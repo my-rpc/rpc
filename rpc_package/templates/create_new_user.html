@@ -16,7 +16,7 @@
     </div>
     <div class="box-body">
     <!--   Action="" is used to confirm to route to the same page.     -->
-      <form method="POST", action="">
+      <form method="POST", action="" id="create_user">
           {{ form.hidden_tag()}}
           <fieldset class="form-group">
               <div class="form-group">
@@ -101,7 +101,49 @@
 {% endblock main_content%}
 {% block js_code %}
     <!-- 
-        add js code or library here as need 
+        add js code or library here as needed 
         This code will be add to the footer of the page
     -->
+    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
+    <script src="{{url_for('static', filename='js/toastr.js')}}"></script>
+    <script>
+        $(document).on( 'submit', '#create_user', function(e){
+            e.preventDefault();
+            $form = $(this);
+            var formData = new FormData($form[0]);
+            $.ajax({
+                type: "POST",
+                url: "create_new_user",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log(response)
+                    
+                    $.toast({
+                        heading: 'Welcome to my Adnix Admin',
+                        text: response.message,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'success',
+                        hideAfter: 3500,
+                        stack: 6
+                    });
+
+                },error: function(response){
+                    alert(response);
+                    $.toast({
+                        heading: 'Welcome to my Adnix Admin',
+                        text: response.message,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'warning',
+                        hideAfter: 3500,
+                        stack: 6
+                    });
+                    console.log(response)
+                }
+            });
+        });
+    </script>
 {% endblock js_code %}

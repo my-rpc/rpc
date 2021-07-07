@@ -1187,10 +1187,10 @@ $('.demo-panel-bx').slimScroll({
 
 
 // feather icon
-	$(function () {
-		'use strict'			
-		feather.replace();		
-	}); // End of use strict
+	// $(function () {
+	// 	'use strict'			
+	// 	feather.replace();		
+	// }); // End of use strict
 
 /*!
  * Waves v0.6.4
