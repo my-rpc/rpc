@@ -5,7 +5,7 @@ from flask import Flask
 import os
 import json
 
-from rpc_package.utils import Translation
+from rpc_package.utils import Translation, MessagePull
 
 app = Flask(__name__)
 config_path = os.path.dirname(__file__)
@@ -14,6 +14,7 @@ app.config["SECRET_KEY"] = CONFIG['secret_key']
 
 # create translation object
 translation_obj = Translation(os.path.join(config_path, 'config/english_dari_translation.json'))
+message_obj = MessagePull(os.path.join(config_path, 'config/messages.json'))
 
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SECRET_KEY'] = '0650c9411b66221d947b0ea065d18008'

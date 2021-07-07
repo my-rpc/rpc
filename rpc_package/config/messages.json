@@ -1,0 +1,18 @@
+{
+  "create_new_user_save": {
+    "dari": "کاربر جدید با آیدی {} موفقانه اضافه شد",
+    "en": "User created for {} ID"
+  },
+  "create_new_user_delete": {
+    "dari": "کاربر با آیدی {} موفقانه حذف شد",
+    "en": "User deleted for {} ID"
+  },
+  "create_new_user_update": {
+    "dari": "اطلاعات کاربر با آیدی {} بروزرسانی شد",
+    "en": "User updated for {} ID"
+  },
+  "create_new_user_not": {
+    "dari": "کاربر جدید اضافه نشد",
+    "en": "User was not created"
+  }
+}
