@@ -1,0 +1,36 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} blank {% endblock %}
+{% block css_or_js_code %}
+    <!-- add js, css code or library as need. js code is recommended in at footer 
+        This code will be add to the head of the page
+    -->
+
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<!-- main content code will be add here -->
+
+<div class="box">
+    <div class="box-header with-border">
+        <script>
+            console.log("Hello")
+        </script>
+      <h4 class="box-title">{{translation.user_login[]}}</h4>
+    </div>
+    <div class="box-body">
+      This is some text within a card block. We extended the layout in layout.html ddd
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      Footer
+    </div>
+    <!-- /.box-footer-->
+</div>
+
+{% endblock main_content%}
+{% block js_code %}
+    <!-- 
+        add js code or library here as need 
+        This code will be add to the footer of the page
+    -->
+{% endblock js_code %}

@@ -1,0 +1,39 @@
+{
+  "create_new_user": {
+    "dari": "ایجاد کاربر جدید",
+    "en": "Create New User"
+  },
+  "user_login": {
+    "dari": "ورود به سیستم",
+    "en": "Login"
+  },
+  "hr_department": {
+    "dari": "دیپارتمنت منابع بشری",
+    "en": "HR Department"
+  },
+  "employees": {
+    "dari": "کارمندان",
+    "en": "Employees"
+  },
+  "employee_id": {
+    "dari": "آیدی نمبر",
+    "en": "Employees ID"
+  },
+  "password": {
+    "dari": "پسورد",
+    "en": "Password"
+  },
+  "confirm_password": {
+    "dari": "تایید پسورد",
+    "en": "Confirm Password"
+  },
+  "user_role": {
+    "dari": "نقش کاربر",
+    "en": "User Role"
+  },
+  "submit_user": {
+    "dari": "ایجاد کاربر جدید",
+    "en": "Create New User"
+  }
+
+}

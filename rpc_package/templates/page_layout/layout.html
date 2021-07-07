@@ -1,0 +1,63 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>{% block title %}{% endblock %} - RPC-MIS</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+    <!-- Vendors Style-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendors_css.css')}}">
+
+    <!-- Style-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/skin_color.css')}}">
+
+    <!-- this block is for css or js code if needed at the begining of page  -->
+    {% block css_or_js_code %}{% endblock %}
+
+</head>
+
+{% if language == "en" %}
+    <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
+{% else %}
+    <body class="hold-transition light-skin sidebar-mini theme-primary fixed rtl">
+{% endif%}
+{% include 'page_layout/header.html'  %}
+
+{% include 'page_layout/sidebar.html' %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <div class="container-full">
+{% include 'page_layout/breadcrumb.html' %}
+
+      <!-- Main content -->
+      <section class="content">
+          <div class="row">
+              <div class="col-12">
+                {% block main_content %} {% endblock %}
+              </div>
+          </div>
+      </section>
+      <!-- /.content -->
+
+    </div>
+</div>
+<!-- /.content-wrapper -->
+{% include 'page_layout/footer.html'  %}
+
+<!-- Vendor JS -->
+<script src="{{ url_for('static', filename='js/vendors.min.js')}}"></script>
+<script src="{{ url_for('static', filename='js/pages/chat-popup.js')}}"></script>
+<!-- <script src="{{ url_for('static', filename='assets/icons/feather-icons/feather.min.js')}}"></script>	 -->
+
+<!-- Adnix Admin App -->
+<script src="{{ url_for('static', filename='js/template.js')}}"></script>
+
+<!-- this block is for js code if needed at the begining of page  -->
+{% block js_code %}{% endblock %}
+
+</body>
+</html>

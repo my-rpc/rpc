@@ -1,0 +1,58 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} blank {% endblock %}
+{% block css_or_js_code %}
+    <!-- add js, css code or library as need. js code is recommended in at footer 
+        This code will be add to the head of the page
+    -->
+
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<!-- main content code will be add here -->
+
+<div class="box">
+    <div class="box-header with-border">
+      <h4 class="box-title">{{translation.create_new_user[language]}}</h4>
+    </div>
+    <div class="box-body">
+    <!--   Action="" is used to confirm to route to the same page.     -->
+      <form method="POST", action="">
+          {{ form.hidden_tag()}}
+          <fieldset class="form-group">
+              <div class="form-group">
+                  {{ form.employee_id.label(class="form-control-label")}}
+                  {{ form.employee_id(class="form-control form-control-lg")}}
+              </div>
+              <div class="form-group">
+                  {{ form.password.label(class="form-control-label")}}
+                  {{ form.password(class="form-control form-control-lg")}}
+              </div>
+              <div class="form-group">
+                  {{ form.confirm_password.label(class="form-control-label")}}
+                  {{ form.confirm_password(class="form-control form-control-lg")}}
+              </div>
+              <div class="form-group">
+                  {{ form.user_role.label(class="form-control-label")}}
+                  {{ form.user_role(class="form-control form-control-lg")}}
+              </div>
+          </fieldset>
+          <div class="form-group">
+              {{form.submit(class="btn btn-outline-info")}}
+          </div>
+          
+      </form>
+    </div>
+    <!-- /.box-body -->
+    <div class="box-footer">
+      Footer
+    </div>
+    <!-- /.box-footer-->
+</div>
+
+{% endblock main_content%}
+{% block js_code %}
+    <!-- 
+        add js code or library here as need 
+        This code will be add to the footer of the page
+    -->
+{% endblock js_code %}
