@@ -26,5 +26,5 @@ def create_new_user():
 def login():
     login_form = LoginForm()
 
-    return render_template('create_new_user.html', title='Login',
+    return render_template('user_login.html', title='Login',
                            form=login_form, language='en', translation=translation_obj)
