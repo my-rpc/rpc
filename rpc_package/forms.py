@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp
 
 
@@ -20,9 +20,8 @@ class CreateUserForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     # TODO add the foreign key of the employee table.
-    employee_id = StringField('Employee ID', validators=[DataRequired(),
-                                                         Length(min=6, max=20)])
-
+    username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
+    prefer_language = RadioField('Language', choices=[('dari', 'Dari'), ('en', 'English')], default='en')
     submit = SubmitField('Login')
