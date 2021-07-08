@@ -1,9 +1,9 @@
 formValidateErrors = function(response){
     ul = "<ul>";
     messages = response.responseJSON.message;
-    for( i in messages) {
+    for(var i in messages) {
         if(messages[i].length > 1 ){
-            for( j in messages[i]){
+            for(var j in messages[i]){
                 ul += "<li>" + messages[i][j] + "</li>";
             }
         }else{

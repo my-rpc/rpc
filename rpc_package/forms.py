@@ -6,8 +6,8 @@ from wtforms.validators import DataRequired, Length, EqualTo, Regexp
 class CreateUserForm(FlaskForm):
     # TODO add the foreign key of the employee table.
     # TODO fine the special character validator.
-    employee_id = StringField('Employee ID', validators=[DataRequired(),
-                                                         Length(min=6, max=20),
+    employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
+                                                         Length(message='Employee ID length must be at least 8', min=8, max=20),
                                                          Regexp('RPC_\d+', message='Invalid employee ID.')])
 
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
