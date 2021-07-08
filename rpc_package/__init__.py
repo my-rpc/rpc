@@ -1,6 +1,8 @@
 from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import pymysql
+pymysql.install_as_MySQLdb()
 # from flask_login import LoginManager
 import os
 import json
@@ -11,6 +13,9 @@ app = Flask(__name__)
 config_path = os.path.dirname(__file__)
 CONFIG = json.load(open(os.path.join(config_path, 'config/config.json'), 'rb'))
 app.config["SECRET_KEY"] = CONFIG['secret_key']
+app.config["SQLALCHEMY_DATABASE_URI"] = CONFIG['db_url']
+db = SQLAlchemy(app)
+# TODO check why we need this
 
 # create translation object
 translation_obj = Translation(os.path.join(config_path, 'config/english_dari_translation.json'))
