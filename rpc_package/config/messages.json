@@ -14,5 +14,62 @@
   "create_new_user_not": {
     "dari": "کاربر جدید اضافه نشد",
     "en": "User was not created"
+  },
+  "email_incorrect": {
+    "dari": "ایمیل شما اشتباه است",
+    "en": "Your email is incorrect"
+  },
+  "password_incorrect": {
+    "dari": "پسورد شما اشتباه است",
+    "en": "Your password is incorrect"
+  },
+  "are_you_sure": {
+    "dari": "آیا شما مطمئن هستید؟",
+    "en": "Are you sure?"
+  },
+  "new_task": {
+    "dari": "وظیفه جدید",
+    "en": "New Task"
+  },
+  "new_mail": {
+    "dari": "ایمیل جدید",
+    "en": "New Mail"
+  },
+  "wrong_email": {
+    "dari": "فورمت ایمیل اشتباه است",
+    "en": "Wrong email format"
+  },
+  "required_field": {
+    "dari": "{} این قسمت الزامی است",
+    "en": "The {} field is required"
+  },
+  "required_upload": {
+    "dari": "آپلود فایل {} الزامی است",
+    "en": "Uploading this file is required"
+  },
+  "leave_time": {
+    "dari": "روز های رخصتی شما خلاص شده است",
+    "en": "Your leave time is up"
+  },
+  "wrong_phone_number": {
+    "dari": "فورمت شماره تماس اشتباه است",
+    "en": "Wrong phone number format"
+  },
+  "exist_in_system": {
+    "dari": " در سیستم موجود است{} ",
+    "en": "{} exist in system"
+  },
+  "check_length": {
+    "dari": " طول فیلد {} باید برای {}  فیلد است ",
+    "en": "The length must be at least {} for field {}"
+  },
+  "wrong_format": {
+    "dari": "فرمت داده وارد شده اشتباه است. {}",
+    "en": "Please check the {} format."
+  },
+  "equal": {
+    "dari": "پسورد و تاییدیه پسورد یکی نیست",
+    "en": "Confirm password must be equal to password"
   }
+
 }

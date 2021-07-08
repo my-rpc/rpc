@@ -27,8 +27,12 @@ def create_new_user():
                    403, {'ContentType': 'application/json'}
 
     create_new_user_form.employee_id.label.text = translation_obj.employee_id[language]
+    create_new_user_form.employee_id.validators[1].message = message_obj.check_length[language].format(str(8), "Employee ID")
+    create_new_user_form.employee_id.validators[2].message = message_obj.wrong_format[language].format("Employee ID")
     create_new_user_form.password.label.text = translation_obj.password[language]
+    create_new_user_form.password.validators[1].message = message_obj.check_length[language].format(str(6), "")
     create_new_user_form.confirm_password.label.text = translation_obj.confirm_password[language]
+    create_new_user_form.confirm_password.validators[1].message = message_obj.equal[language]
     create_new_user_form.user_role.label.text = translation_obj.user_role[language]
     create_new_user_form.submit.label.text = translation_obj.submit_user[language]
     return render_template('create_new_user.html', title='Create New User',
