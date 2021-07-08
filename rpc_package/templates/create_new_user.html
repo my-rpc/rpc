@@ -105,7 +105,7 @@
         This code will be add to the footer of the page
     -->
     <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
-    <script src="{{url_for('static', filename='js/toastr.js')}}"></script>
+    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
     <script>
         $(document).on( 'submit', '#create_user', function(e){
             e.preventDefault();
@@ -126,22 +126,21 @@
                         position: 'top-right',
                         loaderBg: '#ff6849',
                         icon: 'success',
-                        hideAfter: 3500,
+                        hideAfter: 5500,
                         stack: 6
                     });
 
                 },error: function(response){
-                    alert(response);
                     $.toast({
-                        heading: 'Welcome to my Adnix Admin',
-                        text: response.message,
+                        heading: 'Error',
+                        text: formValidateErrors(response),
                         position: 'top-right',
                         loaderBg: '#ff6849',
                         icon: 'warning',
-                        hideAfter: 3500,
+                        hideAfter: false,
                         stack: 6
                     });
-                    console.log(response)
+                    // console.log(response)
                 }
             });
         });
