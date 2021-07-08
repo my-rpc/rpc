@@ -16,12 +16,14 @@ def create_new_user():
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
-            # flash(message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data), 'success')
-            return jsonify({'success':True, 'message': message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), 200, {'ContentType':'application/json'} 
+            return jsonify({'success':True, 
+            'message': message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), 
+            200, {'ContentType':'application/json'} 
         else: 
-            # flash(message_obj.create_new_user_not[language], 'danger')
             print(create_new_user_form.errors)
-            return jsonify({'success':False, 'message': create_new_user_form.errors}), 403, {'ContentType':'application/json'} 
+            return jsonify({'success':False, 
+            'message': create_new_user_form.errors}), 
+            403, {'ContentType':'application/json'} 
     
     create_new_user_form.employee_id.label.text = translation_obj.employee_id[language]
     create_new_user_form.password.label.text = translation_obj.password[language]
