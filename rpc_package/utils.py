@@ -23,5 +23,3 @@ class MessagePull:
         for key, item in self.messages.items():
             if isinstance(item, dict):
                 setattr(self, key, item)
-
-

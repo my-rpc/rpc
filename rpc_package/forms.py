@@ -25,3 +25,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     prefer_language = RadioField('Language', choices=[('dari', 'Dari'), ('en', 'English')], default='en')
     submit = SubmitField('Login')
+
+
+class EmployeeForm(FlaskForm):
+    pass
