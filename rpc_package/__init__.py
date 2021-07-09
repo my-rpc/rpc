@@ -2,10 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import pymysql
-pymysql.install_as_MySQLdb()
-# from flask_login import LoginManager
+from flask_login import LoginManager
 import os
 import json
+
+pymysql.install_as_MySQLdb()
 
 from rpc_package.utils import Translation, MessagePull
 
@@ -21,11 +22,6 @@ db = SQLAlchemy(app)
 translation_obj = Translation(os.path.join(config_path, 'config/english_dari_translation.json'))
 message_obj = MessagePull(os.path.join(config_path, 'config/messages.json'))
 
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SECRET_KEY'] = '0650c9411b66221d947b0ea065d18008'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-# db = SQLAlchemy(app)
-# db.session.execute('pragma foreign_keys=on')
 pass_crypt = Bcrypt(app)
 # login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
