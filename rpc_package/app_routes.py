@@ -6,7 +6,7 @@ from rpc_package.rpc_tables import Users, Employees, User_roles
 import json
 
 
-@app.route("/blank", methods=['GET', 'POST'])
+@app.route("/", methods=['GET', 'POST'])
 def blank():
     return render_template('blank.html', language='en')
 
@@ -25,13 +25,16 @@ def create_new_user():
                             role=create_new_user_form.user_role.data,
                             status=1,
                             token='adding new token')
-            db.session.add(new_user)
-            db.session.commit()
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+            except IOError as exc:
+                return jsonify({'success': False, 'message': message_obj.create_new_user_not[language]}), \
+                                                        403, {'ContentType': 'application/json'}
             return jsonify({'success': True, 'message':
                 message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), \
                    200, {'ContentType': 'application/json'}
         else:
-            print(create_new_user_form.errors)
             return jsonify({'success': False, 'message': create_new_user_form.errors}), \
                                                         403, {'ContentType': 'application/json'}
     create_new_user_form = update_messages_user(create_new_user_form, language)
