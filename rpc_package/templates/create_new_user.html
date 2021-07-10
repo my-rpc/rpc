@@ -21,68 +21,23 @@
           <fieldset class="form-group">
               <div class="form-group">
                   {{ form.employee_id.label(class="form-control-label")}}
-
-                  {% if form.employee_id.errors %}
-                      {{ form.employee_id(class="form-control form-control-lg is-invalid")}}
-                          <div class="invalid-feedback">
-                            {% for error in form.employee_id.errors %}
-                                <span>
-                                    {{error}}
-                                </span>
-                            {% endfor %}
-                          </div>
-                  {% else %}
-                      {{ form.employee_id(class="form-control form-control-lg")}}
-                  {%  endif %}
+                  {{ form.employee_id(class="form-control form-control-lg")}}
               </div>
               <div class="form-group">
                   {{ form.password.label(class="form-control-label")}}
-
-                  {% if form.password.errors %}
-                      {{ form.password(class="form-control form-control-lg is-invalid")}}
-                          <div class="invalid-feedback">
-                            {% for error in form.password.errors %}
-                                <span>
-                                    {{error}}
-                                </span>
-                            {% endfor %}
-                          </div>
-                  {% else %}
-                      {{ form.password(class="form-control form-control-lg")}}
-                  {%  endif %}
+                  {{ form.password(class="form-control form-control-lg")}}
+                  
 
               </div>
               <div class="form-group">
                   {{ form.confirm_password.label(class="form-control-label")}}
-
-                  {% if form.confirm_password.errors %}
-                      {{ form.confirm_password(class="form-control form-control-lg is-invalid")}}
-                          <div class="invalid-feedback">
-                            {% for error in form.confirm_password.errors %}
-                                <span>
-                                    {{error}}
-                                </span>
-                            {% endfor %}
-                          </div>
-                  {% else %}
-                      {{ form.confirm_password(class="form-control form-control-lg")}}
-                  {%  endif %}
+                  {{ form.confirm_password(class="form-control form-control-lg")}}
+                  
               </div>
               <div class="form-group">
                   {{ form.user_role.label(class="form-control-label")}}
-
-                  {% if form.user_role.errors %}
-                      {{ form.user_role(class="form-control form-control-lg is-invalid")}}
-                          <div class="invalid-feedback">
-                            {% for error in form.user_role.errors %}
-                                <span>
-                                    {{error}}
-                                </span>
-                            {% endfor %}
-                          </div>
-                  {% else %}
-                      {{ form.user_role(class="form-control form-control-lg")}}
-                  {%  endif %}
+                  {{ form.user_role(class="form-control form-control-lg")}}
+                  
               </div>
           </fieldset>
           <div class="form-group">
@@ -118,29 +73,14 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log(response)
-                    
-                    $.toast({
-                        heading: 'Success',
-                        text: response.message,
-                        position: 'top-right',
-                        loaderBg: '#ff6849',
-                        icon: 'success',
-                        hideAfter: 5500,
-                        stack: 6
-                    });
-
+                    toastSuccess(response);
                 },error: function(response){
-                    $.toast({
-                        heading: 'Error',
-                        text: formValidateErrors(response),
-                        position: 'top-right',
-                        loaderBg: '#ff6849',
-                        icon: 'warning',
-                        hideAfter: 6000,
-                        stack: 6
-                    });
-                    // console.log(response)
+                    var statusCode = response.status;
+                    var r = '';
+                    if(statusCode == '403'){
+                        r = formValidateErrors(response);
+                    }
+                    toastError(r);
                 }
             });
         });
