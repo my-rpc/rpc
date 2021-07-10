@@ -10,7 +10,6 @@ formValidateErrors = function(response){
             ul += "<li>" + messages[i] + "</li>";
         }
     }
-
     ul += "</ul>";
     return ul;
 };
