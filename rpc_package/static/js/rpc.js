@@ -1,6 +1,6 @@
 formValidateErrors = function(response){
-    ul = "<ul>";
-    messages = response.responseJSON.message;
+    var ul = "<ul>";
+    var messages = response.responseJSON.message;
     for(var i in messages) {
         if(messages[i].length > 1 ){
             for(var j in messages[i]){
@@ -17,7 +17,7 @@ formValidateErrors = function(response){
 toastInfo = function (message){
     $.toast({
         heading: 'Error',
-        text: messages,
+        text: message,
         position: 'top-right',
         loaderBg: '#ff6849',
         icon: 'info',
@@ -29,7 +29,7 @@ toastInfo = function (message){
 toastWarning  = function(message){
     $.toast({
         heading: 'Error',
-        text: messages,
+        text: message,
         position: 'top-right',
         loaderBg: '#ff6849',
         icon: 'warning',
@@ -39,7 +39,6 @@ toastWarning  = function(message){
 };
 
 toastError = function (message) { 
-    console.log(message);
     $.toast({
         heading: 'Error',
         text: message,
@@ -54,7 +53,7 @@ toastError = function (message) {
 toastSuccess = function (message){
     $.toast({
         heading: 'Error',
-        text: messages,
+        text: message,
         position: 'top-right',
         loaderBg: '#ff6849',
         icon: 'success',
