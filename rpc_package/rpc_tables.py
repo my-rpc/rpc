@@ -1,4 +1,6 @@
 from rpc_package import db
+
+
 # from rpc_package import login_manager
 # from flask_login import UserMixin
 
@@ -49,28 +51,34 @@ class User_roles(db.Model):
     def __repr__(self):
         return f"Role ID: {self.id}, role: {self.name}, English role: {self.name_english}"
 
+
 class Emails(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
+                       nullable=False)
     email = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Email: {self.email}"
 
+
 class Phone(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
+                       nullable=False)
     phone = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Phone: {self.email}"
 
+
 class Current_addresses(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
+                       nullable=False)
     address = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
     province_id = db.Column(db.Integer, db.ForeignKey('provinces.id'), primary_key=True, nullable=False)
@@ -82,13 +90,15 @@ class Current_addresses(db.Model):
 class Permanent_addresses(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
+                       nullable=False)
     address = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
     province_id = db.Column(db.Integer, db.ForeignKey('provinces.id'), primary_key=True, nullable=False)
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Address: {self.address}, District: {self.district_id}, Province: {self.province_id}"
+
 
 class District(db.Model):
     __table_args__ = {'extend_existing': True}
@@ -100,6 +110,7 @@ class District(db.Model):
     def __repr__(self):
         return f"District ID: {self.id}, Name: {self.district_name}, English Name: {self.district_name_english}, Province: {self.province}"
 
+
 class Provinces(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
@@ -109,10 +120,12 @@ class Provinces(db.Model):
     def __repr__(self):
         return f"Province ID: {self.id}, Name: {self.province_name}, English Name: {self.province_name_english}"
 
+
 class Documents(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
+                       nullable=False)
     name = db.Column(db.String(255), nullable=True)
     province_name_english = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
