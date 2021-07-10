@@ -15,6 +15,22 @@
     "dari": "کاربر جدید اضافه نشد",
     "en": "User was not created"
   },
+  "create_new_employee_save": {
+    "dari": "کارمند جدید با آیدی {} موفقانه اضافه شد",
+    "en": "Employee created for {} ID"
+  },
+  "create_new_employee_delete": {
+    "dari": "کارمند با آیدی {} موفقانه حذف شد",
+    "en": "Employee deleted for {} ID"
+  },
+  "create_new_employee_update": {
+    "dari": "اطلاعات کارمند با آیدی {} بروزرسانی شد",
+    "en": "Employee updated for {} ID"
+  },
+  "create_new_employee_not": {
+    "dari": "کارمند جدید اضافه نشد",
+    "en": "Employee was not created"
+  },
   "email_incorrect": {
     "dari": "ایمیل شما اشتباه است",
     "en": "Your email is incorrect"
@@ -27,25 +43,17 @@
     "dari": "آیا شما مطمئن هستید؟",
     "en": "Are you sure?"
   },
-  "new_task": {
-    "dari": "وظیفه جدید",
-    "en": "New Task"
-  },
-  "new_mail": {
-    "dari": "ایمیل جدید",
-    "en": "New Mail"
-  },
   "wrong_email": {
     "dari": "فورمت ایمیل اشتباه است",
     "en": "Wrong email format"
   },
   "required_field": {
-    "dari": "{} این قسمت الزامی است",
-    "en": "The {} field is required"
+  "dari": "الزامی است  {}",
+    "en": "{} is required"
   },
   "required_upload": {
-    "dari": "آپلود فایل {} الزامی است",
-    "en": "Uploading this file is required"
+    "dari": "آپلود {} فایل الزامی است",
+    "en": "Uploading {} file is required"
   },
   "leave_time": {
     "dari": "روز های رخصتی شما خلاص شده است",
@@ -59,17 +67,17 @@
     "dari": " در سیستم موجود است{} ",
     "en": "{} exist in system"
   },
-  "check_length": {
-    "dari": " طول فیلد {} باید برای {}  فیلد است ",
-    "en": "The length must be at least {} for field {}"
+  "not_access": {
+  "dari": "شما اجازه ورود به این قسمت از سیستم را ندارید",
+    "en": "You are not allowed to log in to this part of the system"
   },
-  "wrong_format": {
-    "dari": "فرمت داده وارد شده اشتباه است. {}",
-    "en": "Please check the {} format."
+  "system_error": {
+  "dari": "خطای سیستم",
+    "en": "System Error"
   },
-  "equal": {
-    "dari": "پسورد و تاییدیه پسورد یکی نیست",
-    "en": "Confirm password must be equal to password"
+  "call_admin": {
+  "dari": "با ادمین در ارتباط شوید",
+    "en": "Cantact with admin"
   }
-
+  
 }
