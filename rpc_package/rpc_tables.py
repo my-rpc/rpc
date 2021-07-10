@@ -5,7 +5,7 @@ from rpc_package import db
 
 class Employees(db.Model):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.String(20), primary_key=True)
+    id = db.Column(db.String(20, collation='utf8_general_ci'), primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)
     fname = db.Column(db.String(50), nullable=False)
@@ -29,12 +29,22 @@ class Employees(db.Model):
 
 class Users(db.Model):
     __table_args__ = {'extend_existing': True}
-    emp_id = db.Column(db.String(20), db.ForeignKey('employees.id'), nullable=False, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'),
+                       db.ForeignKey('employees.id'), primary_key=True, nullable=False)
     password = db.Column(db.String(60), nullable=True)
-    # TODO db.ForeignKey of role table
-    role = db.Column(db.Integer, nullable=True)
+    role = db.Column(db.Integer, db.ForeignKey('user_roles.id'), nullable=False)
     status = db.Column(db.Boolean, nullable=False)
     token = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f"User ID: {self.emp_id}, role: {self.role}, status: {self.status}"
+
+
+class User_roles(db.Model):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    name_english = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f"Role ID: {self.id}, role: {self.name}, English role: {self.name_english}"
