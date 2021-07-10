@@ -1,9 +1,12 @@
 from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-# from flask_login import LoginManager
+import pymysql
+from flask_login import LoginManager
 import os
 import json
+
+pymysql.install_as_MySQLdb()
 
 from rpc_package.utils import Translation, MessagePull
 
@@ -11,16 +14,14 @@ app = Flask(__name__)
 config_path = os.path.dirname(__file__)
 CONFIG = json.load(open(os.path.join(config_path, 'config/config.json'), 'rb'))
 app.config["SECRET_KEY"] = CONFIG['secret_key']
+app.config["SQLALCHEMY_DATABASE_URI"] = CONFIG['db_url']
+db = SQLAlchemy(app)
+# TODO check why we need this
 
 # create translation object
 translation_obj = Translation(os.path.join(config_path, 'config/english_dari_translation.json'))
 message_obj = MessagePull(os.path.join(config_path, 'config/messages.json'))
 
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SECRET_KEY'] = '0650c9411b66221d947b0ea065d18008'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-# db = SQLAlchemy(app)
-# db.session.execute('pragma foreign_keys=on')
 pass_crypt = Bcrypt(app)
 # login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
