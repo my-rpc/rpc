@@ -305,7 +305,9 @@
     .box-title{
         display: inline-block;
         margin: 0;
-	    font-weight: $fw-400;
+	    font-weight: $fw-500;
+        color: #E64A19 !important;
+        font-weight: bold;
     }
     >i{       
         display: inline-block;

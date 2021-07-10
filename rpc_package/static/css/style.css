@@ -24398,7 +24398,8 @@ textarea.form-control {
 .box-header .box-title {
   display: inline-block;
   margin: 0;
-  font-weight: 400;
+  font-weight: 500;
+  color: #E64A19 !important;
 }
 .box-header > i {
   display: inline-block;

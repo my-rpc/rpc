@@ -90,6 +90,17 @@
   "call_admin": {
   "dari": "با ادمین در ارتباط شوید",
     "en": "Cantact with admin"
+  },
+  "check_length": {
+    "dari": " طول فیلد {} باید برای {}  فیلد است ",
+    "en": "The length must be at least {} for field {}"
+  },
+  "wrong_format": {
+    "dari": "فرمت داده وارد شده اشتباه است. {}",
+    "en": "Please check the {} format."
+  },
+  "equal": {
+    "dari": "پسورد و تاییدیه پسورد یکی نیست",
+    "en": "Confirm password must be equal to password"
   }
-  
 }
