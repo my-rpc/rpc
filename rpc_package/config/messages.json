@@ -71,18 +71,6 @@
   "dari": "شما اجازه ورود به این قسمت از سیستم را ندارید",
     "en": "You are not allowed to log in to this part of the system"
   },
-  "check_length": {
-    "dari": " طول فیلد {} باید برای {}  فیلد است ",
-    "en": "The length must be at least {} for field {}"
-  },
-  "wrong_format": {
-    "dari": "فرمت داده وارد شده اشتباه است. {}",
-    "en": "Please check the {} format."
-  },
-  "equal": {
-    "dari": "پسورد و تاییدیه پسورد یکی نیست",
-    "en": "Confirm password must be equal to password"
-  },
   "system_error": {
   "dari": "خطای سیستم",
     "en": "System Error"
