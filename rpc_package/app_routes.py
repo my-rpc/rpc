@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, request, jsonify
 from rpc_package import app, pass_crypt, db
-from rpc_package.forms import CreateUserForm, LoginForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, User_roles
 import json
@@ -41,7 +41,7 @@ def create_new_user():
 
 
 @app.route("/uds_user", methods=['GET', 'POST'])
-def search_user():
+def uds_user():
     language = 'en'
     # language = json.loads(request.args["messages"])['language']
     create_new_user_form = CreateUserForm()
@@ -82,3 +82,9 @@ def login():
     return render_template('login.html', title='Login',
                            form=login_form, language=default_language,
                            translation=translation_obj, message_obj=message_obj)
+
+
+@app.route("/add_employee", methods=['GET', 'POST'])
+def add_employee():
+    language = 'en'
+    add_employee_form = EmployeeForm()
