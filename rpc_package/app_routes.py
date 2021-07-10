@@ -30,7 +30,6 @@ def create_new_user():
                 message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), \
                    200, {'ContentType': 'application/json'}
         else:
-            print(create_new_user_form.errors)
             return jsonify({'success': False, 'message': create_new_user_form.errors}), \
                                                         403, {'ContentType': 'application/json'}
     create_new_user_form = update_messages_user(create_new_user_form, language)

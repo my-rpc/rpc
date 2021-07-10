@@ -119,28 +119,12 @@
                 contentType: false,
                 success: function (response) {
                     console.log(response)
-                    
-                    $.toast({
-                        heading: 'Success',
-                        text: response.message,
-                        position: 'top-right',
-                        loaderBg: '#ff6849',
-                        icon: 'success',
-                        hideAfter: 5500,
-                        stack: 6
-                    });
+                    toastSuccess(response);
 
                 },error: function(response){
-                    $.toast({
-                        heading: 'Error',
-                        text: formValidateErrors(response),
-                        position: 'top-right',
-                        loaderBg: '#ff6849',
-                        icon: 'warning',
-                        hideAfter: 6000,
-                        stack: 6
-                    });
-                    // console.log(response)
+                    var r = formValidateErrors(response);
+                    
+                    toastError(escape(r));
                 }
             });
         });
