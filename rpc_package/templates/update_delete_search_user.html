@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} login {% endblock %}
+{% block title %} {{ super() }} blank {% endblock %}
 {% block css_or_js_code %}
     <!-- add js, css code or library as need. js code is recommended in at footer 
         This code will be add to the head of the page
@@ -13,8 +13,18 @@
 <div class="box">
     <div class="box-header with-border">
       <h4 class="box-title">{{translation.create_new_user[language]}}</h4>
+      <div class="box-body">
+        <div class="input-group">
+            <div class="form-outline">
+              <input id="search-input" type="search" id="form1" class="form-control" />
+              <label class="form-label" for="form1">Search</label>
+            </div>
+            <button id="search-button" type="button" class="btn btn-primary">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
     </div>
-    <div class="box-body">
+ 
     <!--   Action="" is used to confirm to route to the same page.     -->
       <form method="POST", action="" id="create_user">
           {{ form.hidden_tag()}}
@@ -107,7 +117,7 @@
     <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
     <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
     <script>
-        $(document).on( 'submit', '#create_user', function(e){
+        $(document).on( 'submit', '#Search_user', function(e){
             e.preventDefault();
             $form = $(this);
             var formData = new FormData($form[0]);
@@ -146,3 +156,12 @@
         });
     </script>
 {% endblock js_code %}
+<script>
+
+const searchButton = document.getElementById('search-button');
+const searchInput = document.getElementById('search-input');
+searchButton.addEventListener('click', () => {
+  const inputValue = searchInput.value;
+  alert(inputValue);
+});
+</script>
