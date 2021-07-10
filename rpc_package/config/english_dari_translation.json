@@ -207,9 +207,9 @@
     "dari": "موافقت نمیشود",
     "en": "Not Accepted"
   },
-  "reason_for_not_accepted": {
+  "reason": {
     "dari": "علت عدم موافقت",
-    "en": "Reason for not Accepted"
+    "en": "Reason"
   },
   "form_number": {
     "dari": "شماره فورم",
@@ -366,6 +366,14 @@
   "leave_duration": {
     "dari": "مدت رخصتی",
     "en": "Leave Duration"
+  },
+  "new_task": {
+    "dari": "وظیفه جدید",
+    "en": "New Task"
+  },
+  "new_mail": {
+    "dari": "ایمیل جدید",
+    "en": "New Mail"
   },
   "work_duration": {
     "dari": "مدت همکاری با شرکت",
@@ -562,6 +570,14 @@
   "clear_all": {
     "dari": "پاک کردن همه",
     "en": "Clear All"
+  },
+  "clearance_form": {
+    "dari": "فورم عدم مسئولیت",
+    "en": "Clearance Form"
+  },
+  "my_wallet": {
+    "dari": "",
+    "en": "My Wallet"
   }
 
 }
