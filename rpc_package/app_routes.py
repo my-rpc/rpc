@@ -94,7 +94,7 @@ def add_employee():
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
             new_employee = Employees(
-                emp_id=add_employee_form.employee_id.data,
+                id=add_employee_form.employee_id.data,
                 name=add_employee_form.first_name.data,
                 lname=add_employee_form.last_name.data,
                 fname=add_employee_form.father_name.data,
@@ -105,9 +105,9 @@ def add_employee():
                 gname_english=add_employee_form.grand_name_english.data,
                 birthday=add_employee_form.birthday.data,
                 tazkira=add_employee_form.tazkira.data,
-                gender=add_employee_form.gender.data,
+                gender=True if add_employee_form.gender.data else False,
                 blood=add_employee_form.blood.data,
-                m_status=add_employee_form.m_status.data,
+                m_status=True if add_employee_form.m_status.data else False,
                 tin=add_employee_form.tin.data,
                 status=1)
             try:
