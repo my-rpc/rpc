@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField
-from wtforms.validators import DataRequired, Length, EqualTo, Regexp
+from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email, SelectField
+
+from rpc_package.rpc_tables import Provinces, District
 
 
 class CreateUserForm(FlaskForm):
@@ -48,7 +50,22 @@ class EmployeeForm(FlaskForm):
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
     tin = StringField('TIN Number', validators=[Regexp('\d+')])
 
-    submit = SubmitField('Create New Employee')
+    submit = SubmitField('Save and Next')
+
+
+class EmployeeContactForm(FlaskForm):
+    employee_id = StringField('Employee ID', validators=[DataRequired()])
+    provinces_list = [province.province_name for province in Provinces.query.all()]
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    permanent_address = StringField('Permanent Address', validators=[DataRequired()])
+    permanent_address = StringField('Temporary Address', validators=[DataRequired()])
+    provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
+    district = SelectField('District', validators=[DataRequired()])
+
+    submit = SubmitField('Add Employee')
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, request, jsonify
 from rpc_package import app, pass_crypt, db
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, EmployeeContactForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, User_roles
 import json
@@ -91,6 +91,7 @@ def login():
 def add_employee():
     language = 'en'
     add_employee_form = EmployeeForm()
+    add_employee_contact_form = EmployeeContactForm()
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
             new_employee = Employees(
@@ -119,6 +120,8 @@ def add_employee():
             return jsonify({'success': True, 'message':
                 message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data)}), \
                    200, {'ContentType': 'application/json'}
+        elif add_employee_contact_form.validate_on_submit():
+            pass
         else:
             return jsonify({'success': False, 'message': add_employee_form.errors}), \
                    403, {'ContentType': 'application/json'}
