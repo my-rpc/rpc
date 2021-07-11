@@ -119,7 +119,7 @@
     <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
     <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
     <script>
-        $(document).on( 'submit', '#create_user', function(e){
+        $(document).on( 'submit', '#add_employee', function(e){
             e.preventDefault();
             $form = $(this);
             var formData = new FormData($form[0]);
