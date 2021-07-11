@@ -52,7 +52,7 @@ toastError = function (message) {
 
 toastSuccess = function (message){
     $.toast({
-        heading: 'Error',
+        heading: 'Success',
         text: message,
         position: 'top-right',
         loaderBg: '#ff6849',

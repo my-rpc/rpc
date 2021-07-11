@@ -24395,12 +24395,6 @@ textarea.form-control {
   border-bottom-width: 1px;
   border-bottom-style: solid;
 }
-.box-header .box-title {
-  display: inline-block;
-  margin: 0;
-  font-weight: 500;
-  color: #E64A19 !important;
-}
 .box-header > i {
   display: inline-block;
   margin: 0 5px 0 0;
