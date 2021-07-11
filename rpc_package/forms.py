@@ -25,4 +25,28 @@ class LoginForm(FlaskForm):
 
 
 class EmployeeForm(FlaskForm):
-    pass
+    employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
+                                                         Length(message='Employee ID length must be at least 8', min=8,
+                                                                max=20),
+                                                         Regexp('RPC_\d+', message='Invalid employee ID.')])
+
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    father_name = StringField('Father Name', validators=[DataRequired()])
+    grand_name = StringField('Grand Father Name', validators=[DataRequired()])
+
+    first_name_english = StringField('First Name')
+    last_name_english = StringField('Last Name')
+    father_name_english = StringField('Father Name')
+    grand_name_english = StringField('Grand Father Name')
+
+    # TODO adding datetime picker.
+    birthday = StringField('Birthday')
+    tazkira = StringField('Tazkira', validators=[Regexp('\d+')])
+    gender = RadioField('Gender', choices=[(1, 'Male'), (0, 'Female')], validators=[DataRequired()])
+    blood = StringField("Blood Type", validators=[DataRequired(), Regexp('(A|B|AB|O)[+-]')])
+    m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
+    tin = StringField('TIN Number', validators=[Regexp('\d+')])
+
+    submit = SubmitField('Create New Employee')
+

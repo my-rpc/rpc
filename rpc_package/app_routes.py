@@ -20,23 +20,23 @@ def create_new_user():
         if create_new_user_form.validate_on_submit():
             hashed_pass = pass_crypt.generate_password_hash(create_new_user_form.password.data).decode('utf=8')
             new_user = Users(
-                            emp_id=create_new_user_form.employee_id.data,
-                            password=hashed_pass,
-                            role=create_new_user_form.user_role.data,
-                            status=1,
-                            token='adding new token')
+                emp_id=create_new_user_form.employee_id.data,
+                password=hashed_pass,
+                role=create_new_user_form.user_role.data,
+                status=1,
+                token='adding new token')
             try:
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
                 return jsonify({'success': False, 'message': message_obj.create_new_user_not[language]}), \
-                                                        403, {'ContentType': 'application/json'}
+                       403, {'ContentType': 'application/json'}
             return jsonify({'success': True, 'message':
                 message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), \
                    200, {'ContentType': 'application/json'}
         else:
             return jsonify({'success': False, 'message': create_new_user_form.errors}), \
-                                                        403, {'ContentType': 'application/json'}
+                   403, {'ContentType': 'application/json'}
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User',
                            form=create_new_user_form, language=language, translation=translation_obj,
@@ -52,10 +52,10 @@ def uds_user():
         if create_new_user_form.validate_on_submit():
             hashed_pass = pass_crypt.generate_password_hash(create_new_user_form.password.data).decode('utf=8')
             new_user = Users(emp_id=create_new_user_form.employee_id.data,
-                            password=hashed_pass,
-                            role=create_new_user_form.user_role.data,
-                            status=1,
-                            token='adding new token')
+                             password=hashed_pass,
+                             role=create_new_user_form.user_role.data,
+                             status=1,
+                             token='adding new token')
             db.session.add(new_user)
             db.session.commit()
             return jsonify({'success': True, 'message':
@@ -63,7 +63,7 @@ def uds_user():
                    200, {'ContentType': 'application/json'}
         else:
             return jsonify({'success': False, 'message': create_new_user_form.errors}), \
-                                                        403, {'ContentType': 'application/json'}
+                   403, {'ContentType': 'application/json'}
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User',
                            form=create_new_user_form, language=language, translation=translation_obj,
@@ -91,3 +91,39 @@ def login():
 def add_employee():
     language = 'en'
     add_employee_form = EmployeeForm()
+    if request.method == 'POST':
+        if add_employee_form.validate_on_submit():
+            new_employee = Employees(
+                emp_id=add_employee_form.employee_id.data,
+                name=add_employee_form.first_name.data,
+                lname=add_employee_form.last_name.data,
+                fname=add_employee_form.father_name.data,
+                gname=add_employee_form.grand_name.data,
+                name_english=add_employee_form.first_name_english.data,
+                lname_english=add_employee_form.last_name_english.data,
+                fname_english=add_employee_form.father_name_english.data,
+                gname_english=add_employee_form.grand_name_english.data,
+                birthday=add_employee_form.birthday.data,
+                tazkira=add_employee_form.tazkira.data,
+                gender=add_employee_form.gender.data,
+                blood=add_employee_form.blood.data,
+                m_status=add_employee_form.m_status.data,
+                tin=add_employee_form.tin.data,
+                status=1)
+            try:
+                db.session.add(new_employee)
+                db.session.commit()
+            except IOError as exc:
+                return jsonify({'success': False, 'message': message_obj.create_new_employee_not[language]}), \
+                       403, {'ContentType': 'application/json'}
+            return jsonify({'success': True, 'message':
+                message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data)}), \
+                   200, {'ContentType': 'application/json'}
+        else:
+            return jsonify({'success': False, 'message': add_employee_form.errors}), \
+                   403, {'ContentType': 'application/json'}
+
+    add_employee_form = update_messages_employee(add_employee_form, language)
+    return render_template('add_employee.html', title='Add Employee',
+                           form=add_employee_form, language=language,
+                           translation=translation_obj, message_obj=message_obj)
