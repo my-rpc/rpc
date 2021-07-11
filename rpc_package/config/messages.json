@@ -90,5 +90,13 @@
   "equal": {
     "dari": "پسورد و تاییدیه پسورد یکی نیست",
     "en": "Confirm password must be equal to password"
+  },
+  "contact_details": {
+    "dari": "اطلاعات مربوط به آدرس و شماره تماس ذخیره شد",
+    "en": "The information about phone and address has bees saved!"
+  },
+  "contact_details_not": {
+    "dari": "اطلاعات مربوط به آدرس و شماره تماس ذخیره نشد",
+    "en": "The information about phone and address has not bees saved!"
   }
 }

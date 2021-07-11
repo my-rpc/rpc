@@ -55,10 +55,10 @@ class EmployeeForm(FlaskForm):
 
 class EmployeeContactForm(FlaskForm):
     employee_id = StringField('Employee ID', validators=[DataRequired()])
-    provinces_list = [province.province_name for province in Provinces.query.all()]
+    provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     permanent_address = StringField('Permanent Address', validators=[DataRequired()])
-    permanent_address = StringField('Temporary Address', validators=[DataRequired()])
+    current_address = StringField('Current Address', validators=[DataRequired()])
     provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
     district = SelectField('District', validators=[DataRequired()])
 

@@ -586,6 +586,9 @@
   "my_wallet": {
     "dari": "",
     "en": "My Wallet"
+  },
+  "contact_details": {
+    "dari": "اطلاعات تماس و آدرسس ",
+    "en": "Contact Details"
   }
-
 }
