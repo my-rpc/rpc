@@ -90,5 +90,13 @@
   "equal": {
     "dari": "پسورد و تاییدیه پسورد یکی نیست",
     "en": "Confirm password must be equal to password"
+  },
+  "password_length": {
+    "dari": "طول پسورد کم است،باید بیشتر از 6 کارکتر باشد.",
+    "en": "Password length is short, it should be more than 8 characters"
+  },
+  "wrong_format_employee_ID": {
+    "dari": "فورمت شماره کارمندی اشتباه است",
+    "en": "Format of employee ID is wrong"
   }
 }
