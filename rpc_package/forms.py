@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField
-from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField
+from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email
 
 from rpc_package.rpc_tables import Provinces, District
 
