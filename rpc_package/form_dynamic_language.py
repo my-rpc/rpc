@@ -14,5 +14,9 @@ def update_messages_user(form_obj, language):
     return form_obj
 
 
+def update_messages_employee(form_obj, language):
+    return form_obj
+
+
 
 
