@@ -24,7 +24,7 @@
           </a>
         </li>
 		<li>
-          <a href="extra_calendar.html">
+      <a href="{{ url_for('add_employee') }}">
             <i span class="icon-Layout-grid"><span class="path1"></span><span class="path2"></span></i>
 			<span>کارمندان</span>
           </a>
@@ -41,6 +41,13 @@
 			<span>فورم ها</span>
           </a>
         </li>
+        <li>
+          <a href="{{ url_for('create_new_user') }}">
+        
+            <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>
+          <span>کاربران</span>
+              </a>
+            </li>
       </ul>
     </section>
 	<div class="sidebar-footer">
