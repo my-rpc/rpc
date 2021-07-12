@@ -2,18 +2,19 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email
 
-from rpc_package.rpc_tables import Provinces, District
+from rpc_package.rpc_tables import Provinces, District, User_roles
 
 
 class CreateUserForm(FlaskForm):
+    role_list = [(role.id, role.name_english) for role in User_roles.query.all()]
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
-                                                         Length(message='Employee ID length must be at least 8', min=8, max=20),
-                                                         Regexp('RPC_\d+', message='Invalid employee ID.')])
+                                                         Length(message='Employee ID length must be at least 8', min=7, max=7),
+                                                         Regexp('RPC-\d+', message='Invalid employee ID.')])
 
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     # TODO add the foreign key of the role table.
-    user_role = StringField("User Role", validators=[DataRequired()])
+    user_role = SelectField('Provinces', choices=role_list, validators=[DataRequired()])
 
     submit = SubmitField('Create New User')
 
@@ -28,9 +29,9 @@ class LoginForm(FlaskForm):
 
 class EmployeeForm(FlaskForm):
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
-                                                         Length(message='Employee ID length must be at least 8', min=8,
-                                                                max=20),
-                                                         Regexp('RPC_\d+', message='Invalid employee ID.')])
+                                                         Length(message='Employee ID length must be at least 8', min=7,
+                                                                max=7),
+                                                         Regexp('RPC-\d+', message='Invalid employee ID.')])
 
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
@@ -46,7 +47,7 @@ class EmployeeForm(FlaskForm):
     birthday = StringField('Birthday')
     tazkira = StringField('Tazkira', validators=[Regexp('\d+')])
     gender = RadioField('Gender', choices=[(1, 'Male'), (0, 'Female')], validators=[DataRequired()])
-    blood = StringField("Blood Type", validators=[DataRequired(), Regexp('(A|B|AB|O)[+-]')])
+    blood = StringField("Blood Type", validators=[Regexp('(A|B|AB|O)[+-]')])
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
     tin = StringField('TIN Number', validators=[Regexp('\d+')])
 
@@ -57,6 +58,7 @@ class EmployeeContactForm(FlaskForm):
     employee_id = StringField('Employee ID', validators=[DataRequired()])
     provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
+    phone = StringField('Email Address', validators=[DataRequired(), Email()])
     permanent_address = StringField('Permanent Address', validators=[DataRequired()])
     current_address = StringField('Current Address', validators=[DataRequired()])
     provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])

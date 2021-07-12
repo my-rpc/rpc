@@ -75,7 +75,9 @@ def login():
     default_language = 'en'
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        user_pass = ''
+        logged_user = Users.query.filter_by(email=login_form.email.data).first()
+        if logged_user and pass_crypt.check_password_hash(logged_user.password, login_form.password.data):
+            pass
         if login_form.prefer_language.data and login_form.username.data == 'rpc':
             return redirect(
                 url_for("create_new_user", messages=json.dumps({"language": login_form.prefer_language.data})))
@@ -89,7 +91,7 @@ def login():
 
 @app.route("/add_employee", methods=['GET', 'POST'])
 def add_employee():
-    language = 'dari'
+    language = 'en'
     add_employee_form = EmployeeForm()
     add_employee_contact_form = EmployeeContactForm()
     if request.method == 'POST':
@@ -149,6 +151,8 @@ def add_employee():
     return render_template('add_employee.html', title='Add Employee',
                            form=add_employee_form, language=language,
                            translation=translation_obj, message_obj=message_obj, form_contact=add_employee_contact_form)
+
+
 @app.route("/employee_list", methods=['GET', 'POST'])
 def employee_list():
     language = 'en'
@@ -202,7 +206,6 @@ def employee_list():
                        403, {'ContentType': 'application/json'}
             return jsonify({'success': True, 'message': message_obj.contact_details[language]}), \
                    200, {'ContentType': 'application/json'}
-
         else:
             return jsonify({'success': False, 'message': add_employee_form.errors}), \
                    403, {'ContentType': 'application/json'}
