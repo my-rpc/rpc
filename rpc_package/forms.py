@@ -29,14 +29,14 @@ class LoginForm(FlaskForm):
 
 class EmployeeForm(FlaskForm):
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
-                                                         Length(message='Employee ID length must be at least 8', min=7,
+                                                         Length(message='Employee ID length must be at least 7', min=7,
                                                                 max=7),
                                                          Regexp('RPC-\d+', message='Invalid employee ID.')])
 
-    first_name = StringField('First Name', validators=[DataRequired()])
-    last_name = StringField('Last Name', validators=[DataRequired()])
-    father_name = StringField('Father Name', validators=[DataRequired()])
-    grand_name = StringField('Grand Father Name', validators=[DataRequired()])
+    first_name = StringField('نام', validators=[DataRequired()])
+    last_name = StringField('تخلص', validators=[DataRequired()])
+    father_name = StringField('نام پدر', validators=[DataRequired()])
+    grand_name = StringField('نام پدر کلان', validators=[DataRequired()])
 
     first_name_english = StringField('First Name')
     last_name_english = StringField('Last Name')
@@ -50,12 +50,6 @@ class EmployeeForm(FlaskForm):
     blood = StringField("Blood Type", validators=[Regexp('(A|B|AB|O)[+-]')])
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
     tin = StringField('TIN Number', validators=[Regexp('\d+')])
-
-    submit = SubmitField('Save and Next')
-
-
-class EmployeeContactForm(FlaskForm):
-    employee_id = StringField('Employee ID', validators=[DataRequired()])
     provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     phone = StringField('Email Address', validators=[DataRequired(), Email()])
