@@ -90,5 +90,29 @@
   "equal": {
     "dari": "پسورد و تاییدیه پسورد یکی نیست",
     "en": "Confirm password must be equal to password"
+  },
+  "contact_details": {
+    "dari": "اطلاعات مربوط به آدرس و شماره تماس ذخیره شد",
+    "en": "The information about phone and address has bees saved!"
+  },
+  "contact_details_not": {
+    "dari": "اطلاعات مربوط به آدرس و شماره تماس ذخیره نشد",
+    "en": "The information about phone and address has not bees saved!"
+  },
+  "employee_id": {
+    "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-0000)",
+    "en": "Wrong employee ID please type correct (RPC-0000)"
+  },
+  "required_name": {
+    "dari": "نام الزامی است",
+    "en": "Name is required"
+  },
+  "required_father_name": {
+    "dari": "نام پدر الزامی است",
+    "en": "Father name is required"
+  },
+  "required_last_name": {
+    "dari": "تخلص الزامی است",
+    "en": "Last name is required"
   }
 }

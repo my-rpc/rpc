@@ -3,6 +3,14 @@
     "dari": "ایجاد کاربر جدید",
     "en": "Create New User"
   },
+  "add_new_employee": {
+    "dari": "اضافه کردن کارمند جدید",
+    "en": "َAdd New Employee"
+  },
+  "name_language": {
+    "dari": "مشخصات به انگلیسی",
+    "en": "ٍَName in English"
+  },
   "user_login": {
     "dari": "ورود به سیستم",
     "en": "Login"
@@ -578,6 +586,9 @@
   "my_wallet": {
     "dari": "",
     "en": "My Wallet"
+  },
+  "contact_details": {
+    "dari": "اطلاعات تماس و آدرس ",
+    "en": "Contact Details"
   }
-
 }
