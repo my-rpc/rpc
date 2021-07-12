@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, request, jsonify
 from rpc_package import app, pass_crypt, db
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm # EmployeeContactForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Emails, Phone
 import json
@@ -91,7 +91,7 @@ def login():
 
 @app.route("/add_employee", methods=['GET', 'POST'])
 def add_employee():
-    language = 'dari'
+    language = 'en'
     add_employee_form = EmployeeForm()
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
@@ -132,6 +132,8 @@ def add_employee():
                 db.session.add(new_employee)
                 db.session.add(permanent_address)
                 db.session.add(current_address)
+                db.session.add(email)
+                db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
                 return jsonify({'success': False, 'message': message_obj.create_new_employee_not[language]}), \

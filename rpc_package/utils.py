@@ -23,3 +23,18 @@ class MessagePull:
         for key, item in self.messages.items():
             if isinstance(item, dict):
                 setattr(self, key, item)
+
+
+def check_language(input_sentence):
+    for ch in input_sentence:
+        if ('\u0600' <= ch <= '\u06FF' or
+                '\u0750' <= ch <= '\u077F' or
+                '\u08A0' <= ch <= '\u08FF' or
+                '\uFB50' <= ch <= '\uFDFF' or
+                '\uFE70' <= ch <= '\uFEFF' or
+                '\U00010E60' <= ch <= '\U00010E7F' or
+                '\U0001EE00' <= ch <= '\U0001EEFF'):
+            continue
+        else:
+            return False
+    return True
