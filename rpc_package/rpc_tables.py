@@ -138,11 +138,11 @@ class Documents(db.Model):
 class Contracts(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True, nullable=False)
-    pos_id = db.Column(db.Integer,), db.ForeignKey('positions.id'), nullable=False)
-    sal_id = db.Column(db.Integer,), db.ForeignKey('salary.id'),  nullable=False)
-    contract_type = db.Column(db.Integer,), db.ForeignKey('contract_types.id'),  nullable=False)
-    contract_duration = db.Column(db.Integer(6)), nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.employees.id'), primary_key=True, nullable=False)
+    pos_id = db.Column(db.Integer, db.ForeignKey('positions.id'), nullable=False)
+    sal_id = db.Column(db.Integer, db.ForeignKey('salary.id'),  nullable=False)
+    contract_type = db.Column(db.Integer, db.ForeignKey('contract_types.id'),  nullable=False)
+    contract_duration = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"
@@ -201,10 +201,10 @@ class Salary(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     cont_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
-    base = db.Column(db.Double  nullable=False)
-    transportation = db.Column(db.Double  nullable=False)
-    house_hold = db.Column(db.Double  nullable=False)
-    currency = db.Column(db.String(10)  nullable=False)
+    base = db.Column(db.String, nullable=False)
+    transportation = db.Column(db.String, nullable=False)
+    house_hold = db.Column(db.String, nullable=False)
+    currency = db.Column(db.String(10), nullable=False)
     
     def __repr__(self):
         return f"Salary ID: {self.id}, Contract ID: {self.cont_id}"
