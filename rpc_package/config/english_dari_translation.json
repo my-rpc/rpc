@@ -590,5 +590,9 @@
   "contact_details": {
     "dari": "اطلاعات تماس و آدرس ",
     "en": "Contact Details"
-  }
+  },
+  "user_setting": {
+    "dari": " تنظیمات کاربر ",
+    "en": "User Setting"
+  } 
 }
