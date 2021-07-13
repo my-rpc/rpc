@@ -9,6 +9,10 @@
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <!-- main content code will be add here -->
+
+<span><i class="fad fa-times text-danger"></i></span>
+<span class="px-4 text-secondary font-weight-bolder">|</span>
+<span class="" onclick="updateUserOpenModel(111)"><i class="fad fa-edit text-info"></i></span>
 <div class="box">
     <div class="box-header"><h4 class="box-title text-primary font-weight-bold ">User Settings</h4></div>
     <div class="box-body">
@@ -19,66 +23,27 @@
                     <th>Position</th>
                     <th>Office</th>
                     <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
-                    <th>operation</th>
+                    
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
-                    <td><span><i class="fad fa-times text-danger"></i></span><span class="px-4 text-secondary font-weight-bolder">|</span><span><i class="fad fa-edit text-info"></i></span></td>
-                </tr>
-                <tr>
-                    <td>Garrett Winters</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>63</td>
-                    <td>2011/07/25</td>
-                    <td>$170,750</td>
-                    <td><span><i class="fad fa-times text-danger"></i></span><span class="px-4 text-secondary font-weight-bolder">|</span><span><i class="fad fa-edit text-info"></i></span></td>
-                </tr>
-                <tr>
-                    <td>Ashton Cox</td>
-                    <td>Junior Technical Author</td>
-                    <td>San Francisco</td>
-                    <td>66</td>
-                    <td>2009/01/12</td>
-                    <td>$86,000</td>
-                    <td><span><i class="fad fa-times text-danger"></i></span><span class="px-4 text-secondary font-weight-bolder">|</span><span><i class="fad fa-edit text-info"></i></span></td>
-                </tr>
-                <tr>
-                    <td>Cedric Kelly</td>
-                    <td>Senior Javascript Developer</td>
-                    <td>Edinburgh</td>
-                    <td>22</td>
-                    <td>2012/03/29</td>
-                    <td>$433,060</td>
-                    <td><span><i class="fad fa-times text-danger"></i></span><span class="px-4 text-secondary font-weight-bolder">|</span><span><i class="fad fa-edit text-info"></i></span></td>
-                </tr>
-                <tr>
-                    <td>Airi Satou</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>33</td>
-                    <td>2008/11/28</td>
-                    <td>$162,700</td>
-                    <td><span><i class="fad fa-times text-danger"></i></span><span class="px-4 text-secondary font-weight-bolder">|</span><span><i class="fad fa-edit text-info"></i></span></td>
-                </tr>
-                <tr>
-                    <td>Brielle Williamson</td>
-                    <td>Integration Specialist</td>
-                    <td>New York</td>
-                    <td>61</td>
-                    <td>2012/12/02</td>
-                    <td>$372,000</td>
-                    <td><span><i class="fad fa-times text-danger"></i></span><span class="px-4 text-secondary font-weight-bolder">|</span><span><i class="fad fa-edit text-info"></i></span></td>
-                </tr>
+                {% for user in users %}
+                    <tr>
+                        <td>
+                            {{user[0].emp_id}}
+                        </td>
+                        <td>
+                            {{user[1].name}}
+                        </td>
+                        <td>
+                            {{user[2].name}}
+                        </td>
+                            
+                        <td>{{user[2].lname}}</td>
+
+                        
+                    </tr>
+                {% endfor %}
                 
             </tbody>
             <tfoot>
@@ -87,13 +52,14 @@
                     <th>Position</th>
                     <th>Office</th>
                     <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    
                 </tr>
             </tfoot>
         </table>
     </div>
 </div>
+
+<!-- adding new user modal start -->
 <div class="modal fade create_new_user_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -131,8 +97,52 @@
                     
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger text-left" data-dismiss="modal">Close</button>
+            
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- updating user modal start -->
+<div class="modal fade update_user_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-primary" id="myLargeModalLabel">
+                    {{translation.create_new_user[language]}}
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body" id="">
+                <div class="text-center" id="loader"></div>
+                <!--   Action="" is used to confirm to route to the same page.     -->
+                <form method="POST", action="" id="create_user" class="d-none">
+                    {{ form.hidden_tag()}}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            {{ form.employee_id.label(class="form-control-label")}}
+                            {{ form.employee_id(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="form-control-label")}}
+                            {{ form.password(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.confirm_password.label(class="form-control-label")}}
+                            {{ form.confirm_password(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.user_role.label(class="form-control-label")}}
+                            {{ form.user_role(class="form-control form-control-lg")}}
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        {{form.submit(class="btn btn-primary")}}
+                    </div>
+                    
+                </form>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -173,6 +183,31 @@ $(document).ready(function() {
     );
 });
 
+updateUserOpenModel = function(userID){
+    spinner = "<i class='fad fa-spinner fa-spin text-info'></i>";
+    $('#loader').html(spinner);
+    $('.update_user_modal').modal('show');
+    $.ajax({
+        type: "GET",
+        url: "uds_user/"+userID,
+        // data: {'user_id':userID},
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response);
+            // $('.create_new_user_modal').modal('show')
+        },
+        // error: function(response){
+        //     var statusCode = response.status;
+        //     var r = '';
+        //     if(statusCode == '403'){
+        //         r = formValidateErrors(response);
+        //     }
+        //     toastError(r);
+        // }
+    });
+}
+
         $(document).on( 'submit', '#create_user', function(e){
             e.preventDefault();
             $form = $(this);
@@ -184,7 +219,7 @@ $(document).ready(function() {
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    toastSuccess(response);
+                    toastSuccess(response.message);
                 },error: function(response){
                     var statusCode = response.status;
                     var r = '';
