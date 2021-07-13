@@ -127,10 +127,6 @@
     "dari": "ورود",
     "en": "Login"
   },
-  "email": {
-    "dari": "ایمیل",
-    "en": "Email"
-  },
   "titile": {
     "dari": "عنوان",
     "en": "Title"
@@ -395,30 +391,6 @@
     "dari": "تجهیزات مربوطه ",
     "en": "Relevant Equipment"
   },
-  "resume": {
-    "dari": "خلص سوانح",
-    "en": "Resume"
-  },
-  "leave_type": {
-    "dari": "نوع رخصتی",
-    "en": "Leave Type"
-  },
-  "leave_duration": {
-    "dari": "مدت رخصتی",
-    "en": "Leave Duration"
-  },
-  "work_duration": {
-    "dari": "مدت همکاری با شرکت",
-    "en": "Work Duration"
-  },
-  "relevant_responsibilities": {
-    "dari": "وظایف مربوطه",
-    "en": "Employee Card"
-  },
-  "relevant_equipment": {
-    "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipment"
-  },
   "resign_reason": {
     "dari": "دلیل استعفا",
     "en": "Resign Reason"
@@ -594,5 +566,9 @@
   "user_setting": {
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
+  },
+  "search_and_update_employee": {
+    "dari": " جستجو و تغییرات کارمندان",
+    "en": "Search and Update Employee"
   } 
 }

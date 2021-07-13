@@ -100,18 +100,18 @@
     "en": "The information about phone and address has not bees saved!"
   },
   "employee_id": {
-    "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-0000)",
-    "en": "Wrong employee ID please type correct (RPC-0000)"
+    "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-000)",
+    "en": "Wrong employee ID please type correct (RPC-000)"
   },
-  "required_name": {
+  "name": {
     "dari": "نام الزامی است",
     "en": "Name is required"
   },
-  "required_father_name": {
+  "father_name": {
     "dari": "نام پدر الزامی است",
     "en": "Father name is required"
   },
-  "required_last_name": {
+  "last_name": {
     "dari": "تخلص الزامی است",
     "en": "Last name is required"
   }
