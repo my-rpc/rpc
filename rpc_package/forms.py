@@ -30,7 +30,10 @@ class LoginForm(FlaskForm):
 class EmployeeForm(FlaskForm):
     emp_id = [emp.id for emp in Employees.query.all()]
     emp_id.sort()
-    last_emp_id = emp_id[-1]
+    if len(emp_id) > 0:
+        last_emp_id = emp_id[-1]
+    else:
+        last_emp_id = 'RPC-001'
 
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
                                                          Length(message='Employee ID length must be at least 7', min=7,

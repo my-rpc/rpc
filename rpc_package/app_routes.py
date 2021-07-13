@@ -8,7 +8,7 @@ import json
 
 @app.route("/", methods=['GET', 'POST'])
 def blank():
-    return render_template('blank.html', language='en')
+    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
