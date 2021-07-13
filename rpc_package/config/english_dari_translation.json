@@ -567,8 +567,12 @@
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
   },
-  "search_and_update_employee": {
-    "dari": " جستجو و تغییرات کارمندان",
-    "en": "Search and Update Employee"
-  } 
+  "update_employee": {
+    "dari": " تغییرات کارمندان",
+    "en": "Update Employee"
+  },
+  "search_employee": {
+    "dari": "جستجو کارمندان",
+    "en": "Search Employee"
+  }
 }
