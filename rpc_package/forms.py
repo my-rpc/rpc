@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email, ValidationError
 
-from rpc_package.rpc_tables import Provinces, District, User_roles, Employees
+from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees
 from rpc_package.utils import check_language
 
 
@@ -53,20 +53,20 @@ class EmployeeForm(FlaskForm):
     grand_name_english = StringField('Grand Father Name')
 
     # TODO adding datetime picker.
-    birthday = StringField('Birthday')
-    tazkira = StringField('Tazkira', validators=[Regexp('\d+')])
+    birthday = StringField('Birthday/تارخ تولد')
+    tazkira = StringField('Tazkira/تذکره', validators=[Regexp('\d+')])
     gender = RadioField('Gender', choices=[(1, 'Male'), (0, 'Female')], validators=[DataRequired()])
-    blood = StringField("Blood Type", validators=[Regexp('(A|B|AB|O)[+-]')], default='')
+    blood = StringField("Blood Type/گروپ خون", validators=[Regexp('(A|B|AB|O|C)[+-]')], default='C')
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
-    tin = StringField('TIN Number', validators=[Regexp('\d+')], default='')
-    provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
-    email = StringField('Email Address', validators=[Email()])
-    # phone = StringField('Phone', validators=[DataRequired()])
-    permanent_address = StringField('Permanent Address', validators=[DataRequired()])
-    current_address = StringField('Current Address', validators=[DataRequired()])
+    tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
+    provinces_list = [(province.id, province.province_name+'/'+province.province_name_english) for province in Provinces.query.all()]
+    districts_list = [(district.id, district.district_name+'/'+district.district_name_english) for district in Districts.query.filter_by(province=provinces_list[0][0]).all()]
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    # phone = StringField('Phone Address', validators=[DataRequired(), Email()])
+    permanent_address = StringField('Permanent Address/سکونت اصلی', validators=[DataRequired()])
+    current_address = StringField('Current Address/سکونت فعلی', validators=[DataRequired()])
     provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
-    district = SelectField('Districts', choices=provinces_list, validators=[DataRequired()])
-
+    district = SelectField('Districts', validators=[DataRequired()], choices=districts_list)
     submit = SubmitField('Add Employee')
 
     def validate_first_name(self, first_name):

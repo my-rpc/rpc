@@ -55,7 +55,7 @@ class User_roles(db.Model):
 class Emails(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
+    emp_id = db.Column(db.String(20), db.ForeignKey('employees.id'), unique=True,
                        nullable=False)
     email = db.Column(db.String(255), nullable=True)
 
@@ -100,7 +100,7 @@ class Permanent_addresses(db.Model):
         return f"Employee: {self.emp_id}, Address: {self.address}, District: {self.district_id}, Province: {self.province_id}"
 
 
-class District(db.Model):
+class Districts(db.Model):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
     district_name = db.Column(db.String(255), nullable=True)
