@@ -163,9 +163,13 @@
     "dari": "ضمایم",
     "en": "Attachment"
   },
-  "name": {
+  "first_name": {
     "dari": "نام",
     "en": "Name"
+  },
+  "grand_name": {
+    "dari": "نام پدر کلان",
+    "en": "Grand Father Name"
   },
   "last_name": {
     "dari": "تخلص",
