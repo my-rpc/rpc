@@ -9,7 +9,8 @@ from rpc_package.utils import check_language
 class CreateUserForm(FlaskForm):
     role_list = [(role.id, role.name_english) for role in User_roles.query.all()]
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
-                                                         Length(message='Employee ID length must be at least 8', min=7, max=7),
+                                                         Length(message='Employee ID length must be at least 8', min=7,
+                                                                max=7),
                                                          Regexp('RPC-\d+', message='Invalid employee ID.')])
 
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
@@ -37,8 +38,9 @@ class EmployeeForm(FlaskForm):
 
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
                                                          Length(message='Employee ID length must be at least 7', min=7,
-                                                        max=7), Regexp('RPC-\d+', message='Invalid employee ID.')],
-                                                        default=last_emp_id)
+                                                                max=7),
+                                                         Regexp('RPC-\d+', message='Invalid employee ID.')],
+                                                         default=last_emp_id)
 
     first_name = StringField('نام', validators=[DataRequired()])
     last_name = StringField('تخلص', validators=[DataRequired()])
@@ -54,9 +56,9 @@ class EmployeeForm(FlaskForm):
     birthday = StringField('Birthday')
     tazkira = StringField('Tazkira', validators=[Regexp('\d+')])
     gender = RadioField('Gender', choices=[(1, 'Male'), (0, 'Female')], validators=[DataRequired()])
-    blood = StringField("Blood Type", validators=[Regexp('(A|B|AB|O|C)[+-]')], default='C+')
+    blood = StringField("Blood Type", validators=[Regexp('(A|B|AB|O)[+-]')], default='')
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
-    tin = StringField('TIN Number', validators=[Regexp('\d+')], default='000')
+    tin = StringField('TIN Number', validators=[Regexp('\d+')], default='')
     provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     phone = StringField('Phone', validators=[DataRequired()])
@@ -82,7 +84,3 @@ class EmployeeForm(FlaskForm):
     def validate_grand_name(self, grand_name):
         if not check_language(grand_name.data):
             raise ValidationError("نام پدرکلان باید به دری نوشته شود.")
-
-
-
-

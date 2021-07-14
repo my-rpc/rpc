@@ -16,10 +16,6 @@ def update_messages_user(form_obj, language):
 
 def update_messages_employee(form_obj, language):
     form_obj.employee_id.label.text = translation_obj.employee_id[language]
-    #form_obj.first_name.label.text = translation_obj.first_name[language]
-    #form_obj.last_name.label.text = translation_obj.last_name[language]
-    #form_obj.father_name.label.text = translation_obj.father_name[language]
-   # form_obj.grand_name.label.text = translation_obj.grand_name[language]
     form_obj.tazkira.label.text = translation_obj.tazkira[language]
     form_obj.birthday.label.text = translation_obj.date_of_birth[language]
     form_obj.gender.label.text = translation_obj.gender[language]
