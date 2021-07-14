@@ -33,6 +33,7 @@ def check_language(input_sentence):
                 '\uFB50' <= ch <= '\uFDFF' or
                 '\uFE70' <= ch <= '\uFEFF' or
                 '\U00010E60' <= ch <= '\U00010E7F' or
+                ch == ' ' or
                 '\U0001EE00' <= ch <= '\U0001EEFF'):
             continue
         else:

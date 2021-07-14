@@ -16,10 +16,20 @@ def update_messages_user(form_obj, language):
 
 def update_messages_employee(form_obj, language):
     form_obj.employee_id.label.text = translation_obj.employee_id[language]
-    form_obj.employee_id.validators[2].message = message_obj.wrong_format[language].format("Employee ID")
-    form_obj.first_name.label.text = translation_obj.name[language]
-    form_obj.last_name.label.text = translation_obj.last_name[language]
-    form_obj.father_name.label.text = translation_obj.father_name[language]
+    #form_obj.first_name.label.text = translation_obj.first_name[language]
+    #form_obj.last_name.label.text = translation_obj.last_name[language]
+    #form_obj.father_name.label.text = translation_obj.father_name[language]
+   # form_obj.grand_name.label.text = translation_obj.grand_name[language]
+    form_obj.tazkira.label.text = translation_obj.tazkira[language]
+    form_obj.birthday.label.text = translation_obj.date_of_birth[language]
+    form_obj.gender.label.text = translation_obj.gender[language]
+    form_obj.m_status.label.text = translation_obj.status[language]
+    form_obj.email.label.text = translation_obj.email[language]
+    form_obj.phone.label.text = translation_obj.phone[language]
+    form_obj.permanent_address.label.text = translation_obj.permanent_address[language]
+    form_obj.current_address.label.text = translation_obj.current_address[language]
+    form_obj.provinces.label.text = translation_obj.provinces[language]
+    form_obj.district.label.text = translation_obj.district[language]
     return form_obj
 
 

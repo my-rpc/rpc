@@ -107,7 +107,7 @@
     "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-000)",
     "en": "Wrong employee ID please type correct (RPC-000)"
   },
-  "name": {
+  "first_name": {
     "dari": "نام الزامی است",
     "en": "Name is required"
   },
