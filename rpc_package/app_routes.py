@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, jsonify
+from flask import render_template, url_for, redirect, request, jsonify, Response
 from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, EmployeeContactForm, UpdateUserForm
 from rpc_package.form_dynamic_language import *
@@ -48,8 +48,9 @@ def create_new_user():
                            message_obj=message_obj)
 
 
-@app.route("/uds_user/<int:user_id>", methods=['GET', 'POST'])
+@app.route("/uds_user/<user_id>", methods=['GET', 'POST'])
 def uds_user(user_id):
+    print(user_id)
     language = 'en'
     # language = json.loads(request.args["messages"])['language']
     update_user_form = UpdateUserForm()
@@ -69,14 +70,17 @@ def uds_user(user_id):
         else:
             return jsonify({'success': False, 'message': update_user_form.errors}), \
                    403, {'ContentType': 'application/json'}
-    user =  Users.query.get(); 
-    
-    return jsonify({'form':update_user_form, 'language':language, 'translation':translation_obj,
-                           'message_obj':message_obj})
-    create_new_user_form = update_messages_user(update_user_form, language)
-    return render_template('create_new_user.html', title='Create New User',
-                           form=update_user_form, language=language, translation=translation_obj,
-                           message_obj=message_obj)
+                   
+    user =  Users.query.get(user_id)
+    # response = {'form':update_user_form.__dict__, 'language':language, 'translation':translation_obj,
+    #                        'message_obj':message_obj}
+    # return response.__str__
+    return ({'user': {'emp_id': user.emp_id, 'role': user.role, 'status': user.status}, 'language':language, 'translation':translation_obj.__dict__,
+                            'message_obj':message_obj.__dict__})
+    # create_new_user_form = update_messages_user(update_user_form, language)
+    # return render_template('create_new_user.html', title='Create New User',
+    #                        form=update_user_form, language=language, translation=translation_obj,
+    #                        message_obj=message_obj)
 
 
 @app.route("/login", methods=['GET', 'POST'])
