@@ -114,10 +114,10 @@
                                 {{ form.provinces.label(class="form-control-label")}}
                                 {{ form.provinces(onChange="load_districts(this.value, 'current_district')",class="form-control form-control-lg")}}
                             </div>
-                            <div class="form-group col-md-3">
-                                {{ form.district.label(class="form-control-label")}}
-                                {{ form.district(id="current_district", class="form-control form-control-lg")}}
-                            </div>
+{#                            <div class="form-group col-md-3">#}
+{#                                {{ form.district.label(class="form-control-label")}}#}
+{#                                {{ form.district(id="current_district", class="form-control form-control-lg")}}#}
+{#                            </div>#}
                         <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">Address</strong>
                             {{ form.current_address(class="form-control mt-2 form-control-lg")}}

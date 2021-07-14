@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email, ValidationError
 
-from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees
+from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails
 from rpc_package.utils import check_language
 
 
@@ -60,7 +60,7 @@ class EmployeeForm(FlaskForm):
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
     tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name+'/'+province.province_name_english) for province in Provinces.query.all()]
-    districts_list = [(district.id, district.district_name+'/'+district.district_name_english) for district in Districts.query.filter_by(province=provinces_list[0][0]).all()]
+    districts_list = [(district.id, district.district_name+'/'+district.district_name_english) for district in Districts.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     # phone = StringField('Phone Address', validators=[DataRequired(), Email()])
     permanent_address = StringField('Permanent Address/سکونت اصلی', validators=[DataRequired()])
@@ -68,6 +68,11 @@ class EmployeeForm(FlaskForm):
     provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
     district = SelectField('Districts', validators=[DataRequired()], choices=districts_list)
     submit = SubmitField('Add Employee')
+
+    def validate_email(self, email):
+        user_email = Emails.query.filter_by(email=email.data).first()
+        if user_email:
+            raise ValidationError('ایمیل شما موجود است')
 
     def validate_first_name(self, first_name):
         if not check_language(first_name.data):
