@@ -56,7 +56,7 @@ class EmployeeForm(FlaskForm):
     tin = StringField('TIN Number', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
-    phone = StringField('Phone Address', validators=[DataRequired(), Email()])
+    phone = StringField('Phone', validators=[DataRequired()])
     permanent_address = StringField('Permanent Address', validators=[DataRequired()])
     current_address = StringField('Current Address', validators=[DataRequired()])
     provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])

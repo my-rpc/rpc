@@ -87,6 +87,10 @@
     "dari": "فورم استعفا",
     "en": "Resign Form"
   },
+  "tazkira": {
+    "dari": "تذکره",
+    "en": "Tazkira"
+  },
   "employee_profile": {
     "dari": "پروفایل کارمند",
     "en": "Employee Profile"
@@ -459,7 +463,7 @@
     "dari": "تاریخ تولد",
     "en": "Date of Birth"
   },
-  "phone_number": {
+  "phone": {
     "dari": "شماره تماس",
     "en": "Phone Number"
   },
@@ -495,6 +499,10 @@
     "dari": "کشور",
     "en": "Country"
   },
+  "district": {
+    "dari": "ولسوالی",
+    "en": "District"
+  },
   "َadditional_information": {
     "dari": "معلومات تکمیلی",
     "en": "Additional Information"
@@ -526,6 +534,10 @@
   "program": {
     "dari": "برنامه",
     "en": "Program"
+  },
+  "provinces": {
+    "dari": "ولایت",
+    "en": "Provinces"
   },
   "fair": {
     "dari": "نسبتا خوب",
