@@ -60,12 +60,12 @@ class EmployeeForm(FlaskForm):
     m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
     tin = StringField('TIN Number', validators=[Regexp('\d+')], default='')
     provinces_list = [(province.id, province.province_name) for province in Provinces.query.all()]
-    email = StringField('Email Address', validators=[DataRequired(), Email()])
-    phone = StringField('Phone', validators=[DataRequired()])
+    email = StringField('Email Address', validators=[Email()])
+    # phone = StringField('Phone', validators=[DataRequired()])
     permanent_address = StringField('Permanent Address', validators=[DataRequired()])
     current_address = StringField('Current Address', validators=[DataRequired()])
     provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
-    district = SelectField('District', validators=[])
+    district = SelectField('Districts', choices=provinces_list, validators=[DataRequired()])
 
     submit = SubmitField('Add Employee')
 

@@ -116,24 +116,24 @@ def add_employee():
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.permanent_address.data,
                 district_id=add_employee_form.district.data,
-                province_id=add_employee_form.province.data)
+                province_id=add_employee_form.provinces.data)
             current_address = Current_addresses(
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.current_address.data,
                 district_id=add_employee_form.district.data,
-                province_id=add_employee_form.province.data)
+                province_id=add_employee_form.provinces.data)
             email = Emails(
                 emp_id=add_employee_form.employee_id.data,
                 email=add_employee_form.email.data)
-            phone = Phone(
-                emp_id=add_employee_form.employee_id.data,
-                phone=add_employee_form.phone.data)
+            # phone = Phone(
+            #     emp_id=add_employee_form.employee_id.data,
+            #     phone=add_employee_form.phone.data)
             try:
                 db.session.add(new_employee)
                 db.session.add(permanent_address)
                 db.session.add(current_address)
                 db.session.add(email)
-                db.session.add(phone)
+                # db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
                 return jsonify({'success': False, 'message': message_obj.create_new_employee_not[language]}), \
@@ -148,7 +148,7 @@ def add_employee():
     add_employee_form = update_messages_employee(add_employee_form, language)
     return render_template('add_employee.html', title='Add Employee',
                            form=add_employee_form, language=language,
-                           translation=translation_obj, message_obj=message_obj, form_contact=add_employee_form)
+                           translation=translation_obj, message_obj=message_obj)
 
 
 # @app.route("/employee_list", methods=['GET', 'POST'])
