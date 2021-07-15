@@ -3,6 +3,7 @@ from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, EmployeeContactForm, UpdateUserForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
 
 
@@ -16,7 +17,6 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 def create_new_user():
     language = 'en'
-    # language = json.loads(request.args["messages"])['language']
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -31,19 +31,17 @@ def create_new_user():
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
-                return jsonify({'success': False, 'message': message_obj.create_new_user_not[language]}), \
-                       403, {'ContentType': 'application/json'}
-            return jsonify({'success': True, 'message':
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), \
-                   200, {'ContentType': 'application/json'}
+                return message_to_client_403(message_obj.create_new_user_not[language])
+            return message_to_client_200(
+                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
         else:
-            return jsonify({'success': False, 'message': create_new_user_form.errors}), \
-                   403, {'ContentType': 'application/json'}
-    users = db.session.query(Users, User_roles, Employees).outerjoin(Users,
-                                      (Users.role == User_roles.id)).outerjoin(Employees, (Users.emp_id == Employees.id)).all()
+            return message_to_client_403(create_new_user_form.errors)
+    users = db.session.query(Users, User_roles, Employees).join(Users,
+                                                                (Users.role == User_roles.id)).join(Employees, (
+                Users.emp_id == Employees.id)).all()
 
     create_new_user_form = update_messages_user(create_new_user_form, language)
-    return render_template('create_new_user.html', title='Create New User', users = users,
+    return render_template('create_new_user.html', title='Create New User', users=users,
                            form=create_new_user_form, language=language, translation=translation_obj,
                            message_obj=message_obj)
 
@@ -51,43 +49,32 @@ def create_new_user():
 @app.route("/uds_user", methods=['GET', 'POST'])
 def uds_user():
     language = 'en'
-    # language = json.loads(request.args["messages"])['language']
-    
-    update_user_form = UpdateUserForm()
     if request.method == 'POST':
-        if update_user_form.validate_on_submit():
+        if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
+                EmployeeValidator.number_validator(request.form['user_role']):
             user = Users.query.get(request.form['employee_id'])
             try:
-                if request.form['status'] == 1:
-                    status = True
-                else:
-                    status = False
-                user.status = status
+                user.status = bool(request.form['status'])
                 user.role = request.form['user_role']
                 db.session.commit()
             except IOError as exc:
-                return jsonify({'success': False, 'message': message_obj.create_new_user_update_not[language]}), \
-                       403, {'ContentType': 'application/json'}
-            return jsonify({'success': True, 'message':
-                message_obj.create_new_user_update[language].format(request.form['employee_id'])}), \
-                   200, {'ContentType': 'application/json'}
+                return message_to_client_403(message_obj.create_new_user_update_not[language])
+            return message_to_client_200(
+                message_obj.create_new_user_update[language].format(request.form['employee_id']))
         else:
-            return jsonify({'success': False, 'message': update_user_form.errors}), \
-                   403, {'ContentType': 'application/json'}
-                   
+            return message_to_client_403(message_obj.create_new_user_update_not[language])
     user_id = request.args.get('user_id')
-    user =  Users.query.get(user_id)
-    role_list = [(role.id, role.name_english, role.name) for role in User_roles.query.all()] 
+    if EmployeeValidator.emp_id_validator(user_id):
+        user = Users.query.get(user_id)
+        role_list = [(role.id, role.name_english, role.name) for role in User_roles.query.all()]
 
-    # response = {'form':update_user_form.__dict__, 'language':language, 'translation':translation_obj,
-    #                        'message_obj':message_obj}
-    # return response.__str__
-    return ({'user': {'emp_id': user.emp_id, 'role': user.role, 'status': user.status}, 'user_role':role_list, 'language':language, 'translation':translation_obj.__dict__,
-                            'message_obj':message_obj.__dict__})
-    # create_new_user_form = update_messages_user(update_user_form, language)
-    # return render_template('create_new_user.html', title='Create New User',
-    #                        form=update_user_form, language=language, translation=translation_obj,
-    #                        message_obj=message_obj)
+        return ({'user': {'emp_id': user.emp_id, 'role': user.role,
+                          'status': user.status}, 'user_role': role_list,
+                 'language': language,
+                 'translation': translation_obj.__dict__,
+                 'message_obj': message_obj.__dict__})
+    else:
+        message_to_client_403(message_obj.invalid_message[language])
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -144,15 +131,15 @@ def add_employee():
                    200, {'ContentType': 'application/json'}
         elif add_employee_contact_form.validate_on_submit():
             permanent_address = Permanent_addresses(emp_id=add_employee_contact_form.employee_id.data,
-                                              address=add_employee_contact_form.permanent_address.data,
-                                              district_id=add_employee_contact_form.district.data,
-                                              province_id=add_employee_contact_form.province.data
-                                              )
+                                                    address=add_employee_contact_form.permanent_address.data,
+                                                    district_id=add_employee_contact_form.district.data,
+                                                    province_id=add_employee_contact_form.province.data
+                                                    )
             current_address = Current_addresses(emp_id=add_employee_contact_form.employee_id.data,
-                                              address=add_employee_contact_form.current_address.data,
-                                              district_id=add_employee_contact_form.district.data,
-                                              province_id=add_employee_contact_form.province.data
-                                              )
+                                                address=add_employee_contact_form.current_address.data,
+                                                district_id=add_employee_contact_form.district.data,
+                                                province_id=add_employee_contact_form.province.data
+                                                )
             try:
                 db.session.add(permanent_address)
                 db.session.add(current_address)
@@ -208,15 +195,15 @@ def employee_list():
                    200, {'ContentType': 'application/json'}
         elif add_employee_contact_form.validate_on_submit():
             permanent_address = Permanent_addresses(emp_id=add_employee_contact_form.employee_id.data,
-                                              address=add_employee_contact_form.permanent_address.data,
-                                              district_id=add_employee_contact_form.district.data,
-                                              province_id=add_employee_contact_form.province.data
-                                              )
+                                                    address=add_employee_contact_form.permanent_address.data,
+                                                    district_id=add_employee_contact_form.district.data,
+                                                    province_id=add_employee_contact_form.province.data
+                                                    )
             current_address = Current_addresses(emp_id=add_employee_contact_form.employee_id.data,
-                                              address=add_employee_contact_form.current_address.data,
-                                              district_id=add_employee_contact_form.district.data,
-                                              province_id=add_employee_contact_form.province.data
-                                              )
+                                                address=add_employee_contact_form.current_address.data,
+                                                district_id=add_employee_contact_form.district.data,
+                                                province_id=add_employee_contact_form.province.data
+                                                )
             try:
                 db.session.add(permanent_address)
                 db.session.add(current_address)
@@ -234,4 +221,3 @@ def employee_list():
     return render_template('employee_list.html', title='Add Employee',
                            form=add_employee_form, language=language,
                            translation=translation_obj, message_obj=message_obj, form_contact=add_employee_contact_form)
-

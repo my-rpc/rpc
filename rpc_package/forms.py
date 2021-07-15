@@ -22,7 +22,7 @@ class CreateUserForm(FlaskForm):
 class UpdateUserForm(FlaskForm):
     role_list = [(role.id, role.name_english) for role in User_roles.query.all()] 
     employee_id = StringField('Employee ID', validators=[DataRequired(message='Employee ID is required!'),
-                                                         Length(message='Employee ID length must be at least 8', min=7, max=7),
+                                                         Length(message='Employee ID length must be at least 7', min=7, max=7),
                                                          Regexp('RPC-\d+', message='Invalid employee ID.')])
     user_role = SelectField('User Role', choices=role_list, validators=[DataRequired()])
     submit = SubmitField('Update User Role')

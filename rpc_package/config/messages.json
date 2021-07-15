@@ -118,5 +118,9 @@
   "required_last_name": {
     "dari": "تخلص الزامی است",
     "en": "Last name is required"
+  },
+  "invalid_message": {
+    "dari": "درخواست اشتباه",
+    "en": "invalid request"
   }
 }
