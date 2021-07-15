@@ -47,7 +47,7 @@
     "dari": "آیا شما مطمئن هستید؟",
     "en": "Are you sure?"
   },
-  "wrong_email": {
+  "email": {
     "dari": "فورمت ایمیل اشتباه است",
     "en": "Wrong email format"
   },
@@ -66,6 +66,10 @@
   "wrong_phone_number": {
     "dari": "فورمت شماره تماس اشتباه است",
     "en": "Wrong phone number format"
+  },
+  "length_phone_number": {
+    "dari": "طول شماره تماس باید 10 عدد باشد.",
+    "en": "length of phone number should be 10 number"
   },
   "exist_in_system": {
     "dari": " در سیستم موجود است{} ",
@@ -104,23 +108,23 @@
     "en": "The information about phone and address has not bees saved!"
   },
   "employee_id": {
-    "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-0000)",
-    "en": "Wrong employee ID please type correct (RPC-0000)"
+    "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-000)",
+    "en": "Wrong employee ID please type correct (RPC-000)"
   },
-  "required_name": {
+  "first_name": {
     "dari": "نام الزامی است",
     "en": "Name is required"
   },
-  "required_father_name": {
+  "father_name": {
     "dari": "نام پدر الزامی است",
     "en": "Father name is required"
   },
-  "required_last_name": {
+  "last_name": {
     "dari": "تخلص الزامی است",
     "en": "Last name is required"
   },
-  "invalid_message": {
-    "dari": "درخواست اشتباه",
-    "en": "invalid request"
+  "blood_type": {
+    "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
+    "en": "wrong format of blood type correct one is (B+)"
   }
 }

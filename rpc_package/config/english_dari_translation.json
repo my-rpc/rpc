@@ -8,8 +8,8 @@
     "en": "َAdd New Employee"
   },
   "name_language": {
-    "dari": "مشخصات به انگلیسی",
-    "en": "ٍَName in English"
+    "dari": "اطلاعات شخصی به دری",
+    "en": "Personal Information"
   },
   "user_login": {
     "dari": "ورود به سیستم",
@@ -86,6 +86,10 @@
   "resign_form": {
     "dari": "فورم استعفا",
     "en": "Resign Form"
+  },
+  "tazkira": {
+    "dari": "تذکره",
+    "en": "Tazkira"
   },
   "employee_profile": {
     "dari": "پروفایل کارمند",
@@ -167,9 +171,13 @@
     "dari": "ضمایم",
     "en": "Attachment"
   },
-  "name": {
+  "first_name": {
     "dari": "نام",
     "en": "Name"
+  },
+  "grand_name": {
+    "dari": "نام پدر کلان",
+    "en": "Grand Father Name"
   },
   "last_name": {
     "dari": "تخلص",
@@ -363,14 +371,6 @@
     "dari": "تجربه کاری",
     "en": "Job Exprience"
   },
-  "new_task": {
-    "dari": "وظیفه جدید",
-    "en": "New Task"
-  },
-  "new_mail": {
-    "dari": "ایمیل جدید",
-    "en": "New Mail"
-  },
   "resume": {
     "dari": "خلص سوانح",
     "en": "Resume"
@@ -382,6 +382,14 @@
   "leave_duration": {
     "dari": "مدت رخصتی",
     "en": "Leave Duration"
+  },
+  "new_task": {
+    "dari": "وظیفه جدید",
+    "en": "New Task"
+  },
+  "new_mail": {
+    "dari": "ایمیل جدید",
+    "en": "New Mail"
   },
   "work_duration": {
     "dari": "مدت همکاری با شرکت",
@@ -492,6 +500,10 @@
     "dari": "کشور",
     "en": "Country"
   },
+  "district": {
+    "dari": "ولسوالی",
+    "en": "District"
+  },
   "َadditional_information": {
     "dari": "معلومات تکمیلی",
     "en": "Additional Information"
@@ -523,6 +535,10 @@
   "program": {
     "dari": "برنامه",
     "en": "Program"
+  },
+  "provinces": {
+    "dari": "ولایت",
+    "en": "Provinces"
   },
   "fair": {
     "dari": "نسبتا خوب",
@@ -591,5 +607,14 @@
   "user_status":{
     "dari": "وضعیت",
     "en": "status"
+  }
+  },
+  "update_employee": {
+    "dari": " تغییرات کارمندان",
+    "en": "Update Employee"
+  },
+  "search_employee": {
+    "dari": "جستجو کارمندان",
+    "en": "Search Employee"
   }
 }

@@ -2,7 +2,7 @@
 
 {% block title %} {{ super() }} Add Employee {% endblock %}
 {% block css_or_js_code %}
-    <!-- add js, css code or library as need. js code is recommended in at footer 
+<!-- add js, css code or library as need. js code is recommended in at footer 
         This code will be add to the head of the page
     -->
 
@@ -12,166 +12,189 @@
 
 <div class="box">
     <div class="box-header with-border">
-      <h4 class="box-title">{{translation.add_new_employee[language]}}</h4>
+        <h4 class="box-title">{{translation.add_new_employee[language]}}</h4>
     </div>
     <div class="box-body">
-    <!--   Action="" is used to confirm to route to the same page.     -->
-      <form method="POST", action="" id="add_employee">
-          {{ form.hidden_tag()}}
-          <fieldset class="form-group">
-              <div class="form-group">
-                  {{ form.employee_id.label(class="form-control-label")}}
-                  {{ form.employee_id(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  <legend class="border-bottom mb-4">
-                    {{  translation.name_language['dari'] }}
-                </legend>
-                  {{ form.first_name.label(class="form-control-label")}}
-                  {{ form.first_name(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.last_name.label(class="form-control-label")}}
-                  {{ form.last_name(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.father_name.label(class="form-control-label")}}
-                  {{ form.father_name(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.grand_name.label(class="form-control-label")}}
-                  {{ form.grand_name(class="form-control form-control-lg")}}
-              </div>
+        <!--   Action="" is used to confirm to route to the same page.     -->
+        <form method="POST" , action="" id="add_employee">
+            {{ form.hidden_tag()}}
+            <fieldset class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form.employee_id.label(class="form-control-label")}}
+                            {{ form.employee_id(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            <legend class="border-bottom mb-4">
+                                {{  translation.name_language['en'] }}
+                            </legend>
+                            {{ form.first_name_english.label(class="form-control-label")}}
+                            {{ form.first_name_english(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.last_name_english.label(class="form-control-label")}}
+                            {{ form.last_name_english(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.father_name_english.label(class="form-control-label")}}
+                            {{ form.father_name_english(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.grand_name_english.label(class="form-control-label")}}
+                            {{ form.grand_name_english(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.tazkira.label(class="form-control-label")}}
+                            {{ form.tazkira(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.tin.label(class="form-control-label")}}
+                            {{ form.tin(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            <legend class="border-bottom mb-4">
+                                {{ form.permanent_address.label(class="form-control-label")}}
+                            </legend>
+                           <div class="row">
+                            <div class="form-group col-md-3">
+                                {{ form.provinces.label(class="form-control-label")}}
+                                {{ form.provinces(onChange="load_districts(this.value, 'permanent_district')", class="form-control form-control-lg")}}
+                            </div>
+                            <div class="form-group col-md-3">
+                                {{ form.district.label(class="form-control-label")}}
+                                {{ form.district(id="permanent_district", class="form-control form-control-lg")}}
+                            </div>
+                        <div class="form-group col-md-6">
+                            <strong class="form-control-label m-5">Address</strong>
+                            {{ form.permanent_address(class="form-control mt-2 form-control-lg")}}
+                            </div>
+                           </div>
+                           
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {{ form.email.label(class="form-control-label")}}
+                            {{ form.email(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            <legend class="border-bottom mb-4">
+                                {{  translation.name_language['dari'] }}
+                            </legend>
+                            {{ form.first_name.label(class="form-control-label")}}
+                            {{ form.first_name(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.last_name.label(class="form-control-label")}}
+                            {{ form.last_name(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.father_name.label(class="form-control-label")}}
+                            {{ form.father_name(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.grand_name.label(class="form-control-label")}}
+                            {{ form.grand_name(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.birthday.label(class="form-control-label")}}
+                            {{ form.birthday(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            {{ form.blood.label(class="form-control-label")}}
+                            {{ form.blood(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group">
+                            <legend class="border-bottom mb-4">
+                                {{ form.current_address.label(class="form-control-label")}}
+                            </legend>
+                           <div class="row">
+                            <div class="form-group col-md-3">
+                                {{ form.provinces.label(class="form-control-label")}}
+                                {{ form.provinces(onChange="load_districts(this.value, 'current_district')",class="form-control form-control-lg")}}
+                            </div>
+{#                            <div class="form-group col-md-3">#}
+{#                                {{ form.district.label(class="form-control-label")}}#}
+{#                                {{ form.district(id="current_district", class="form-control form-control-lg")}}#}
+{#                            </div>#}
+                        <div class="form-group col-md-6">
+                            <strong class="form-control-label m-5">Address</strong>
+                            {{ form.current_address(class="form-control mt-2 form-control-lg")}}
+                            </div>
+                           </div>
+                           
+                        </div>
+                    </div>
+                </div>
 
-              <div class="form-group">
-                  <legend class="border-bottom mb-4">
-                    {{  translation.name_language['en'] }}
-                  </legend>
-                  {{ form.first_name_english.label(class="form-control-label")}}
-                  {{ form.first_name_english(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.last_name_english.label(class="form-control-label")}}
-                  {{ form.last_name_english(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.father_name_english.label(class="form-control-label")}}
-                  {{ form.father_name_english(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.grand_name_english.label(class="form-control-label")}}
-                  {{ form.grand_name_english(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.birthday.label(class="form-control-label")}}
-                  {{ form.birthday(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form.tazkira.label(class="form-control-label")}}
-                  {{ form.tazkira(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  <div class="form-check1">
-                    {% for radio in form.gender %}
+
+                <div class="form-group">
+                    <div class="form-check1">
+                        {% for radio in form.gender %}
                         {{ radio(class="form-check-input")}}
                         {{ radio.label(class="form-check-label")}}
-                    {% endfor %}
-                  </div>
-              </div>
-               <div class="form-group">
-                  {{ form.blood.label(class="form-control-label")}}
-                  {{ form.blood(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  <div class="form-check1">
-                    {% for radio in form.m_status %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-check1">
+                        {% for radio in form.m_status %}
                         {{ radio(class="form-check-input")}}
                         {{ radio.label(class="form-check-label")}}
-                    {% endfor %}
-                  </div>
-              </div>
-              <div class="form-group">
-                  {{ form.tin.label(class="form-control-label")}}
-                  {{ form.tin(class="form-control form-control-lg")}}
-              </div>
+                        {% endfor %}
+                    </div>
+                </div>
 
 
-          </fieldset>
-          <div class="form-group">
-              {{form.submit(class="btn btn-primary")}}
-          </div>
-      </form>
-    <form method="POST", action="" id="add_employee_contact">
-          {{ form.hidden_tag()}}
-          <fieldset class="form-group">
+
+            </fieldset>
             <div class="form-group">
-                  {{ form.employee_id.label(class="form-control-label")}}
-                  {{ form.employee_id(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  <legend class="border-bottom mb-4">
-                    {{  translation.contact_details[language] }}
-                  </legend>
-                  {{ form_contact.email.label(class="form-control-label")}}
-                  {{ form_contact.email(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form_contact.permanent_address.label(class="form-control-label")}}
-                  {{ form_contact.permanent_address(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form_contact.current_address.label(class="form-control-label")}}
-                  {{ form_contact.current_address(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form_contact.provinces.label(class="form-control-label")}}
-                  {{ form_contact.provinces(class="form-control form-control-lg")}}
-              </div>
-              <div class="form-group">
-                  {{ form_contact.district.label(class="form-control-label")}}
-                  {{ form_contact.district(class="form-control form-control-lg")}}
-              </div>
-          </fieldset>
-    </form>
+                {{form.submit(class="btn btn-primary")}}
+            </div>
+        </form>
 
     </div>
-{#    <!-- /.box-body -->#}
-{#    <div class="box-footer">#}
-{#      Footer#}
-{#    </div>#}
-{#    <!-- /.box-footer-->#}
-    </div>
+    {#    <!-- /.box-body -->#}
+    {#    <div class="box-footer">#}
+    {#      Footer#}
+    {#    </div>#}
+    {#    <!-- /.box-footer-->#}
+</div>
 
 {% endblock main_content%}
 {% block js_code %}
-    <!-- 
+<!-- 
         add js code or library here as needed 
         This code will be add to the footer of the page
     -->
-    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
-    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
-    <script>
-        $(document).on( 'submit', '#add_employee', function(e){
-            e.preventDefault();
-            $form = $(this);
-            var formData = new FormData($form[0]);
-            $.ajax({
-                type: "POST",
-                url: "add_employee",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    toastSuccess(response);
-                },error: function(response){
-                    var statusCode = response.status;
-                    var r = '';
-                    if(statusCode == '403'){
-                        r = formValidateErrors(response);
-                    }
-                    toastError(r);
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+<script>
+    $(document).on('submit', '#add_employee', function (e) {
+        e.preventDefault();
+        $form = $(this);
+        var formData = new FormData($form[0]);
+        $.ajax({
+            type: "POST",
+            url: "add_employee",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                toastSuccess(response);
+            },
+            error: function (response) {
+                var statusCode = response.status;
+                var r = '';
+                if (statusCode == '403') {
+                    r = formValidateErrors(response);
                 }
-            });
+                toastError(r);
+            }
         });
-    </script>
+    });
+</script>
 {% endblock js_code %}
