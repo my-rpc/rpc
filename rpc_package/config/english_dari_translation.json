@@ -135,7 +135,7 @@
     "dari": "ایمیل",
     "en": "Email"
   },
-  "titile": {
+  "title": {
     "dari": "عنوان",
     "en": "Title"
   },
@@ -467,7 +467,7 @@
     "dari": "تاریخ تولد",
     "en": "Date of Birth"
   },
-  "phone_number": {
+  "phone": {
     "dari": "شماره تماس",
     "en": "Phone Number"
   },
