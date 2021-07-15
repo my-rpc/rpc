@@ -99,9 +99,7 @@ def add_employee():
     language = 'en'
     add_employee_form = EmployeeForm()
     if request.method == 'POST':
-        print("inside post")
         if add_employee_form.validate_on_submit():
-            print("inside if sf")
             new_employee = Employees(
                 id=add_employee_form.employee_id.data,
                 name=add_employee_form.first_name.data,
@@ -122,16 +120,21 @@ def add_employee():
             permanent_address = Permanent_addresses(
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.permanent_address.data,
-                district_id=add_employee_form.district.data,
-                province_id=add_employee_form.provinces.data)
+                address_dari=add_employee_form.permanent_address_dari.data,
+                district_id=add_employee_form.district_permanent.data,
+                province_id=add_employee_form.provinces_permanent.data)
             current_address = Current_addresses(
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.current_address.data,
-                district_id=add_employee_form.district.data,
-                province_id=add_employee_form.provinces.data)
+                address_dari=add_employee_form.current_address_dari.data,
+                district_id=add_employee_form.district_current.data,
+                province_id=add_employee_form.provinces_current.data)
             email = Emails(
                 emp_id=add_employee_form.employee_id.data,
                 email=add_employee_form.email.data)
+            email_second = Emails(
+                emp_id=add_employee_form.employee_id.data,
+                email=add_employee_form.email_second.data)
             # phone = Phone(
             #     emp_id=add_employee_form.employee_id.data,
             #     phone=add_employee_form.phone.data)
@@ -141,6 +144,7 @@ def add_employee():
                 db.session.add(permanent_address)
                 db.session.add(current_address)
                 db.session.add(email)
+                db.session.add(email_second)
                 # db.session.add(phone)
                 db.session.commit()
             except IOError as exc:

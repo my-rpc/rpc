@@ -132,4 +132,4 @@ dmypy.json
 .idea
 
 #config file
-./rpc_package/config/config.json
+rpc_package/config/config.json
