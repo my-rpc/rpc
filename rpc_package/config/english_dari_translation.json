@@ -131,7 +131,11 @@
     "dari": "ورود",
     "en": "Login"
   },
-  "titile": {
+  "email": {
+    "dari": "ایمیل",
+    "en": "Email"
+  },
+  "title": {
     "dari": "عنوان",
     "en": "Title"
   },
@@ -590,6 +594,30 @@
   "user_setting": {
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
+  },
+  "active":{
+    "dari": "فعال",
+    "en": "Active"
+  },
+  "inactive":{
+    "dari": "غیرفعال",
+    "en": "Inactive"
+  },
+  "activate":{
+    "dari": "فعال کردن",
+    "en": "Activate"
+  },
+  "deactivate":{
+    "dari": "غیرفعال کردن",
+    "en": "Deactivate"
+  },
+  "operation":{
+    "dari": "عملیات",
+    "en": "Operation"
+  },
+  "user_status":{
+    "dari": "وضعیت",
+    "en": "status"
   },
   "update_employee": {
     "dari": " تغییرات کارمندان",
