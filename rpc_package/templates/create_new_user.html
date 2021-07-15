@@ -39,7 +39,11 @@
                         </td>
                             
                         <td>
-                            {{user[0].status}}
+                            {% if user[0].status == True %}
+                                {{translation.active[language]}}
+                            {% else %}
+                                {{translation.inactive[language]}}
+                            {% endif %}
                         </td>
                         <td>
                             <span><i class="fad fa-times text-danger"></i></span>
@@ -123,24 +127,29 @@
             <div class="modal-body" id="">
                 <div class="text-center" id="loader"></div>
                 <!--   Action="" is used to confirm to route to the same page.     -->
-                <form method="POST", action="" id="create_user" class="d-none">
+                <form method="POST", action="" id="update_user" class="">
                     {{ form.hidden_tag()}}
                     <fieldset class="form-group">
                         <div class="form-group">
-                            {{ form.employee_id.label(class="form-control-label")}}
-                            {{ form.employee_id(class="form-control form-control-lg")}}
+                            <label class="control-label"> {{translation.employee_id[language]}}</label>
+                            <input type="text" class="form-control" id="emp_id" name="employee_id" readonly='readonly'>
+                            <!-- {{ form.employee_id.label(class="form-control-label")}}
+                            {{ form.employee_id(class="form-control form-control-lg")}} -->
                         </div>
                         <div class="form-group">
-                            {{ form.password.label(class="form-control-label")}}
-                            {{ form.password(class="form-control form-control-lg")}}
+                            <label for="" class="control-label">{{translation.user_role[language]}}</label>
+                            {{ form.user_role(class="form-control")}}
+                           
                         </div>
+                        
                         <div class="form-group">
-                            {{ form.confirm_password.label(class="form-control-label")}}
-                            {{ form.confirm_password(class="form-control form-control-lg")}}
-                        </div>
-                        <div class="form-group">
-                            {{ form.user_role.label(class="form-control-label")}}
-                            {{ form.user_role(class="form-control form-control-lg")}}
+                            <label for="" class="control-label">{{translation.user_status[language]}}</label>
+                           <select name="status" class="form-control" id="">
+                               <option value="">-----</option>
+                               <option value="1">{{translation.active[language]}}</option>
+                               <option value="0">{{translation.inactive[language]}}</option>
+                           </select>
+                           
                         </div>
                     </fieldset>
                     <div class="form-group">
@@ -194,13 +203,19 @@ updateUserOpenModel = function(userID){
     $('.update_user_modal').modal('show');
     $.ajax({
         type: "GET",
-        url: "uds_user/"+userID,
+        url: "uds_user?user_id="+userID,
         // data: {'user_id':userID},
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log(response);
-            // $('.create_new_user_modal').modal('show')
+            console.log(response.user);
+            $('#update_user [name="employee_id"]').val(response.user.emp_id);
+            $('#update_user [name="user_role"]').val(response.user.role);
+            if(response.user.status == true)
+                $('#update_user [name="status"]').val(1);
+            else
+                $('#update_user [name="status"]').val(0);
+                
         },
         // error: function(response){
         //     var statusCode = response.status;
@@ -213,27 +228,53 @@ updateUserOpenModel = function(userID){
     });
 }
 
-        $(document).on( 'submit', '#create_user', function(e){
-            e.preventDefault();
-            $form = $(this);
-            var formData = new FormData($form[0]);
-            $.ajax({
-                type: "POST",
-                url: "/create_new_user",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    toastSuccess(response.message);
-                },error: function(response){
-                    var statusCode = response.status;
-                    var r = '';
-                    if(statusCode == '403'){
-                        r = formValidateErrors(response);
-                    }
-                    toastError(r);
-                }
-            });
-        });
-    </script>
+$(document).on( 'submit', '#create_user', function(e){
+    e.preventDefault();
+    $form = $(this);
+    var formData = new FormData($form[0]);
+    $.ajax({
+        type: "POST",
+        url: "/create_new_user",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastSuccess(response.message);
+        },error: function(response){
+            var statusCode = response.status;
+            var r = '';
+            if(statusCode == '403'){
+                r = formValidateErrors(response);
+            }
+            toastError(r);
+        }
+    });
+});
+
+$(document).on( 'submit', '#update_user', function(e){
+    e.preventDefault();
+    $form = $(this);
+    var formData = new FormData($form[0]);
+    $.ajax({
+        type: "POST",
+        url: "/uds_user",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response)
+            toastSuccess(response.message);
+        },error: function(response){
+            console.log(response)
+
+            var statusCode = response.status;
+            var r = '';
+            if(statusCode == '403'){
+                r = formValidateErrors(response);
+            }
+            toastError(r);
+        }
+    });
+});
+</script>
 {% endblock js_code %}

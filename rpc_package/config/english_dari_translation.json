@@ -363,18 +363,6 @@
     "dari": "تجربه کاری",
     "en": "Job Exprience"
   },
-  "resume": {
-    "dari": "خلص سوانح",
-    "en": "Resume"
-  },
-  "leave_type": {
-    "dari": "نوع رخصتی",
-    "en": "Leave Type"
-  },
-  "leave_duration": {
-    "dari": "مدت رخصتی",
-    "en": "Leave Duration"
-  },
   "new_task": {
     "dari": "وظیفه جدید",
     "en": "New Task"
@@ -382,18 +370,6 @@
   "new_mail": {
     "dari": "ایمیل جدید",
     "en": "New Mail"
-  },
-  "work_duration": {
-    "dari": "مدت همکاری با شرکت",
-    "en": "Work Duration"
-  },
-  "relevant_responsibilities": {
-    "dari": "وظایف مربوطه",
-    "en": "Employee Card"
-  },
-  "relevant_equipment": {
-    "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipment"
   },
   "resume": {
     "dari": "خلص سوانح",
@@ -499,10 +475,7 @@
     "dari": "وضعیت تاهل",
     "en": "Status"
   },
-  "email": {
-    "dari": "ایمیل",
-    "en": "Email"
-  },
+
   "educational_background": {
     "dari": "سوابق تحصیلی",
     "en": "Educational Background"
@@ -594,5 +567,29 @@
   "user_setting": {
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
-  } 
+  },
+  "active":{
+    "dari": "فعال",
+    "en": "Active"
+  },
+  "inactive":{
+    "dari": "غیرفعال",
+    "en": "Inactive"
+  },
+  "activate":{
+    "dari": "فعال کردن",
+    "en": "Activate"
+  },
+  "deactivate":{
+    "dari": "غیرفعال کردن",
+    "en": "Deactivate"
+  },
+  "operation":{
+    "dari": "عملیات",
+    "en": "Operation"
+  },
+  "user_status":{
+    "dari": "وضعیت",
+    "en": "status"
+  }
 }

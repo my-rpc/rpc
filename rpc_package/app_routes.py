@@ -48,34 +48,41 @@ def create_new_user():
                            message_obj=message_obj)
 
 
-@app.route("/uds_user/<user_id>", methods=['GET', 'POST'])
-def uds_user(user_id):
-    print(user_id)
+@app.route("/uds_user", methods=['GET', 'POST'])
+def uds_user():
     language = 'en'
     # language = json.loads(request.args["messages"])['language']
+    
     update_user_form = UpdateUserForm()
     if request.method == 'POST':
         if update_user_form.validate_on_submit():
-            hashed_pass = pass_crypt.generate_password_hash(update_user_form.password.data).decode('utf=8')
-            new_user = Users(emp_id=update_user_form.employee_id.data,
-                             password=hashed_pass,
-                             role=update_user_form.user_role.data,
-                             status=1,
-                             token='adding new token')
-            db.session.add(new_user)
-            db.session.commit()
+            user = Users.query.get(request.form['employee_id'])
+            try:
+                if request.form['status'] == 1:
+                    status = True
+                else:
+                    status = False
+                user.status = status
+                user.role = request.form['user_role']
+                db.session.commit()
+            except IOError as exc:
+                return jsonify({'success': False, 'message': message_obj.create_new_user_update_not[language]}), \
+                       403, {'ContentType': 'application/json'}
             return jsonify({'success': True, 'message':
-                message_obj.create_new_user_save[language].format(update_user_form.employee_id.data)}), \
+                message_obj.create_new_user_update[language].format(request.form['employee_id'])}), \
                    200, {'ContentType': 'application/json'}
         else:
             return jsonify({'success': False, 'message': update_user_form.errors}), \
                    403, {'ContentType': 'application/json'}
                    
+    user_id = request.args.get('user_id')
     user =  Users.query.get(user_id)
+    role_list = [(role.id, role.name_english, role.name) for role in User_roles.query.all()] 
+
     # response = {'form':update_user_form.__dict__, 'language':language, 'translation':translation_obj,
     #                        'message_obj':message_obj}
     # return response.__str__
-    return ({'user': {'emp_id': user.emp_id, 'role': user.role, 'status': user.status}, 'language':language, 'translation':translation_obj.__dict__,
+    return ({'user': {'emp_id': user.emp_id, 'role': user.role, 'status': user.status}, 'user_role':role_list, 'language':language, 'translation':translation_obj.__dict__,
                             'message_obj':message_obj.__dict__})
     # create_new_user_form = update_messages_user(update_user_form, language)
     # return render_template('create_new_user.html', title='Create New User',
