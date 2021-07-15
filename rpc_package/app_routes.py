@@ -117,6 +117,8 @@ def add_employee():
                 m_status=True if add_employee_form.m_status.data else False,
                 tin=add_employee_form.tin.data,
                 status=1)
+            db.session.add(new_employee)
+            db.session.commit()
             permanent_address = Permanent_addresses(
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.permanent_address.data,
@@ -129,23 +131,28 @@ def add_employee():
                 address_dari=add_employee_form.current_address_dari.data,
                 district_id=add_employee_form.district_current.data,
                 province_id=add_employee_form.provinces_current.data)
-            email = Emails(
+            if add_employee_form.email.data:
+                email = Emails(
+                    emp_id=add_employee_form.employee_id.data,
+                    email=add_employee_form.email.data)
+                db.session.add(email)
+            if add_employee_form.email_second.data:
+                email_second = Emails(
+                    emp_id=add_employee_form.employee_id.data,
+                    email=add_employee_form.email_second.data)
+                db.session.add(email_second)
+            phone = Phone(
                 emp_id=add_employee_form.employee_id.data,
-                email=add_employee_form.email.data)
-            email_second = Emails(
-                emp_id=add_employee_form.employee_id.data,
-                email=add_employee_form.email_second.data)
-            # phone = Phone(
-            #     emp_id=add_employee_form.employee_id.data,
-            #     phone=add_employee_form.phone.data)
+                phone=add_employee_form.phone.data)
+            if add_employee_form.phone_second.data:
+                phone_second = Phone(
+                    emp_id=add_employee_form.employee_id.data,
+                    phone=add_employee_form.phone_second.data)
+                db.session.add(phone_second)
             try:
-                db.session.add(new_employee)
-                db.session.commit()
                 db.session.add(permanent_address)
                 db.session.add(current_address)
-                db.session.add(email)
-                db.session.add(email_second)
-                # db.session.add(phone)
+                db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
                 return jsonify({'success': False, 'message': message_obj.create_new_employee_not[language]}), \

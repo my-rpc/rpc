@@ -20,11 +20,11 @@
             {{ form.hidden_tag()}}
             <fieldset class="form-group">
                 <div class="row">
+                    <div class="form-group col-md-12">
+                        {{ form.employee_id.label(class="form-control-label")}}
+                        {{ form.employee_id(class="form-control form-control-lg")}}
+                    </div>
                     <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form.employee_id.label(class="form-control-label")}}
-                            {{ form.employee_id(class="form-control form-control-lg")}}
-                        </div>
                         <div class="form-group">
                             <legend class="border-bottom mb-4">
                                 {{  translation.name_language['en'] }}
@@ -43,6 +43,16 @@
                         <div class="form-group">
                             {{ form.grand_name_english.label(class="form-control-label")}}
                             {{ form.grand_name_english(class="form-control form-control-lg")}}
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                {{ form.phone.label(class="form-control-label")}}
+                                {{ form.phone(class="form-control form-control-lg")}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ form.phone_second.label(class="form-control-label")}}
+                                {{ form.phone_second(class="form-control form-control-lg")}}
+                            </div>
                         </div>
                         <div class="row">
                             <div class="form-group  col-md-6">
@@ -80,16 +90,6 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                       <div class="row">
-                        <div class="form-group col-md-6">
-                            {{ form.email.label(class="form-control-label")}}
-                            {{ form.email(class="form-control form-control-lg")}}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{ form.email_second.label(class="form-control-label")}}
-                            {{ form.email_second(class="form-control form-control-lg")}}
-                        </div>
-                       </div>
                         <div class="form-group">
                             <legend class="border-bottom mb-4">
                                 {{  translation.name_language['dari'] }}
@@ -109,6 +109,16 @@
                             {{ form.grand_name.label(class="form-control-label")}}
                             {{ form.grand_name(class="form-control form-control-lg")}}
                         </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                {{ form.email.label(class="form-control-label")}}
+                                {{ form.email(class="form-control form-control-lg")}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ form.email_second.label(class="form-control-label")}}
+                                {{ form.email_second(class="form-control form-control-lg")}}
+                            </div>
+                           </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 {{ form.birthday.label(class="form-control-label")}}
