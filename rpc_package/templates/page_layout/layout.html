@@ -55,27 +55,6 @@
 
 <!-- Adnix Admin App -->
 <script src="{{ url_for('static', filename='js/template.js')}}"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script>
-    function load_districts(province, target){
-        $.ajax({
-            type: "POST",
-            url: "/load_districts?province="+province,
-            contentType: "application/json",
-            dataType: 'json',
-            success: function(result) {
-                var options="<option value="+Object.keys(result)[0]+">"+Object.values(result)[0]+"</>";
-                console.log(Object.values(result))
-                for(var x in result)
-                {
-                    options+= "<option value="+x+">"+result[x]+"</>";
-                        console.log(x)
-                }
-                $("#"+target).html(options)
-            } 
-            });
-}
-</script>
 <!-- this block is for js code if needed at the begining of page  -->
 {% block js_code %}{% endblock %}
 

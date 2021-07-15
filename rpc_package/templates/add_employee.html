@@ -44,40 +44,52 @@
                             {{ form.grand_name_english.label(class="form-control-label")}}
                             {{ form.grand_name_english(class="form-control form-control-lg")}}
                         </div>
-                        <div class="form-group">
-                            {{ form.tazkira.label(class="form-control-label")}}
-                            {{ form.tazkira(class="form-control form-control-lg")}}
-                        </div>
-                        <div class="form-group">
-                            {{ form.tin.label(class="form-control-label")}}
-                            {{ form.tin(class="form-control form-control-lg")}}
+                        <div class="row">
+                            <div class="form-group  col-md-6">
+                                {{ form.tazkira.label(class="form-control-label")}}
+                                {{ form.tazkira(class="form-control form-control-lg")}}
+                            </div>
+                            <div class="form-group  col-md-6">
+                                {{ form.tin.label(class="form-control-label")}}
+                                {{ form.tin(class="form-control form-control-lg")}}
+                            </div>
                         </div>
                         <div class="form-group">
                             <legend class="border-bottom mb-4">
                                 {{ form.permanent_address.label(class="form-control-label")}}
                             </legend>
                            <div class="row">
-                            <div class="form-group col-md-3">
-                                {{ form.provinces.label(class="form-control-label")}}
-                                {{ form.provinces(onChange="load_districts(this.value, 'permanent_district')", class="form-control form-control-lg")}}
+                            <div class="form-group col-md-6">
+                                {{ form.provinces_permanent.label(class="form-control-label")}}
+                                {{ form.provinces_permanent(onChange="load_districts(this.value, 'permanent_district')", class="form-control form-control-lg")}}
                             </div>
-                            <div class="form-group col-md-3">
-                                {{ form.district.label(class="form-control-label")}}
-                                {{ form.district(id="permanent_district", class="form-control form-control-lg")}}
+                            <div class="form-group col-md-6">
+                                {{ form.district_permanent.label(class="form-control-label")}}
+                                {{ form.district_permanent(id="permanent_district", class="form-control form-control-lg")}}
                             </div>
-                        <div class="form-group col-md-6">
+                            <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">Address</strong>
                             {{ form.permanent_address(class="form-control mt-2 form-control-lg")}}
                             </div>
+                            <div class="form-group col-md-6">
+                                <strong class="form-control-label m-5">آدرس</strong>
+                                {{ form.permanent_address_dari(class="form-control mt-2 form-control-lg")}}
+                                </div>
                            </div>
                            
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group">
+                       <div class="row">
+                        <div class="form-group col-md-6">
                             {{ form.email.label(class="form-control-label")}}
                             {{ form.email(class="form-control form-control-lg")}}
                         </div>
+                        <div class="form-group col-md-6">
+                            {{ form.email_second.label(class="form-control-label")}}
+                            {{ form.email_second(class="form-control form-control-lg")}}
+                        </div>
+                       </div>
                         <div class="form-group">
                             <legend class="border-bottom mb-4">
                                 {{  translation.name_language['dari'] }}
@@ -97,30 +109,36 @@
                             {{ form.grand_name.label(class="form-control-label")}}
                             {{ form.grand_name(class="form-control form-control-lg")}}
                         </div>
-                        <div class="form-group">
-                            {{ form.birthday.label(class="form-control-label")}}
-                            {{ form.birthday(class="form-control form-control-lg")}}
-                        </div>
-                        <div class="form-group">
-                            {{ form.blood.label(class="form-control-label")}}
-                            {{ form.blood(class="form-control form-control-lg")}}
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                {{ form.birthday.label(class="form-control-label")}}
+                                {{ form.birthday(class="form-control form-control-lg")}}
+                            </div>
+                            <div class="form-group  col-md-6">
+                                {{ form.blood.label(class="form-control-label")}}
+                                {{ form.blood(class="form-control form-control-lg")}}
+                            </div>
                         </div>
                         <div class="form-group">
                             <legend class="border-bottom mb-4">
                                 {{ form.current_address.label(class="form-control-label")}}
                             </legend>
                            <div class="row">
-                            <div class="form-group col-md-3">
-                                {{ form.provinces.label(class="form-control-label")}}
-                                {{ form.provinces(onChange="load_districts(this.value, 'current_district')",class="form-control form-control-lg")}}
+                            <div class="form-group col-md-6">
+                                {{ form.provinces_current.label(class="form-control-label")}}
+                                {{ form.provinces_current(onChange="load_districts(this.value, 'current_district')",class="form-control form-control-lg")}}
                             </div>
-{#                            <div class="form-group col-md-3">#}
-{#                                {{ form.district.label(class="form-control-label")}}#}
-{#                                {{ form.district(id="current_district", class="form-control form-control-lg")}}#}
-{#                            </div>#}
-                        <div class="form-group col-md-6">
+                           <div class="form-group col-md-6">
+                              {{ form.district_current.label(class="form-control-label")}}
+                                {{ form.district_current(id="current_district", class="form-control form-control-lg")}}
+                           </div>
+                            <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">Address</strong>
                             {{ form.current_address(class="form-control mt-2 form-control-lg")}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <strong class="form-control-label m-5">آدرس</strong>
+                                {{ form.current_address_dari(class="form-control mt-2 form-control-lg")}}
                             </div>
                            </div>
                            
@@ -173,6 +191,24 @@
 </script>
 <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
 <script>
+     function load_districts(province, target){
+        $.ajax({
+            type: "POST",
+            url: "/load_districts?province="+province,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(result) {
+                var options="<option value="+Object.keys(result)[0]+">"+Object.values(result)[0]+"</>";
+                console.log(Object.values(result))
+                for(var x in result)
+                {
+                    options+= "<option value="+x+">"+result[x]+"</>";
+                        console.log(x)
+                }
+                $("#"+target).html(options)
+            } 
+            });
+        }
     $(document).on('submit', '#add_employee', function (e) {
         e.preventDefault();
         $form = $(this);

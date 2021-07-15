@@ -80,6 +80,7 @@ class Current_addresses(db.Model):
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
                        nullable=False)
     address = db.Column(db.String(255), nullable=True)
+    address_dari = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
     province_id = db.Column(db.Integer, db.ForeignKey('provinces.id'), primary_key=True, nullable=False)
 
@@ -93,6 +94,7 @@ class Permanent_addresses(db.Model):
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
                        nullable=False)
     address = db.Column(db.String(255), nullable=True)
+    address_dari = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
     province_id = db.Column(db.Integer, db.ForeignKey('provinces.id'), primary_key=True, nullable=False)
 

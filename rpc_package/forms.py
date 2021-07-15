@@ -33,6 +33,7 @@ class EmployeeForm(FlaskForm):
     emp_id.sort()
     if len(emp_id) > 0:
         last_emp_id = emp_id[-1]
+        # print(last_emp_id[4:])
     else:
         last_emp_id = 'RPC-001'
 
@@ -62,11 +63,16 @@ class EmployeeForm(FlaskForm):
     provinces_list = [(province.id, province.province_name+'/'+province.province_name_english) for province in Provinces.query.all()]
     districts_list = [(district.id, district.district_name+'/'+district.district_name_english) for district in Districts.query.all()]
     email = StringField('Email Address', validators=[DataRequired(), Email()])
+    email_second = StringField('Email Address', validators=[DataRequired(), Email()])
     # phone = StringField('Phone Address', validators=[DataRequired(), Email()])
     permanent_address = StringField('Permanent Address/سکونت اصلی', validators=[DataRequired()])
+    permanent_address_dari = StringField('Permanent Address/سکونت اصلی', validators=[DataRequired()])
     current_address = StringField('Current Address/سکونت فعلی', validators=[DataRequired()])
-    provinces = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
-    district = SelectField('Districts', validators=[DataRequired()], choices=districts_list)
+    current_address_dari = StringField('Current Address/سکونت فعلی', validators=[DataRequired()])
+    provinces_permanent = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
+    provinces_current = SelectField('Provinces', choices=provinces_list, validators=[DataRequired()])
+    district_permanent = SelectField('Districts', validators=[DataRequired()], choices=districts_list)
+    district_current = SelectField('Districts', validators=[DataRequired()], choices=districts_list)
     submit = SubmitField('Add Employee')
 
     def validate_email(self, email):

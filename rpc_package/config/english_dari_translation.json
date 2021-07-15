@@ -483,6 +483,10 @@
     "dari": "ایمیل",
     "en": "Email"
   },
+  "email_second": {
+    "dari": "ایمیل دوم",
+    "en": "Second Email"
+  },
   "educational_background": {
     "dari": "سوابق تحصیلی",
     "en": "Educational Background"
