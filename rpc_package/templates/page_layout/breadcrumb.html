@@ -1,4 +1,7 @@
-<!-- Content Header (Page header) or breadcrumb -->	  
+<!-- Content Header (Page header) or breadcrumb -->	 
+<script src=
+   "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+   </script> 
       <div class="content-header">
           <div class="d-flex align-items-center">
               <div class="mr-auto">
@@ -16,3 +19,19 @@
               
           </div>
       </div>
+
+      <script>
+ $('.breadcrumb-item a').on('click', function() {
+  var $this = $(this),
+      $bc = $('<div class="d-inline-block align-items-center"></div>');
+
+  $this.parents('li').each(function(n, li) {
+      var $a = $(li).children('a').clone();
+      $bc.prepend(' / ', $a);
+  });
+    $('.breadcrumb').html( $bc.prepend('<a href="#home">Home</a>') );
+    return false;
+}) 
+ 
+      </script>
+

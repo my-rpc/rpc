@@ -130,3 +130,6 @@ dmypy.json
 #IDE personal config
 .vscode
 .idea
+
+#config file
+./rpc_package/config/config.json
