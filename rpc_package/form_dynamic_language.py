@@ -22,7 +22,7 @@ def update_messages_employee(form_obj, language):
     form_obj.m_status.label.text = translation_obj.status[language]
     form_obj.email.label.text = translation_obj.email[language]
     form_obj.email_second.label.text = translation_obj.email_second[language]
-    # form_obj.phone.label.text = translation_obj.phone[language]
+    form_obj.phone_second.label.text = translation_obj.phone_second[language]
     form_obj.permanent_address.label.text = translation_obj.permanent_address[language]
     form_obj.current_address.label.text = translation_obj.current_address[language]
     form_obj.provinces_permanent.label.text = translation_obj.provinces[language]

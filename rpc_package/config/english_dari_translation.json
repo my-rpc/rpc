@@ -467,6 +467,10 @@
     "dari": "شماره تماس",
     "en": "Phone Number"
   },
+  "phone_second": {
+    "dari": "شماره تماس دوم",
+    "en": "Second Phone Number"
+  },
   "permanent_address": {
     "dari": "سکونت اصلی",
     "en": "Permanenet Address"

@@ -62,9 +62,10 @@ class EmployeeForm(FlaskForm):
     tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name+'/'+province.province_name_english) for province in Provinces.query.all()]
     districts_list = [(district.id, district.district_name+'/'+district.district_name_english) for district in Districts.query.all()]
-    email = StringField('Email Address', validators=[DataRequired(), Email()])
-    email_second = StringField('Email Address', validators=[DataRequired(), Email()])
-    # phone = StringField('Phone Address', validators=[DataRequired(), Email()])
+    email = StringField('Email Address')
+    email_second = StringField('Email Address')
+    phone = StringField('Phone Address', validators=[DataRequired()])
+    phone_second = StringField('Second Phone Address')
     permanent_address = StringField('Permanent Address/سکونت اصلی', validators=[DataRequired()])
     permanent_address_dari = StringField('Permanent Address/سکونت اصلی', validators=[DataRequired()])
     current_address = StringField('Current Address/سکونت فعلی', validators=[DataRequired()])
@@ -79,6 +80,11 @@ class EmployeeForm(FlaskForm):
         user_email = Emails.query.filter_by(email=email.data).first()
         if user_email:
             raise ValidationError('ایمیل شما موجود است')
+
+    def validate_email_second(self, email_second):
+        user_email = Emails.query.filter_by(email=email_second.data).first()
+        if user_email:
+            raise ValidationError('ایمیل دوم شما موجود است')
 
     def validate_first_name(self, first_name):
         if not check_language(first_name.data):
