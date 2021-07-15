@@ -2,7 +2,8 @@ from flask import render_template, url_for, redirect, request, jsonify
 from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Provinces, Districts, Permanent_addresses, Current_addresses, Emails, Phone
+from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
 
 
@@ -14,7 +15,6 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 def create_new_user():
     language = 'en'
-    # language = json.loads(request.args["messages"])['language']
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -29,16 +29,17 @@ def create_new_user():
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
-                return jsonify({'success': False, 'message': message_obj.create_new_user_not[language]}), \
-                       403, {'ContentType': 'application/json'}
-            return jsonify({'success': True, 'message':
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), \
-                   200, {'ContentType': 'application/json'}
+                return message_to_client_403(message_obj.create_new_user_not[language])
+            return message_to_client_200(
+                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
         else:
-            return jsonify({'success': False, 'message': create_new_user_form.errors}), \
-                   403, {'ContentType': 'application/json'}
+            return message_to_client_403(create_new_user_form.errors)
+    users = db.session.query(Users, User_roles, Employees).join(Users,
+                                                                (Users.role == User_roles.id)).join(Employees, (
+                Users.emp_id == Employees.id)).all()
+
     create_new_user_form = update_messages_user(create_new_user_form, language)
-    return render_template('create_new_user.html', title='Create New User',
+    return render_template('create_new_user.html', title='Create New User', users=users,
                            form=create_new_user_form, language=language, translation=translation_obj,
                            message_obj=message_obj)
 
@@ -46,28 +47,32 @@ def create_new_user():
 @app.route("/uds_user", methods=['GET', 'POST'])
 def uds_user():
     language = 'en'
-    # language = json.loads(request.args["messages"])['language']
-    create_new_user_form = CreateUserForm()
     if request.method == 'POST':
-        if create_new_user_form.validate_on_submit():
-            hashed_pass = pass_crypt.generate_password_hash(create_new_user_form.password.data).decode('utf=8')
-            new_user = Users(emp_id=create_new_user_form.employee_id.data,
-                             password=hashed_pass,
-                             role=create_new_user_form.user_role.data,
-                             status=1,
-                             token='adding new token')
-            db.session.add(new_user)
-            db.session.commit()
-            return jsonify({'success': True, 'message':
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data)}), \
-                   200, {'ContentType': 'application/json'}
+        if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
+                EmployeeValidator.number_validator(request.form['user_role']):
+            user = Users.query.get(request.form['employee_id'])
+            try:
+                user.status = bool(request.form['status'])
+                user.role = request.form['user_role']
+                db.session.commit()
+            except IOError as exc:
+                return message_to_client_403(message_obj.create_new_user_update_not[language])
+            return message_to_client_200(
+                message_obj.create_new_user_update[language].format(request.form['employee_id']))
         else:
-            return jsonify({'success': False, 'message': create_new_user_form.errors}), \
-                   403, {'ContentType': 'application/json'}
-    create_new_user_form = update_messages_user(create_new_user_form, language)
-    return render_template('create_new_user.html', title='Create New User',
-                           form=create_new_user_form, language=language, translation=translation_obj,
-                           message_obj=message_obj)
+            return message_to_client_403(message_obj.create_new_user_update_not[language])
+    user_id = request.args.get('user_id')
+    if EmployeeValidator.emp_id_validator(user_id):
+        user = Users.query.get(user_id)
+        role_list = [(role.id, role.name_english, role.name) for role in User_roles.query.all()]
+
+        return ({'user': {'emp_id': user.emp_id, 'role': user.role,
+                          'status': user.status}, 'user_role': role_list,
+                 'language': language,
+                 'translation': translation_obj.__dict__,
+                 'message_obj': message_obj.__dict__})
+    else:
+        message_to_client_403(message_obj.invalid_message[language])
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -94,9 +99,7 @@ def add_employee():
     language = 'en'
     add_employee_form = EmployeeForm()
     if request.method == 'POST':
-        print("inside post")
         if add_employee_form.validate_on_submit():
-            print("inside if sf")
             new_employee = Employees(
                 id=add_employee_form.employee_id.data,
                 name=add_employee_form.first_name.data,
@@ -117,16 +120,21 @@ def add_employee():
             permanent_address = Permanent_addresses(
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.permanent_address.data,
-                district_id=add_employee_form.district.data,
-                province_id=add_employee_form.provinces.data)
+                address_dari=add_employee_form.permanent_address_dari.data,
+                district_id=add_employee_form.district_permanent.data,
+                province_id=add_employee_form.provinces_permanent.data)
             current_address = Current_addresses(
                 emp_id=add_employee_form.employee_id.data,
                 address=add_employee_form.current_address.data,
-                district_id=add_employee_form.district.data,
-                province_id=add_employee_form.provinces.data)
+                address_dari=add_employee_form.current_address_dari.data,
+                district_id=add_employee_form.district_current.data,
+                province_id=add_employee_form.provinces_current.data)
             email = Emails(
                 emp_id=add_employee_form.employee_id.data,
                 email=add_employee_form.email.data)
+            email_second = Emails(
+                emp_id=add_employee_form.employee_id.data,
+                email=add_employee_form.email_second.data)
             # phone = Phone(
             #     emp_id=add_employee_form.employee_id.data,
             #     phone=add_employee_form.phone.data)
@@ -136,6 +144,7 @@ def add_employee():
                 db.session.add(permanent_address)
                 db.session.add(current_address)
                 db.session.add(email)
+                db.session.add(email_second)
                 # db.session.add(phone)
                 db.session.commit()
             except IOError as exc:

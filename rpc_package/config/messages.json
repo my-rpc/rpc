@@ -11,6 +11,10 @@
     "dari": "اطلاعات کاربر با آیدی {} بروزرسانی شد",
     "en": "User updated for {} ID"
   },
+  "create_new_user_update_not": {
+    "dari": "اطلاعات کاربر با آیدی {} بروزرسانی نشد",
+    "en": "User not updated for {} ID"
+  },
   "create_new_user_not": {
     "dari": "کاربر جدید اضافه نشد",
     "en": "User was not created"
