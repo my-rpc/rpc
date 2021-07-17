@@ -174,12 +174,29 @@ def add_employee():
                            form=add_employee_form, language=language,
                            translation=translation_obj, message_obj=message_obj)
 
+@app.route("/add_documents", methods=['GET', 'POST'])
+def add_documents():
+    language = 'en'
+    return render_template("add_documents.html", title='Add Employee Documents',
+                            language=language,
+                            translation=translation_obj, message_obj=message_obj)
+
+@app.route("/employee_setting", methods=['GET', 'POST'])
+def employee_setting():
+    language = 'en'
+    return render_template("employee_setting.html", title='Employee Settings',
+                            language=language,
+                            translation=translation_obj, message_obj=message_obj)
 
 @app.route("/load_districts", methods=['GET', 'POST'])
 def load_districts():
     province = request.args.get("province")
     districts = {district.id: district.district_name+"/"+district.district_name_english for district in Districts.query.filter_by(province=province).all()}
     return jsonify(districts)
+
+
+
+    
 # @app.route("/employee_list", methods=['GET', 'POST'])
 # def employee_list():
 #     language = 'en'
