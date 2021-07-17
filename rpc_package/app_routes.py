@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, request, jsonify
 from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses
+from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
 
@@ -168,6 +168,7 @@ def add_employee():
     return render_template('add_employee.html', title='Add Employee',
                            form=add_employee_form, language=language,
                            translation=translation_obj, message_obj=message_obj)
+
 
 @app.route("/load_districts", methods=['GET', 'POST'])
 def load_districts():
