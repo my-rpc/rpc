@@ -52,7 +52,7 @@ def uds_user():
                 EmployeeValidator.number_validator(request.form['user_role']):
             user = Users.query.get(request.form['employee_id'])
             try:
-                user.status = bool(request.form['status'])
+                user.status = bool(int(request.form['status']))
                 user.role = request.form['user_role']
                 db.session.commit()
             except IOError as exc:
@@ -155,14 +155,10 @@ def add_employee():
                 db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
-                return jsonify({'success': False, 'message': message_obj.create_new_employee_not[language]}), \
-                       403, {'ContentType': 'application/json'}
-            return jsonify({'success': True, 'message':
-                message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data)}), \
-                   200, {'ContentType': 'application/json'}
+                return message_to_client_403(message_obj.create_new_employee_not[language])
+            return message_to_client_200(message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data))
         else:
-            return jsonify({'success': False, 'message': add_employee_form.errors}), \
-                   403, {'ContentType': 'application/json'}
+            return message_to_client_403(add_employee_form.errors)
 
     add_employee_form = update_messages_employee(add_employee_form, language)
     return render_template('add_employee.html', title='Add Employee',
