@@ -90,17 +90,23 @@ class EmployeeForm(FlaskForm):
     submit = SubmitField('Add Employee')
 
     def validate_email(self, email):
-        user_email = Emails.query.filter_by(email=email.data).first()
-        if user_email:
-            raise ValidationError('ایمیل شما موجود است')
-        if user_email != '':
-            if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email)):
-                raise ValidationError('فرمت ایمیل را چک کنید')
+        if email.data:
+            if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
+                    raise ValidationError('فرمت ایمیل را چک کنید')
+            user_email = Emails.query.filter_by(email=email.data).first()
+            if user_email:
+                raise ValidationError('ایمیل شما موجود است')
+
 
     def validate_email_second(self, email_second):
-        user_email = Emails.query.filter_by(email=email_second.data).first()
-        if user_email:
-            raise ValidationError('ایمیل دوم شما موجود است')
+        if email_second.data:
+            if not email_second.data:
+                if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email_second.data)):
+                    raise ValidationError('فرمت ایمیل را چک کنید')
+            user_email = Emails.query.filter_by(email=email_second.data).first()
+            if user_email:
+                raise ValidationError('ایمیل شما موجود است')
+
 
     def validate_first_name(self, first_name):
         if not check_language(first_name.data):
@@ -120,13 +126,16 @@ class EmployeeForm(FlaskForm):
 
     def validate_phone(self, phone):
         if not bool(
-                re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})', phone)):
+                re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
+                         phone.data)):
             raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
 
     def validate_phone_second(self, phone_second):
-        if not bool(
-                re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})', phone_second)):
-            raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
+        if phone_second.data != '':
+            if not bool(
+                    re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
+                             phone_second.data)):
+                raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
 
     def validate_employee_id(self, employee_id):
         employee = Employees.query.get(employee_id)
