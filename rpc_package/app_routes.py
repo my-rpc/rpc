@@ -1,8 +1,9 @@
 from flask import render_template, url_for, redirect, request, jsonify
+from flask_login import login_user, current_user, logout_user
 from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts
+from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, Emails, Phone
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
 
@@ -75,19 +76,27 @@ def uds_user():
         message_to_client_403(message_obj.invalid_message[language])
 
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+
+# Login part
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("blank"))
     default_language = 'en'
+
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        logged_user = Users.query.filter_by(email=login_form.email.data).first()
-        if logged_user and pass_crypt.check_password_hash(logged_user.password, login_form.password.data):
-            pass
-        if login_form.prefer_language.data and login_form.username.data == 'rpc':
-            return redirect(
-                url_for("create_new_user", messages=json.dumps({"language": login_form.prefer_language.data})))
-    else:
-        print("Check the username and password")
+        user = Users.query.filter_by(emp_id=login_form.username.data).first()
+        if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            login_user(user, remember=login_form.remember_me.data)
+            return redirect(url_for("blank"))
+        else:
+            return message_to_client_403(message_obj.password_incorrect[default_language])
 
     return render_template('login.html', title='Login',
                            form=login_form, language=default_language,
