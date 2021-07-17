@@ -2,9 +2,10 @@ from flask import render_template, url_for, redirect, request, jsonify
 from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts
+from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses,Provinces, Districts, Emails, Phone
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
+from sqlalchemy.orm import aliased
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -172,12 +173,6 @@ def add_documents():
                             language=language,
                             translation=translation_obj, message_obj=message_obj)
 
-@app.route("/employee_setting", methods=['GET', 'POST'])
-def employee_setting():
-    language = 'en'
-    return render_template("employee_setting.html", title='Employee Settings',
-                            language=language,
-                            translation=translation_obj, message_obj=message_obj)
 
 @app.route("/load_districts", methods=['GET', 'POST'])
 def load_districts():
@@ -186,67 +181,23 @@ def load_districts():
     return jsonify(districts)
 
 
+@app.route("/employee_settings", methods=['GET', 'POST'])
+def employee_setting():
+    language = 'en'
 
-    
-# @app.route("/employee_list", methods=['GET', 'POST'])
-# def employee_list():
-#     language = 'en'
-#     add_employee_form = EmployeeForm()
-#     add_employee_contact_form = EmployeeContactForm()
-#     if request.method == 'POST':
-#         if add_employee_form.validate_on_submit():
-#             new_employee = Employees(
-#                 id=add_employee_form.employee_id.data,
-#                 name=add_employee_form.first_name.data,
-#                 lname=add_employee_form.last_name.data,
-#                 fname=add_employee_form.father_name.data,
-#                 gname=add_employee_form.grand_name.data,
-#                 name_english=add_employee_form.first_name_english.data,
-#                 lname_english=add_employee_form.last_name_english.data,
-#                 fname_english=add_employee_form.father_name_english.data,
-#                 gname_english=add_employee_form.grand_name_english.data,
-#                 birthday=add_employee_form.birthday.data,
-#                 tazkira=add_employee_form.tazkira.data,
-#                 gender=True if add_employee_form.gender.data else False,
-#                 blood=add_employee_form.blood.data,
-#                 m_status=True if add_employee_form.m_status.data else False,
-#                 tin=add_employee_form.tin.data,
-#                 status=1)
-#             try:
-#                 db.session.add(new_employee)
-#                 db.session.commit()
-#             except IOError as exc:
-#                 return jsonify({'success': False, 'message': message_obj.create_new_employee_not[language]}), \
-#                        403, {'ContentType': 'application/json'}
-#             return jsonify({'success': True, 'message':
-#                 message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data)}), \
-#                    200, {'ContentType': 'application/json'}
-#         elif add_employee_contact_form.validate_on_submit():
-#             permanent_address = Permanent_addresses(emp_id=add_employee_contact_form.employee_id.data,
-#                                               address=add_employee_contact_form.permanent_address.data,
-#                                               district_id=add_employee_contact_form.district.data,
-#                                               province_id=add_employee_contact_form.province.data
-#                                               )
-#             current_address = Current_addresses(emp_id=add_employee_contact_form.employee_id.data,
-#                                               address=add_employee_contact_form.current_address.data,
-#                                               district_id=add_employee_contact_form.district.data,
-#                                               province_id=add_employee_contact_form.province.data
-#                                               )
-#             try:
-#                 db.session.add(permanent_address)
-#                 db.session.add(current_address)
-#                 db.session.commit()
-#             except IOError as exc:
-#                 return jsonify({'success': False, 'message': message_obj.contact_details_not[language]}), \
-#                        403, {'ContentType': 'application/json'}
-#             return jsonify({'success': True, 'message': message_obj.contact_details[language]}), \
-#                    200, {'ContentType': 'application/json'}
-#         else:
-#             return jsonify({'success': False, 'message': add_employee_form.errors}), \
-#                    403, {'ContentType': 'application/json'}
-
-#     add_employee_form = update_messages_employee(add_employee_form, language)
-#     return render_template('employee_list.html', title='Add Employee',
-#                            form=add_employee_form, language=language,
-#                            translation=translation_obj, message_obj=message_obj, form_contact=add_employee_contact_form)
+    employees = db.session.query(Employees).all()
+    phones = {}
+    emails = {}
+    for x, emp in enumerate(employees):
+        phone = db.session.query(Phone).filter_by(emp_id = emp.id).all()
+        email = db.session.query(Emails).filter_by(emp_id = emp.id)
+        if phone is not None:
+            phones[x] = phone
+        if email is not None:
+            emails[x] = email
+    print(emails)
+         
+    return render_template("employee_settings.html", title='Employee Settings',
+                            employees=employees, emails=emails, phones=phones, language=language,
+                            translation=translation_obj, message_obj=message_obj)
 

@@ -71,7 +71,7 @@ class Phone(db.Model):
     phone = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
-        return f"Employee: {self.emp_id}, Phone: {self.email}"
+        return f"Employee: {self.emp_id}, Phone: {self.phone}"
 
 
 class Current_addresses(db.Model):

@@ -1,0 +1,141 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} Add Employee {% endblock %}
+{% block css_or_js_code %}
+    <style>
+        [type=radio]:not(:checked), [type=radio]:checked {
+            position: absolute !important;
+            left: auto;
+            opacity: 1 !important;
+        }
+    </style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+
+<div class="box">
+    <div class="box-header with-border">
+        <h4 class="box-title">{{translation.employee_setting[language]}}</h4>
+    </div>
+    <div class="box-body">
+        <table class="table table-striped table-hover" id="employee_setting">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Father Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Tazkira</th>
+                    <th>Birthday</th>
+                    <th>Blood Group</th>
+                    <th>TIN</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for emp in employees %}
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input type="radio" class="with-gap radio-col-success" name="selected_emp" id="" value="{{emp.id}}">
+                        </div>
+                    </td>
+                    <td>{{emp.id}}</td>
+                    <td>{{emp.name}} {{emp.lname}}</td>
+                    <td>{{emp.fname}}</td>
+                    <td> 
+                        {% if phones[loop.index0] %}
+                        {% for ph in phones[loop.index0] %}
+                        {% if ph['emp_id'] == emp.id %}
+                        <span class="d-block"> {{ph['phone']}} </span>
+                         
+                        
+                        {% endif %}
+                        {% endfor %}
+
+                        {% else %}
+                            Not Available
+                        {% endif %}
+
+                    </td>
+                    <td>
+                        {% if emails[loop.index0] %}
+                            {% for em in emails[loop.index0] %}
+                                {% if em['emp_id'] == emp.id %}
+                                    <span class="d-block"> {{em['email']}} </span>
+                                {% endif %}
+                            {% endfor %}
+
+                        {% else %}
+                            Not Available
+                        {% endif %}
+                    </td>
+                    {% if true %}
+                        <td>Male</td>
+                    {% else %}
+                        <td>Female</td>
+                    {% endif %}
+                    <td>{{emp.tazkira}}</td>
+                    <td>{{emp.birthday}}</td>
+                    <td>{{emp.blood}}</td>
+                    <td>{{emp.tin}}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock main_content%}
+{% block js_code %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js"></script>
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+
+<script>
+
+
+    $(document).ready(function() {
+        $('#employee_setting').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'colvis',
+                'excel',
+                'print',
+                {
+                    text: '<i class="fad fa-eye"></i> View Employee',
+                    attr: {'class': 'btn btn-info'},
+                    action: function () {
+                        $('.create_new_user_modal').modal('show')
+                    }
+                },
+                {
+                    text: '<i class="fad fa-edit"></i> Edit Employee',
+                    attr: {'class': 'btn btn-primary'},
+                    action: function () {
+                        $('.create_new_user_modal').modal('show')
+                    }
+                },
+                {
+                    text: '<i class="fad fa-times"></i> Delete Employee',
+                    attr: {'class': 'btn btn-warning'},
+                    action: function () {
+                        $('.create_new_user_modal').modal('show')
+                    }
+                }
+                
+            ],
+        }
+        );
+    });
+
+
+</script>
+{% endblock js_code %}
