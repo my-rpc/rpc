@@ -4,8 +4,8 @@
     "en": "Create New User"
   },
   "add_new_employee": {
-    "dari": "اضافه کردن کارمند جدید",
-    "en": "َAdd New Employee"
+    "dari" : "اضافه کردن کارمند",
+    "en" : "Add Employee"
   },
   "name_language": {
     "dari": "اطلاعات شخصی به دری",
@@ -335,6 +335,10 @@
     "dari": "اسناد تحصیلی",
     "en": "Educational Documents"
   },
+  "add_documents": {
+    "dari": "اضافه کردن اسناد",
+    "en": "Add Documents"
+  },
   "guarantors": {
     "dari": "ضمانت خط",
     "en": "Guarantors"
@@ -594,6 +598,10 @@
   "user_setting": {
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
+  },
+  "employee_setting": {
+    "dari": "تنظیمات کامند",
+    "en": "Employee Setting"
   },
   "active":{
     "dari": "فعال",
