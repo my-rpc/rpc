@@ -1,13 +1,13 @@
 from flask import render_template, url_for, redirect, request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
+from werkzeug.utils import secure_filename
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
-    Emails, Phone
+from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, Emails, Phone
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
-
+import os
 
 @app.route("/", methods=['GET', 'POST'])
 @login_required
@@ -188,9 +188,31 @@ def add_employee():
 @app.route("/add_documents", methods=['GET', 'POST'])
 def add_documents():
     language = 'en'
+    cv_form = UploadCVForm()
+    # cv_form = UploadCVForm(request.POST)
+    if request.method == 'POST':
+        # profilepic_name = str(id)+'.pdf'
+        # profilepic_url = '/static/CVs/'+profilepic_name
+        workingdir = os.path.abspath(os.getcwd())
+        # workingdir += workingdir + "/static/CVs"
+        # fullprofilepic_url = workingdir + profilepic_url
+        # file = request.files['cv']
+        # file.save(workingdir)
+        # return "Success! Profile photo uploaded successfully."
+        cv = request.files['cv']
+        path = os.path.join(workingdir, cv.filename )
+        cv.save(path)
+        return path
+    # else:
+    #     return "nodata"
+    # if cv_form.cv.data:
+    #     print("inside")
+    #     image_data = request.FILES[cv_form.cv.name].read()
+    #     open(os.path.join("./", cv_form.cv.data), 'w').write(image_data)
+
     return render_template("add_documents.html", title='Add Employee Documents',
-                           language=language,
-                           translation=translation_obj, message_obj=message_obj)
+                            language=language,
+                            translation=translation_obj, form=cv_form, message_obj=message_obj)
 
 
 @app.route("/employee_setting", methods=['GET', 'POST'])
@@ -200,14 +222,17 @@ def employee_setting():
                            language=language,
                            translation=translation_obj, message_obj=message_obj)
 
-
-@app.route("/load_districts", methods=['GET', 'POST'])
+@app.route("/load_districts", methods=['POST'])
 def load_districts():
-    province = request.args.get("province")
-    districts = {district.id: district.district_name + "/" + district.district_name_english for district in
-                 Districts.query.filter_by(province=province).all()}
-    return jsonify(districts)
+    if request.method == "POST":
+        province = request.args.get("province")
+        districts = {district.id: district.district_name + "/" + district.district_name_english for district in
+                     Districts.query.filter_by(province=province).all()}
+        return jsonify(districts)
 
+
+
+    
 # @app.route("/employee_list", methods=['GET', 'POST'])
 # def employee_list():
 #     language = 'en'
@@ -269,3 +294,4 @@ def load_districts():
 #     return render_template('employee_list.html', title='Add Employee',
 #                            form=add_employee_form, language=language,
 #                            translation=translation_obj, message_obj=message_obj, form_contact=add_employee_contact_form)
+
