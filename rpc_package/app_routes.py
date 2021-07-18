@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
-    Emails, Phone
+    Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import os
 from datetime import datetime
@@ -84,6 +84,7 @@ def uds_user():
 
 
 @app.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
@@ -205,6 +206,7 @@ def add_documents():
 
 
 @app.route("/load_districts", methods=['POST'])
+@login_required
 def load_districts():
     if request.method == "POST":
         province = request.args.get("province")
@@ -218,6 +220,7 @@ def load_districts():
 
 
 @app.route("/employee_settings", methods=['GET', 'POST'])
+@login_required
 def employee_settings():
     language = 'en'
 
@@ -239,6 +242,7 @@ def employee_settings():
 
 
 @app.route('/employee_details', methods=['GET', "POST"])
+@login_required
 def employee_details():
     language = 'en'
     return render_template('employee_details.html', title='Employee Details', language=language,
@@ -246,6 +250,7 @@ def employee_details():
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
+@login_required
 def uds_employee():
     language = 'en'
 
