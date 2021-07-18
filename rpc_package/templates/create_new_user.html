@@ -120,7 +120,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title text-primary" id="myLargeModalLabel">
-                    {{translation.create_new_user[language]}}
+                    {{translation.update_user[language]}}
                 </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
@@ -226,6 +226,14 @@ updateUserOpenModel = function(userID){
         //     toastError(r);
         // }
     });
+}
+
+deleteEmployee = function(empID){
+    if (confirm("Are you sure you want to delete employee with "+empID+ " number?")) {
+        toastSuccess('employee deleted!')
+    } else {
+        toastError('Canceled')
+    }
 }
 
 $(document).on( 'submit', '#create_user', function(e){

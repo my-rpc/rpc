@@ -1,0 +1,172 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} Add Employee {% endblock %}
+{% block css_or_js_code %}
+
+{% endblock  css_or_js_code %}
+{% block main_content %}
+
+<div class="box">
+    <div class="box-header with-border">
+        <h4 class="box-title">{{translation.add_documents[language]}}</h4>
+    </div>
+    <div class="box-body">
+        <!--   Action="" is used to confirm to route to the same page.     -->
+        <div class="row">
+
+            <div class="col-md-12">
+                <form method="POST" , action="" id="add_documents" enctype="multipart/form-data">
+                    {{ form.hidden_tag()}}
+                <div class="row">
+                    <div class="form-group col-md-9 row">
+                        <label class="col-form-label col-lg-2">{{translation.copy_of_national_id[language]}}</label>
+                        <div class="col-lg-12">
+                            <div class="custom-file">
+                                <!-- <input type="file" class="custom-file-input" id="customFile"> -->
+                                {{ form.cv(class="custom-file-input", id="customFile")}}
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-9 row">
+                        <label class="col-form-label col-lg-2">{{translation.guarantors[language]}}</label>
+                        <div class="col-lg-12">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-9 row">
+                        <label class="col-form-label col-lg-2">{{translation.educational_documents[language]}}</label>
+                        <div class="col-lg-12">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-9 row">
+                        <label class="col-form-label col-lg-2">{{translation.tin[language]}}</label>
+                        <div class="col-lg-12">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-9 row">
+                        <label class="col-form-label col-lg-2">{{translation.cv[language]}}</label>
+                        <div class="col-lg-12">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-9 row">
+                        <label class="col-form-label col-lg-2">Custom BS file input</label>
+                        <div class="col-lg-12">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
+                    </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock main_content%}
+{% block js_code %}
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% endblock js_code %}

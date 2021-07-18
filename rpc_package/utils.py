@@ -37,6 +37,14 @@ class EmployeeValidator:
     def number_validator(number):
         return bool(re.match(r"\d+", number))
 
+    @staticmethod
+    def email_validator(email):
+        return bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email))
+
+    @staticmethod
+    def phone_validator(phone):
+        return bool(re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})', phone))
+
 
 def message_to_client_403(message):
     return jsonify({'success': False, 'message': message}), \

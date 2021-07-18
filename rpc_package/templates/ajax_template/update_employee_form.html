@@ -1,0 +1,180 @@
+<form method="POST" , action="" id="update_employee">
+    {{ form.hidden_tag()}}
+    <fieldset class="form-group">
+        <div class="row">
+            <div class="form-group col-md-12">
+                {{ form.employee_id.label(class="form-control-label")}}
+                {{ form.employee_id(class="form-control form-control-lg")}}
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <legend class="border-bottom mb-4">
+                        {{  translation.name_language['en'] }}
+                    </legend>
+                    {{ form.first_name_english.label(class="form-control-label")}}
+                    {{ form.first_name_english(class="form-control form-control-lg")}}
+                </div>
+                <div class="form-group">
+                    {{ form.last_name_english.label(class="form-control-label")}}
+                    {{ form.last_name_english(class="form-control form-control-lg")}}
+                </div>
+                <div class="form-group">
+                    {{ form.father_name_english.label(class="form-control-label")}}
+                    {{ form.father_name_english(class="form-control form-control-lg")}}
+                </div>
+                <div class="form-group">
+                    {{ form.grand_name_english.label(class="form-control-label")}}
+                    {{ form.grand_name_english(class="form-control form-control-lg")}}
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        {{ form.phone.label(class="form-control-label")}}
+                        {{ form.phone(class="form-control form-control-lg")}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.phone_second.label(class="form-control-label")}}
+                        {{ form.phone_second(class="form-control form-control-lg")}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group  col-md-6">
+                        {{ form.tazkira.label(class="form-control-label")}}
+                        {{ form.tazkira(class="form-control form-control-lg")}}
+                    </div>
+                    <div class="form-group  col-md-6">
+                        {{ form.tin.label(class="form-control-label")}}
+                        {{ form.tin(class="form-control form-control-lg")}}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <legend class="border-bottom mb-4">
+                        {{  translation.name_language['dari'] }}
+                    </legend>
+                    {{ form.first_name.label(class="form-control-label")}}
+                    {{ form.first_name(class="form-control form-control-lg")}}
+                </div>
+                <div class="form-group">
+                    {{ form.last_name.label(class="form-control-label")}}
+                    {{ form.last_name(class="form-control form-control-lg")}}
+                </div>
+                <div class="form-group">
+                    {{ form.father_name.label(class="form-control-label")}}
+                    {{ form.father_name(class="form-control form-control-lg")}}
+                </div>
+                <div class="form-group">
+                    {{ form.grand_name.label(class="form-control-label")}}
+                    {{ form.grand_name(class="form-control form-control-lg")}}
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        {{ form.email.label(class="form-control-label")}}
+                        {{ form.email(class="form-control form-control-lg")}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ form.email_second.label(class="form-control-label")}}
+                        {{ form.email_second(class="form-control form-control-lg")}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        {{ form.birthday.label(class="form-control-label")}}
+                        {{ form.birthday(class="form-control form-control-lg")}}
+                    </div>
+                    <div class="form-group  col-md-6">
+                        {{ form.blood.label(class="form-control-label")}}
+                        {{ form.blood(class="form-control form-control-lg")}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 per-address-col">
+                
+            </div>
+            <div class="col-md-6 cur-address-col">
+                
+            </div>
+            <div class="col-md-6">
+                <div class="form-group per-address d-none">
+                    <legend class="border-bottom mb-4">
+                        {{ form.permanent_address.label(class="form-control-label")}}
+                    </legend>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            {{ form.provinces_permanent.label(class="form-control-label")}}
+                            {{ form.provinces_permanent(onChange="load_districts(this.value, 'permanent_district')", class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ form.district_permanent.label(class="form-control-label")}}
+                            {{ form.district_permanent(id="permanent_district", class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <strong class="form-control-label m-5">Address</strong>
+                            {{ form.permanent_address(class="form-control mt-2 form-control-lg")}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <strong class="form-control-label m-5">آدرس</strong>
+                            {{ form.permanent_address_dari(class="form-control mt-2 form-control-lg")}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group cur-address d-none">
+                    <legend class="border-bottom mb-4">
+                        {{ form.current_address.label(class="form-control-label")}}
+                    </legend>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            {{ form.provinces_current.label(class="form-control-label")}}
+                            {{ form.provinces_current(onChange="load_districts(this.value, 'current_district')",class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ form.district_current.label(class="form-control-label")}}
+                            {{ form.district_current(id="current_district", class="form-control form-control-lg")}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <strong class="form-control-label m-5">Address</strong>
+                            {{ form.current_address(class="form-control mt-2 form-control-lg")}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <strong class="form-control-label m-5">آدرس</strong>
+                            {{ form.current_address_dari(class="form-control mt-2 form-control-lg")}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check1">
+                {% for radio in form.gender %}
+                {{ radio(class="form-check-input")}}
+                {{ radio.label(class="form-check-label")}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check1">
+                {% for radio in form.m_status %}
+                {{ radio(class="form-check-input")}}
+                {{ radio.label(class="form-check-label")}}
+                {% endfor %}
+            </div>
+        </div>
+
+
+
+    </fieldset>
+    <div class="form-group">
+        {{form.submit(class="btn btn-primary")}}
+    </div>
+</form>

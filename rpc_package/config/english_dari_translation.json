@@ -4,8 +4,8 @@
     "en": "Create New User"
   },
   "add_new_employee": {
-    "dari": "اضافه کردن کارمند جدید",
-    "en": "َAdd New Employee"
+    "dari" : "اضافه کردن کارمند",
+    "en" : "Add Employee"
   },
   "name_language": {
     "dari": "اطلاعات شخصی به دری",
@@ -14,6 +14,10 @@
   "user_login": {
     "dari": "ورود به سیستم",
     "en": "Login"
+  },
+  "login_message": {
+    "dari": "برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید",
+    "en": "Please check your username and password."
   },
   "hr_department": {
     "dari": "دیپارتمنت منابع بشری",
@@ -327,13 +331,25 @@
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
   },
-  "copy_of_nationale_id": {
+  "copy_of_national_id": {
     "dari": "کاپی تذکره",
     "en": "Copy of National ID"
+  },
+  "tin": {
+    "dari": "نمبر تشخصیه",
+    "en": "TIN Number"
+  },
+  "cv": {
+    "dari": "سی وی",
+    "en": "CV"
   },
   "educational_documents": {
     "dari": "اسناد تحصیلی",
     "en": "Educational Documents"
+  },
+  "add_documents": {
+    "dari": "اضافه کردن اسناد",
+    "en": "Add Documents"
   },
   "guarantors": {
     "dari": "ضمانت خط",
@@ -595,6 +611,10 @@
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
   },
+  "employee_setting": {
+    "dari": "تنظیمات کامند",
+    "en": "Employee Setting"
+  },
   "active":{
     "dari": "فعال",
     "en": "Active"
@@ -626,5 +646,9 @@
   "search_employee": {
     "dari": "جستجو کارمندان",
     "en": "Search Employee"
+  },
+  "update_user": {
+    "dari": " تغییرات کاربر",
+    "en": "Update user"
   }
 }
