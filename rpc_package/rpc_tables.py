@@ -129,7 +129,6 @@ class Documents(db.Model):
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
                        nullable=False)
     name = db.Column(db.String(255), nullable=True)
-    province_name_english = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):

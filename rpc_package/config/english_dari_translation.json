@@ -327,9 +327,17 @@
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
   },
-  "copy_of_nationale_id": {
+  "copy_of_national_id": {
     "dari": "کاپی تذکره",
     "en": "Copy of National ID"
+  },
+  "tin": {
+    "dari": "نمبر تشخصیه",
+    "en": "TIN Number"
+  },
+  "cv": {
+    "dari": "سی وی",
+    "en": "CV"
   },
   "educational_documents": {
     "dari": "اسناد تحصیلی",

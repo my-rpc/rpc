@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField, FileField, TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email, ValidationError
 
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails
@@ -110,3 +110,15 @@ class EmployeeForm(FlaskForm):
     def validate_grand_name(self, grand_name):
         if not check_language(grand_name.data):
             raise ValidationError("نام پدرکلان باید به دری نوشته شود.")
+
+class UploadCVForm(FlaskForm):
+    # cv = FileField('سی وی', validators=[DataRequired()])
+    cv = FileField(u'CV File', validators=[Regexp("\w+\.pdf$")]) 
+    # description = TextAreaField(u'Image Description')
+    def validate_cv(self, cv):
+        
+        if field.data: field.data = re.sub(r'[^a-z0-9_.-]', '_', field.data) 
+    # national_id = StringField('تذکره', validators=[DataRequired()])
+    # educational_documents = StringField('اسناد تحصیلی', validators=[DataRequired()])
+    # tin = StringField('نمبر تشخصیه', validators=[DataRequired()])
+    # grand_name = StringField('نام پدر کلان', validators=[DataRequired()])
