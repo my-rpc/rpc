@@ -204,14 +204,6 @@ def add_documents():
                            translation=translation_obj, form=cv_form, message_obj=message_obj)
 
 
-@app.route("/employee_setting", methods=['GET', 'POST'])
-def employee_setting():
-    language = 'en'
-    return render_template("employee_setting.html", title='Employee Settings',
-                           language=language,
-                           translation=translation_obj, message_obj=message_obj)
-
-
 @app.route("/load_districts", methods=['POST'])
 def load_districts():
     if request.method == "POST":
@@ -220,35 +212,37 @@ def load_districts():
                      Districts.query.filter_by(province=province).all()}
         return jsonify(districts)
     province = request.args.get("province")
-    districts = {district.id: district.district_name+"/"+district.district_name_english for district in Districts.query.filter_by(province=province).all()}
+    districts = {district.id: district.district_name + "/" + district.district_name_english for district in
+                 Districts.query.filter_by(province=province).all()}
     return jsonify(districts)
 
 
 @app.route("/employee_settings", methods=['GET', 'POST'])
-def employee_setting():
+def employee_settings():
     language = 'en'
 
     employees = db.session.query(Employees).all()
     phones = {}
     emails = {}
     for x, emp in enumerate(employees):
-        phone = db.session.query(Phone).filter_by(emp_id = emp.id).all()
-        email = db.session.query(Emails).filter_by(emp_id = emp.id)
+        phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
+        email = db.session.query(Emails).filter_by(emp_id=emp.id)
         if phone is not None:
             phones[x] = phone
         if email is not None:
             emails[x] = email
     print(emails)
 
-    return render_template("employee_settings.html", title='Employee Settings',
-                            employees=employees, emails=emails, phones=phones, language=language,
-                            translation=translation_obj, message_obj=message_obj)
+    return render_template("employee_setting.html", title='Employee Settings',
+                           employees=employees, emails=emails, phones=phones, language=language,
+                           translation=translation_obj, message_obj=message_obj)
+
 
 @app.route('/employee_details', methods=['GET', "POST"])
 def employee_details():
     language = 'en'
     return render_template('employee_details.html', title='Employee Details', language=language,
-                            translation=translation_obj, message_obj=message_obj)
+                           translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
@@ -260,10 +254,10 @@ def uds_employee():
     if EmployeeValidator.emp_id_validator(emp_id):
 
         emp = Employees.query.get(emp_id)
-        phones = Phone.query.filter_by(emp_id = emp_id).all()
-        emails = Emails.query.filter_by(emp_id = emp_id).all()
-        cur_add = Current_addresses.query.filter_by(emp_id = emp_id).first()
-        per_add = Permanent_addresses.query.filter_by(emp_id = emp_id).first()
+        phones = Phone.query.filter_by(emp_id=emp_id).all()
+        emails = Emails.query.filter_by(emp_id=emp_id).all()
+        cur_add = Current_addresses.query.filter_by(emp_id=emp_id).first()
+        per_add = Permanent_addresses.query.filter_by(emp_id=emp_id).first()
         update_employee_form.employee_id.data = emp.id
         update_employee_form.first_name.data = emp.name
         update_employee_form.last_name.data = emp.lname
@@ -293,7 +287,6 @@ def uds_employee():
             update_employee_form.current_address.data = cur_add.address
             update_employee_form.current_address_dari.data = cur_add.address_dari
 
-
         if phones is not None and len(phones) == 2:
             update_employee_form.phone.data = phones[0].phone
             update_employee_form.phone_second.data = phones[1].phone
@@ -313,24 +306,24 @@ def uds_employee():
         else:
             update_employee_form.email.data = None
             update_employee_form.email_second.data = None
-        cur_district = Districts.query.filter_by(id = cur_add.district_id).first()
-        cur_province = Provinces.query.filter_by(id = cur_add.province_id).first()
-        per_district = Districts.query.filter_by(id = per_add.district_id).first()
-        per_province = Provinces.query.filter_by(id = per_add.province_id).first()
+        cur_district = Districts.query.filter_by(id=cur_add.district_id).first()
+        cur_province = Provinces.query.filter_by(id=cur_add.province_id).first()
+        per_district = Districts.query.filter_by(id=per_add.district_id).first()
+        per_province = Provinces.query.filter_by(id=per_add.province_id).first()
 
         current_addresses = "<div class='py-4'><h5 class='d-inline text-primary'> \
                             Current address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
-                            + cur_district.district_name  + ", " +cur_province.province_name\
+                            + cur_district.district_name + ", " + cur_province.province_name \
                             + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
         perpanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
                             Permanent address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
-                                + per_district.district_name + ", " +per_province.province_name \
-                                + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+                              + per_district.district_name + ", " + per_province.province_name \
+                              + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
         data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
-                            form=update_employee_form, translation=translation_obj, message_obj=message_obj),
-                            {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
+                                       form=update_employee_form, translation=translation_obj, message_obj=message_obj),
+                       {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
         return data
     else:
         message_to_client_403(message_obj.invalid_message[language])
