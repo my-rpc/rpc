@@ -138,7 +138,7 @@ class EmployeeForm(FlaskForm):
                 raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
 
     def validate_employee_id(self, employee_id):
-        employee = Employees.query.get(employee_id)
+        employee = Employees.query.get(employee_id.data)
         if employee:
             raise ValidationError('Employee already exist, please check your employee ID')
 
