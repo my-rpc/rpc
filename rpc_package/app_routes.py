@@ -98,7 +98,11 @@ def login():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
-            return redirect(url_for("blank"))
+            request_user_page = request.args.get('next')
+            if request_user_page:
+                return redirect(request_user_page)
+            else:
+                return redirect(url_for("blank"))
         else:
             return message_to_client_403(message_obj.password_incorrect[default_language])
 
