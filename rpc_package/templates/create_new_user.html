@@ -228,6 +228,14 @@ updateUserOpenModel = function(userID){
     });
 }
 
+deleteEmployee = function(empID){
+    if (confirm("Are you sure you want to delete employee with "+empID+ " number?")) {
+        toastSuccess('employee deleted!')
+    } else {
+        toastError('Canceled')
+    }
+}
+
 $(document).on( 'submit', '#create_user', function(e){
     e.preventDefault();
     $form = $(this);

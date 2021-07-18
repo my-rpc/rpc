@@ -219,8 +219,9 @@ def uds_employee():
         emp = Employees.query.get(emp_id)
         phones = Phone.query.filter_by(emp_id = emp_id).all()
         emails = Emails.query.filter_by(emp_id = emp_id).all()
-        cur_add = Current_addresses.query.filter_by(emp_id = emp_id).all()
-        per_add = Permanent_addresses.query.filter_by(emp_id = emp_id).all()
+        cur_add = Current_addresses.query.filter_by(emp_id = emp_id).first()
+        per_add = Permanent_addresses.query.filter_by(emp_id = emp_id).first()
+        update_employee_form.employee_id.data = emp.id
         update_employee_form.first_name.data = emp.name
         update_employee_form.last_name.data = emp.lname
         update_employee_form.father_name.data = emp.fname
@@ -232,18 +233,22 @@ def uds_employee():
         update_employee_form.tin.data = emp.tin
         update_employee_form.tazkira.data = emp.tazkira
         update_employee_form.birthday.data = emp.birthday
+        update_employee_form.blood.data = emp.blood
 
         update_employee_form.gender.data = emp.gender
         update_employee_form.m_status.data = emp.m_status
 
-        update_employee_form.provinces_permanent.data = per_add.province_id
-        update_employee_form.district_permanent.data = per_add.district_id
-        update_employee_form.permanent_address_dari.data = per_add.address
-        
-        update_employee_form.provinces_current.data = cur_add.province_id
-        update_employee_form.district_current.data = cur_add.district_id
+        if per_add is not None:
+            update_employee_form.provinces_permanent.data = per_add.province_id
+            update_employee_form.district_permanent.data = per_add.district_id
+            update_employee_form.permanent_address.data = per_add.address
+            update_employee_form.permanent_address_dari.data = per_add.address_dari
 
-        update_employee_form.current_address.data = cur_add.address
+        if cur_add is not None:
+            update_employee_form.provinces_current.data = cur_add.province_id
+            update_employee_form.district_current.data = cur_add.district_id
+            update_employee_form.current_address.data = cur_add.address
+            update_employee_form.current_address_dari.data = cur_add.address_dari
 
 
         if phones is not None and len(phones) == 2:
@@ -265,10 +270,25 @@ def uds_employee():
         else:
             update_employee_form.email.data = None
             update_employee_form.email_second.data = None
+        cur_district = Districts.query.filter_by(id = cur_add.district_id).first()
+        cur_province = Provinces.query.filter_by(id = cur_add.province_id).first()
+        per_district = Districts.query.filter_by(id = per_add.district_id).first()
+        per_province = Provinces.query.filter_by(id = per_add.province_id).first()
 
+        current_addresses = "<div class='py-4'><h5 class='d-inline text-primary'> \
+                            Current address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
+                            + cur_district.district_name  + ", " +cur_province.province_name\
+                            + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
-        return render_template('ajax_template/update_employee_form.html', language=language, 
-                            form=update_employee_form, translation=translation_obj, message_obj=message_obj )
+        perpanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
+                            Permanent address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
+                                + per_district.district_name + ", " +per_province.province_name \
+                                + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+
+        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language, 
+                            form=update_employee_form, translation=translation_obj, message_obj=message_obj), 
+                            {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
+        return data
     else:
         message_to_client_403(message_obj.invalid_message[language])
     

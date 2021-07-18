@@ -178,8 +178,12 @@ updateEmployee = function(empID){
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log(response)
-            $('#employee_update_modal').html(response)        
+            $('#employee_update_modal').html(response[0])   
+            $('.per-address-col').html(response[1].perpament_add)   
+            $('.cur-address-col').html(response[1].current_add)   
+            
+
+            $("#employee_id").prop('readonly', true);
         },
         // error: function(response){
         //     var statusCode = response.status;
@@ -208,5 +212,9 @@ function load_districts(province, target){
         } 
     });
 }
+
+showAddress = function(address){
+    $('.'+address).removeClass('d-none');
+};
 </script>
 {% endblock js_code %}
