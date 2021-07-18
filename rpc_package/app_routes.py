@@ -1,19 +1,22 @@
 from flask import render_template, url_for, redirect, request, jsonify
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, Emails, Phone
+from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
+    Emails, Phone
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import json
 
 
 @app.route("/", methods=['GET', 'POST'])
+@login_required
 def blank():
     return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
+@login_required
 def create_new_user():
     language = 'en'
     create_new_user_form = CreateUserForm()
@@ -37,7 +40,7 @@ def create_new_user():
             return message_to_client_403(create_new_user_form.errors)
     users = db.session.query(Users, User_roles, Employees).join(Users,
                                                                 (Users.role == User_roles.id)).join(Employees, (
-                Users.emp_id == Employees.id)).all()
+            Users.emp_id == Employees.id)).all()
 
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User', users=users,
@@ -46,6 +49,7 @@ def create_new_user():
 
 
 @app.route("/uds_user", methods=['GET', 'POST'])
+@login_required
 def uds_user():
     language = 'en'
     if request.method == 'POST':
@@ -104,6 +108,7 @@ def login():
 
 
 @app.route("/add_employee", methods=['GET', 'POST'])
+@login_required
 def add_employee():
     language = 'en'
     add_employee_form = EmployeeForm()
@@ -165,7 +170,8 @@ def add_employee():
                 db.session.commit()
             except IOError as exc:
                 return message_to_client_403(message_obj.create_new_employee_not[language])
-            return message_to_client_200(message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data))
+            return message_to_client_200(
+                message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data))
         else:
             return message_to_client_403(add_employee_form.errors)
 
@@ -174,29 +180,30 @@ def add_employee():
                            form=add_employee_form, language=language,
                            translation=translation_obj, message_obj=message_obj)
 
+
 @app.route("/add_documents", methods=['GET', 'POST'])
 def add_documents():
     language = 'en'
     return render_template("add_documents.html", title='Add Employee Documents',
-                            language=language,
-                            translation=translation_obj, message_obj=message_obj)
+                           language=language,
+                           translation=translation_obj, message_obj=message_obj)
+
 
 @app.route("/employee_setting", methods=['GET', 'POST'])
 def employee_setting():
     language = 'en'
     return render_template("employee_setting.html", title='Employee Settings',
-                            language=language,
-                            translation=translation_obj, message_obj=message_obj)
+                           language=language,
+                           translation=translation_obj, message_obj=message_obj)
+
 
 @app.route("/load_districts", methods=['GET', 'POST'])
 def load_districts():
     province = request.args.get("province")
-    districts = {district.id: district.district_name+"/"+district.district_name_english for district in Districts.query.filter_by(province=province).all()}
+    districts = {district.id: district.district_name + "/" + district.district_name_english for district in
+                 Districts.query.filter_by(province=province).all()}
     return jsonify(districts)
 
-
-
-    
 # @app.route("/employee_list", methods=['GET', 'POST'])
 # def employee_list():
 #     language = 'en'
@@ -258,4 +265,3 @@ def load_districts():
 #     return render_template('employee_list.html', title='Add Employee',
 #                            form=add_employee_form, language=language,
 #                            translation=translation_obj, message_obj=message_obj, form_contact=add_employee_contact_form)
-
