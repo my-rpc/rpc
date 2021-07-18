@@ -213,10 +213,6 @@ def load_districts():
         districts = {district.id: district.district_name + "/" + district.district_name_english for district in
                      Districts.query.filter_by(province=province).all()}
         return jsonify(districts)
-    province = request.args.get("province")
-    districts = {district.id: district.district_name + "/" + district.district_name_english for district in
-                 Districts.query.filter_by(province=province).all()}
-    return jsonify(districts)
 
 
 @app.route("/employee_settings", methods=['GET', 'POST'])
@@ -236,7 +232,7 @@ def employee_settings():
             emails[x] = email
     print(emails)
 
-    return render_template("employee_setting.html", title='Employee Settings',
+    return render_template("employee_settings.html", title='Employee Settings',
                            employees=employees, emails=emails, phones=phones, language=language,
                            translation=translation_obj, message_obj=message_obj)
 
