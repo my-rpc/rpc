@@ -9,6 +9,7 @@ from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addre
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import os
 from datetime import datetime
+from sqlalchemy.orm import aliased
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -218,3 +219,118 @@ def load_districts():
         districts = {district.id: district.district_name + "/" + district.district_name_english for district in
                      Districts.query.filter_by(province=province).all()}
         return jsonify(districts)
+    province = request.args.get("province")
+    districts = {district.id: district.district_name+"/"+district.district_name_english for district in Districts.query.filter_by(province=province).all()}
+    return jsonify(districts)
+
+
+@app.route("/employee_settings", methods=['GET', 'POST'])
+def employee_setting():
+    language = 'en'
+
+    employees = db.session.query(Employees).all()
+    phones = {}
+    emails = {}
+    for x, emp in enumerate(employees):
+        phone = db.session.query(Phone).filter_by(emp_id = emp.id).all()
+        email = db.session.query(Emails).filter_by(emp_id = emp.id)
+        if phone is not None:
+            phones[x] = phone
+        if email is not None:
+            emails[x] = email
+    print(emails)
+
+    return render_template("employee_settings.html", title='Employee Settings',
+                            employees=employees, emails=emails, phones=phones, language=language,
+                            translation=translation_obj, message_obj=message_obj)
+
+@app.route('/employee_details', methods=['GET', "POST"])
+def employee_details():
+    language = 'en'
+    return render_template('employee_details.html', title='Employee Details', language=language,
+                            translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/uds_employee', methods=['GET', "POST"])
+def uds_employee():
+    language = 'en'
+
+    update_employee_form = EmployeeForm()
+    emp_id = request.args.get('emp_id')
+    if EmployeeValidator.emp_id_validator(emp_id):
+
+        emp = Employees.query.get(emp_id)
+        phones = Phone.query.filter_by(emp_id = emp_id).all()
+        emails = Emails.query.filter_by(emp_id = emp_id).all()
+        cur_add = Current_addresses.query.filter_by(emp_id = emp_id).first()
+        per_add = Permanent_addresses.query.filter_by(emp_id = emp_id).first()
+        update_employee_form.employee_id.data = emp.id
+        update_employee_form.first_name.data = emp.name
+        update_employee_form.last_name.data = emp.lname
+        update_employee_form.father_name.data = emp.fname
+        update_employee_form.grand_name.data = emp.gname
+        update_employee_form.first_name_english.data = emp.name_english
+        update_employee_form.last_name_english.data = emp.name_english
+        update_employee_form.father_name_english.data = emp.name_english
+        update_employee_form.grand_name_english.data = emp.name_english
+        update_employee_form.tin.data = emp.tin
+        update_employee_form.tazkira.data = emp.tazkira
+        update_employee_form.birthday.data = emp.birthday
+        update_employee_form.blood.data = emp.blood
+
+        update_employee_form.gender.data = emp.gender
+        update_employee_form.m_status.data = emp.m_status
+
+        if per_add is not None:
+            update_employee_form.provinces_permanent.data = per_add.province_id
+            update_employee_form.district_permanent.data = per_add.district_id
+            update_employee_form.permanent_address.data = per_add.address
+            update_employee_form.permanent_address_dari.data = per_add.address_dari
+
+        if cur_add is not None:
+            update_employee_form.provinces_current.data = cur_add.province_id
+            update_employee_form.district_current.data = cur_add.district_id
+            update_employee_form.current_address.data = cur_add.address
+            update_employee_form.current_address_dari.data = cur_add.address_dari
+
+
+        if phones is not None and len(phones) == 2:
+            update_employee_form.phone.data = phones[0].phone
+            update_employee_form.phone_second.data = phones[1].phone
+        elif phones is not None and len(phones) == 1:
+            update_employee_form.phone.data = phones[0].phone
+            update_employee_form.phone_second.data = None
+        else:
+            update_employee_form.phone.data = None
+            update_employee_form.phone_second.data = None
+
+        if emails is not None and len(emails) == 2:
+            update_employee_form.email.data = emails[0].email
+            update_employee_form.email_second.data = emails[1].email
+        elif emails is not None and len(emails) == 1:
+            update_employee_form.email.data = emails[0].email
+            update_employee_form.email_second.data = None
+        else:
+            update_employee_form.email.data = None
+            update_employee_form.email_second.data = None
+        cur_district = Districts.query.filter_by(id = cur_add.district_id).first()
+        cur_province = Provinces.query.filter_by(id = cur_add.province_id).first()
+        per_district = Districts.query.filter_by(id = per_add.district_id).first()
+        per_province = Provinces.query.filter_by(id = per_add.province_id).first()
+
+        current_addresses = "<div class='py-4'><h5 class='d-inline text-primary'> \
+                            Current address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
+                            + cur_district.district_name  + ", " +cur_province.province_name\
+                            + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+
+        perpanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
+                            Permanent address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
+                                + per_district.district_name + ", " +per_province.province_name \
+                                + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+
+        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
+                            form=update_employee_form, translation=translation_obj, message_obj=message_obj),
+                            {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
+        return data
+    else:
+        message_to_client_403(message_obj.invalid_message[language])
