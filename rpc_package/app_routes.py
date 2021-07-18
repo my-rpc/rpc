@@ -201,3 +201,74 @@ def employee_setting():
                             employees=employees, emails=emails, phones=phones, language=language,
                             translation=translation_obj, message_obj=message_obj)
 
+@app.route('/employee_details', methods=['GET', "POST"])
+def employee_details():
+    language = 'en'
+    return render_template('employee_details.html', title='Employee Details', language=language,
+                            translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/uds_employee', methods=['GET', "POST"])
+def uds_employee():
+    language = 'en'
+
+    update_employee_form = EmployeeForm()
+    emp_id = request.args.get('emp_id')
+    if EmployeeValidator.emp_id_validator(emp_id):
+
+        emp = Employees.query.get(emp_id)
+        phones = Phone.query.filter_by(emp_id = emp_id).all()
+        emails = Emails.query.filter_by(emp_id = emp_id).all()
+        cur_add = Current_addresses.query.filter_by(emp_id = emp_id).all()
+        per_add = Permanent_addresses.query.filter_by(emp_id = emp_id).all()
+        update_employee_form.first_name.data = emp.name
+        update_employee_form.last_name.data = emp.lname
+        update_employee_form.father_name.data = emp.fname
+        update_employee_form.grand_name.data = emp.gname
+        update_employee_form.first_name_english.data = emp.name_english
+        update_employee_form.last_name_english.data = emp.name_english
+        update_employee_form.father_name_english.data = emp.name_english
+        update_employee_form.grand_name_english.data = emp.name_english
+        update_employee_form.tin.data = emp.tin
+        update_employee_form.tazkira.data = emp.tazkira
+        update_employee_form.birthday.data = emp.birthday
+
+        update_employee_form.gender.data = emp.gender
+        update_employee_form.m_status.data = emp.m_status
+
+        update_employee_form.provinces_permanent.data = per_add.province_id
+        update_employee_form.district_permanent.data = per_add.district_id
+        update_employee_form.permanent_address_dari.data = per_add.address
+        
+        update_employee_form.provinces_current.data = cur_add.province_id
+        update_employee_form.district_current.data = cur_add.district_id
+
+        update_employee_form.current_address.data = cur_add.address
+
+
+        if phones is not None and len(phones) == 2:
+            update_employee_form.phone.data = phones[0].phone
+            update_employee_form.phone_second.data = phones[1].phone
+        elif phones is not None and len(phones) == 1:
+            update_employee_form.phone.data = phones[0].phone
+            update_employee_form.phone_second.data = None
+        else:
+            update_employee_form.phone.data = None
+            update_employee_form.phone_second.data = None
+        
+        if emails is not None and len(emails) == 2:
+            update_employee_form.email.data = emails[0].email
+            update_employee_form.email_second.data = emails[1].email
+        elif emails is not None and len(emails) == 1:
+            update_employee_form.email.data = emails[0].email
+            update_employee_form.email_second.data = None
+        else:
+            update_employee_form.email.data = None
+            update_employee_form.email_second.data = None
+
+
+        return render_template('ajax_template/update_employee_form.html', language=language, 
+                            form=update_employee_form, translation=translation_obj, message_obj=message_obj )
+    else:
+        message_to_client_403(message_obj.invalid_message[language])
+    

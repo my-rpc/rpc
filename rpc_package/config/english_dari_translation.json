@@ -634,5 +634,9 @@
   "search_employee": {
     "dari": "جستجو کارمندان",
     "en": "Search Employee"
+  },
+  "update_user": {
+    "dari": " تغییرات کاربر",
+    "en": "Update user"
   }
 }

@@ -3,7 +3,7 @@
 {% block title %} {{ super() }} Add Employee {% endblock %}
 {% block css_or_js_code %}
     <style>
-        [type=radio]:not(:checked), [type=radio]:checked {
+        [type=radio]:not(:checked).rd, [type=radio]:checked.rd {
             position: absolute !important;
             left: auto;
             opacity: 1 !important;
@@ -38,37 +38,28 @@
                 <tr>
                     <td>
                         <div class="form-group">
-                            <input type="radio" class="with-gap radio-col-success" name="selected_emp" id="" value="{{emp.id}}">
+                            <input type="radio" class="rd radio-col-success" name="selected_emp" id="" value="{{emp.id}}">
                         </div>
                     </td>
                     <td>{{emp.id}}</td>
                     <td>{{emp.name}} {{emp.lname}}</td>
                     <td>{{emp.fname}}</td>
-                    <td> 
+                    <td>
                         {% if phones[loop.index0] %}
                         {% for ph in phones[loop.index0] %}
                         {% if ph['emp_id'] == emp.id %}
-                        <span class="d-block"> {{ph['phone']}} </span>
-                         
-                        
+                        <span class="d-block">{{ph['phone']}}</span>
                         {% endif %}
                         {% endfor %}
-
-                        {% else %}
-                            Not Available
                         {% endif %}
-
                     </td>
                     <td>
                         {% if emails[loop.index0] %}
                             {% for em in emails[loop.index0] %}
                                 {% if em['emp_id'] == emp.id %}
-                                    <span class="d-block"> {{em['email']}} </span>
+                                    <span class="d-block">{{em['email']}}</span>
                                 {% endif %}
                             {% endfor %}
-
-                        {% else %}
-                            Not Available
                         {% endif %}
                     </td>
                     {% if true %}
@@ -88,7 +79,32 @@
 
     </div>
 </div>
-
+<!-- updating employee modal start -->
+<div class="modal fade update_employee_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-primary box-title" id="myLargeModalLabel">
+                    {{translation.update_employee[language]}}
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body" id="">
+                <div class="box">
+                    
+                    <div class="box-body" id="employee_update_modal">
+                        <div class="text-center" id="loader"></div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 {% endblock main_content%}
 {% block js_code %}
 
@@ -113,21 +129,36 @@
                     text: '<i class="fad fa-eye"></i> View Employee',
                     attr: {'class': 'btn btn-info'},
                     action: function () {
-                        $('.create_new_user_modal').modal('show')
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
+                        if(empID != '' && empID != undefined){
+                            window.open('/employee_details?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee');
+                        }
                     }
                 },
                 {
                     text: '<i class="fad fa-edit"></i> Edit Employee',
                     attr: {'class': 'btn btn-primary'},
                     action: function () {
-                        $('.create_new_user_modal').modal('show')
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
+                        if(empID != '' && empID != undefined){
+                            updateEmployee(empID);
+                        }else{
+                            toastWarning('Please select an employee');
+                        }
                     }
                 },
                 {
                     text: '<i class="fad fa-times"></i> Delete Employee',
                     attr: {'class': 'btn btn-warning'},
                     action: function () {
-                        $('.create_new_user_modal').modal('show')
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
+                        if(empID != '' && empID != undefined){
+                            alert('This opthion is for employee deletion!')
+                        }else{
+                            toastWarning('Please select an employee')
+                        }
                     }
                 }
                 
@@ -136,6 +167,46 @@
         );
     });
 
+updateEmployee = function(empID){
+    spinner = "<i class='fad fa-spinner fa-spin text-info'></i>";
+    $('#loader').html(spinner);
+    $('.update_employee_modal').modal('show');
+    $.ajax({
+        type: "GET",
+        url: "uds_employee?emp_id="+empID,
+        // data: {'user_id':userID},
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response)
+            $('#employee_update_modal').html(response)        
+        },
+        // error: function(response){
+        //     var statusCode = response.status;
+        //     var r = '';
+        //     if(statusCode == '403'){
+        //         r = formValidateErrors(response);
+        //     }
+        //     toastError(r);
+        // }
+    });
+};
 
+function load_districts(province, target){
+    $.ajax({
+        type: "POST",
+        url: "/load_districts?province="+province,
+        contentType: "application/json",
+        dataType: 'json',
+        success: function(result) {
+            var options="";
+            for(var x in result)
+            {
+                options+= "<option value="+x+">"+result[x]+"</>";
+            }
+            $("#"+target).html(options)
+        } 
+    });
+}
 </script>
 {% endblock js_code %}
