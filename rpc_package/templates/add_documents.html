@@ -19,10 +19,10 @@
                     {{ form.hidden_tag()}}
                 <div class="row">
                     <div class="form-group col-md-9 row">
-                        <label class="col-form-label col-lg-2">{{translation.copy_of_national_id[language]}}</label>
+                        <label class="col-form-label col-lg-2">{{translation.cv[language]}}</label>
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                <!-- <input type="file" class="custom-file-input" id="customFile"> -->
+                                {{ form.flag()}}
                                 {{ form.cv(class="custom-file-input", id="customFile")}}
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
@@ -42,18 +42,21 @@
             </div>
 
             <div class="col-md-12">
+                <form method="POST" , action="" id="add_documents" enctype="multipart/form-data">
+                    {{ guarantor_form.hidden_tag()}}
                 <div class="row">
                     <div class="form-group col-md-9 row">
                         <label class="col-form-label col-lg-2">{{translation.guarantors[language]}}</label>
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
+                                {{ guarantor_form.flag()}}
+                                {{ guarantor_form.guarantor(class="custom-file-input", id="customFile")}}
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                        <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
@@ -62,21 +65,25 @@
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
+                </form>
             </div>
 
             <div class="col-md-12">
+                <form method="POST" , action="" id="add_documents" enctype="multipart/form-data">
+                    {{ education_form.hidden_tag()}}
                 <div class="row">
                     <div class="form-group col-md-9 row">
                         <label class="col-form-label col-lg-2">{{translation.educational_documents[language]}}</label>
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
+                                {{ education_form.flag()}}
+                                {{ education_form.education(class="custom-file-input", id="customFile")}}
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                        <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
@@ -85,21 +92,25 @@
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
+                </form>
             </div>
 
             <div class="col-md-12">
+                <form method="POST" , action="" id="add_documents" enctype="multipart/form-data">
+                    {{ tin_form.hidden_tag()}}
                 <div class="row">
                     <div class="form-group col-md-9 row">
                         <label class="col-form-label col-lg-2">{{translation.tin[language]}}</label>
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
+                                {{ tin_form.flag()}}
+                                {{ tin_form.tin(class="custom-file-input", id="customFile")}}      
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                        <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
@@ -108,21 +119,25 @@
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
+                </form>
             </div>
 
             <div class="col-md-12">
+                <form method="POST" , action="" id="add_documents" enctype="multipart/form-data">
+                    {{ tazkira_form.hidden_tag()}}
                 <div class="row">
                     <div class="form-group col-md-9 row">
-                        <label class="col-form-label col-lg-2">{{translation.cv[language]}}</label>
+                        <label class="col-form-label col-lg-2">{{translation.copy_of_national_id[language]}}</label>
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
+                                {{ tazkira_form.flag()}}
+                                {{ tazkira_form.tazkira(class="custom-file-input", id="customFile")}} 
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                        <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
@@ -131,21 +146,25 @@
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
+                </form>
             </div>
 
             <div class="col-md-12">
+                <form method="POST" , action="" id="add_documents" enctype="multipart/form-data">
+                    {{ extra_docs_form.hidden_tag()}}
                 <div class="row">
                     <div class="form-group col-md-9 row">
                         <label class="col-form-label col-lg-2">Custom BS file input</label>
                         <div class="col-lg-12">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
+                                {{ extra_docs_form.flag()}}
+                                {{ extra_docs_form.extra_docs(class="custom-file-input", id="customFile")}} 
                                 <label class="custom-file-label" for="customFile">Choose file</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
+                        <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button>
@@ -154,6 +173,7 @@
                         <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
                 </div>
+                </form>
             </div>
 
             

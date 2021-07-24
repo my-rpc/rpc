@@ -2,7 +2,8 @@ from flask import render_template, url_for, redirect, request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, UploadEducationalDocsForm, \
+        UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
     Emails, Phone, Provinces
@@ -194,15 +195,59 @@ def add_employee():
 def add_documents():
     language = 'en'
     cv_form = UploadCVForm()
+    guarantor = UploadGuarantorForm()
+    education = UploadEducationalDocsForm()
+    tin = UploadTinForm()
+    tazkira = UploadTazkiraForm()
+    extra_docs = UploadExtraDocsForm()
     if request.method == 'POST':
         workingdir = os.path.abspath(os.getcwd())
-        cv = request.files['cv']
-        path = os.path.join(workingdir, cv.filename)
-        cv.save(path)
-        return path
+        if guarantor.flag.data == "guarantor": 
+            guarantor = request.files['guarantor']
+            # with the following line, we can rename the file
+            # guarantor.filename = "dd.pdf" 
+            path = os.path.join(workingdir+"/files/guarantor", guarantor.filename)
+            guarantor.save(path)
+            return path
+        if cv_form and cv_form.flag.data == "cv":
+            cv = request.files['cv']
+            # with the following line, we can rename the file
+            # cv.filename = "dd.pdf" 
+            path = os.path.join(workingdir+"/files/cv", cv.filename)
+            cv.save(path)
+            return path
+        if education and education.flag.data == "education":
+            education = request.files['education']
+            # with the following line, we can rename the file
+            # education.filename = "dd.pdf" 
+            path = os.path.join(workingdir+"/files/education", education.filename)
+            education.save(path)
+            return path
+        if tin and tin.flag.data == "tin":
+            tin = request.files['tin']
+            # with the following line, we can rename the file
+            # tin.filename = "dd.pdf" 
+            path = os.path.join(workingdir+"/files/tin", tin.filename)
+            tin.save(path)
+            return path
+        if tazkira and tazkira.flag.data == "tazkira":
+            tazkira = request.files['tazkira']
+            # with the following line, we can rename the file
+            # tazkira.filename = "dd.pdf" 
+            path = os.path.join(workingdir+"/files/tazkira", tazkira.filename)
+            tazkira.save(path)
+            return path
+        if extra_docs and extra_docs.flag.data == "extra_docs":
+            extra_docs = request.files['extra_docs']
+            # with the following line, we can rename the file
+            # extra_docs.filename = "dd.pdf" 
+            path = os.path.join(workingdir+"/files/extra_docs", extra_docs.filename)
+            extra_docs.save(path)
+            return path
+
     return render_template("add_documents.html", title='Add Employee Documents',
                            language=language,
-                           translation=translation_obj, form=cv_form, message_obj=message_obj)
+                           translation=translation_obj, extra_docs_form=extra_docs, tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education, guarantor_form=guarantor, message_obj=message_obj)
 
 
 @app.route("/load_districts", methods=['POST'])

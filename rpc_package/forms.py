@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField, FileField
+from wtforms import StringField, PasswordField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails
@@ -143,6 +143,24 @@ class EmployeeForm(FlaskForm):
 
 
 class UploadCVForm(FlaskForm):
-    # cv = FileField('سی وی', validators=[DataRequired()])
-    cv = FileField(u'CV File', validators=[Regexp("\w+\.pdf$")])
-    # description = TextAreaField(u'Image Description')
+    cv = FileField(u'CV File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="cv")
+
+class UploadGuarantorForm(FlaskForm):
+    guarantor = FileField(u'Guarantor File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="guarantor")
+
+class UploadEducationalDocsForm(FlaskForm):
+    education = FileField(u'Education File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="education")
+
+class UploadTinForm(FlaskForm):
+    tin = FileField(u'Tin File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="tin")
+
+class UploadTazkiraForm(FlaskForm):
+    tazkira = FileField(u'Tazkira File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="tazkira")
+class UploadExtraDocsForm(FlaskForm):
+    extra_docs = FileField(u'extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="extra_docs")
