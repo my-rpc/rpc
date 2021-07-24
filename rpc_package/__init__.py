@@ -21,11 +21,10 @@ db = SQLAlchemy(app)
 # create translation object
 translation_obj = Translation(os.path.join(config_path, 'config/english_dari_translation.json'))
 message_obj = MessagePull(os.path.join(config_path, 'config/messages.json'))
-
 pass_crypt = Bcrypt(app)
-# login_manager = LoginManager(app)
-# login_manager.login_view = 'login'
-# login_manager.login_message_category = 'info'
-# login_manager.login_message = 'برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید'
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
+login_manager.login_message = translation_obj.login_message['en']
 
 from rpc_package import app_routes
