@@ -280,14 +280,14 @@ def uds_employee():
                             + cur_district.district_name  + ", " +cur_province.province_name\
                             + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
-        perpanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
+        permanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
                             Permanent address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
                                 + per_district.district_name + ", " +per_province.province_name \
                                 + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
         data = jsonify(render_template('ajax_template/update_employee_form.html', language=language, 
                             form=update_employee_form, translation=translation_obj, message_obj=message_obj), 
-                            {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
+                            {'current_add': current_addresses, 'permanent_add': permanent_addresses})
         return data
     else:
         message_to_client_403(message_obj.invalid_message[language])
