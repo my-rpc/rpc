@@ -15,6 +15,10 @@
     "dari": "ورود به سیستم",
     "en": "Login"
   },
+  "login_message": {
+    "dari": "برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید",
+    "en": "Please check your username and password."
+  },
   "hr_department": {
     "dari": "دیپارتمنت منابع بشری",
     "en": "HR Department"
@@ -327,9 +331,17 @@
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
   },
-  "copy_of_nationale_id": {
+  "copy_of_national_id": {
     "dari": "کاپی تذکره",
     "en": "Copy of National ID"
+  },
+  "tin": {
+    "dari": "نمبر تشخصیه",
+    "en": "TIN Number"
+  },
+  "cv": {
+    "dari": "سی وی",
+    "en": "CV"
   },
   "educational_documents": {
     "dari": "اسناد تحصیلی",
