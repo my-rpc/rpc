@@ -31,6 +31,10 @@
     "dari": "اطلاعات کارمند با آیدی {} بروزرسانی شد",
     "en": "Employee updated for {} ID"
   },
+  "create_new_employee_update_not": {
+    "dari": "اطلاعات کارمند با آیدی {} بروزرسانی نشد",
+    "en": "Employee not updated for {} ID"
+  },
   "create_new_employee_not": {
     "dari": "کارمند جدید اضافه نشد",
     "en": "Employee was not created"

@@ -62,7 +62,7 @@
                             {% endfor %}
                         {% endif %}
                     </td>
-                    {% if true %}
+                    {% if emp.gender == true %}
                         <td>Male</td>
                     {% else %}
                         <td>Female</td>
@@ -160,6 +160,18 @@
                             toastWarning('Please select an employee')
                         }
                     }
+                },
+                {
+                    text: '<i class="fad fa-times"></i> Add Documents',
+                    attr: {'class': 'btn btn-warning'},
+                    action: function () {
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
+                        if(empID != '' && empID != undefined){
+                            window.open('/employee_details?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee')
+                        }
+                    }
                 }
                 
             ],
@@ -179,10 +191,8 @@ updateEmployee = function(empID){
         contentType: false,
         success: function (response) {
             $('#employee_update_modal').html(response[0])   
-            $('.per-address-col').html(response[1].perpament_add)   
-            $('.cur-address-col').html(response[1].current_add)   
-            
-
+            $('.per-address-col').html(response[1].permanent_add);   
+            $('.cur-address-col').html(response[1].current_add);
             $("#employee_id").prop('readonly', true);
         },
         // error: function(response){
@@ -214,7 +224,39 @@ function load_districts(province, target){
 }
 
 showAddress = function(address){
-    $('.'+address).removeClass('d-none');
+    $('.'+address).toggleClass('d-none');
+
+    if( $('.'+address + ' input:text, .'+address + ' select').is('[disabled = disabled]') ){
+        $('.'+address + ' input:text, .'+address + ' select').prop("disabled", false)
+    }else{
+        $('.'+address + ' input:text, .'+address + ' select').prop("disabled", true)
+
+    }
 };
+
+$(document).on('submit', '#update_employee', function(e){
+    e.preventDefault();
+    $form = $(this);
+    var formData = new FormData($form[0]);
+    $.ajax({
+        type: "POST",
+        url: 'uds_employee',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response){
+        toastSuccess(response.message);
+        $('.update_employee_modal').modal('hide');
+            console.log(response);
+        },error: function(response){
+            var statusCode = response.status;
+            var r = '';
+            if(statusCode == '403'){
+                r = formValidateErrors(response);
+            }
+            toastError(r);
+        }
+    });
+});
 </script>
 {% endblock js_code %}
