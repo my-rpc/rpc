@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
-from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails
+from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
 from rpc_package.utils import check_language
 
 
@@ -125,22 +125,32 @@ class EmployeeForm(FlaskForm):
 
     def validate_phone(self, phone):
         if not bool(
-                re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
+                re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                          phone.data)):
             raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
+        user_phone = Phone.query.filter_by(phone=phone.data).first()
+        if user_phone:
+            raise ValidationError('تلفون شما موجود است')
 
     def validate_phone_second(self, phone_second):
         if phone_second.data != '':
             if not bool(
-                    re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
+                    re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                              phone_second.data)):
                 raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
+        user_phone = Phone.query.filter_by(phone=phone_second.data).first()
+        if user_phone:
+            raise ValidationError('تلفون شما موجود است')
 
     def validate_employee_id(self, employee_id):
         employee = Employees.query.get(employee_id.data)
         if employee:
             raise ValidationError('Employee already exist, please check your employee ID')
 
+    def validate_birthday(self, birthday):
+        if birthday.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', birthday.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
 class UploadCVForm(FlaskForm):
     cv = FileField(u'CV File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
