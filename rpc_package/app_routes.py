@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, UploadEducationalDocsForm, \
         UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
+from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import os
@@ -200,54 +200,93 @@ def add_documents():
     tin = UploadTinForm()
     tazkira = UploadTazkiraForm()
     extra_docs = UploadExtraDocsForm()
+    emp_id = 0
+    # if request.method == "GET":
+    emp_id = request.args.get("emp_id")
     if request.method == 'POST':
         workingdir = os.path.abspath(os.getcwd())
         if guarantor.flag.data == "guarantor": 
             guarantor = request.files['guarantor']
-            # with the following line, we can rename the file
-            # guarantor.filename = "dd.pdf" 
-            path = os.path.join(workingdir+"/files/guarantor", guarantor.filename)
+            guarantor.filename = "Guarantor-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/guarantor", guarantor.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="guarantor",
+                            url="/static/files/guarantor"+guarantor.filename)
+            db.session.add(document)
+            db.session.commit()
             guarantor.save(path)
             return path
-        if cv_form and cv_form.flag.data == "cv":
+        if  cv_form.flag.data == "cv":
             cv = request.files['cv']
-            # with the following line, we can rename the file
-            # cv.filename = "dd.pdf" 
-            path = os.path.join(workingdir+"/files/cv", cv.filename)
+            cv.filename = "CV-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/cv", cv.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="cv",
+                            url="/static/files/cv"+cv.filename)
+            db.session.add(document)
+            db.session.commit()
             cv.save(path)
             return path
         if education and education.flag.data == "education":
             education = request.files['education']
-            # with the following line, we can rename the file
-            # education.filename = "dd.pdf" 
-            path = os.path.join(workingdir+"/files/education", education.filename)
+            education.filename = "Education-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/education", education.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="education",
+                            url="/static/files/education"+education.filename)
+            db.session.add(document)
+            db.session.commit()
             education.save(path)
             return path
         if tin and tin.flag.data == "tin":
             tin = request.files['tin']
-            # with the following line, we can rename the file
-            # tin.filename = "dd.pdf" 
-            path = os.path.join(workingdir+"/files/tin", tin.filename)
+            tin.filename = "TIN-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/tin", tin.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="tin",
+                            url="/static/files/tin"+tin.filename)
+            db.session.add(document)
+            db.session.commit()
             tin.save(path)
             return path
         if tazkira and tazkira.flag.data == "tazkira":
             tazkira = request.files['tazkira']
-            # with the following line, we can rename the file
-            # tazkira.filename = "dd.pdf" 
-            path = os.path.join(workingdir+"/files/tazkira", tazkira.filename)
+            tazkira.filename = "Tazkira-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/tazkira", tazkira.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="tazkira",
+                            url="/static/files/tazkira"+tazkira.filename)
+            db.session.add(document)
+            db.session.commit()
             tazkira.save(path)
             return path
         if extra_docs and extra_docs.flag.data == "extra_docs":
             extra_docs = request.files['extra_docs']
-            # with the following line, we can rename the file
-            # extra_docs.filename = "dd.pdf" 
-            path = os.path.join(workingdir+"/files/extra_docs", extra_docs.filename)
+            extra_docs.filename = "Extra-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/extra_docs", extra_docs.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="extra",
+                            url="/static/files/extra_docs"+extra_docs.filename)
+            db.session.add(document)
+            db.session.commit()
             extra_docs.save(path)
             return path
 
     return render_template("add_documents.html", title='Add Employee Documents',
                            language=language,
-                           translation=translation_obj, extra_docs_form=extra_docs, tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education, guarantor_form=guarantor, message_obj=message_obj)
+                           translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs, tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education, guarantor_form=guarantor, message_obj=message_obj)
 
 
 @app.route("/load_districts", methods=['POST'])
