@@ -125,14 +125,14 @@ class EmployeeForm(FlaskForm):
 
     def validate_phone(self, phone):
         if not bool(
-                re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
+                re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                          phone.data)):
             raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
 
     def validate_phone_second(self, phone_second):
         if phone_second.data != '':
             if not bool(
-                    re.match(r'(\d{3}[-\.\s]\d{3}[-\.\s]\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
+                    re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                              phone_second.data)):
                 raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
 
