@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
-from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails
+from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
 from rpc_package.utils import check_language
 
 
@@ -128,6 +128,9 @@ class EmployeeForm(FlaskForm):
                 re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                          phone.data)):
             raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
+        user_phone = Phone.query.filter_by(email=phone.data).first()
+        if user_phone:
+            raise ValidationError('تلفون شما موجود است')
 
     def validate_phone_second(self, phone_second):
         if phone_second.data != '':
@@ -135,6 +138,9 @@ class EmployeeForm(FlaskForm):
                     re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                              phone_second.data)):
                 raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
+        user_phone = Phone.query.filter_by(email=phone_second.data).first()
+        if user_phone:
+            raise ValidationError('تلفون شما موجود است')
 
     def validate_employee_id(self, employee_id):
         employee = Employees.query.get(employee_id.data)
