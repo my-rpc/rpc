@@ -147,6 +147,10 @@ class EmployeeForm(FlaskForm):
         if employee:
             raise ValidationError('Employee already exist, please check your employee ID')
 
+    def validate_birthday(self, birthday):
+        if birthday.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', birthday.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
 class UploadCVForm(FlaskForm):
     # cv = FileField('سی وی', validators=[DataRequired()])
