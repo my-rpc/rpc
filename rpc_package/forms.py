@@ -128,7 +128,7 @@ class EmployeeForm(FlaskForm):
                 re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                          phone.data)):
             raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
-        user_phone = Phone.query.filter_by(email=phone.data).first()
+        user_phone = Phone.query.filter_by(phone=phone.data).first()
         if user_phone:
             raise ValidationError('تلفون شما موجود است')
 
@@ -138,7 +138,7 @@ class EmployeeForm(FlaskForm):
                     re.match(r'(\d{3}[-\.\s]*\d{3}[-\.\s]*\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]\d{4}|\d{3}[-\.\s]\d{4})',
                              phone_second.data)):
                 raise ValidationError("فرمت شماره تماس خود را چک کنید 0875.231.1235 ")
-        user_phone = Phone.query.filter_by(email=phone_second.data).first()
+        user_phone = Phone.query.filter_by(phone=phone_second.data).first()
         if user_phone:
             raise ValidationError('تلفون شما موجود است')
 
