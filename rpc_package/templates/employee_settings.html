@@ -160,6 +160,18 @@
                             toastWarning('Please select an employee')
                         }
                     }
+                },
+                {
+                    text: '<i class="fad fa-times"></i> Add Documents',
+                    attr: {'class': 'btn btn-warning'},
+                    action: function () {
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
+                        if(empID != '' && empID != undefined){
+                            window.open('/employee_details?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee')
+                        }
+                    }
                 }
                 
             ],
