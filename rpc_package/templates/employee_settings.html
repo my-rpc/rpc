@@ -167,7 +167,7 @@
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
                         if(empID != '' && empID != undefined){
-                            window.open('/employee_details?emp_id='+empID, '_blank');
+                            window.open('/add_documents?emp_id='+empID, '_blank');
                         }else{
                             toastWarning('Please select an employee')
                         }
