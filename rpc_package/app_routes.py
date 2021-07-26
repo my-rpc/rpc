@@ -213,7 +213,7 @@ def add_documents():
             document = Documents(
                             emp_id=emp_id,
                             name="guarantor",
-                            url="/static/files/guarantor"+guarantor.filename)
+                            url="/static/files/guarantor/"+guarantor.filename)
             db.session.add(document)
             db.session.commit()
             guarantor.save(path)
@@ -226,7 +226,7 @@ def add_documents():
             document = Documents(
                             emp_id=emp_id,
                             name="cv",
-                            url="/static/files/cv"+cv.filename)
+                            url="/static/files/cv/"+cv.filename)
             db.session.add(document)
             db.session.commit()
             cv.save(path)
@@ -239,7 +239,7 @@ def add_documents():
             document = Documents(
                             emp_id=emp_id,
                             name="education",
-                            url="/static/files/education"+education.filename)
+                            url="/static/files/education/"+education.filename)
             db.session.add(document)
             db.session.commit()
             education.save(path)
@@ -252,7 +252,7 @@ def add_documents():
             document = Documents(
                             emp_id=emp_id,
                             name="tin",
-                            url="/static/files/tin"+tin.filename)
+                            url="/static/files/tin/"+tin.filename)
             db.session.add(document)
             db.session.commit()
             tin.save(path)
@@ -265,7 +265,7 @@ def add_documents():
             document = Documents(
                             emp_id=emp_id,
                             name="tazkira",
-                            url="/static/files/tazkira"+tazkira.filename)
+                            url="/static/files/tazkira/"+tazkira.filename)
             db.session.add(document)
             db.session.commit()
             tazkira.save(path)
@@ -278,7 +278,7 @@ def add_documents():
             document = Documents(
                             emp_id=emp_id,
                             name="extra",
-                            url="/static/files/extra_docs"+extra_docs.filename)
+                            url="/static/files/extra_docs/"+extra_docs.filename)
             db.session.add(document)
             db.session.commit()
             extra_docs.save(path)
