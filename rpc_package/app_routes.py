@@ -2,9 +2,10 @@ from flask import render_template, url_for, redirect, request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, UploadEducationalDocsForm, \
+        UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
+from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 import os
@@ -194,16 +195,116 @@ def add_employee():
 def add_documents():
     language = 'en'
     cv_form = UploadCVForm()
+    guarantor = UploadGuarantorForm()
+    education = UploadEducationalDocsForm()
+    tin = UploadTinForm()
+    tazkira = UploadTazkiraForm()
+    extra_docs = UploadExtraDocsForm()
+    emp_id = 0
+    emp_id = request.args.get("emp_id")
+
+    if request.method == "GET":
+        cv_doc = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
+        guarantor_doc = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
+        tazkira_doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
+        education_doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
+        tin_doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
+        extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+
     if request.method == 'POST':
         workingdir = os.path.abspath(os.getcwd())
-        cv = request.files['cv']
-        path = os.path.join(workingdir, cv.filename)
-        cv.save(path)
-        return path
+        if guarantor.flag.data == "guarantor": 
+            guarantor = request.files['guarantor']
+            guarantor.filename = "Guarantor-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/guarantor", guarantor.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="guarantor",
+                            url="/static/files/guarantor/"+guarantor.filename)
+            db.session.add(document)
+            db.session.commit()
+            guarantor.save(path)
+            return redirect(request.referrer)
+        if  cv_form.flag.data == "cv":
+            cv = request.files['cv']
+            cv.filename = "CV-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/cv", cv.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="cv",
+                            url="/static/files/cv/"+cv.filename)
+            db.session.add(document)
+            db.session.commit()
+            cv.save(path)
+            return redirect(request.referrer)
+        if education and education.flag.data == "education":
+            education = request.files['education']
+            education.filename = "Education-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/education", education.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="education",
+                            url="/static/files/education/"+education.filename)
+            db.session.add(document)
+            db.session.commit()
+            education.save(path)
+            return redirect(request.referrer)
+        if tin and tin.flag.data == "tin":
+            tin = request.files['tin']
+            tin.filename = "TIN-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/tin", tin.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="tin",
+                            url="/static/files/tin/"+tin.filename)
+            db.session.add(document)
+            db.session.commit()
+            tin.save(path)
+            return redirect(request.referrer)
+        if tazkira and tazkira.flag.data == "tazkira":
+            tazkira = request.files['tazkira']
+            tazkira.filename = "Tazkira-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/tazkira", tazkira.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="tazkira",
+                            url="/static/files/tazkira/"+tazkira.filename)
+            db.session.add(document)
+            db.session.commit()
+            tazkira.save(path)
+            return redirect(request.referrer)
+        if extra_docs and extra_docs.flag.data == "extra_docs":
+            extra_docs = request.files['extra_docs']
+            extra_docs.filename = "Extra-"+emp_id+".pdf"
+            path = os.path.join(workingdir+"/rpc_package/static/files/extra_docs", extra_docs.filename)
+            doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+            document = Documents(
+                            emp_id=emp_id,
+                            name="extra",
+                            url="/static/files/extra_docs/"+extra_docs.filename)
+            db.session.add(document)
+            db.session.commit()
+            extra_docs.save(path)
+            return redirect(request.referrer)
+    # return message_to_client_200(
+    #             message_obj.create_new_employee_update[language].format(request.form['employee_id']))
     return render_template("add_documents.html", title='Add Employee Documents',
                            language=language,
-                           translation=translation_obj, form=cv_form, message_obj=message_obj)
+                           translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs,
+                            tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education,
+                             guarantor_form=guarantor, message_obj=message_obj,
+                             cv_doc=cv_doc, guarantor_doc=guarantor_doc, tin_doc=tin_doc,
+                             education_doc=education_doc, extra_doc=extra_doc, tazkira_doc=tazkira_doc
+                             )
 
+# @app.route("/delete_document", methods=['GET'])
+# @login_required
+# def load_districts():
 
 @app.route("/load_districts", methods=['POST'])
 @login_required

@@ -1,5 +1,5 @@
 {
   "secret_key": "21336e4efc63009bbe778ae3e5b16d806934ee92a583e9772761703a70161091",
-  "db_url": "mysql://root@localhost/employees",
-  "current_version": "0.1.1"
+  "db_url": "mysql://shin:shin43@localhost/employees",
+  "current_version": "0.1.2"
 }
