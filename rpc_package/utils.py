@@ -1,7 +1,7 @@
 import json
 import re
 from flask import jsonify
-
+import os
 
 class Translation:
     def __init__(self, file_path=""):
@@ -70,3 +70,11 @@ def check_language(input_sentence):
         else:
             return False
     return True
+
+
+def get_uploaded_file(emp_id, request, file_type):
+    new_file = request.files[file_type]
+    new_file.filename = f"{file_type}-"+emp_id+".pdf"
+    path = os.path.join(f"./rpc_package/static/files/{file_type}", new_file.filename)
+
+    return path

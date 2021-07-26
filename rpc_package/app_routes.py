@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, jsonify
+from flask import render_template, url_for, redirect, request, jsonify, flash
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
@@ -7,7 +7,7 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, Districts, \
     Emails, Phone, Provinces
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, get_uploaded_file
 import os
 from datetime import datetime
 
@@ -227,17 +227,14 @@ def add_documents():
             guarantor.save(path)
             return redirect(request.referrer)
         if  cv_form.flag.data == "cv":
-            cv = request.files['cv']
-            cv.filename = "CV-"+emp_id+".pdf"
-            path = os.path.join(workingdir+"/rpc_package/static/files/cv", cv.filename)
-            doc = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
+            path = get_uploaded_file(emp_id, request, "cv")
             document = Documents(
                             emp_id=emp_id,
                             name="cv",
-                            url="/static/files/cv/"+cv.filename)
+                            url="/static/files/cv/"+request.files['cv'].filename)
             db.session.add(document)
             db.session.commit()
-            cv.save(path)
+            request.files['cv'].save(path)
             return redirect(request.referrer)
         if education and education.flag.data == "education":
             education = request.files['education']
@@ -251,19 +248,26 @@ def add_documents():
             db.session.add(document)
             db.session.commit()
             education.save(path)
+            # flash("uploaded")
             return redirect(request.referrer)
         if tin and tin.flag.data == "tin":
-            tin = request.files['tin']
-            tin.filename = "TIN-"+emp_id+".pdf"
-            path = os.path.join(workingdir+"/rpc_package/static/files/tin", tin.filename)
-            doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
-            document = Documents(
-                            emp_id=emp_id,
-                            name="tin",
-                            url="/static/files/tin/"+tin.filename)
-            db.session.add(document)
-            db.session.commit()
-            tin.save(path)
+            try:
+                tin = request.files['tin']
+                tin.filename = "TIN-"+emp_id+".pdf"
+                path = os.path.join(workingdir+"/rpc_package/static/files/tin", tin.filename)
+                doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
+                document = Documents(
+                                emp_id=emp_id,
+                                name="tin",
+                                url="/static/files/tin/"+tin.filename)
+                db.session.add(document)
+                db.session.commit()
+                tin.save(path)
+                flash(f"TIN uploaded", "success")
+            except:
+                flash(f"TIN not uploaded", "error")
+
+
             return redirect(request.referrer)
         if tazkira and tazkira.flag.data == "tazkira":
             tazkira = request.files['tazkira']
@@ -277,6 +281,8 @@ def add_documents():
             db.session.add(document)
             db.session.commit()
             tazkira.save(path)
+            flash("uploaded")
+
             return redirect(request.referrer)
         if extra_docs and extra_docs.flag.data == "extra_docs":
             extra_docs = request.files['extra_docs']
@@ -290,6 +296,7 @@ def add_documents():
             db.session.add(document)
             db.session.commit()
             extra_docs.save(path)
+            flash("uploaded")
             return redirect(request.referrer)
     # return message_to_client_200(
     #             message_obj.create_new_employee_update[language].format(request.form['employee_id']))
