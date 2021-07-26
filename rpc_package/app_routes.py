@@ -251,8 +251,7 @@ def uds_employee():
     language = 'en'
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
-        if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
-            EmployeeValidator.email_validator(request.form['email']) and EmployeeValidator.phone_validator(request.form['phone']):
+        if EmployeeValidator.emp_id_validator(request.form['employee_id']):
             sel_emp = Employees.query.filter_by(id = update_employee_form.employee_id.data).first()
             phones = Phone.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
             emails = Emails.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
@@ -389,7 +388,7 @@ def uds_employee():
             }
             return jsonify(data)
         else:
-            return message_to_client_403(message_obj.create_new_employee_update_not[language])
+            return message_to_client_403(update_employee_form.errors)
             
 
     emp_id = request.args.get('emp_id')
