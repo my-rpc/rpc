@@ -650,5 +650,13 @@
   "update_user": {
     "dari": " تغییرات کاربر",
     "en": "Update user"
+  },
+  "male": {
+    "dari": "مرد",
+    "en": "Male"
+  },
+  "female": {
+    "dari": "مرد",
+    "en": "Female"
   }
 }

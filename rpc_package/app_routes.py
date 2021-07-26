@@ -251,7 +251,8 @@ def uds_employee():
     language = 'en'
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
-        if EmployeeValidator.emp_id_validator(request.form['employee_id']):
+        if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
+            EmployeeValidator.email_validator(request.form['email']) and EmployeeValidator.phone_validator(request.form['phone']):
             sel_emp = Employees.query.filter_by(id = update_employee_form.employee_id.data).first()
             phones = Phone.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
             emails = Emails.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
@@ -367,10 +368,26 @@ def uds_employee():
                         db.session.add(permanent_address)
                 db.session.commit()
             except IOError as exc:
-                print(exc)
                 return message_to_client_403(message_obj.create_new_employee_update_not[language])
-            return message_to_client_200(
-                message_obj.create_new_employee_update[language].format(request.form['employee_id']))
+            data = {
+                'employee': {
+                    'emp_id': update_employee_form.employee_id.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data,
+                    'name_english': update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data,
+                    'father_name_english': update_employee_form.father_name_english.data,
+                    'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
+                    'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
+                    'gender': update_employee_form.gender.data,
+                    'tazkira': update_employee_form.tazkira.data,
+                    'm_status': update_employee_form.m_status.data,
+                    'birthday': update_employee_form.birthday.data,
+                    'blood': update_employee_form.blood.data,
+                    'tin': update_employee_form.tin.data
+                },
+                'message': message_obj.create_new_employee_update[language].format(request.form['employee_id'])
+            }
+            return jsonify(data)
         else:
             return message_to_client_403(message_obj.create_new_employee_update_not[language])
             

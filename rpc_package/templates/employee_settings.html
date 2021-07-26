@@ -35,7 +35,7 @@
             </thead>
             <tbody>
             {% for emp in employees %}
-                <tr>
+                <tr id="{{emp.id}}" >
                     <td>
                         <div class="form-group">
                             <input type="radio" class="rd radio-col-success" name="selected_emp" id="" value="{{emp.id}}">
@@ -63,9 +63,9 @@
                         {% endif %}
                     </td>
                     {% if emp.gender == true %}
-                        <td>Male</td>
+                        <td>{{translation.male[language]}}</td>
                     {% else %}
-                        <td>Female</td>
+                        <td>{{translation.female[language]}}</td>
                     {% endif %}
                     <td>{{emp.tazkira}}</td>
                     <td>{{emp.birthday}}</td>
@@ -150,24 +150,24 @@
                     }
                 },
                 {
-                    text: '<i class="fad fa-times"></i> Delete Employee',
-                    attr: {'class': 'btn btn-warning'},
+                    text: '<i class="fad fa-plus"></i> Add Documents',
+                    attr: {'class': 'btn btn-primary'},
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
                         if(empID != '' && empID != undefined){
-                            alert('This opthion is for employee deletion!')
+                            window.open('/employee_details?emp_id='+empID, '_blank');
                         }else{
                             toastWarning('Please select an employee')
                         }
                     }
                 },
                 {
-                    text: '<i class="fad fa-times"></i> Add Documents',
+                    text: '<i class="fad fa-times"></i> Delete Employee',
                     attr: {'class': 'btn btn-warning'},
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
                         if(empID != '' && empID != undefined){
-                            window.open('/employee_details?emp_id='+empID, '_blank');
+                            alert('This option is for employee deletion!')
                         }else{
                             toastWarning('Please select an employee')
                         }
@@ -195,14 +195,6 @@ updateEmployee = function(empID){
             $('.cur-address-col').html(response[1].current_add);
             $("#employee_id").prop('readonly', true);
         },
-        // error: function(response){
-        //     var statusCode = response.status;
-        //     var r = '';
-        //     if(statusCode == '403'){
-        //         r = formValidateErrors(response);
-        //     }
-        //     toastError(r);
-        // }
     });
 };
 
@@ -245,9 +237,28 @@ $(document).on('submit', '#update_employee', function(e){
         processData: false,
         contentType: false,
         success: function(response){
-        toastSuccess(response.message);
-        $('.update_employee_modal').modal('hide');
-            console.log(response);
+            $('.update_employee_modal').modal('hide');
+            toastSuccess(response.message);
+            console.log(response.employee)
+            emp = response.employee
+            rowID = emp.emp_id;
+            $('#'+rowID).find("td:gt(0)").remove();
+            rowCells = $('#'+rowID).html();    
+            sRowCell = '<td>';
+            eRowCell = '</td>';
+            rowCells += sRowCell + rowID + eRowCell 
+                    + sRowCell + emp.name + eRowCell 
+                    + sRowCell + emp.father_name + eRowCell
+                    + sRowCell + emp.phone + eRowCell
+                    + sRowCell + emp.email + eRowCell
+                    + sRowCell + emp.gender + eRowCell
+                    + sRowCell + emp.tazkira + eRowCell
+                    + sRowCell + emp.birthday + eRowCell
+                    + sRowCell + emp.blood + eRowCell
+                    + sRowCell + emp.tine + eRowCell;
+            
+            $('#'+rowID).addClass('bg-success').html(rowCells);
+
         },error: function(response){
             var statusCode = response.status;
             var r = '';
