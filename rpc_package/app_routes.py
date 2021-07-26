@@ -251,7 +251,20 @@ def uds_employee():
     language = 'en'
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
-        if EmployeeValidator.emp_id_validator(request.form['employee_id']):
+        if not update_employee_form.validate_on_submit():
+            del update_employee_form.employee_id
+            del update_employee_form.provinces_permanent
+            del update_employee_form.provinces_current
+            del update_employee_form.district_permanent
+            del update_employee_form.district_current
+            del update_employee_form.permanent_address
+            del update_employee_form.permanent_address_dari
+            del update_employee_form.current_address
+            del update_employee_form.current_address_dari
+            del update_employee_form.permanent_address
+
+            
+        if update_employee_form.validate_on_submit():
             sel_emp = Employees.query.filter_by(id = update_employee_form.employee_id.data).first()
             phones = Phone.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
             emails = Emails.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
