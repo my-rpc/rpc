@@ -153,36 +153,36 @@ class EmployeeForm(FlaskForm):
 
 
 class UploadCVForm(FlaskForm):
-    cv = FileField(u'CV File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    cv = FileField('CV File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="cv")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 
 class UploadGuarantorForm(FlaskForm):
-    guarantor = FileField(u'Guarantor File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    guarantor = FileField('Guarantor File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="guarantor")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 
 class UploadEducationalDocsForm(FlaskForm):
-    education = FileField(u'Education File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    education = FileField('Education File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="education")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 
 class UploadTinForm(FlaskForm):
-    tin = FileField(u'Tin File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    tin = FileField('Tin File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="tin")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 
 class UploadTazkiraForm(FlaskForm):
-    tazkira = FileField(u'Tazkira File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    tazkira = FileField('Tazkira File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="tazkira")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 
 class UploadExtraDocsForm(FlaskForm):
-    extra_docs = FileField(u'extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    extra_docs = FileField('extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="extra_docs")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])

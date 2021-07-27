@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, jsonify, session
+from flask import render_template, url_for, redirect, request, jsonify, session, flash
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
@@ -212,23 +212,23 @@ def add_documents():
 
     if request.method == 'POST':
         if guarantor.flag.data == "guarantor":
-            upload_docs(emp_id, request, 'guarantor')
-            return redirect(request.referrer)
+            result = upload_docs(emp_id, request, 'guarantor')
         if cv_form.flag.data == "cv":
-            upload_docs(emp_id, request, 'cv')
-            return redirect(request.referrer)
+            result = upload_docs(emp_id, request, 'cv')
         if education and education.flag.data == "education":
-            upload_docs(emp_id, request, 'education')
-            return redirect(request.referrer)
+            result = upload_docs(emp_id, request, 'education')
         if tin and tin.flag.data == "tin":
-            upload_docs(emp_id, request, 'tin')
-            return redirect(request.referrer)
+            result = upload_docs(emp_id, request, 'tin')
         if tazkira and tazkira.flag.data == "tazkira":
-            upload_docs(emp_id, request, 'tazkira')
-            return redirect(request.referrer)
+            result = upload_docs(emp_id, request, 'tazkira')
         if extra_docs and extra_docs.flag.data == "extra_docs":
-            upload_docs(emp_id, request, 'extra_docs')
-            return redirect(request.referrer)
+            result = upload_docs(emp_id, request, 'extra_docs')
+
+        if result == "success":
+            flash("Document uploaded", result)
+        else:
+            flash("Document not uploaded", result)
+        return redirect(request.referrer)
     return render_template("add_documents.html", title='Add Employee Documents',
                            language=language,
                            translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs,
@@ -239,9 +239,21 @@ def add_documents():
                            )
 
 
-# @app.route("/delete_document", methods=['GET'])
-# @login_required
-# def load_districts():
+@app.route("/delete_document", methods=['GET'])
+@login_required
+def delete_document():
+    emp_id = request.args.get("emp_id")
+    doc = request.args.get("doc")
+    document = Documents.query.filter_by(emp_id=emp_id, name=doc).first()
+    try:
+        os.remove(os.path.join(f"./rpc_package"+document.url))
+        Documents.query.filter_by(emp_id=emp_id, name=doc).delete()
+        db.session.commit()
+        flash("Document deleted", "success")
+    except:
+        flash("Document not deleted", "error")
+    return redirect(request.referrer)
+
 
 @app.route("/load_districts", methods=['POST'])
 @login_required
