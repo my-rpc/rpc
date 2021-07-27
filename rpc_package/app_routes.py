@@ -2,15 +2,17 @@ from flask import render_template, url_for, redirect, request, jsonify, flash
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, UploadEducationalDocsForm, \
-        UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
+    UploadEducationalDocsForm, \
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, Districts, \
+from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
+    Districts, \
     Emails, Phone, Provinces
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, get_uploaded_file
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
+from rpc_package.route_utils import upload_docs
 import os
 from datetime import datetime
-
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -200,7 +202,6 @@ def add_documents():
     tin = UploadTinForm()
     tazkira = UploadTazkiraForm()
     extra_docs = UploadExtraDocsForm()
-    emp_id = 0
     emp_id = request.args.get("emp_id")
 
     if request.method == "GET":
@@ -212,102 +213,33 @@ def add_documents():
         extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
 
     if request.method == 'POST':
-        workingdir = os.path.abspath(os.getcwd())
-        if guarantor.flag.data == "guarantor": 
-            guarantor = request.files['guarantor']
-            guarantor.filename = "Guarantor-"+emp_id+".pdf"
-            path = os.path.join(workingdir+"/rpc_package/static/files/guarantor", guarantor.filename)
-            doc = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
-            document = Documents(
-                            emp_id=emp_id,
-                            name="guarantor",
-                            url="/static/files/guarantor/"+guarantor.filename)
-            db.session.add(document)
-            db.session.commit()
-            guarantor.save(path)
+        if guarantor.flag.data == "guarantor":
+            upload_docs(emp_id, request, 'guarantor')
             return redirect(request.referrer)
-        if  cv_form.flag.data == "cv":
-            path = get_uploaded_file(emp_id, request, "cv")
-            document = Documents(
-                            emp_id=emp_id,
-                            name="cv",
-                            url="/static/files/cv/"+request.files['cv'].filename)
-            db.session.add(document)
-            db.session.commit()
-            request.files['cv'].save(path)
+        if cv_form.flag.data == "cv":
+            upload_docs(emp_id, request, 'cv')
             return redirect(request.referrer)
         if education and education.flag.data == "education":
-            education = request.files['education']
-            education.filename = "Education-"+emp_id+".pdf"
-            path = os.path.join(workingdir+"/rpc_package/static/files/education", education.filename)
-            doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
-            document = Documents(
-                            emp_id=emp_id,
-                            name="education",
-                            url="/static/files/education/"+education.filename)
-            db.session.add(document)
-            db.session.commit()
-            education.save(path)
-            # flash("uploaded")
+            upload_docs(emp_id, request, 'education')
             return redirect(request.referrer)
         if tin and tin.flag.data == "tin":
-            try:
-                tin = request.files['tin']
-                tin.filename = "TIN-"+emp_id+".pdf"
-                path = os.path.join(workingdir+"/rpc_package/static/files/tin", tin.filename)
-                doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
-                document = Documents(
-                                emp_id=emp_id,
-                                name="tin",
-                                url="/static/files/tin/"+tin.filename)
-                db.session.add(document)
-                db.session.commit()
-                tin.save(path)
-                flash(f"TIN uploaded", "success")
-            except:
-                flash(f"TIN not uploaded", "error")
-
-
+            upload_docs(emp_id, request, 'tin')
             return redirect(request.referrer)
         if tazkira and tazkira.flag.data == "tazkira":
-            tazkira = request.files['tazkira']
-            tazkira.filename = "Tazkira-"+emp_id+".pdf"
-            path = os.path.join(workingdir+"/rpc_package/static/files/tazkira", tazkira.filename)
-            doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
-            document = Documents(
-                            emp_id=emp_id,
-                            name="tazkira",
-                            url="/static/files/tazkira/"+tazkira.filename)
-            db.session.add(document)
-            db.session.commit()
-            tazkira.save(path)
-            flash("uploaded")
-
+            upload_docs(emp_id, request, 'tazkira')
             return redirect(request.referrer)
         if extra_docs and extra_docs.flag.data == "extra_docs":
-            extra_docs = request.files['extra_docs']
-            extra_docs.filename = "Extra-"+emp_id+".pdf"
-            path = os.path.join(workingdir+"/rpc_package/static/files/extra_docs", extra_docs.filename)
-            doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
-            document = Documents(
-                            emp_id=emp_id,
-                            name="extra",
-                            url="/static/files/extra_docs/"+extra_docs.filename)
-            db.session.add(document)
-            db.session.commit()
-            extra_docs.save(path)
-            flash("uploaded")
+            upload_docs(emp_id, request, 'extra_docs')
             return redirect(request.referrer)
-    # return message_to_client_200(
-    #             message_obj.create_new_employee_update[language].format(request.form['employee_id']))
     return render_template("add_documents.html", title='Add Employee Documents',
                            language=language,
                            translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs,
-                            tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education,
-                             guarantor_form=guarantor, message_obj=message_obj,
-                             cv_doc=cv_doc, guarantor_doc=guarantor_doc, tin_doc=tin_doc,
-                             education_doc=education_doc, extra_doc=extra_doc, tazkira_doc=tazkira_doc
-                             )
+                           tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education,
+                           guarantor_form=guarantor, message_obj=message_obj,
+                           cv_doc=cv_doc, guarantor_doc=guarantor_doc, tin_doc=tin_doc,
+                           education_doc=education_doc, extra_doc=extra_doc, tazkira_doc=tazkira_doc
+                           )
+
 
 # @app.route("/delete_document", methods=['GET'])
 # @login_required
@@ -360,10 +292,9 @@ def uds_employee():
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
         if EmployeeValidator.emp_id_validator(request.form['employee_id']):
-            sel_emp = Employees.query.filter_by(id = update_employee_form.employee_id.data).first()
-            phones = Phone.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
-            emails = Emails.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
-            
+            sel_emp = Employees.query.filter_by(id=update_employee_form.employee_id.data).first()
+            phones = Phone.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
+            emails = Emails.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
 
             try:
                 sel_emp.name = update_employee_form.first_name.data
@@ -387,7 +318,7 @@ def uds_employee():
                     phones[0].phone = update_employee_form.phone.data
                     if update_employee_form.phone_second.data:
                         phones[1].phone = update_employee_form.phone_second.data
-                        
+
                 elif phones is not None and len(phones) == 1:
                     phones[0].phone = update_employee_form.phone.data
                     if update_employee_form.phone_second.data:
@@ -416,13 +347,13 @@ def uds_employee():
                     emails[0].email = update_employee_form.email.data
                     if update_employee_form.email_second.data:
                         emails[1].email = update_employee_form.email_second.data
-                        
+
                 elif emails is not None and len(emails) == 1:
                     update_employee_form.email.data = emails[0].email
                     if update_employee_form.email_second.data:
                         email_second = Emails(
-                        emp_id=update_employee_form.employee_id.data,
-                        email=update_employee_form.email_second.data)
+                            emp_id=update_employee_form.employee_id.data,
+                            email=update_employee_form.email_second.data)
                         db.session.add(email_second)
                 elif not emails:
                     email = Emails(
@@ -438,17 +369,17 @@ def uds_employee():
                 ###
                 #   check if the address data is updated or provided by client
                 #   if yes then update data
-                
+
                 if update_employee_form.current_address.data or update_employee_form.current_address_dari.data:
-                    cur_add = Current_addresses.query.filter_by(emp_id = update_employee_form.employee_id.data).first()
+                    cur_add = Current_addresses.query.filter_by(emp_id=update_employee_form.employee_id.data).first()
 
                     if cur_add is not None:
                         cur_add.province_id = update_employee_form.provinces_current.data
                         cur_add.district_id = update_employee_form.district_current.data
                         cur_add.address = update_employee_form.current_address.data
                         cur_add.address_dari = update_employee_form.current_address_dari.data
-                    else: 
-                        
+                    else:
+
                         current_address = Current_addresses(
                             emp_id=update_employee_form.employee_id.data,
                             address=update_employee_form.current_address.data,
@@ -457,15 +388,14 @@ def uds_employee():
                             province_id=update_employee_form.provinces_current.data)
                         db.session.add(current_address)
 
-
-                if update_employee_form.permanent_address.data or update_employee_form.permanent_address_dari.data: 
-                    per_add = Permanent_addresses.query.filter_by(emp_id = update_employee_form.employee_id.data).first()
+                if update_employee_form.permanent_address.data or update_employee_form.permanent_address_dari.data:
+                    per_add = Permanent_addresses.query.filter_by(emp_id=update_employee_form.employee_id.data).first()
                     if per_add is not None:
                         per_add.province_id = update_employee_form.provinces_permanent.data
                         per_add.district_id = update_employee_form.district_permanent.data
                         per_add.address = update_employee_form.permanent_address.data
                         per_add.address_dari = update_employee_form.permanent_address_dari.data
-                    else: 
+                    else:
                         permanent_address = Permanent_addresses(
                             emp_id=update_employee_form.employee_id.data,
                             address=update_employee_form.permanent_address.data,
@@ -481,7 +411,6 @@ def uds_employee():
                 message_obj.create_new_employee_update[language].format(request.form['employee_id']))
         else:
             return message_to_client_403(message_obj.create_new_employee_update_not[language])
-            
 
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
@@ -508,10 +437,10 @@ def uds_employee():
         update_employee_form.gender.data = emp.gender
         update_employee_form.m_status.data = emp.m_status
 
-        cur_address = '' 
+        cur_address = ''
         cur_district_name = ''
         cur_province_name = ''
-        cur_address_eng = '' 
+        cur_address_eng = ''
         cur_district_name_eng = ''
         cur_province_name_eng = ''
 
@@ -521,7 +450,7 @@ def uds_employee():
         per_address_eng = ''
         per_district_name_eng = ''
         per_province_name_eng = ''
-        
+
         # check if permanent address exists.
         if per_add is not None:
             update_employee_form.provinces_permanent.data = per_add.province_id
@@ -576,25 +505,28 @@ def uds_employee():
         else:
             update_employee_form.email.data = None
             update_employee_form.email_second.data = None
-        
-        
+
         current_addresses = "<div class='py-4 d-flex'><h5 class='text-primary'>ادرس فعلی: </h5>" \
-                            +"<p class='px-3'>" \
-                            + str(cur_address) + ", " + str(cur_district_name) + ", " + str(cur_province_name) +"</p> <br> " \
-                            + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(cur_address_eng) + ", " \
+                            + "<p class='px-3'>" \
+                            + str(cur_address) + ", " + str(cur_district_name) + ", " + str(
+            cur_province_name) + "</p> <br> " \
+                            + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(
+            cur_address_eng) + ", " \
                             + str(cur_district_name_eng) + ", " + str(cur_province_name_eng) \
                             + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
         permanent_addresses = "<div class='py-4 d-flex'> <h5 class=' text-primary'> ادرس اصلی: </h5>" \
                               + "<p class='px-3 '>" \
-                              + str(per_address) + ", " + str(per_district_name) + ", " + str(per_province_name)+ "</p> <br>" \
+                              + str(per_address) + ", " + str(per_district_name) + ", " + str(
+            per_province_name) + "</p> <br>" \
                               + "<h5 class=' text-primary'> Permanent address: </h5> <p class='px-3 '>" \
-                              + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(per_province_name_eng) \
-                              +"</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+                              + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(
+            per_province_name_eng) \
+                              + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
-        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language, 
-                            form=update_employee_form, translation=translation_obj, message_obj=message_obj), 
-                            {'current_add': current_addresses, 'permanent_add': permanent_addresses})
+        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
+                                       form=update_employee_form, translation=translation_obj, message_obj=message_obj),
+                       {'current_add': current_addresses, 'permanent_add': permanent_addresses})
         return data
     else:
         message_to_client_403(message_obj.invalid_message[language])

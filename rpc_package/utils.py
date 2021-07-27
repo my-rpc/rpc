@@ -1,31 +1,8 @@
 import json
+import os
 import re
 from flask import jsonify
 import os
-
-class Translation:
-    def __init__(self, file_path=""):
-        try:
-            self.translations = json.load(open(file_path, 'rb'))
-        except IOError as exc:
-            raise RuntimeError('Failed to open translation json fle') from exc
-
-        for key, item in self.translations.items():
-            if isinstance(item, dict):
-                setattr(self, key, item)
-
-
-class MessagePull:
-    def __init__(self, file_path=""):
-        try:
-            self.messages = json.load(open(file_path, 'rb'))
-        except IOError as exc:
-            raise RuntimeError('Failed to open translation json fle') from exc
-
-        for key, item in self.messages.items():
-            if isinstance(item, dict):
-                setattr(self, key, item)
-
 
 class EmployeeValidator:
 
@@ -72,9 +49,3 @@ def check_language(input_sentence):
     return True
 
 
-def get_uploaded_file(emp_id, request, file_type):
-    new_file = request.files[file_type]
-    new_file.filename = f"{file_type}-"+emp_id+".pdf"
-    path = os.path.join(f"./rpc_package/static/files/{file_type}", new_file.filename)
-
-    return path
