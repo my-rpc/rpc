@@ -32,17 +32,14 @@
                     <div class="form-group col-md-1 col-4 pt-3 text-center">
                         <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
+                    {% if cv_doc.url %}
                     <div class="form-group col-md-1 pt-3 col-4 text-center">
-                        {% if cv_doc.url %}
                         <a href="{{cv_doc.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
-                        {% endif %}                    </div>
+                    </div>
                     <div class="form-group col-md-1 pt-3 col-4 text-center">
-                        {% if cv_doc.url %}
                         <a href="/delete_document?emp_id={{cv_doc.emp_id}}&doc=cv"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button></a>
-                        {% endif %}    
                     </div>
-                    
-                    </div>
+                    {% endif %}    
                 </div>
                 </form>
             </div>
@@ -65,14 +62,14 @@
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
+                    {% if guarantor_doc.url %}
                     <div class="form-group col-md-1 pt-3 text-center">
-                        {% if guarantor_doc.url %}
                         <a href="{{guarantor_doc.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
-                        {% endif %}
                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                        <a href="/delete_document?emp_id={{guarantor_doc.emp_id}}&doc=guarantor"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button></a>
                     </div>
+                    {% endif %}
                 </div>
                 </form>
             </div>
@@ -95,13 +92,14 @@
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
+                    {% if education_doc.url %}
                     <div class="form-group col-md-1 pt-3 text-center">
-                        {% if education_doc.url %}
                         <a href="{{education_doc.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
-                        {% endif %}                    </div>
-                    <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <a href="/delete_document?emp_id={{education_doc.emp_id}}&doc=education"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button></a>
+                    </div>
+                    {% endif %}
                 </div>
                 </form>
             </div>
@@ -124,13 +122,14 @@
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
+                    {% if tin_doc.url %}
                     <div class="form-group col-md-1 pt-3 text-center">
-                        {% if tin_doc.url %}
                         <a href="{{tin_doc.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
-                        {% endif %}                     </div>
-                    <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
                     </div>
+                    <div class="form-group col-md-1 pt-3 text-center">
+                        <a href="/delete_document?emp_id={{tin_doc.emp_id}}&doc=tin"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button></a>
+                    </div>
+                    {% endif %}                     
                 </div>
                 </form>
             </div>
@@ -153,13 +152,14 @@
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
+                    {% if tazkira_doc.url %}
                     <div class="form-group col-md-1 pt-3 text-center">
-                        {% if tazkira_doc.url %}
                         <a href="{{tazkira_doc.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
-                        {% endif %}                     </div>
+                     </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                        <a href="/delete_document?emp_id={{tazkira_doc.emp_id}}&doc=tazkira"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button></a>
                     </div>
+                    {% endif %}                    
                 </div>
                 </form>
             </div>
@@ -182,13 +182,14 @@
                     <div class="form-group col-md-1 pt-3 text-center">
                         <button type="submit" class="waves-effect waves-light btn btn-sm btn-success mt-4"><i class="fa fa-upload"></i> Success</button>
                     </div>
+                    {% if extra_doc.url %}
                     <div class="form-group col-md-1 pt-3 text-center">
-                        {% if extra_doc.url %}
                         <a href="{{extra_doc.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
-                        {% endif %}                     </div>
+                       </div>
                     <div class="form-group col-md-1 pt-3 text-center">
-                        <button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button>
+                        <a href="/delete_document?emp_id={{extra_doc.emp_id}}&doc=extra"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-danger mt-4"><i class="fa fa-trash"></i></button></a>
                     </div>
+                    {% endif %}                  
                 </div>
                 </form>
             </div>
