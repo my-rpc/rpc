@@ -157,12 +157,13 @@
 
         <div class="form-group">
             <div class="form-check1">
+                {% set d = form.gender.data | int %}
                 {% for radio in form.gender %}
-                    {% if radio.data == true %}
-                        {{ radio(class="form-check-input", checked = 'checked')}}
-                    {% else %}
-                        {{ radio(class="form-check-input")}}
-                    {% endif %}
+                {% if radio.data == d %}
+                    {{ radio(class="form-check-input", checked = true )}}
+                {% else %}
+                    {{ radio(class="form-check-input", checked = false )}}
+                {% endif %}
                 {{ radio.label(class="form-check-label")}}
                 {% endfor %}
             </div>
@@ -171,11 +172,12 @@
         <div class="form-group">
             <div class="form-check1">
                 {% for radio in form.m_status %}
-                    {% if radio.data %}
-                        {{ radio(class="form-check-input", checked = 'checked')}}
-                    {% else %}
-                        {{ radio(class="form-check-input")}}
-                    {% endif %}
+                {% set d = form.m_status.data | int %}
+                {% if radio.data == d %}
+                    {{ radio(class="form-check-input", checked = true )}}
+                {% else %}
+                    {{ radio(class="form-check-input", checked = false )}}
+                {% endif %}
                 {{ radio.label(class="form-check-label")}}
                 {% endfor %}
             </div>

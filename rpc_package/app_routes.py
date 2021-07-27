@@ -252,19 +252,26 @@ def uds_employee():
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
         if not update_employee_form.validate_on_submit():
-            del update_employee_form.employee_id
-            del update_employee_form.provinces_permanent
-            del update_employee_form.provinces_current
-            del update_employee_form.district_permanent
-            del update_employee_form.district_current
-            del update_employee_form.permanent_address
-            del update_employee_form.permanent_address_dari
-            del update_employee_form.current_address
-            del update_employee_form.current_address_dari
-            del update_employee_form.permanent_address
-
+            val_dic = {
+                'employee_id': ['Employee already exi...mployee ID'],
+                'email': ['ایمیل شما موجود است'],
+                'phone': ['تلفون شما موجود است'],
+                'phone_second': ['تلفون شما موجود است'],
+                'permanent_address': ['This field is required.'], 
+                'permanent_address_dari': ['This field is required.'],
+                'current_address': ['This field is required.'],
+                'current_address_dari': ['This field is required.'],
+                'provinces_permanent': ['This field is required.'], 
+                'provinces_current': ['This field is required.'], 
+                'district_permanent': ['This field is required.'], 
+                'district_current': ['This field is required.']
+            }
             
-        if update_employee_form.validate_on_submit():
+            for key, value in  update_employee_form.errors.items():
+                if value[0] != val_dic[key][0]:
+                    update_employee_form.validate_on_submit()
+                
+
             sel_emp = Employees.query.filter_by(id = update_employee_form.employee_id.data).first()
             phones = Phone.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
             emails = Emails.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
@@ -428,6 +435,8 @@ def uds_employee():
 
         update_employee_form.gender.data = emp.gender
         update_employee_form.m_status.data = emp.m_status
+
+        update_employee_form.gender
 
         cur_address = '' 
         cur_district_name = ''
