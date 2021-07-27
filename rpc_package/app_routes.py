@@ -1,5 +1,4 @@
-from flask import render_template, url_for, redirect, request, jsonify, flash
-from flask import render_template, url_for, redirect, request, jsonify, session
+from flask import render_template, url_for, redirect, request, jsonify, flash, session
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
