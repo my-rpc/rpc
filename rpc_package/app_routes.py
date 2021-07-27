@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, jsonify
+from flask import render_template, url_for, redirect, request, jsonify, session
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
@@ -98,12 +98,11 @@ def logout():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("blank"))
-    default_language = 'en'
-
     login_form = LoginForm()
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            session['language'] = login_form.prefer_language.data
             login_user(user, remember=login_form.remember_me.data)
             request_user_page = request.args.get('next')
             if request_user_page:
@@ -111,17 +110,16 @@ def login():
             else:
                 return redirect(url_for("blank"))
         else:
-            return message_to_client_403(message_obj.password_incorrect[default_language])
+            return message_to_client_403(message_obj.password_incorrect[session['language']])
 
     return render_template('login.html', title='Login',
-                           form=login_form, language=default_language,
+                           form=login_form, language='en',
                            translation=translation_obj, message_obj=message_obj)
 
 
 @app.route("/add_employee", methods=['GET', 'POST'])
 @login_required
 def add_employee():
-    language = 'en'
     add_employee_form = EmployeeForm()
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
@@ -180,15 +178,15 @@ def add_employee():
                 db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_employee_not[language])
+                return message_to_client_403(message_obj.create_new_employee_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data))
+                message_obj.create_new_employee_save[session['language']].format(add_employee_form.employee_id.data))
         else:
             return message_to_client_403(add_employee_form.errors)
 
-    add_employee_form = update_messages_employee(add_employee_form, language)
+    add_employee_form = update_messages_employee(add_employee_form, session['language'])
     return render_template('add_employee.html', title='Add Employee',
-                           form=add_employee_form, language=language,
+                           form=add_employee_form, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
