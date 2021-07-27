@@ -555,22 +555,18 @@ def uds_employee():
             update_employee_form.email_second.data = None
 
         current_addresses = "<div class='py-4 d-flex'><h5 class='text-primary'>ادرس فعلی: </h5>" \
-                            + "<p class='px-3'>" \
-                            + str(cur_address) + ", " + str(cur_district_name) + ", " + str(
-            cur_province_name) + "</p> <br> " \
-                            + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(
-            cur_address_eng) + ", " \
+                            +"<p class='px-3'>" \
+                            + str(cur_address) + ", " + str(cur_district_name) + ", " + str(cur_province_name) +"</p> <br> " \
+                            + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(cur_address_eng) + ", " \
                             + str(cur_district_name_eng) + ", " + str(cur_province_name_eng) \
                             + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
         permanent_addresses = "<div class='py-4 d-flex'> <h5 class=' text-primary'> ادرس اصلی: </h5>" \
                               + "<p class='px-3 '>" \
-                              + str(per_address) + ", " + str(per_district_name) + ", " + str(
-            per_province_name) + "</p> <br>" \
+                              + str(per_address) + ", " + str(per_district_name) + ", " + str(per_province_name)+ "</p> <br>" \
                               + "<h5 class=' text-primary'> Permanent address: </h5> <p class='px-3 '>" \
-                              + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(
-            per_province_name_eng) \
-                              + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+                              + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(per_province_name_eng) \
+                              +"</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
         data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
                                        form=update_employee_form, translation=translation_obj, message_obj=message_obj),
