@@ -15,8 +15,9 @@ def upload_docs(emp_id, request, file_type):
             url=f"/static/files/{file_type}/" + request_file.filename)
         assert isinstance(db, object)
         request_file.save(path)
-        db.session.add(document)
-        db.session.commit()
+        if not Documents.query.filter_by(emp_id=emp_id, name=file_type).first():
+            db.session.add(document)
+            db.session.commit()
         return 'success'
     except IOError as io:
         return 'error'
