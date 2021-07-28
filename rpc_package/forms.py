@@ -67,9 +67,9 @@ class EmployeeForm(FlaskForm):
     # TODO adding datetime picker.
     birthday = StringField('Birthday/تارخ تولد')
     tazkira = StringField('Tazkira/تذکره', validators=[Regexp('\d+')])
-    gender = RadioField('Gender', choices=[(1, 'Male'), (0, 'Female')], validators=[DataRequired()])
+    gender = RadioField('Gender', choices=[[1, 'Male'], [0, 'Female']], validators=[DataRequired()])
     blood = StringField("Blood Type/گروپ خون", validators=[Regexp('(A|B|AB|O|C)[+-]')], default='C+')
-    m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
+    m_status = RadioField('Marital Status', choices=[[1, 'Married'], [0, 'Single']], validators=[DataRequired()])
     tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name + '/' + province.province_name_english) for province in
                       Provinces.query.all()]
