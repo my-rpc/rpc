@@ -102,7 +102,11 @@ def login():
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            employee = Employees.query.filter_by(id=user.emp_id).first()
             session['language'] = login_form.prefer_language.data
+            session['emp_id'] = user.emp_id
+            session['emp_name'] = employee.name
+            session['emp_lname'] = employee.lname
             login_user(user, remember=login_form.remember_me.data)
             request_user_page = request.args.get('next')
             if request_user_page:
@@ -545,5 +549,8 @@ def uds_employee():
 @login_required
 def profile():
     language = "en"
-    return render_template('profile.html', title='My Profile', language=language,
+    profile = db.session.query(Users, User_roles, Emails, Employees).join(Users,
+                (Users.role == User_roles.id)).join(Employees, (Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
+    # print(profile.Name)
+    return render_template('profile.html', title='My Profile', language=language, profile=profile, 
                            translation=translation_obj, message_obj=message_obj)
