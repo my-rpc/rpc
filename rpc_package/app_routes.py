@@ -540,3 +540,10 @@ def uds_employee():
         return data
     else:
         message_to_client_403(message_obj.invalid_message[language])
+
+@app.route('/profile', methods=['GET', "POST"])
+@login_required
+def profile():
+    language = "en"
+    return render_template('profile.html', title='My Profile', language=language,
+                           translation=translation_obj, message_obj=message_obj)
