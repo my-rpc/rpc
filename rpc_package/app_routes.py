@@ -50,7 +50,7 @@ def create_new_user():
 
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User', users=users,
-                           form=create_new_user_form, language=language, translation=translation_obj,
+                           form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
 
 
@@ -230,7 +230,7 @@ def add_documents():
             flash("Document not uploaded", result)
         return redirect(request.referrer)
     return render_template("add_documents.html", title='Add Employee Documents',
-                           language=language,
+                           language=session['language'],
                            translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs,
                            tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education,
                            guarantor_form=guarantor, message_obj=message_obj,
@@ -283,7 +283,7 @@ def employee_settings():
     print(emails)
 
     return render_template("employee_settings.html", title='Employee Settings',
-                           employees=employees, emails=emails, phones=phones, language=language,
+                           employees=employees, emails=emails, phones=phones, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
@@ -291,7 +291,7 @@ def employee_settings():
 @login_required
 def employee_details():
     language = 'en'
-    return render_template('employee_details.html', title='Employee Details', language=language,
+    return render_template('employee_details.html', title='Employee Details', language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
@@ -534,7 +534,7 @@ def uds_employee():
             per_province_name_eng) \
                               + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
-        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
+        data = jsonify(render_template('ajax_template/update_employee_form.html', language=session['language'],
                                        form=update_employee_form, translation=translation_obj, message_obj=message_obj),
                        {'current_add': current_addresses, 'permanent_add': permanent_addresses})
         return data
