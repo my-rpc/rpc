@@ -135,10 +135,6 @@
     "dari": "ورود",
     "en": "Login"
   },
-  "email": {
-    "dari": "ایمیل",
-    "en": "Email"
-  },
   "title": {
     "dari": "عنوان",
     "en": "Title"
@@ -427,6 +423,10 @@
     "dari": "جنسیت",
     "en": "Gender"
   },
+  "m_status": {
+    "dari": "حالت مدنی",
+    "en": "Marital Status"
+  },
   "need_date": {
     "dari": "شروع ضرورت",
     "en": "Need Date"
@@ -467,6 +467,22 @@
     "dari": "مبلغ معاش",
     "en": "Salary"
   },
+  "male": {
+    "dari": "مرد",
+    "en": "Male"
+  },
+  "female": {
+    "dari": "زن",
+    "en": "Female"
+  },
+  "single": {
+    "dari": "مجرد",
+    "en": "Single"
+  },
+  "married": {
+    "dari": "متاهل",
+    "en": "Married"
+  },
   "communication_skills": {
     "dari": "توانایی ارتباطات",
     "en": "Communication Skills"
@@ -485,7 +501,7 @@
   },
   "phone": {
     "dari": "شماره تماس",
-    "en": "Phone Number"
+    "en": "Phone Address"
   },
   "phone_second": {
     "dari": "شماره تماس دوم",
