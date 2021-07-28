@@ -292,7 +292,6 @@ def employee_settings():
 @app.route('/employee_details', methods=['GET', "POST"])
 @login_required
 def employee_details():
-    language = 'en'
     return render_template('employee_details.html', title='Employee Details', language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
