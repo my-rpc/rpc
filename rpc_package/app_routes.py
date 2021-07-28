@@ -44,9 +44,11 @@ def create_new_user():
                 message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
         else:
             return message_to_client_403(create_new_user_form.errors)
-    users = db.session.query(Users, User_roles, Employees).join(Users,
-                                                                (Users.role == User_roles.id)).join(Employees, (
-            Users.emp_id == Employees.id)).all()
+    users = db.session.query(Users,
+                             User_roles,
+                             Employees).join(Users,
+                                             (Users.role == User_roles.id)).join(Employees,
+                                                                                 (Users.emp_id == Employees.id)).all()
 
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User', users=users,
