@@ -155,7 +155,7 @@
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
                         if(empID != '' && empID != undefined){
-                            window.open('/employee_details?emp_id='+empID, '_blank');
+                            window.open('/add_documents?emp_id='+empID, '_blank');
                         }else{
                             toastWarning('Please select an employee')
                         }
@@ -167,7 +167,7 @@
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
                         if(empID != '' && empID != undefined){
-                            window.open('/add_documents?emp_id='+empID, '_blank');
+                            deleteEmployee(empID);
                         }else{
                             toastWarning('Please select an employee')
                         }
@@ -269,5 +269,29 @@ $(document).on('submit', '#update_employee', function(e){
         }
     });
 });
+
+
+deleteEmployee = function(empID){
+    if(confirm('Are you sure you want to delete this Employee?')){
+        $.ajax({
+            method: 'DELETE',
+            url: 'delete_employee?emp_id='+empID,
+            contentType:false,
+            processData:false,
+            success: function(response){
+                console.log(response)
+                $('#'+empID).addClass('bg-danger').fadeOut(3000);
+                toastSuccess(response.message);
+            },error: function(response){
+                var statusCode = response.status;
+                var r = '';
+                if(statusCode == '403'){
+                    r = formValidateErrors(response);
+                }
+                toastError(r);
+            }
+        });
+    }
+};
 </script>
 {% endblock js_code %}
