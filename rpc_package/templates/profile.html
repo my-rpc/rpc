@@ -56,8 +56,8 @@
                       <div class="box-body">
                           <!-- Nav tabs -->
                           <ul class="nav nav-tabs nav-fill" role="tablist">
-                              <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">Home</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">Profile</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">معلومات شخصی</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">آدرس</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">Messages</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">Setting</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#about11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">About</span></a> </li>
@@ -74,9 +74,84 @@
                               </div>
                               <div class="tab-pane" id="profile11" role="tabpanel">
                                   <div class="p-15">
-                                      <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
-                                      <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
-                                      <h3>Donec vitae laoreet neque, id convallis ante.</h3>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="box">
+                                                <div class="box-header m-0 p-0" style="border: none;">
+                                                    <div class="box-title">سکونت فعلی</div>
+                                                </div>
+                                                <div class="box-body p-0 m-0">
+                                                    <div class="table-responsive-sm">
+                                                        <table class="table table-bordered mb-0">
+                                                          <thead>
+                                                            <tr>
+                                                              <th scope="col">#</th>
+                                                              <th colspan="2" scope="col">ولایت</th>  
+                                                              <th colspan="2" scope="col">ولسوالی</th>
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <tr>
+                                                              <th scope="row">1</th>
+                                                              <td>Cell</td>
+                                                              <td>Cell</td>
+                                                              <td>Cell</td>
+                                                              <td>Cell</td>
+                                                            </tr>
+                                                            <tr>
+                                                              <th scope="row">3</th>
+                                                              <td  colspan="5">Cell</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">3</th>
+                                                                <td  colspan="5">Cell</td>
+                                                              </tr>
+                                                          </tbody>
+                                                        </table>
+                                                      </div>
+                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="box">
+                                                <div class="box-header m-0 p-0" style="border: none;">
+                                                    <div class="box-title">سکونت اصلی</div>
+                                                </div>
+                                                <div class="box-body p-0 m-0">
+                                                    <div class="table-responsive-sm">
+                                                        <table class="table table-bordered mb-0">
+                                                          <thead>
+                                                            <tr>
+                                                              <th scope="col">#</th>
+                                                              <th colspan="2" scope="col">ولایت</th>  
+                                                              <th colspan="2" scope="col">ولسوالی</th>
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <tr>
+                                                              <th scope="row">1</th>
+                                                              <td>Cell</td>
+                                                              <td>Cell</td>
+                                                              <td>Cell</td>
+                                                              <td>Cell</td>
+                                                            </tr>
+                                                            <tr>
+                                                              <th scope="row">3</th>
+                                                              <td  colspan="5">Cell</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">3</th>
+                                                                <td  colspan="5">Cell</td>
+                                                              </tr>
+                                                          </tbody>
+                                                        </table>
+                                                      </div>
+                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                   </div>
                               </div>
                               <div class="tab-pane" id="messages11" role="tabpanel">
@@ -121,7 +196,7 @@
                     <div class="mb-20 mt-20">
                         <img src="../images/avatar/avatar-12.png" width="150" class="rounded-circle bg-info-light" alt="user">
                         <h4 class="mt-20 mb-0">{{session['emp_name'] +" "+ session['emp_lname']}}</h4>
-                        <a href="mailto:dummy@gmail.com">{{profile[0].emp_id}}</a>
+                        <a href="mailto:dummy@gmail.com">{{email.email}}</a>
                     </div>
                     <div class="badge badge-pill badge-info-light font-size-16">Dashboard</div>
                     <div class="badge badge-pill badge-primary-light font-size-16">UI</div>

@@ -548,9 +548,18 @@ def uds_employee():
 @app.route('/profile', methods=['GET', "POST"])
 @login_required
 def profile():
-    language = "en"
-    profile = db.session.query(Users, User_roles, Emails, Employees).join(Users,
+    language = "dari"
+    profile = db.session.query(Users, User_roles, Employees).join(Users,
                 (Users.role == User_roles.id)).join(Employees, (Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
-    # print(profile.Name)
-    return render_template('profile.html', title='My Profile', language=language, profile=profile, 
+    current_address = db.session.query(Current_addresses, Provinces, Districts).join(
+        Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (Current_addresses.district_id == Districts.id)
+    ).filter(Current_addresses.emp_id == session['emp_id']).first()
+    permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
+        Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (Permanent_addresses.district_id == Districts.id)
+    ).filter(Permanent_addresses.emp_id == session['emp_id']).first()
+    documents = Documents.query.filter_by(emp_id=session['emp_id']).all()
+    email = Emails.query.filter_by(emp_id=session['emp_id']).first()
+    phone = Phone.query.filter_by(emp_id=session['emp_id']).first()
+    return render_template('profile.html', title='My Profile', language=language, profile=profile, current_address=current_address,
+                            permanent_address=permanent_address, documents=documents, email=email, phone=phone,
                            translation=translation_obj, message_obj=message_obj)
