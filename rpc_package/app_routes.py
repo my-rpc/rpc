@@ -10,7 +10,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs
+from rpc_package.route_utils import upload_docs, get_profile_info
 import os
 from datetime import datetime
 
@@ -548,18 +548,10 @@ def uds_employee():
 @app.route('/profile', methods=['GET', "POST"])
 @login_required
 def profile():
-    language = "dari"
-    profile = db.session.query(Users, User_roles, Employees).join(Users,
-                (Users.role == User_roles.id)).join(Employees, (Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
-    current_address = db.session.query(Current_addresses, Provinces, Districts).join(
-        Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (Current_addresses.district_id == Districts.id)
-    ).filter(Current_addresses.emp_id == session['emp_id']).first()
-    permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
-        Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (Permanent_addresses.district_id == Districts.id)
-    ).filter(Permanent_addresses.emp_id == session['emp_id']).first()
-    documents = Documents.query.filter_by(emp_id=session['emp_id']).all()
-    email = Emails.query.filter_by(emp_id=session['emp_id']).first()
-    phone = Phone.query.filter_by(emp_id=session['emp_id']).first()
+    language = "en"
+    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(current_user.emp_id)
     return render_template('profile.html', title='My Profile', language=language, profile=profile, current_address=current_address,
-                            permanent_address=permanent_address, documents=documents, email=email, phone=phone,
+                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone, doc_tazkira=doc_tazkira,
+                            doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education, doc_extra=doc_extra,
                            translation=translation_obj, message_obj=message_obj)
+

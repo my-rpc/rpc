@@ -58,7 +58,7 @@
                           <ul class="nav nav-tabs nav-fill" role="tablist">
                               <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">معلومات شخصی</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">آدرس</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">Messages</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">اسناد</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">Setting</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#about11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">About</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#contact11" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ml-15">Contact</span></a> </li>
@@ -83,31 +83,31 @@
                                                 <div class="box-body p-0 m-0">
                                                     <div class="table-responsive-sm">
                                                         <table class="table table-bordered mb-0">
-                                                          <thead>
-                                                            <tr>
-                                                              <th scope="col">#</th>
-                                                              <th colspan="2" scope="col">ولایت</th>  
-                                                              <th colspan="2" scope="col">ولسوالی</th>
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody>
-                                                            <tr>
-                                                              <th scope="row">1</th>
-                                                              <td>Cell</td>
-                                                              <td>Cell</td>
-                                                              <td>Cell</td>
-                                                              <td>Cell</td>
-                                                            </tr>
-                                                            <tr>
-                                                              <th scope="row">3</th>
-                                                              <td  colspan="5">Cell</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">3</th>
-                                                                <td  colspan="5">Cell</td>
+                                                            <thead>
+                                                              <tr>
+                                                                <th scope="col">#</th>
+                                                                <th colspan="2" scope="col">ولایت</th>  
+                                                                <th colspan="2" scope="col">ولسوالی</th>
                                                               </tr>
-                                                          </tbody>
-                                                        </table>
+                                                            </thead>
+                                                            <tbody>
+                                                              <tr>
+                                                                <th scope="row">1</th>
+                                                                <td>{{current_address[1].province_name}}</td>
+                                                                <td>{{current_address[1].province_name_english}}</td>
+                                                                <td>{{current_address[2].district_name}}</td>
+                                                                <td>{{current_address[2].district_name_english}}</td>
+                                                              </tr>
+                                                              <tr>
+                                                                <th scope="row">3</th>
+                                                                <td  colspan="5">{{current_address[0].address}}</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <th scope="row">3</th>
+                                                                  <td  colspan="5">{{current_address[0].address_english}}</td>
+                                                              </tr>
+                                                            </tbody>
+                                                          </table>
                                                       </div>
                                   
                                                 </div>
@@ -131,19 +131,19 @@
                                                           <tbody>
                                                             <tr>
                                                               <th scope="row">1</th>
-                                                              <td>Cell</td>
-                                                              <td>Cell</td>
-                                                              <td>Cell</td>
-                                                              <td>Cell</td>
+                                                              <td>{{permanent_address[1].province_name}}</td>
+                                                              <td>{{permanent_address[1].province_name_english}}</td>
+                                                              <td>{{permanent_address[2].district_name}}</td>
+                                                              <td>{{permanent_address[2].district_name_english}}</td>
                                                             </tr>
                                                             <tr>
                                                               <th scope="row">3</th>
-                                                              <td  colspan="5">Cell</td>
+                                                              <td  colspan="5">{{permanent_address[0].address}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row">3</th>
-                                                                <td  colspan="5">Cell</td>
-                                                              </tr>
+                                                                <td  colspan="5">{{permanent_address[0].address_english}}</td>
+                                                            </tr>
                                                           </tbody>
                                                         </table>
                                                       </div>
@@ -156,9 +156,49 @@
                               </div>
                               <div class="tab-pane" id="messages11" role="tabpanel">
                                   <div class="p-15">
-                                      <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
-                                      <h3>Donec vitae laoreet neque, id convallis ante.</h3>
-                                      <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">سی وی</th>  
+                                            <th scope="col">تذکره</th>
+                                            <th scope="col">ضامن</th>
+                                            <th scope="col">نمبر تشخصیه</th>
+                                            <th scope="col">اسناد تحصیلی</th>
+                                            <th scope="col">اسناد اضافی</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <th scope="row">1</th>
+                                            <td class="text-center">{% if doc_cv %}
+                                                <a href="{{doc_cv.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_tazkira %}
+                                                <a href="{{doc_tazkira.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_guarantor %}
+                                                <a href="{{doc_guarantor.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_tin %}
+                                                <a href="{{doc_tin.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_education %}
+                                                <a href="{{doc_education.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_extra %}
+                                                <a href="{{doc_extra.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                          </tr>
+                                         
+                                        </tbody>
+                                      </table>
                                   </div>
                               </div>
                               <div class="tab-pane" id="setting11" role="tabpanel">
