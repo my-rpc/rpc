@@ -187,6 +187,14 @@
     "dari": "وظیفه",
     "en": "Position"
   },
+  "operations": {
+    "dari": "عملیات",
+    "en": "Operations"
+  },
+  "blood_group": {
+    "dari": "گروپ خونی",
+    "en": "Blood Group"
+  },
   "employee_number": {
     "dari": "شماره کارمندی",
     "en": "Employee Number"
@@ -334,6 +342,38 @@
   "tin": {
     "dari": "نمبر تشخصیه",
     "en": "TIN Number"
+  },
+  "select": {
+    "dari": "انتخاب",
+    "en": "Select"
+  },
+  "view_employee": {
+    "dari": "مشاهده کارمند",
+    "en": "View Employee"
+  },
+  "edit_employee": {
+    "dari": "تغییرات کارمند",
+    "en": "Edit Employee"
+  },
+  "delete_employee": {
+    "dari": "حذف کارمند",
+    "en": "Delete Employee"
+  },
+  "add_document": {
+    "dari": "اضافه کردن اسناد",
+    "en": "Add Document"
+  },
+  "print": {
+    "dari": "پرینت",
+    "en": "Print"
+  },
+  "excel": {
+    "dari": "اکسل",
+    "en": "Excel"
+  },
+  "column_visibility": {
+    "dari": "نمایش ردیف",
+    "en": "Column Visibility"
   },
   "cv": {
     "dari": "سی وی",
@@ -498,6 +538,10 @@
   "date_of_birth": {
     "dari": "تاریخ تولد",
     "en": "Date of Birth"
+  },
+  "birthday": {
+    "dari": "تاریخ تولد",
+    "en": "Birthday"
   },
   "phone": {
     "dari": "شماره تماس",
