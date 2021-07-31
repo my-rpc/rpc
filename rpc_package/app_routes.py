@@ -18,7 +18,7 @@ from datetime import datetime
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
+    return redirect("/profile")
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])

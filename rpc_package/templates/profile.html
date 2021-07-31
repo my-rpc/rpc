@@ -59,7 +59,7 @@
                               <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">معلومات شخصی</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">آدرس</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">اسناد</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">Setting</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">تماس</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#about11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">About</span></a> </li>
                               <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#contact11" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ml-15">Contact</span></a> </li>
                           </ul>
@@ -67,9 +67,47 @@
                           <div class="tab-content tabcontent-border">
                               <div class="tab-pane active" id="home11" role="tabpanel">
                                   <div class="p-15">
-                                      <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
-                                      <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
-                                      <h3>Donec vitae laoreet neque, id convallis ante.</h3>
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">نام</th>  
+                                            <th scope="col">تخلص</th>
+                                            <th scope="col">نام پدر</th>
+                                            <th scope="col">نام پدر کلان</th>
+                                            <th scope="col">تاریخ تولد</th>
+                                            <th scope="col">جنسیت</th>
+                                            <th scope="col">گروپ خون</th>
+                                            <th scope="col">شماره تذکره</th>
+                                            <th scope="col">نمبر تشخصیه</th>
+                                            <th scope="col">حالت مدنی</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if profile %}
+                                          <tr>
+                                            <th rowspan="2" scope="row">1</th>
+                                            <td class="text-center">{{profile[2].name}}</td>
+                                            <td class="text-center">{{profile[2].lname}}</td>
+                                            <td class="text-center">{{profile[2].fname}}</td>
+                                            <td class="text-center">{{profile[2].gname}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].birthday}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].gender}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].blood}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].tazkira}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].tin}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].m_status}}</td>
+                                          </tr>
+                                          <tr>
+                                            
+                                            <td class="text-center">{{profile[2].name_english}}</td>
+                                            <td class="text-center">{{profile[2].lname_english}}</td>
+                                            <td class="text-center">{{profile[2].fname_english}}</td>
+                                            <td class="text-center">{{profile[2].gname_english}}</td>
+                                          </tr>
+                                         {% endif %}
+                                        </tbody>
+                                      </table>
                                   </div>
                               </div>
                               <div class="tab-pane" id="profile11" role="tabpanel">
@@ -203,9 +241,23 @@
                               </div>
                               <div class="tab-pane" id="setting11" role="tabpanel">
                                   <div class="p-15">
-                                      <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
-                                      <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
-                                      <h3>Donec vitae laoreet neque, id convallis ante.</h3>
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th colspan="3" scope="col">ایمیل</th>  
+                                            <th colspan="3" scope="col">شماره تماس</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <th scope="row">1</th>
+                                            <td colspan="3">{% if email %} {{email.email}} {% endif %}</td>
+                                            <td colspan="3">{% if phone %} {{phone.phone}} {% endif %}</td>
+                                          </tr>
+                                         
+                                        </tbody>
+                                      </table>
                                   </div>
                               </div>
                               <div class="tab-pane" id="about11" role="tabpanel">
