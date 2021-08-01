@@ -10,7 +10,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents
 import os
 from datetime import datetime
 
@@ -24,7 +24,6 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
-    language = 'en'
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -39,9 +38,9 @@ def create_new_user():
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_user_not[language])
+                return message_to_client_403(message_obj.create_new_user_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
+                message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
         else:
             return message_to_client_403(create_new_user_form.errors)
     users = db.session.query(Users,
@@ -59,7 +58,7 @@ def create_new_user():
 @app.route("/uds_user", methods=['GET', 'POST'])
 @login_required
 def uds_user():
-    language = 'en'
+    language = session['language']
     if request.method == 'POST':
         if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
                 EmployeeValidator.number_validator(request.form['user_role']):
@@ -107,14 +106,18 @@ def login():
             employee = Employees.query.filter_by(id=user.emp_id).first()
             session['language'] = login_form.prefer_language.data
             session['emp_id'] = user.emp_id
-            session['emp_name'] = employee.name
-            session['emp_lname'] = employee.lname
+            if session['language'] == 'dari':
+                session['emp_name'] = employee.name
+                session['emp_lname'] = employee.lname
+            else:
+                session['emp_name'] = employee.name_english
+                session['emp_lname'] = employee.lname_english
             login_user(user, remember=login_form.remember_me.data)
             request_user_page = request.args.get('next')
             if request_user_page:
                 return redirect(request_user_page)
             else:
-                return redirect(url_for("blank"))
+                return redirect('/profile')
         else:
             return message_to_client_403(message_obj.password_incorrect[session['language']])
 
@@ -209,12 +212,7 @@ def add_documents():
     emp_id = request.args.get("emp_id")
 
     if request.method == "GET":
-        cv_doc = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
-        guarantor_doc = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
-        tazkira_doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
-        education_doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
-        tin_doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
-        extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+        cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc = get_documents(emp_id)
 
     if request.method == 'POST':
         if guarantor.flag.data == "guarantor":
@@ -547,7 +545,7 @@ def uds_employee():
     else:
         message_to_client_403(message_obj.invalid_message[language])
 
-@app.route('/profile', methods=['GET', "POST"])
+@app.route('/profile')
 @login_required
 def profile():
     language = "en"
