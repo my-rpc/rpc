@@ -24,7 +24,6 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
-    language = 'en'
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -39,9 +38,9 @@ def create_new_user():
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_user_not[language])
+                return message_to_client_403(message_obj.create_new_user_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
+                message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
         else:
             return message_to_client_403(create_new_user_form.errors)
     users = db.session.query(Users, User_roles, Employees).join(Users,
@@ -57,7 +56,7 @@ def create_new_user():
 @app.route("/uds_user", methods=['GET', 'POST'])
 @login_required
 def uds_user():
-    language = 'en'
+    language = session['language']
     if request.method == 'POST':
         if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
                 EmployeeValidator.number_validator(request.form['user_role']):
@@ -116,7 +115,7 @@ def login():
             if request_user_page:
                 return redirect(request_user_page)
             else:
-                return redirect(url_for("blank"))
+                return redirect('/profile')
         else:
             return message_to_client_403(message_obj.password_incorrect[session['language']])
 
@@ -544,7 +543,7 @@ def uds_employee():
     else:
         message_to_client_403(message_obj.invalid_message[language])
 
-@app.route('/profile', methods=['GET', "POST"])
+@app.route('/profile')
 @login_required
 def profile():
     language = "en"
