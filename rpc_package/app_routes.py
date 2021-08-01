@@ -18,7 +18,7 @@ from datetime import datetime
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def blank():
-    return redirect("/profile")
+    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -296,6 +296,7 @@ def employee_settings():
 @app.route('/employee_details', methods=['GET', "POST"])
 @login_required
 def employee_details():
+    language = 'en'
     return render_template('employee_details.html', title='Employee Details', language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
