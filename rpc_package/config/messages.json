@@ -27,6 +27,10 @@
     "dari": "کارمند با آیدی {} موفقانه حذف شد",
     "en": "Employee deleted for {} ID"
   },
+  "create_new_employee_delete_not": {
+    "dari": "کارمند با آیدی {}  حذف نشد",
+    "en": "Employee not deleted for {} ID"
+  },
   "create_new_employee_update": {
     "dari": "اطلاعات کارمند با آیدی {} بروزرسانی شد",
     "en": "Employee updated for {} ID"
@@ -130,5 +134,19 @@
   "blood_type": {
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
     "en": "wrong format of blood type correct one is (B+)"
-  }
+  },
+  "val_dic" : {
+    "employee_id": "Employee already exi...mployee ID",
+    "email": "ایمیل شما موجود است",
+    "phone": "تلفون شما موجود است",
+    "phone_second": "تلفون شما موجود است",
+    "permanent_address": "This field is required.", 
+    "permanent_address_dari": "This field is required.",
+    "current_address": "This field is required.",
+    "current_address_dari": "This field is required.",
+    "provinces_permanent": "This field is required.", 
+    "provinces_current": "This field is required.", 
+    "district_permanent": "This field is required.", 
+    "district_current": "This field is required."
+}
 }
