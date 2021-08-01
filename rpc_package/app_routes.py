@@ -10,7 +10,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs
+from rpc_package.route_utils import upload_docs, get_profile_info
 import os
 from datetime import datetime
 
@@ -18,7 +18,7 @@ from datetime import datetime
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
+    return redirect("/profile")
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -104,7 +104,11 @@ def login():
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            employee = Employees.query.filter_by(id=user.emp_id).first()
             session['language'] = login_form.prefer_language.data
+            session['emp_id'] = user.emp_id
+            session['emp_name'] = employee.name
+            session['emp_lname'] = employee.lname
             login_user(user, remember=login_form.remember_me.data)
             request_user_page = request.args.get('next')
             if request_user_page:
@@ -541,3 +545,14 @@ def uds_employee():
         return data
     else:
         message_to_client_403(message_obj.invalid_message[language])
+
+@app.route('/profile', methods=['GET', "POST"])
+@login_required
+def profile():
+    language = "en"
+    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(current_user.emp_id)
+    return render_template('profile.html', title='My Profile', language=language, profile=profile, current_address=current_address,
+                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone, doc_tazkira=doc_tazkira,
+                            doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education, doc_extra=doc_extra,
+                           translation=translation_obj, message_obj=message_obj)
+
