@@ -250,7 +250,7 @@ def delete_document():
     doc = request.args.get("doc")
     document = Documents.query.filter_by(emp_id=emp_id, name=doc).first()
     try:
-        os.remove(os.path.join(f"./rpc_package"+document.url))
+        os.remove(os.path.join(f"./rpc_package" + document.url))
         Documents.query.filter_by(emp_id=emp_id, name=doc).delete()
         db.session.commit()
         flash("Document deleted", "success")
@@ -545,13 +545,16 @@ def uds_employee():
     else:
         message_to_client_403(message_obj.invalid_message[language])
 
+
 @app.route('/profile')
 @login_required
 def profile():
-    language = "en"
-    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(current_user.emp_id)
-    return render_template('profile.html', title='My Profile', language=language, profile=profile, current_address=current_address,
-                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone, doc_tazkira=doc_tazkira,
-                            doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education, doc_extra=doc_extra,
+    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
+        current_user.emp_id)
+    return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
+                           current_address=current_address,
+                           permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
+                           doc_tazkira=doc_tazkira,
+                           doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
+                           doc_extra=doc_extra,
                            translation=translation_obj, message_obj=message_obj)
-
