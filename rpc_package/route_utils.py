@@ -43,3 +43,13 @@ def get_profile_info(emp_id):
     email = Emails.query.filter_by(emp_id=session['emp_id']).first()
     phone = Phone.query.filter_by(emp_id=session['emp_id']).first()
     return profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra
+
+
+def get_documents(emp_id):
+    cv_doc = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
+    guarantor_doc = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
+    tazkira_doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
+    education_doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
+    tin_doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
+    extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+    return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
