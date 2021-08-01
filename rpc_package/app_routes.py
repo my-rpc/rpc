@@ -10,7 +10,8 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, update_employee_data, \
+    set_emp_update_form_data
 import os
 from datetime import datetime
 
@@ -18,7 +19,7 @@ from datetime import datetime
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def blank():
-    return redirect("/profile")
+    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -43,9 +44,11 @@ def create_new_user():
                 message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
         else:
             return message_to_client_403(create_new_user_form.errors)
-    users = db.session.query(Users, User_roles, Employees).join(Users,
-                                                                (Users.role == User_roles.id)).join(Employees, (
-            Users.emp_id == Employees.id)).all()
+    users = db.session.query(Users,
+                             User_roles,
+                             Employees).join(Users,
+                                             (Users.role == User_roles.id)).join(Employees,
+                                                                                 (Users.emp_id == Employees.id)).all()
 
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User', users=users,
@@ -200,7 +203,6 @@ def add_employee():
 @app.route("/add_documents", methods=['GET', 'POST'])
 @login_required
 def add_documents():
-    language = 'en'
     cv_form = UploadCVForm()
     guarantor = UploadGuarantorForm()
     education = UploadEducationalDocsForm()
@@ -248,7 +250,7 @@ def delete_document():
     doc = request.args.get("doc")
     document = Documents.query.filter_by(emp_id=emp_id, name=doc).first()
     try:
-        os.remove(os.path.join(f"./rpc_package"+document.url))
+        os.remove(os.path.join(f"./rpc_package" + document.url))
         Documents.query.filter_by(emp_id=emp_id, name=doc).delete()
         db.session.commit()
         flash("Document deleted", "success")
@@ -270,8 +272,6 @@ def load_districts():
 @app.route("/employee_settings", methods=['GET', 'POST'])
 @login_required
 def employee_settings():
-    language = 'en'
-
     employees = db.session.query(Employees).all()
     phones = {}
     emails = {}
@@ -282,7 +282,6 @@ def employee_settings():
             phones[x] = phone
         if email is not None:
             emails[x] = email
-    print(emails)
 
     return render_template("employee_settings.html", title='Employee Settings',
                            employees=employees, emails=emails, phones=phones, language=session['language'],
@@ -303,245 +302,67 @@ def uds_employee():
     language = 'en'
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
-        if EmployeeValidator.emp_id_validator(request.form['employee_id']):
-            sel_emp = Employees.query.filter_by(id=update_employee_form.employee_id.data).first()
-            phones = Phone.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
-            emails = Emails.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
+        if not update_employee_form.validate_on_submit():
+
+            for key, value in update_employee_form.errors.items():
+                if value[0] != message_obj.val_dic[key][0]:
+                    update_employee_form.validate_on_submit()
 
             try:
-                sel_emp.name = update_employee_form.first_name.data
-                sel_emp.lname = update_employee_form.last_name.data
-                sel_emp.fname = update_employee_form.father_name.data
-                sel_emp.gname = update_employee_form.grand_name.data
-                sel_emp.name_english = update_employee_form.first_name_english.data
-                sel_emp.lname_english = update_employee_form.last_name_english.data
-                sel_emp.fname_english = update_employee_form.father_name_english.data
-                sel_emp.gname_english = update_employee_form.grand_name_english.data
-                sel_emp.tin = update_employee_form.tin.data
-                sel_emp.tazkira = update_employee_form.tazkira.data
-                sel_emp.birthday = update_employee_form.birthday.data
-                sel_emp.blood = update_employee_form.blood.data
-                sel_emp.m_status = bool(int(update_employee_form.m_status.data))
-                sel_emp.gender = bool(int(update_employee_form.gender.data))
+                update_employee_data(update_employee_form)
 
-                # check if employee has 2 or has 1 or none phone number 
-                # and check if second phone number is provided
-                if phones is not None and len(phones) == 2:
-                    phones[0].phone = update_employee_form.phone.data
-                    if update_employee_form.phone_second.data:
-                        phones[1].phone = update_employee_form.phone_second.data
-
-                elif phones is not None and len(phones) == 1:
-                    phones[0].phone = update_employee_form.phone.data
-                    if update_employee_form.phone_second.data:
-                        phone_second = Phone(
-                            emp_id=update_employee_form.employee_id.data,
-                            phone=update_employee_form.phone_second.data
-                        )
-                        db.session.add(phone_second)
-                elif not phones:
-                    phone = Phone(
-                        emp_id=update_employee_form.employee_id.data,
-                        phone=update_employee_form.phone.data
-                    )
-                    db.session.add(phone)
-
-                    if update_employee_form.phone_second.data:
-                        phone_second = Phone(
-                            emp_id=update_employee_form.employee_id.data,
-                            phone=update_employee_form.phone_second.data
-                        )
-                        db.session.add(phone_second)
-
-                # check if employee has 2 or has 1 or none email address
-                # and check if second email address is provided
-                if emails is not None and len(emails) == 2:
-                    emails[0].email = update_employee_form.email.data
-                    if update_employee_form.email_second.data:
-                        emails[1].email = update_employee_form.email_second.data
-
-                elif emails is not None and len(emails) == 1:
-                    update_employee_form.email.data = emails[0].email
-                    if update_employee_form.email_second.data:
-                        email_second = Emails(
-                            emp_id=update_employee_form.employee_id.data,
-                            email=update_employee_form.email_second.data)
-                        db.session.add(email_second)
-                elif not emails:
-                    email = Emails(
-                        emp_id=update_employee_form.employee_id.data,
-                        email=update_employee_form.email.data)
-                    db.session.add(email)
-                    if update_employee_form.email_second.data:
-                        email_second = Emails(
-                            emp_id=update_employee_form.employee_id.data,
-                            email=update_employee_form.email_second.data)
-                        db.session.add(email_second)
-
-                ###
-                #   check if the address data is updated or provided by client
-                #   if yes then update data
-
-                if update_employee_form.current_address.data or update_employee_form.current_address_dari.data:
-                    cur_add = Current_addresses.query.filter_by(emp_id=update_employee_form.employee_id.data).first()
-
-                    if cur_add is not None:
-                        cur_add.province_id = update_employee_form.provinces_current.data
-                        cur_add.district_id = update_employee_form.district_current.data
-                        cur_add.address = update_employee_form.current_address.data
-                        cur_add.address_dari = update_employee_form.current_address_dari.data
-                    else:
-
-                        current_address = Current_addresses(
-                            emp_id=update_employee_form.employee_id.data,
-                            address=update_employee_form.current_address.data,
-                            address_dari=update_employee_form.current_address_dari.data,
-                            district_id=update_employee_form.district_current.data,
-                            province_id=update_employee_form.provinces_current.data)
-                        db.session.add(current_address)
-
-                if update_employee_form.permanent_address.data or update_employee_form.permanent_address_dari.data:
-                    per_add = Permanent_addresses.query.filter_by(emp_id=update_employee_form.employee_id.data).first()
-                    if per_add is not None:
-                        per_add.province_id = update_employee_form.provinces_permanent.data
-                        per_add.district_id = update_employee_form.district_permanent.data
-                        per_add.address = update_employee_form.permanent_address.data
-                        per_add.address_dari = update_employee_form.permanent_address_dari.data
-                    else:
-                        permanent_address = Permanent_addresses(
-                            emp_id=update_employee_form.employee_id.data,
-                            address=update_employee_form.permanent_address.data,
-                            address_dari=update_employee_form.permanent_address_dari.data,
-                            district_id=update_employee_form.district_permanent.data,
-                            province_id=update_employee_form.provinces_permanent.data)
-                        db.session.add(permanent_address)
-                db.session.commit()
             except IOError as exc:
-                print(exc)
-                return message_to_client_403(message_obj.create_new_employee_update_not[language])
-            return message_to_client_200(
-                message_obj.create_new_employee_update[language].format(request.form['employee_id']))
+                return message_to_client_403(message_obj.create_new_employee_update_not[session['language']])
+            data = {
+                'employee': {
+                    'emp_id': update_employee_form.employee_id.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data,
+                    'name_english': update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data,
+                    'father_name_english': update_employee_form.father_name_english.data,
+                    'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
+                    'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
+                    'gender': update_employee_form.gender.data,
+                    'tazkira': update_employee_form.tazkira.data,
+                    'm_status': update_employee_form.m_status.data,
+                    'birthday': update_employee_form.birthday.data,
+                    'blood': update_employee_form.blood.data,
+                    'tin': update_employee_form.tin.data
+                },
+                'message': message_obj.create_new_employee_update[session['language']].format(
+                    request.form['employee_id'])
+            }
+            return jsonify(data)
         else:
-            return message_to_client_403(message_obj.create_new_employee_update_not[language])
+            return message_to_client_403(update_employee_form.errors)
 
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
-
-        emp = Employees.query.get(emp_id)
-        phones = Phone.query.filter_by(emp_id=emp_id).all()
-        emails = Emails.query.filter_by(emp_id=emp_id).all()
-        cur_add = Current_addresses.query.filter_by(emp_id=emp_id).first()
-        per_add = Permanent_addresses.query.filter_by(emp_id=emp_id).first()
-        update_employee_form.employee_id.data = emp.id
-        update_employee_form.first_name.data = emp.name
-        update_employee_form.last_name.data = emp.lname
-        update_employee_form.father_name.data = emp.fname
-        update_employee_form.grand_name.data = emp.gname
-        update_employee_form.first_name_english.data = emp.name_english
-        update_employee_form.last_name_english.data = emp.lname_english
-        update_employee_form.father_name_english.data = emp.fname_english
-        update_employee_form.grand_name_english.data = emp.gname_english
-        update_employee_form.tin.data = emp.tin
-        update_employee_form.tazkira.data = emp.tazkira
-        update_employee_form.birthday.data = emp.birthday
-        update_employee_form.blood.data = emp.blood
-
-        update_employee_form.gender.data = emp.gender
-        update_employee_form.m_status.data = emp.m_status
-
-        cur_address = ''
-        cur_district_name = ''
-        cur_province_name = ''
-        cur_address_eng = ''
-        cur_district_name_eng = ''
-        cur_province_name_eng = ''
-
-        per_address = ''
-        per_district_name = ''
-        per_province_name = ''
-        per_address_eng = ''
-        per_district_name_eng = ''
-        per_province_name_eng = ''
-
-        # check if permanent address exists.
-        if per_add is not None:
-            update_employee_form.provinces_permanent.data = per_add.province_id
-            update_employee_form.district_permanent.data = per_add.district_id
-            update_employee_form.permanent_address.data = per_add.address
-            update_employee_form.permanent_address_dari.data = per_add.address_dari
-
-            per_district = Districts.query.filter_by(id=per_add.district_id).first()
-            per_province = Provinces.query.filter_by(id=per_add.province_id).first()
-
-            per_address = per_add.address_dari
-            per_district_name = per_district.district_name
-            per_province_name = per_province.province_name
-            per_address_eng = per_add.address
-            per_district_name_eng = per_district.district_name_english
-            per_province_name_eng = per_province.province_name_english
-
-        # check if current address exists.
-        if cur_add is not None:
-            update_employee_form.provinces_current.data = cur_add.province_id
-            update_employee_form.district_current.data = cur_add.district_id
-            update_employee_form.current_address.data = cur_add.address
-            update_employee_form.current_address_dari.data = cur_add.address_dari
-
-            cur_district = Districts.query.filter_by(id=cur_add.district_id).first()
-            cur_province = Provinces.query.filter_by(id=cur_add.province_id).first()
-
-            cur_address = cur_add.address_dari
-            cur_district_name = cur_district.district_name
-            cur_province_name = cur_province.province_name
-            cur_address_eng = cur_add.address
-            cur_district_name_eng = cur_district.district_name_english
-            cur_province_name_eng = cur_province.province_name_english
-
-        # check if employee has 1 or 2 phone and email numbers and set it form field
-        if phones is not None and len(phones) == 2:
-            update_employee_form.phone.data = phones[0].phone
-            update_employee_form.phone_second.data = phones[1].phone
-        elif phones is not None and len(phones) == 1:
-            update_employee_form.phone.data = phones[0].phone
-            update_employee_form.phone_second.data = None
-        else:
-            update_employee_form.phone.data = None
-            update_employee_form.phone_second.data = None
-
-        if emails is not None and len(emails) == 2:
-            update_employee_form.email.data = emails[0].email
-            update_employee_form.email_second.data = emails[1].email
-        elif emails is not None and len(emails) == 1:
-            update_employee_form.email.data = emails[0].email
-            update_employee_form.email_second.data = None
-        else:
-            update_employee_form.email.data = None
-            update_employee_form.email_second.data = None
-
-        current_addresses = "<div class='py-4 d-flex'><h5 class='text-primary'>ادرس فعلی: </h5>" \
-                            + "<p class='px-3'>" \
-                            + str(cur_address) + ", " + str(cur_district_name) + ", " + str(
-            cur_province_name) + "</p> <br> " \
-                            + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(
-            cur_address_eng) + ", " \
-                            + str(cur_district_name_eng) + ", " + str(cur_province_name_eng) \
-                            + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
-
-        permanent_addresses = "<div class='py-4 d-flex'> <h5 class=' text-primary'> ادرس اصلی: </h5>" \
-                              + "<p class='px-3 '>" \
-                              + str(per_address) + ", " + str(per_district_name) + ", " + str(
-            per_province_name) + "</p> <br>" \
-                              + "<h5 class=' text-primary'> Permanent address: </h5> <p class='px-3 '>" \
-                              + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(
-            per_province_name_eng) \
-                              + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+        emp_update_data = set_emp_update_form_data(emp_id, update_employee_form)
 
         data = jsonify(render_template('ajax_template/update_employee_form.html', language=session['language'],
                                        form=update_employee_form, translation=translation_obj, message_obj=message_obj),
-                       {'current_add': current_addresses, 'permanent_add': permanent_addresses})
+                       {'current_add': emp_update_data[0], 'permanent_add': emp_update_data[1]})
         return data
     else:
-        message_to_client_403(message_obj.invalid_message[language])
+        message_to_client_403(message_obj.invalid_message[session['language']])
+
+
+@app.route('/delete_employee', methods=['DELETE'])
+def delete_employee():
+    emp_id = request.args.get('emp_id')
+    if EmployeeValidator.emp_id_validator(emp_id):
+        try:
+            sel_emp = Employees.query.get(emp_id)
+            db.session.delete(sel_emp)
+            db.session.commit()
+        except IOError as exc:
+            return message_to_client_403(message_obj.create_new_employee_delete_not[session['language']])
+        return message_to_client_200(
+            message_obj.create_new_employee_delete[session['language']].format(emp_id))
+    else:
+        message_to_client_403(message_obj.invalid_message[session['language']])
+
 
 @app.route('/profile')
 @login_required
