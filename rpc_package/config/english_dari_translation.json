@@ -135,10 +135,6 @@
     "dari": "ورود",
     "en": "Login"
   },
-  "email": {
-    "dari": "ایمیل",
-    "en": "Email"
-  },
   "title": {
     "dari": "عنوان",
     "en": "Title"
@@ -190,6 +186,14 @@
   "position": {
     "dari": "وظیفه",
     "en": "Position"
+  },
+  "operations": {
+    "dari": "عملیات",
+    "en": "Operations"
+  },
+  "blood_group": {
+    "dari": "گروپ خونی",
+    "en": "Blood Group"
   },
   "employee_number": {
     "dari": "شماره کارمندی",
@@ -339,6 +343,38 @@
     "dari": "نمبر تشخصیه",
     "en": "TIN Number"
   },
+  "select": {
+    "dari": "انتخاب",
+    "en": "Select"
+  },
+  "view_employee": {
+    "dari": "مشاهده کارمند",
+    "en": "View Employee"
+  },
+  "edit_employee": {
+    "dari": "تغییرات کارمند",
+    "en": "Edit Employee"
+  },
+  "delete_employee": {
+    "dari": "حذف کارمند",
+    "en": "Delete Employee"
+  },
+  "add_document": {
+    "dari": "اضافه کردن اسناد",
+    "en": "Add Document"
+  },
+  "print": {
+    "dari": "پرینت",
+    "en": "Print"
+  },
+  "excel": {
+    "dari": "اکسل",
+    "en": "Excel"
+  },
+  "column_visibility": {
+    "dari": "نمایش ردیف",
+    "en": "Column Visibility"
+  },
   "cv": {
     "dari": "سی وی",
     "en": "CV"
@@ -427,6 +463,10 @@
     "dari": "جنسیت",
     "en": "Gender"
   },
+  "m_status": {
+    "dari": "حالت مدنی",
+    "en": "Marital Status"
+  },
   "need_date": {
     "dari": "شروع ضرورت",
     "en": "Need Date"
@@ -467,6 +507,22 @@
     "dari": "مبلغ معاش",
     "en": "Salary"
   },
+  "male": {
+    "dari": "مرد",
+    "en": "Male"
+  },
+  "female": {
+    "dari": "زن",
+    "en": "Female"
+  },
+  "single": {
+    "dari": "مجرد",
+    "en": "Single"
+  },
+  "married": {
+    "dari": "متاهل",
+    "en": "Married"
+  },
   "communication_skills": {
     "dari": "توانایی ارتباطات",
     "en": "Communication Skills"
@@ -483,9 +539,13 @@
     "dari": "تاریخ تولد",
     "en": "Date of Birth"
   },
+  "birthday": {
+    "dari": "تاریخ تولد",
+    "en": "Birthday"
+  },
   "phone": {
     "dari": "شماره تماس",
-    "en": "Phone Number"
+    "en": "Phone Address"
   },
   "phone_second": {
     "dari": "شماره تماس دوم",
@@ -650,5 +710,13 @@
   "update_user": {
     "dari": " تغییرات کاربر",
     "en": "Update user"
+  },
+  "male": {
+    "dari": "مرد",
+    "en": "Male"
+  },
+  "female": {
+    "dari": "مرد",
+    "en": "Female"
   }
 }

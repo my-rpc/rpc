@@ -20,7 +20,7 @@
                     <th>{{translation.first_name[language]}}</th>
                     <th>{{translation.user_role[language]}}</th>
                     <th>{{translation.status[language]}}</th>
-                    <th>Operations</th> 
+                    <th>{{translation.operations[language]}}</th> 
                     <!-- operations should be added to translation -->
                     
                 </tr>
@@ -55,15 +55,7 @@
                 {% endfor %}
                 
             </tbody>
-            <tfoot>
-                <tr>
-                    <th>{{translation.employee_id[language]}}</th>
-                    <th>{{translation.first_name[language]}}</th>
-                    <th>{{translation.user_role[language]}}</th>
-                    <th>{{translation.status[language]}}</th>
-                    <th>Operations</th>
-                </tr>
-            </tfoot>
+            
         </table>
     </div>
 </div>
@@ -217,14 +209,6 @@ updateUserOpenModel = function(userID){
                 $('#update_user [name="status"]').val(0);
                 
         },
-        // error: function(response){
-        //     var statusCode = response.status;
-        //     var r = '';
-        //     if(statusCode == '403'){
-        //         r = formValidateErrors(response);
-        //     }
-        //     toastError(r);
-        // }
     });
 }
 
@@ -248,6 +232,7 @@ $(document).on( 'submit', '#create_user', function(e){
         contentType: false,
         success: function (response) {
             toastSuccess(response.message);
+            $('.create_new_user_modal').modal('hide');
         },error: function(response){
             var statusCode = response.status;
             var r = '';
@@ -272,6 +257,8 @@ $(document).on( 'submit', '#update_user', function(e){
         success: function (response) {
             console.log(response)
             toastSuccess(response.message);
+            $('.update_user_modal').modal('hide');
+
         },error: function(response){
             console.log(response)
 

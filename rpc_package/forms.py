@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, SelectField, FileField
+from wtforms import StringField, PasswordField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
+    FileField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
@@ -66,9 +67,9 @@ class EmployeeForm(FlaskForm):
     # TODO adding datetime picker.
     birthday = StringField('Birthday/تارخ تولد')
     tazkira = StringField('Tazkira/تذکره', validators=[Regexp('\d+')])
-    gender = RadioField('Gender', choices=[(1, 'Male'), (0, 'Female')], validators=[DataRequired()])
+    gender = RadioField('Gender', choices=[[1, 'Male'], [0, 'Female']], validators=[DataRequired()])
     blood = StringField("Blood Type/گروپ خون", validators=[Regexp('(A|B|AB|O|C)[+-]')], default='C+')
-    m_status = RadioField('Marital Status', choices=[(1, 'Married'), (0, 'Single')], validators=[DataRequired()])
+    m_status = RadioField('Marital Status', choices=[[1, 'Married'], [0, 'Single']], validators=[DataRequired()])
     tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name + '/' + province.province_name_english) for province in
                       Provinces.query.all()]
@@ -91,11 +92,10 @@ class EmployeeForm(FlaskForm):
     def validate_email(self, email):
         if email.data:
             if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
-                    raise ValidationError('فرمت ایمیل را چک کنید')
+                raise ValidationError('فرمت ایمیل را چک کنید')
             user_email = Emails.query.filter_by(email=email.data).first()
             if user_email:
                 raise ValidationError('ایمیل شما موجود است')
-
 
     def validate_email_second(self, email_second):
         if email_second.data:
@@ -105,7 +105,6 @@ class EmployeeForm(FlaskForm):
             user_email = Emails.query.filter_by(email=email_second.data).first()
             if user_email:
                 raise ValidationError('ایمیل شما موجود است')
-
 
     def validate_first_name(self, first_name):
         if not check_language(first_name.data):
@@ -152,7 +151,38 @@ class EmployeeForm(FlaskForm):
             if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', birthday.data)):
                 raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
+
 class UploadCVForm(FlaskForm):
-    # cv = FileField('سی وی', validators=[DataRequired()])
-    cv = FileField(u'CV File', validators=[Regexp("\w+\.pdf$")])
-    # description = TextAreaField(u'Image Description')
+    cv = FileField('CV File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="cv")
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class UploadGuarantorForm(FlaskForm):
+    guarantor = FileField('Guarantor File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="guarantor")
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class UploadEducationalDocsForm(FlaskForm):
+    education = FileField('Education File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="education")
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class UploadTinForm(FlaskForm):
+    tin = FileField('Tin File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="tin")
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class UploadTazkiraForm(FlaskForm):
+    tazkira = FileField('Tazkira File', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="tazkira")
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class UploadExtraDocsForm(FlaskForm):
+    extra_docs = FileField('extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
+    flag = HiddenField('flag', default="extra_docs")
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])

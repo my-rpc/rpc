@@ -8,7 +8,7 @@ import json
 
 pymysql.install_as_MySQLdb()
 
-from rpc_package.utils import Translation, MessagePull
+from rpc_package.read_tran_message import Translation, MessagePull
 
 app = Flask(__name__)
 config_path = os.path.dirname(__file__)

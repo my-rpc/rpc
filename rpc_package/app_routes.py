@@ -1,15 +1,19 @@
-from flask import render_template, url_for, redirect, request, jsonify
+from flask import render_template, url_for, redirect, request, jsonify, flash, session
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
+    UploadEducationalDocsForm, \
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
+from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
+    Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, update_employee_data, \
+    set_emp_update_form_data
 import os
 from datetime import datetime
-from sqlalchemy.orm import aliased
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -21,7 +25,6 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
-    language = 'en'
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -36,25 +39,27 @@ def create_new_user():
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_user_not[language])
+                return message_to_client_403(message_obj.create_new_user_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
+                message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
         else:
             return message_to_client_403(create_new_user_form.errors)
-    users = db.session.query(Users, User_roles, Employees).join(Users,
-                                                                (Users.role == User_roles.id)).join(Employees, (
-            Users.emp_id == Employees.id)).all()
+    users = db.session.query(Users,
+                             User_roles,
+                             Employees).join(Users,
+                                             (Users.role == User_roles.id)).join(Employees,
+                                                                                 (Users.emp_id == Employees.id)).all()
 
     create_new_user_form = update_messages_user(create_new_user_form, language)
     return render_template('create_new_user.html', title='Create New User', users=users,
-                           form=create_new_user_form, language=language, translation=translation_obj,
+                           form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
 
 
 @app.route("/uds_user", methods=['GET', 'POST'])
 @login_required
 def uds_user():
-    language = 'en'
+    language = session['language']
     if request.method == 'POST':
         if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
                 EmployeeValidator.number_validator(request.form['user_role']):
@@ -95,30 +100,36 @@ def logout():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("blank"))
-    default_language = 'en'
-
     login_form = LoginForm()
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            employee = Employees.query.filter_by(id=user.emp_id).first()
+            session['language'] = login_form.prefer_language.data
+            session['emp_id'] = user.emp_id
+            if session['language'] == 'dari':
+                session['emp_name'] = employee.name
+                session['emp_lname'] = employee.lname
+            else:
+                session['emp_name'] = employee.name_english
+                session['emp_lname'] = employee.lname_english
             login_user(user, remember=login_form.remember_me.data)
             request_user_page = request.args.get('next')
             if request_user_page:
                 return redirect(request_user_page)
             else:
-                return redirect(url_for("blank"))
+                return redirect('/profile')
         else:
-            return message_to_client_403(message_obj.password_incorrect[default_language])
+            return message_to_client_403(message_obj.password_incorrect[session['language']])
 
     return render_template('login.html', title='Login',
-                           form=login_form, language=default_language,
+                           form=login_form, language='en',
                            translation=translation_obj, message_obj=message_obj)
 
 
 @app.route("/add_employee", methods=['GET', 'POST'])
 @login_required
 def add_employee():
-    language = 'en'
     add_employee_form = EmployeeForm()
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
@@ -177,32 +188,75 @@ def add_employee():
                 db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_employee_not[language])
+                return message_to_client_403(message_obj.create_new_employee_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data))
+                message_obj.create_new_employee_save[session['language']].format(add_employee_form.employee_id.data))
         else:
             return message_to_client_403(add_employee_form.errors)
 
-    add_employee_form = update_messages_employee(add_employee_form, language)
+    add_employee_form = update_messages_employee(add_employee_form, session['language'])
     return render_template('add_employee.html', title='Add Employee',
-                           form=add_employee_form, language=language,
+                           form=add_employee_form, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
 @app.route("/add_documents", methods=['GET', 'POST'])
 @login_required
 def add_documents():
-    language = 'en'
     cv_form = UploadCVForm()
+    guarantor = UploadGuarantorForm()
+    education = UploadEducationalDocsForm()
+    tin = UploadTinForm()
+    tazkira = UploadTazkiraForm()
+    extra_docs = UploadExtraDocsForm()
+    emp_id = request.args.get("emp_id")
+
+    if request.method == "GET":
+        cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc = get_documents(emp_id)
+
     if request.method == 'POST':
-        workingdir = os.path.abspath(os.getcwd())
-        cv = request.files['cv']
-        path = os.path.join(workingdir, cv.filename)
-        cv.save(path)
-        return path
+        if guarantor.flag.data == "guarantor":
+            result = upload_docs(emp_id, request, 'guarantor')
+        if cv_form.flag.data == "cv":
+            result = upload_docs(emp_id, request, 'cv')
+        if education and education.flag.data == "education":
+            result = upload_docs(emp_id, request, 'education')
+        if tin and tin.flag.data == "tin":
+            result = upload_docs(emp_id, request, 'tin')
+        if tazkira and tazkira.flag.data == "tazkira":
+            result = upload_docs(emp_id, request, 'tazkira')
+        if extra_docs and extra_docs.flag.data == "extra_docs":
+            result = upload_docs(emp_id, request, 'extra_docs')
+
+        if result == "success":
+            flash("Document uploaded", result)
+        else:
+            flash("Document not uploaded", result)
+        return redirect(request.referrer)
     return render_template("add_documents.html", title='Add Employee Documents',
-                           language=language,
-                           translation=translation_obj, form=cv_form, message_obj=message_obj)
+                           language=session['language'],
+                           translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs,
+                           tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education,
+                           guarantor_form=guarantor, message_obj=message_obj,
+                           cv_doc=cv_doc, guarantor_doc=guarantor_doc, tin_doc=tin_doc,
+                           education_doc=education_doc, extra_doc=extra_doc, tazkira_doc=tazkira_doc
+                           )
+
+
+@app.route("/delete_document", methods=['GET'])
+@login_required
+def delete_document():
+    emp_id = request.args.get("emp_id")
+    doc = request.args.get("doc")
+    document = Documents.query.filter_by(emp_id=emp_id, name=doc).first()
+    try:
+        os.remove(os.path.join(f"./rpc_package" + document.url))
+        Documents.query.filter_by(emp_id=emp_id, name=doc).delete()
+        db.session.commit()
+        flash("Document deleted", "success")
+    except:
+        flash("Document not deleted", "error")
+    return redirect(request.referrer)
 
 
 @app.route("/load_districts", methods=['POST'])
@@ -218,8 +272,6 @@ def load_districts():
 @app.route("/employee_settings", methods=['GET', 'POST'])
 @login_required
 def employee_settings():
-    language = 'en'
-
     employees = db.session.query(Employees).all()
     phones = {}
     emails = {}
@@ -230,10 +282,9 @@ def employee_settings():
             phones[x] = phone
         if email is not None:
             emails[x] = email
-    print(emails)
 
     return render_template("employee_settings.html", title='Employee Settings',
-                           employees=employees, emails=emails, phones=phones, language=language,
+                           employees=employees, emails=emails, phones=phones, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
@@ -241,7 +292,7 @@ def employee_settings():
 @login_required
 def employee_details():
     language = 'en'
-    return render_template('employee_details.html', title='Employee Details', language=language,
+    return render_template('employee_details.html', title='Employee Details', language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
@@ -249,82 +300,79 @@ def employee_details():
 @login_required
 def uds_employee():
     language = 'en'
-
     update_employee_form = EmployeeForm()
+    if request.method == 'POST':
+        if not update_employee_form.validate_on_submit():
+
+            for key, value in update_employee_form.errors.items():
+                if value[0] != message_obj.val_dic[key][0]:
+                    update_employee_form.validate_on_submit()
+
+            try:
+                update_employee_data(update_employee_form)
+
+            except IOError as exc:
+                return message_to_client_403(message_obj.create_new_employee_update_not[session['language']])
+            data = {
+                'employee': {
+                    'emp_id': update_employee_form.employee_id.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data,
+                    'name_english': update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data,
+                    'father_name_english': update_employee_form.father_name_english.data,
+                    'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
+                    'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
+                    'gender': update_employee_form.gender.data,
+                    'tazkira': update_employee_form.tazkira.data,
+                    'm_status': update_employee_form.m_status.data,
+                    'birthday': update_employee_form.birthday.data,
+                    'blood': update_employee_form.blood.data,
+                    'tin': update_employee_form.tin.data
+                },
+                'message': message_obj.create_new_employee_update[session['language']].format(
+                    request.form['employee_id'])
+            }
+            return jsonify(data)
+        else:
+            return message_to_client_403(update_employee_form.errors)
+
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
+        emp_update_data = set_emp_update_form_data(emp_id, update_employee_form)
 
-        emp = Employees.query.get(emp_id)
-        phones = Phone.query.filter_by(emp_id=emp_id).all()
-        emails = Emails.query.filter_by(emp_id=emp_id).all()
-        cur_add = Current_addresses.query.filter_by(emp_id=emp_id).first()
-        per_add = Permanent_addresses.query.filter_by(emp_id=emp_id).first()
-        update_employee_form.employee_id.data = emp.id
-        update_employee_form.first_name.data = emp.name
-        update_employee_form.last_name.data = emp.lname
-        update_employee_form.father_name.data = emp.fname
-        update_employee_form.grand_name.data = emp.gname
-        update_employee_form.first_name_english.data = emp.name_english
-        update_employee_form.last_name_english.data = emp.name_english
-        update_employee_form.father_name_english.data = emp.name_english
-        update_employee_form.grand_name_english.data = emp.name_english
-        update_employee_form.tin.data = emp.tin
-        update_employee_form.tazkira.data = emp.tazkira
-        update_employee_form.birthday.data = emp.birthday
-        update_employee_form.blood.data = emp.blood
-
-        update_employee_form.gender.data = emp.gender
-        update_employee_form.m_status.data = emp.m_status
-
-        if per_add is not None:
-            update_employee_form.provinces_permanent.data = per_add.province_id
-            update_employee_form.district_permanent.data = per_add.district_id
-            update_employee_form.permanent_address.data = per_add.address
-            update_employee_form.permanent_address_dari.data = per_add.address_dari
-
-        if cur_add is not None:
-            update_employee_form.provinces_current.data = cur_add.province_id
-            update_employee_form.district_current.data = cur_add.district_id
-            update_employee_form.current_address.data = cur_add.address
-            update_employee_form.current_address_dari.data = cur_add.address_dari
-
-        if phones is not None and len(phones) == 2:
-            update_employee_form.phone.data = phones[0].phone
-            update_employee_form.phone_second.data = phones[1].phone
-        elif phones is not None and len(phones) == 1:
-            update_employee_form.phone.data = phones[0].phone
-            update_employee_form.phone_second.data = None
-        else:
-            update_employee_form.phone.data = None
-            update_employee_form.phone_second.data = None
-
-        if emails is not None and len(emails) == 2:
-            update_employee_form.email.data = emails[0].email
-            update_employee_form.email_second.data = emails[1].email
-        elif emails is not None and len(emails) == 1:
-            update_employee_form.email.data = emails[0].email
-            update_employee_form.email_second.data = None
-        else:
-            update_employee_form.email.data = None
-            update_employee_form.email_second.data = None
-        cur_district = Districts.query.filter_by(id=cur_add.district_id).first()
-        cur_province = Provinces.query.filter_by(id=cur_add.province_id).first()
-        per_district = Districts.query.filter_by(id=per_add.district_id).first()
-        per_province = Provinces.query.filter_by(id=per_add.province_id).first()
-
-        current_addresses = "<div class='py-4'><h5 class='d-inline text-primary'> \
-                            Current address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
-                            + cur_district.district_name + ", " + cur_province.province_name \
-                            + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
-
-        perpanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
-                            Permanent address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
-                              + per_district.district_name + ", " + per_province.province_name \
-                              + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
-
-        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
+        data = jsonify(render_template('ajax_template/update_employee_form.html', language=session['language'],
                                        form=update_employee_form, translation=translation_obj, message_obj=message_obj),
-                       {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
+                       {'current_add': emp_update_data[0], 'permanent_add': emp_update_data[1]})
         return data
     else:
-        message_to_client_403(message_obj.invalid_message[language])
+        message_to_client_403(message_obj.invalid_message[session['language']])
+
+
+@app.route('/delete_employee', methods=['DELETE'])
+def delete_employee():
+    emp_id = request.args.get('emp_id')
+    if EmployeeValidator.emp_id_validator(emp_id):
+        try:
+            sel_emp = Employees.query.get(emp_id)
+            db.session.delete(sel_emp)
+            db.session.commit()
+        except IOError as exc:
+            return message_to_client_403(message_obj.create_new_employee_delete_not[session['language']])
+        return message_to_client_200(
+            message_obj.create_new_employee_delete[session['language']].format(emp_id))
+    else:
+        message_to_client_403(message_obj.invalid_message[session['language']])
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
+        current_user.emp_id)
+    return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
+                           current_address=current_address,
+                           permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
+                           doc_tazkira=doc_tazkira,
+                           doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
+                           doc_extra=doc_extra,
+                           translation=translation_obj, message_obj=message_obj)
