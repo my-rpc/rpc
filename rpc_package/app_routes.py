@@ -10,7 +10,8 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, update_employee_data, set_emp_update_form_data
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, update_employee_data, \
+    set_emp_update_form_data
 import os
 from datetime import datetime
 
@@ -271,7 +272,6 @@ def load_districts():
 @app.route("/employee_settings", methods=['GET', 'POST'])
 @login_required
 def employee_settings():
-
     employees = db.session.query(Employees).all()
     phones = {}
     emails = {}
@@ -304,11 +304,9 @@ def uds_employee():
     if request.method == 'POST':
         if not update_employee_form.validate_on_submit():
 
-
-            for key, value in  update_employee_form.errors.items():
+            for key, value in update_employee_form.errors.items():
                 if value[0] != message_obj.val_dic[key][0]:
                     update_employee_form.validate_on_submit()
-
 
             try:
                 update_employee_data(update_employee_form)
@@ -331,20 +329,20 @@ def uds_employee():
                     'blood': update_employee_form.blood.data,
                     'tin': update_employee_form.tin.data
                 },
-                'message': message_obj.create_new_employee_update[session['language']].format(request.form['employee_id'])
+                'message': message_obj.create_new_employee_update[session['language']].format(
+                    request.form['employee_id'])
             }
             return jsonify(data)
         else:
             return message_to_client_403(update_employee_form.errors)
-
 
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
         emp_update_data = set_emp_update_form_data(emp_id, update_employee_form)
 
         data = jsonify(render_template('ajax_template/update_employee_form.html', language=session['language'],
-                                form=update_employee_form, translation=translation_obj, message_obj=message_obj),
-                {'current_add': emp_update_data[0], 'permanent_add': emp_update_data[1]})
+                                       form=update_employee_form, translation=translation_obj, message_obj=message_obj),
+                       {'current_add': emp_update_data[0], 'permanent_add': emp_update_data[1]})
         return data
     else:
         message_to_client_403(message_obj.invalid_message[session['language']])
@@ -361,9 +359,10 @@ def delete_employee():
         except IOError as exc:
             return message_to_client_403(message_obj.create_new_employee_delete_not[session['language']])
         return message_to_client_200(
-                message_obj.create_new_employee_delete[session['language']].format(emp_id))
+            message_obj.create_new_employee_delete[session['language']].format(emp_id))
     else:
         message_to_client_403(message_obj.invalid_message[session['language']])
+
 
 @app.route('/profile')
 @login_required

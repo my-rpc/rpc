@@ -1,10 +1,9 @@
 import os
 
 from rpc_package import db
-from rpc_package.rpc_tables import Documents, Users, Employees, Emails, User_roles, Current_addresses, Permanent_addresses, Phone, \
-        Provinces, Districts
+from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
+    Current_addresses, Permanent_addresses
 from flask import session
-from rpc_package.rpc_tables import Documents, Employees, Phone, Emails, Districts, Provinces, Current_addresses, Permanent_addresses
 
 
 def upload_docs(emp_id, request, file_type):
@@ -28,13 +27,18 @@ def upload_docs(emp_id, request, file_type):
 
 def get_profile_info(emp_id):
     profile = db.session.query(Users, User_roles, Employees).join(Users,
-                (Users.role == User_roles.id)).join(Employees, (Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
+                                                                  (Users.role == User_roles.id)).join(Employees, (
+                Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
     current_address = db.session.query(Current_addresses, Provinces, Districts).join(
-        Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (Current_addresses.district_id == Districts.id)
-    ).filter(Current_addresses.emp_id == session['emp_id']).first()
+        Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (
+                Current_addresses.district_id == Districts.id)
+                                                                                 ).filter(
+        Current_addresses.emp_id == session['emp_id']).first()
     permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
-        Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (Permanent_addresses.district_id == Districts.id)
-    ).filter(Permanent_addresses.emp_id == session['emp_id']).first()
+        Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (
+                Permanent_addresses.district_id == Districts.id)
+                                                                                     ).filter(
+        Permanent_addresses.emp_id == session['emp_id']).first()
     doc_cv = Documents.query.filter_by(emp_id=session['emp_id'], name="cv").first()
     doc_tazkira = Documents.query.filter_by(emp_id=session['emp_id'], name="tazkira").first()
     doc_guarantor = Documents.query.filter_by(emp_id=session['emp_id'], name="guarantor").first()
@@ -55,10 +59,11 @@ def get_documents(emp_id):
     extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
     return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
 
+
 def update_employee_data(update_employee_form):
-    sel_emp = Employees.query.filter_by(id = update_employee_form.employee_id.data).first()
-    phones = Phone.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
-    emails = Emails.query.filter_by(emp_id = update_employee_form.employee_id.data).all()
+    sel_emp = Employees.query.filter_by(id=update_employee_form.employee_id.data).first()
+    phones = Phone.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
+    emails = Emails.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
     sel_emp.name = update_employee_form.first_name.data
     sel_emp.lname = update_employee_form.last_name.data
     sel_emp.fname = update_employee_form.father_name.data
@@ -167,6 +172,7 @@ def update_employee_data(update_employee_form):
             db.session.add(permanent_address)
     db.session.commit()
 
+
 def set_emp_update_form_data(emp_id, update_employee_form):
     emp = Employees.query.get(emp_id)
     phones = Phone.query.filter_by(emp_id=emp_id).all()
@@ -260,16 +266,19 @@ def set_emp_update_form_data(emp_id, update_employee_form):
         update_employee_form.email_second.data = None
 
     current_addresses = "<div class='py-4 d-flex'><h5 class='text-primary'>ادرس فعلی: </h5>" \
-                        +"<p class='px-3'>" \
-                        + str(cur_address) + ", " + str(cur_district_name) + ", " + str(cur_province_name) +"</p> <br> " \
-                        + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(cur_address_eng) + ", " \
+                        + "<p class='px-3'>" \
+                        + str(cur_address) + ", " + str(cur_district_name) + ", " + str(
+        cur_province_name) + "</p> <br> " \
+                        + "<h5 class=' text-primary'> Current address: </h5> <p class='px-3'>" + str(
+        cur_address_eng) + ", " \
                         + str(cur_district_name_eng) + ", " + str(cur_province_name_eng) \
                         + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
 
     permanent_addresses = "<div class='py-4 d-flex'> <h5 class=' text-primary'> ادرس اصلی: </h5>" \
-                            + "<p class='px-3 '>" \
-                            + str(per_address) + ", " + str(per_district_name) + ", " + str(per_province_name)+ "</p> <br>" \
-                            + "<h5 class=' text-primary'> Permanent address: </h5> <p class='px-3 '>" \
-                            + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(per_province_name_eng) \
-                            +"</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
+                          + "<p class='px-3 '>" \
+                          + str(per_address) + ", " + str(per_district_name) + ", " + str(
+        per_province_name) + "</p> <br>" \
+                          + "<h5 class=' text-primary'> Permanent address: </h5> <p class='px-3 '>" \
+                          + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(per_province_name_eng) \
+                          + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
     return current_addresses, permanent_addresses
