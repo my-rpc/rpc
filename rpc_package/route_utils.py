@@ -53,3 +53,22 @@ def get_documents(emp_id):
     tin_doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
     extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
     return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
+
+
+def uploadProfilePic(request):
+    request_file = request.files['profilePic']
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+    ext = request_file.filename.split('.')[1]
+    if ext in ALLOWED_EXTENSIONS:
+        request_file.filename = f"profile-" + session['emp_id'] +"."+ext
+        workingdir = os.path.abspath(os.getcwd())
+        path = os.path.join(workingdir+"/rpc_package/static/images/profiles", request_file.filename)
+        print(workingdir)
+        emp = Employees.query.filter_by(id=session['emp_id']).first()
+        emp.profile_pic=f"/static/images/profiles/" + request_file.filename
+        assert isinstance(db, object)
+        request_file.save(path)
+        db.session.commit()
+        return 'success'
+    else:
+        return "invalid extention"

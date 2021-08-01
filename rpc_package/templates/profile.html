@@ -286,7 +286,10 @@
             <div class="box">
                 <div class="box-body text-center">
                     <div class="mb-20 mt-20">
-                        <img src="../images/avatar/avatar-12.png" width="150" class="rounded-circle bg-info-light" alt="user">
+                        <form id="upload_profile_pic" enctype="multipart/form-data">
+                            <input type="file" onchange="uploadProfile()" name="profilePic">
+                        </form>
+                        <img src="{{profile[2].profile_pic}}" width="150" class="rounded-circle bg-info-light" alt="user">
                         <h4 class="mt-20 mb-0">{{session['emp_name'] +" "+ session['emp_lname']}}</h4>
                         <a href="mailto:dummy@gmail.com">{{email.email}}</a>
                     </div>
@@ -372,146 +375,30 @@
 
 <script>
 
-
-    $(document).ready(function() {
-        $('#employee_setting').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'colvis',
-                'excel',
-                'print',
-                {
-                    text: '<i class="fad fa-eye"></i> View Employee',
-                    attr: {'class': 'btn btn-info'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
-                        if(empID != '' && empID != undefined){
-                            window.open('/employee_details?emp_id='+empID, '_blank');
-                        }else{
-                            toastWarning('Please select an employee');
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-edit"></i> Edit Employee',
-                    attr: {'class': 'btn btn-primary'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
-                        if(empID != '' && empID != undefined){
-                            updateEmployee(empID);
-                        }else{
-                            toastWarning('Please select an employee');
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-times"></i> Delete Employee',
-                    attr: {'class': 'btn btn-warning'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
-                        if(empID != '' && empID != undefined){
-                            alert('This opthion is for employee deletion!')
-                        }else{
-                            toastWarning('Please select an employee')
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-times"></i> Add Documents',
-                    attr: {'class': 'btn btn-warning'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
-                        if(empID != '' && empID != undefined){
-                            window.open('/add_documents?emp_id='+empID, '_blank');
-                        }else{
-                            toastWarning('Please select an employee')
-                        }
-                    }
+function uploadProfile(){
+        $form = $("#upload_profile_pic");
+        var formData = new FormData($form[0]);
+        $.ajax({
+            type: "POST",
+            url: "upload_profile_pic",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              if(response == "success")
+                location.reload()
+                toastSuccess(response);
+            },
+            error: function (response) {
+                var statusCode = response.status;
+                var r = '';
+                if (statusCode == '403') {
+                    r = formValidateErrors(response);
                 }
-                
-            ],
-        }
-        );
-    });
-
-updateEmployee = function(empID){
-    spinner = "<i class='fad fa-spinner fa-spin text-info'></i>";
-    $('#loader').html(spinner);
-    $('.update_employee_modal').modal('show');
-    $.ajax({
-        type: "GET",
-        url: "uds_employee?emp_id="+empID,
-        // data: {'user_id':userID},
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            $('#employee_update_modal').html(response[0])   
-            $('.per-address-col').html(response[1].permanent_add);   
-            $('.cur-address-col').html(response[1].current_add);
-            $("#employee_id").prop('readonly', true);
-        },
-        // error: function(response){
-        //     var statusCode = response.status;
-        //     var r = '';
-        //     if(statusCode == '403'){
-        //         r = formValidateErrors(response);
-        //     }
-        //     toastError(r);
-        // }
-    });
-};
-
-function load_districts(province, target){
-    $.ajax({
-        type: "POST",
-        url: "/load_districts?province="+province,
-        contentType: "application/json",
-        dataType: 'json',
-        success: function(result) {
-            var options="";
-            for(var x in result)
-            {
-                options+= "<option value="+x+">"+result[x]+"</>";
+                toastError(r);
             }
-            $("#"+target).html(options)
-        } 
-    });
-}
-
-showAddress = function(address){
-    $('.'+address).toggleClass('d-none');
-
-    if( $('.'+address + ' input:text, .'+address + ' select').is('[disabled = disabled]') ){
-        $('.'+address + ' input:text, .'+address + ' select').prop("disabled", false)
-    }else{
-        $('.'+address + ' input:text, .'+address + ' select').prop("disabled", true)
-
-    }
-};
-
-$(document).on('submit', '#update_employee', function(e){
-    e.preventDefault();
-    $form = $(this);
-    var formData = new FormData($form[0]);
-    $.ajax({
-        type: "POST",
-        url: 'uds_employee',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response){
-        toastSuccess(response.message);
-        $('.update_employee_modal').modal('hide');
-            console.log(response);
-        },error: function(response){
-            var statusCode = response.status;
-            var r = '';
-            if(statusCode == '403'){
-                r = formValidateErrors(response);
-            }
-            toastError(r);
-        }
-    });
-});
+        });
+    };
+  
 </script>
 {% endblock js_code %}
