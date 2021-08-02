@@ -25,6 +25,7 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
+    
     create_new_user_form = CreateUserForm()
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -50,7 +51,7 @@ def create_new_user():
                                              (Users.role == User_roles.id)).join(Employees,
                                                                                  (Users.emp_id == Employees.id)).all()
 
-    create_new_user_form = update_messages_user(create_new_user_form, language)
+    create_new_user_form = update_messages_user(create_new_user_form, session['language'])
     return render_template('create_new_user.html', title='Create New User', users=users,
                            form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
@@ -104,23 +105,28 @@ def login():
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
-            employee = Employees.query.filter_by(id=user.emp_id).first()
-            session['language'] = login_form.prefer_language.data
-            session['emp_id'] = user.emp_id
-            if session['language'] == 'dari':
-                session['emp_name'] = employee.name
-                session['emp_lname'] = employee.lname
+            if user.status:
+                employee = Employees.query.filter_by(id=user.emp_id).first()
+                session['language'] = login_form.prefer_language.data
+                session['emp_id'] = user.emp_id
+                if session['language'] == 'dari':
+                    session['emp_name'] = employee.name
+                    session['emp_lname'] = employee.lname
+                else:
+                    session['emp_name'] = employee.name_english
+                    session['emp_lname'] = employee.lname_english
+                login_user(user, remember=login_form.remember_me.data)
+                request_user_page = request.args.get('next')
+                if request_user_page:
+                    return redirect(request_user_page)
+                else:
+                    return redirect('/profile')
             else:
-                session['emp_name'] = employee.name_english
-                session['emp_lname'] = employee.lname_english
-            login_user(user, remember=login_form.remember_me.data)
-            request_user_page = request.args.get('next')
-            if request_user_page:
-                return redirect(request_user_page)
-            else:
-                return redirect('/profile')
+                flash(message_obj.user_inactive[session['language']], 'error')
+                return redirect(request.referrer)
         else:
-            return message_to_client_403(message_obj.password_incorrect[session['language']])
+            flash(message_obj.password_incorrect[session['language']], 'error')
+            return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
