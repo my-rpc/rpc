@@ -11,7 +11,7 @@
 <!-- main content code will be add here -->
 
 <div class="box">
-    <div class="box-header"><h4 class="box-title text-primary font-weight-bold ">User Settings</h4></div>
+    <div class="box-header"><h4 class="box-title text-primary font-weight-bold ">{{translation.user_setting[language]}}</h4></div>
     <div class="box-body">
         <table id="create_new_user_table" class="table table-striped table-bordered" style="width:100%">
             <thead>
@@ -178,7 +178,7 @@ $(document).ready(function() {
             'excel',
             'print',
             {
-            text: '<i class="fad fa-plus"></i> Add New User',
+            text: '<i class="fad fa-plus"></i> {{translation.create_new_user[language]}}',
             attr: {'class': 'btn btn-primary'},
             action: function () {
                 $('.create_new_user_modal').modal('show')
