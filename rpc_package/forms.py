@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
-    FileField
+    FileField, DecimalField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
@@ -186,3 +186,13 @@ class UploadExtraDocsForm(FlaskForm):
     extra_docs = FileField('extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="extra_docs")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+class leaveRequestForm(FlaskForm):
+    leave_type = RadioField('Leave Type', default="hour", choices=[('hour', 'hourly'), ('day', 'Daily')], validators=[DataRequired()])
+    number_of_hour = DecimalField('Number of hours', validators=[DataRequired()])
+    number_of_day = DecimalField('Number of Days', validators=[DataRequired()])
+    from_hour = TimeField('From hour', validators=[DataRequired()])
+    to_hour = TimeField('To hour', validators=[DataRequired()])
+    from_date = DateField('From date', validators=[DataRequired()])
+    to_date = DateField('To date', validators=[DataRequired()])
+    

@@ -72,7 +72,7 @@
     "en": "Setting"
   },
   "forms": {
-    "dari": "فورم ها",
+    "dari": "فرم ها",
     "en": "Forms"
   },
   "employee_form": {
@@ -334,6 +334,10 @@
   "job_responsibilities": {
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
+  },
+  "request_leave_form":{
+    "dari": " درخواست رخصتی",
+    "en": "Leave Form"
   },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",

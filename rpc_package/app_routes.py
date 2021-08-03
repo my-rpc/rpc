@@ -4,7 +4,7 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
@@ -380,3 +380,10 @@ def profile():
 @login_required
 def uploadProfile():
         return uploadProfilePic(request)
+
+@app.route('/leave_request', methods=["GET"])
+@login_required
+def leave_request():
+    leave_form = leaveRequestForm()
+    return render_template('leave_request.html', form=leave_form, title=translation_obj.forms[session['language']], language=session['language'],
+                    translation=translation_obj, message_obj=message_obj)
