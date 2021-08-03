@@ -121,19 +121,20 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("blank"))
     login_form = LoginForm()
-    if login_form.validate_on_submit():
-        user = Users.query.filter_by(emp_id=login_form.username.data).first()
-        if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
-            session['language'] = login_form.prefer_language.data
-            login_user(user, remember=login_form.remember_me.data)
-            request_user_page = request.args.get('next')
-            if request_user_page:
-                return redirect(request_user_page)
+    if request.method == 'POST':
+        if login_form.validate_on_submit():
+            user = Users.query.filter_by(emp_id=login_form.username.data).first()
+            if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+                session['language'] = login_form.prefer_language.data
+                login_user(user, remember=login_form.remember_me.data)
+                request_user_page = request.args.get('next')
+                if request_user_page:
+                    return redirect(request_user_page)
+                else:
+                    return redirect(url_for("blank"))
             else:
-                return redirect(url_for("blank"))
-        else:
-            flash(message_obj.password_incorrect[session['language']], 'error')
-            return redirect(request.referrer)
+                flash(message_obj.password_incorrect[session['language']], 'error')
+                return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
