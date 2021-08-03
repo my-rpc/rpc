@@ -65,11 +65,17 @@ def uds_user():
             try:
                 user.status = bool(int(request.form['status']))
                 user.role = request.form['user_role']
+                user_role = User_roles.query.get(user.role)
                 db.session.commit()
             except IOError as exc:
                 return message_to_client_403(message_obj.create_new_user_update_not[language])
-            return message_to_client_200(
-                message_obj.create_new_user_update[language].format(request.form['employee_id']))
+            data = {
+                "user": {
+                    'emp_id': user.emp_id, 'status': user.status, 'role': {'name':user_role.name, 'name_english': user_role.name_english}
+                },
+                'message': message_obj.create_new_user_update[language].format(request.form['employee_id'])
+            }
+            return jsonify(data)
         else:
             return message_to_client_403(message_obj.create_new_user_update_not[language])
     user_id = request.args.get('user_id')
@@ -83,7 +89,23 @@ def uds_user():
                  'translation': translation_obj.__dict__,
                  'message_obj': message_obj.__dict__})
     else:
-        message_to_client_403(message_obj.invalid_message[language])
+        return message_to_client_403(message_obj.invalid_message[language])
+
+
+@app.route("/reset_user_password")
+def reset_user_password():
+    user_id = request.args.get('user_id')
+    if EmployeeValidator.emp_id_validator(user_id):
+        hashed_pass = pass_crypt.generate_password_hash('123456').decode('utf=8')
+        try:
+            sel_user = Users.query.get(user_id)
+            sel_user.password = hashed_pass
+            db.session.commit()
+        except IOError as exc:
+            return message_to_client_403(message_obj.create_new_user_update_not[session['language']])
+        return message_to_client_200("Password has been reset")
+    else:
+        return message_to_client_403(message_obj.invalid_message[session['language']])
 
 
 @app.route("/logout")
@@ -110,7 +132,8 @@ def login():
             else:
                 return redirect(url_for("blank"))
         else:
-            return message_to_client_403(message_obj.password_incorrect[session['language']])
+            flash(message_obj.password_incorrect[session['language']], 'error')
+            return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
@@ -273,7 +296,7 @@ def employee_settings():
     emails = {}
     for x, emp in enumerate(employees):
         phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
-        email = db.session.query(Emails).filter_by(emp_id=emp.id)
+        email = db.session.query(Emails).filter_by(emp_id=emp.id).all()
         if phone is not None:
             phones[x] = phone
         if email is not None:
@@ -287,10 +310,34 @@ def employee_settings():
 @app.route('/employee_details', methods=['GET', "POST"])
 @login_required
 def employee_details():
-    language = 'en'
-    return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                           translation=translation_obj, message_obj=message_obj)
+    emp_id = request.args.get('emp_id')
+    
+    if EmployeeValidator.emp_id_validator(emp_id):
+        try:
+            sel_emp = Employees.query.get(emp_id)
+            phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
+            emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
 
+            current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
+                                                (Current_addresses.province_id == Provinces.id)) \
+                                                .join(Districts, (Current_addresses.district_id == Districts.id)) \
+                                                .filter(Current_addresses.emp_id == emp_id).first()
+
+            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
+                                                (Permanent_addresses.province_id == Provinces.id)) \
+                                                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
+                                                .filter(Permanent_addresses.emp_id == emp_id).first()
+            employee = sel_emp, phones, emails, current_addresses, permanent_addresses
+            
+        except IOError as exc:
+            return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                            translation=translation_obj, message_obj=message_obj)
+        return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                            employee=employee, translation=translation_obj, message_obj=message_obj)
+    else:
+        flash(message_obj.invalid_message[session['language']], "error")
+        return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                            translation=translation_obj, message_obj=message_obj)
 
 @app.route('/uds_employee', methods=['GET', "POST"])
 @login_required
