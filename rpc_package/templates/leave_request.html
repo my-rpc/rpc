@@ -13,11 +13,13 @@
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <section class="content">
-    <div class="box col-md-10">
+    <div class="box col-md-12">
         <div class="box-header">
-            <div class="box-title">Leave Request Form</div>
+            <div class="box-title">Leave Request</div>
         </div>
         <div class="box-body">
+            <form method="POST" , action="" id="leave_request" enctype="multipart/form-data">
+                {{ form.hidden_tag()}}
             <div class="row">
                 <div class="form-group col-md-4">
                     {{ form.leave_type.label(class="form-control-label")}}
@@ -25,37 +27,21 @@
                 </div>
                 <div class="col-md-8" id="timeType">
                     <div class="row">
-                        <div class="form-group col-md-6">
-                            {{ form.number_of_hour.label(class="form-control-label")}}
-                            {{ form.number_of_hour(class="form-control")}}
+                        <div class="form-group col-md-3">
+                            {{ form.start_datetime.label(class="form-control-label")}}
+                            {{ form.start_datetime(class="form-control")}}
                         </div>
                         <div class="form-group col-md-3">
-                            {{ form.from_hour.label(class="form-control-label")}}
-                            {{ form.from_hour(class="form-control")}}
-                        </div>
-                        <div class="form-group col-md-3">
-                            {{ form.to_hour.label(class="form-control-label")}}
-                            {{ form.to_hour(class="form-control")}}
+                            {{ form.end_datetime.label(class="form-control-label")}}
+                            {{ form.end_datetime(class="form-control")}}
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8 d-none" id="dateType">
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            {{ form.number_of_day.label(class="form-control-label")}}
-                            {{ form.number_of_day(class="form-control")}}
-                        </div>
-                        <div class="form-group col-md-3">
-                            {{ form.from_date.label(class="form-control-label")}}
-                            {{ form.from_date(class="form-control")}}
-                        </div>
-                        <div class="form-group col-md-3">
-                            {{ form.to_date.label(class="form-control-label")}}
-                            {{ form.to_date(class="form-control")}}
-                        </div>
-                    </div>
-                </div>
+                <div class="form-group">
+                {{form.submit(class="btn btn-primary")}}
             </div>
+            </div>
+            </form>
         </div>
     </div>
 </section>

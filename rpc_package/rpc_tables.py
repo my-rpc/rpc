@@ -226,3 +226,18 @@ class Salary(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Salary ID: {self.id}, Contract ID: {self.cont_id}"
+
+class Leave_form(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.employees.id'), nullable=False)
+    leave_type = db.Column(db.Boolean(10), nullable=False)
+    time_in_minutes = db.Column(db.Integer, nullable=True)
+    start_datetime = db.Column(db.DateTime, nullable=True)
+    end_datetime = db.Column(db.Date, nullable=True)
+    supervisor = db.Column(db.Boolean, nullable=True)
+    hr = db.Column(db.Boolean, nullable=True)
+    request_at= db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"

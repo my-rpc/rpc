@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
+from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
     FileField, DecimalField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
@@ -188,11 +188,8 @@ class UploadExtraDocsForm(FlaskForm):
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 class leaveRequestForm(FlaskForm):
-    leave_type = RadioField('Leave Type', default="hour", choices=[('hour', 'hourly'), ('day', 'Daily')], validators=[DataRequired()])
-    number_of_hour = DecimalField('Number of hours', validators=[DataRequired()])
-    number_of_day = DecimalField('Number of Days', validators=[DataRequired()])
-    from_hour = TimeField('From hour', validators=[DataRequired()])
-    to_hour = TimeField('To hour', validators=[DataRequired()])
-    from_date = DateField('From date', validators=[DataRequired()])
-    to_date = DateField('To date', validators=[DataRequired()])
+    leave_type = RadioField('Leave Type', default=True, choices=[(True, 'Hourly'), (False, 'Daily')], validators=[DataRequired()])
+    start_datetime = DateTimeField('From', validators=[DataRequired()])
+    end_datetime = DateTimeField('To', validators=[DataRequired()])
+    submit = SubmitField('Send Request')
     

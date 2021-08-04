@@ -2,7 +2,7 @@ import os
 
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses
+    Current_addresses, Permanent_addresses, Leave_form
 from flask import session
 
 
@@ -299,3 +299,21 @@ def set_emp_update_form_data(emp_id, update_employee_form):
                           + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(per_province_name_eng) \
                           + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
     return current_addresses, permanent_addresses
+
+
+def send_leave_request(request, emp_id):
+    if request.args.get['leave_type'] == "hourly":
+        leave = Leave_form(
+            emp_id=emp_id,
+            start_datetime= request.start_datetime.data,
+            end_datetime= request.end_datetime.data)
+    elif request.leave_type.data == "daily":
+        leave = Leave_form(
+            emp_id=emp_id,
+            start_datetime= request.start_datetime.data,
+            end_datetime= request.end_datetime.data)
+    db.session.add(leave)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"

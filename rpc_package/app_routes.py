@@ -11,7 +11,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Emails, Phone, Provinces
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, update_employee_data, \
-    set_emp_update_form_data
+    set_emp_update_form_data, send_leave_request
 import os
 from datetime import datetime
 
@@ -387,9 +387,16 @@ def profile():
 def uploadProfile():
         return uploadProfilePic(request)
 
-@app.route('/leave_request', methods=["GET"])
+@app.route('/leave_request', methods=["GET", "POST"])
 @login_required
 def leave_request():
     leave_form = leaveRequestForm()
+    if request.method == "POST":
+        leave = send_leave_request(request, current_user.emp_id)
+        if leave == "success":
+            flash(message_obj.leave_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.leave_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
     return render_template('leave_request.html', form=leave_form, title=translation_obj.forms[session['language']], language=session['language'],
                     translation=translation_obj, message_obj=message_obj)
