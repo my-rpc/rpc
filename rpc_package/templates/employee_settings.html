@@ -4,7 +4,7 @@
 {% block css_or_js_code %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
     <style>
-        .rtl [type=radio]:checked, .rtl [type=radio]:not(:checked), [type=radio]:not(:checked).rd, [type=radio]:checked.rd {
+        .rtl [type=radio]:checked.table-radio, .rtl [type=radio]:not(:checked).table-radio, [type=radio]:not(:checked).table-radio, [type=radio]:checked.table-radio {
             position: absolute !important;
             left: auto;
             right: auto;
@@ -41,7 +41,7 @@
                 <tr id="{{emp.id}}" >
                     <td>
                         <div class="form-group">
-                            <input type="radio" class="rd radio-col-success" name="selected_emp" id="" value="{{emp.id}}">
+                            <input type="radio" class="table-radio radio-col-success" name="selected_emp" id="" value="{{emp.id}}">
                         </div>
                     </td>
                     <td>{{emp.id}}</td>
