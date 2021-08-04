@@ -131,6 +131,10 @@
     "dari": "تخلص الزامی است",
     "en": "Last name is required"
   },
+  "user_inactive": {
+    "dari": "حساب کاربر فعال نیست",
+    "en": "User Acoount is not active"
+  },
   "blood_type": {
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
     "en": "wrong format of blood type correct one is (B+)"
