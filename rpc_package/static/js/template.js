@@ -1167,7 +1167,7 @@ $('.demo-panel-bx').slimScroll({
 	
 // Dynamic active menu
     var path = window.location.pathname.split("/").pop();
-    var target = $('.sidebar-menu li a[href="'+path+'"]');
+    var target = $('.sidebar-menu li a[href="/'+path+'"]');
     target.parent().addClass('active');
     $('.sidebar-menu li.active').parents('li').addClass('active');
 
@@ -1179,7 +1179,7 @@ $('.demo-panel-bx').slimScroll({
 	
 // Dynamic active horizontal menu
     var path = window.location.pathname.split("/").pop();
-    var target = $('.sm li a[href="'+path+'"]');
+    var target = $('.sm li a[href="/'+path+'"]');
     target.parent().addClass('current');
     $('.sm li.current').parents('li').addClass('current');
 
