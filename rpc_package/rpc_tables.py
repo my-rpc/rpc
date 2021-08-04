@@ -26,13 +26,14 @@ class Employees(db.Model, UserMixin):
     tazkira = db.Column(db.Integer, unique=True, nullable=False)
     gender = db.Column(db.Boolean, nullable=False)
     blood = db.Column(db.String(10), nullable=False)
+    profile_pic = db.Column(db.String(255), nullable=True)
     m_status = db.Column(db.Boolean, nullable=False)
     tin = db.Column(db.Integer, unique=True, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
-               f"Last name: {self.lname}, Tazkira: {self.tazkira}, TIN: {self.tin}"
+               f"Last name: {self.lname}, Tazkira: {self.tazkira}, Profile: {self.profile_pic} TIN: {self.tin}"
 
 
 class Users(db.Model, UserMixin):
