@@ -20,7 +20,7 @@
                     <th>{{translation.first_name[language]}}</th>
                     <th>{{translation.user_role[language]}}</th>
                     <th>{{translation.status[language]}}</th>
-                    <th>Operations</th> 
+                    <th>{{translation.operations[language]}}</th> 
                     <!-- operations should be added to translation -->
                     
                 </tr>
@@ -60,15 +60,7 @@
                 {% endfor %}
                 
             </tbody>
-            <tfoot>
-                <tr>
-                    <th>{{translation.employee_id[language]}}</th>
-                    <th>{{translation.first_name[language]}}</th>
-                    <th>{{translation.user_role[language]}}</th>
-                    <th>{{translation.status[language]}}</th>
-                    <th>Operations</th>
-                </tr>
-            </tfoot>
+            
         </table>
     </div>
 </div>
