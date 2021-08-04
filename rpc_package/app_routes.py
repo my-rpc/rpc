@@ -373,10 +373,10 @@ def delete_employee():
 @app.route('/profile')
 @login_required
 def profile():
-    language = "en"
+    
     profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(current_user.emp_id)
     print(profile)
-    return render_template('profile.html', title='My Profile', language=language, profile=profile, current_address=current_address,
+    return render_template('profile.html', title='My Profile', language=session['language'], profile=profile, current_address=current_address,
                             permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone, doc_tazkira=doc_tazkira,
                             doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education, doc_extra=doc_extra,
                            translation=translation_obj, message_obj=message_obj)

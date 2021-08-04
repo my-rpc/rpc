@@ -195,6 +195,10 @@
     "dari": "گروپ خونی",
     "en": "Blood Group"
   },
+  "fill": {
+    "dari": "پر کردن",
+    "en": "Fill"
+  },
   "employee_number": {
     "dari": "شماره کارمندی",
     "en": "Employee Number"
@@ -399,6 +403,22 @@
     "dari": "مکتوب های مرتبط",
     "en": "Relevant Documents"
   },
+  "documents": {
+    "dari": "اسناد",
+    "en": "Documents"
+  },
+  "call": {
+    "dari": "تماس",
+    "en": "Call"
+  },
+  "about": {
+    "dari": "درباره",
+    "en": "About"
+  },
+  "contact": {
+    "dari": "ارتباط",
+    "en": "Contact"
+  },
   "evaluation_form": {
     "dari": "فورم ارزیابی",
     "en": "Evaluation Form"
@@ -546,6 +566,10 @@
   "permanent_address": {
     "dari": "سکونت اصلی",
     "en": "Permanenet Address"
+  },
+  "address": {
+    "dari": "آدرس",
+    "en": "Address"
   },
   "current_address": {
     "dari": "سکونت فعلی",
