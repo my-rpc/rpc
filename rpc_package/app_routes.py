@@ -16,11 +16,6 @@ import os
 from datetime import datetime
 
 
-@app.route("/", methods=['GET', 'POST'])
-@login_required
-def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
-
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
@@ -118,10 +113,11 @@ def logout():
 
 
 # Login part
+@app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("blank"))
+        return redirect(url_for("profile"))
     login_form = LoginForm()
     if request.method == 'POST':
         if login_form.validate_on_submit():
@@ -133,11 +129,12 @@ def login():
                 if request_user_page:
                     return redirect(request_user_page)
                 else:
-                    return redirect(url_for("blank"))
+                    return redirect(url_for("profile"))
             else:
                 flash(message_obj.password_incorrect[session['language']], 'error')
-                return redirect(request.referrer)
-
+                return redirect(url_for('login'))
+    
+    
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
                            translation=translation_obj, message_obj=message_obj)
