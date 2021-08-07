@@ -45,7 +45,7 @@ def create_new_user():
                                              (Users.role == User_roles.id)).join(Employees,
                                                                                  (Users.emp_id == Employees.id)).all()
 
-    create_new_user_form = update_messages_user(create_new_user_form, language)
+    create_new_user_form = update_messages_user(create_new_user_form, session['language'])
     return render_template('create_new_user.html', title='Create New User', users=users,
                            form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
@@ -131,7 +131,7 @@ def login():
                 else:
                     return redirect(url_for("profile"))
             else:
-                flash(message_obj.password_incorrect[session['language']], 'error')
+                flash(message_obj.password_incorrect[request.form['prefer_language']], 'error')
                 return redirect(url_for('login'))
     
     

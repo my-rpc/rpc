@@ -186,3 +186,8 @@ class UploadExtraDocsForm(FlaskForm):
     extra_docs = FileField('extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="extra_docs")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class ContractForm(FlaskForm):
+    
+    pass

@@ -149,12 +149,13 @@ class Documents(db.Model, UserMixin):
 class Contracts(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.employees.id'),
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'),
                        primary_key=True, nullable=False)
     pos_id = db.Column(db.Integer, db.ForeignKey('positions.id'), nullable=False)
     sal_id = db.Column(db.Integer, db.ForeignKey('salary.id'), nullable=False)
     contract_type = db.Column(db.Integer, db.ForeignKey('contract_types.id'), nullable=False)
     contract_duration = db.Column(db.Integer, nullable=False)
+    start_date = db.Column(db.String(255), nullable=False)
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"

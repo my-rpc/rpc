@@ -37,6 +37,20 @@
         </ul>
 
       </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="icon-User"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.contract[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">			
+          <li><a href="{{ url_for('add_employee') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.add_new_employee[language] }}</a></li>
+          <li><a href="{{ url_for('employee_settings') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.employee_setting[language] }}</a></li>
+        </ul>
+
+      </li>
       <li>
         <a href="contact_app.html">
           <i class="icon-Clipboard-check"><span class="path1"></span><span class="path2"></span></i>
