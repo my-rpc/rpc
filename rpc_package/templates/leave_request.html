@@ -18,7 +18,7 @@
             <div class="box-title">Leave Request</div>
         </div>
         <div class="box-body">
-            <form method="POST" , action="" id="leave_request" enctype="multipart/form-data">
+            <form method="POST" , action="" id="leave_request">
                 {{ form.hidden_tag()}}
             <div class="row">
                 <div class="form-group col-md-4">
@@ -29,11 +29,11 @@
                     <div class="row">
                         <div class="form-group col-md-3">
                             {{ form.start_datetime.label(class="form-control-label")}}
-                            {{ form.start_datetime(class="form-control")}}
+                            {{ form.start_datetime( type="date", class="form-control")}}
                         </div>
                         <div class="form-group col-md-3">
                             {{ form.end_datetime.label(class="form-control-label")}}
-                            {{ form.end_datetime(class="form-control")}}
+                            {{ form.end_datetime(type="date", class="form-control")}}
                         </div>
                     </div>
                 </div>
@@ -43,6 +43,62 @@
             </div>
             </form>
         </div>
+    </div>
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">List of leave requests</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <tr>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Total Days</th>
+                        <th>Supervisor</th>
+                        <th>HR</th>
+                        <th>Requested Date</th>
+                      </tr>
+                      {% for leave in my_leave_list %}
+                      <tr>
+                        <td>{% if leave.leave_type %} Hourly {% else %} Daily {% endif %}</td>
+                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
+                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
+                        <td>$158.00</td>
+                        <td>
+                            {% if leave.supervisor == None %}
+                            <span class="badge badge-pill badge-warning">Pending</span>
+                            {% elif leave.supervisor == True %}
+                            <span class="badge badge-pill badge-success">Accepted</span>
+                            {% elif leave.supervisor == False %}
+                            <span class="badge badge-pill badge-danger">Rejected</span>
+                            {% endif %}
+
+                        </td>
+                        <td>
+                            {% if leave.hr == None %}
+                            <span class="badge badge-pill badge-warning">Pending</span>
+                            {% elif leave.hr == True %}
+                            <span class="badge badge-pill badge-success">Accepted</span>
+                            {% elif leave.hr == False %}
+                            <span class="badge badge-pill badge-danger">Rejected</span>
+                            {% endif %}
+
+                        </td>
+                        <td>{{leave.requested_at}}</td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
     </div>
 </section>
 {% endblock main_content%}
@@ -57,40 +113,19 @@
 <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
 </script>
 <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
-
-<script>
-    function uploadProfile() {
-        $form = $("#upload_profile_pic");
-        var formData = new FormData($form[0]);
-        $.ajax({
-            type: "POST",
-            url: "upload_profile_pic",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response == "success")
-                    location.reload()
-                toastSuccess(response);
-            },
-            error: function (response) {
-                var statusCode = response.status;
-                var r = '';
-                if (statusCode == '403') {
-                    r = formValidateErrors(response);
-                }
-                toastError(r);
-            }
-        });
-    };
-
-    function chooseLeaveTpe(val)
-    {
-        if(val == 1)
-        {
-            $("#timeType").addClass("d-none");
-            $("#dateType").removeClass("d-none");
-        }
-    }
-</script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+                toastError("{{message}}")
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
 {% endblock js_code %}

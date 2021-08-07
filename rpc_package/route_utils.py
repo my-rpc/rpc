@@ -301,18 +301,21 @@ def set_emp_update_form_data(emp_id, update_employee_form):
     return current_addresses, permanent_addresses
 
 
-def send_leave_request(request, emp_id):
-    if request.args.get['leave_type'] == "hourly":
+def send_leave_request(leave_form, emp_id):
+    if leave_form.leave_type.data=='1':
         leave = Leave_form(
             emp_id=emp_id,
-            start_datetime= request.start_datetime.data,
-            end_datetime= request.end_datetime.data)
-    elif request.leave_type.data == "daily":
+            leave_type=True,
+            start_datetime= leave_form.start_datetime.data,
+            end_datetime= leave_form.end_datetime.data)
+        db.session.add(leave)
+    elif leave_form.leave_type.data == '0':
         leave = Leave_form(
             emp_id=emp_id,
-            start_datetime= request.start_datetime.data,
-            end_datetime= request.end_datetime.data)
-    db.session.add(leave)
+            leave_type=False,
+            start_datetime= leave_form.start_datetime.data,
+            end_datetime= leave_form.end_datetime.data)
+        db.session.add(leave)
     if db.session.commit():
         return "success"
     else:

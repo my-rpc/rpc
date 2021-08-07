@@ -8,7 +8,7 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
-    Emails, Phone, Provinces
+    Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, update_employee_data, \
     set_emp_update_form_data, send_leave_request
@@ -125,7 +125,7 @@ def login():
                 flash(message_obj.user_inactive[session['language']], 'error')
                 return redirect(request.referrer)
         else:
-            flash(message_obj.password_incorrect[session['language']], 'error')
+            flash(message_obj.password_incorrect['en'], 'error')
             return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
@@ -391,12 +391,14 @@ def uploadProfile():
 @login_required
 def leave_request():
     leave_form = leaveRequestForm()
-    if request.method == "POST":
-        leave = send_leave_request(request, current_user.emp_id)
+    if request.method == "GET":
+        my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
+    if request.method == 'POST':
+        leave = send_leave_request(leave_form, current_user.emp_id)
         if leave == "success":
             flash(message_obj.leave_request_sent[session['language']], 'success')
         else:
             flash(message_obj.leave_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
-    return render_template('leave_request.html', form=leave_form, title=translation_obj.forms[session['language']], language=session['language'],
+    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list, title=translation_obj.forms[session['language']], language=session['language'],
                     translation=translation_obj, message_obj=message_obj)
