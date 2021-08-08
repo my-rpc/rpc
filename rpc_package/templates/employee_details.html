@@ -11,17 +11,69 @@
 <!-- main content code will be add here -->
 
 <div class="box">
-    <div class="box-header with-border">
-      <h4 class="box-title">Employee Details </h4>
+  <div class="box-body text-center">
+    <div class="mb-20 mt-20">
+      {# 
+        useful note for letter understanding 
+        {{employee[0]}} => employee table
+        {{employee[1]}} => phone table
+        {{employee[2]}} => email table
+        {{employee[3]}} => current address table
+                employee[3][0] => current address data
+                employee[3][1] => province data
+                employee[3][2] => district data
+        {{employee[4]}} => permanent address table
+                employee[4][0] => current address data
+                employee[4][1] => province data
+                employee[4][2] => district data
+      #}
+      <!-- <img src="../images/avatar/avatar-12.png" width="150" class="rounded-circle bg-info-light" alt="user"> -->
+      <span class="fa-stack fa-6x">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fad fa-user fa-stack-1x fa-inverse"></i>
+      </span>
+      <h4 class="mt-20 mb-0">{{employee[0]['name']}} {{employee[0]['lname']}}</h4>
+      <span>{{employee[0]['id']}}</span>
     </div>
-    <div class="box-body">
-      This is some text within a card block. We extended the layout in layout.html
+    <div class=""> 
+      <h4>Contact Info</h4>
+      {% if employee[1]|length > 1 %}
+      <div class="">{{employee[1][0].phone}}, {{employee[1][1].phone}}</div>
+      {% else %}
+      <div class="font-size-16">{{employee[1][0].phone}}</div>
+      {% endif %}
+
+
+      {% if employee[2] is none %}
+        <span class="text-danger"> No Email Provided</span>
+      {% elif employee[2]|length > 1 %}
+        <div class="font-size-16">{{employee[2][0].email}} {{employee[2][1].email}}</div>
+      {% else %}
+        <div class="font-size-16">{{employee[2][0].email}}</div>
+      {% endif %}
     </div>
-    <!-- /.box-body -->
-    <div class="box-footer">
-      Footer
+    
+
+    <div class="my-20 mb-">
+      <div class="badge badge-pill badge-info-light font-size-16">Department</div>
+      <div class="badge badge-pill badge-info-light font-size-16">Position Title</div>
     </div>
-    <!-- /.box-footer-->
+
+    <div class="my-20">
+      <h4>Address</h4>
+      <div class="my-3">
+        <span class="font-size-16 text-info"> Current Address: </span>
+        <span>{{employee[3][0].address_dari}}, {{employee[3][2].district_name}}, {{employee[3][1].province_name}}  </span>
+      </div>
+      <div class="my-3">
+        <span class="font-size-16 text-info"> Permanent Address: </span>
+        <span>{{employee[4][0].address_dari}}, {{employee[4][2].district_name}}, {{employee[4][1].province_name}}  </span>
+      </div>
+    </div>
+    
+    {% print(employee) %}
+  </div>
+  
 </div>
 
 {% endblock main_content%}
@@ -30,4 +82,22 @@
         add js code or library here as need 
         This code will be add to the footer of the page
     -->
+    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+    </script>
+    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+                toastError("{{message}}")
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
 {% endblock js_code %}
