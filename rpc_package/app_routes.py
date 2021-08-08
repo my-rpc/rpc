@@ -10,7 +10,8 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, update_employee_data, \
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, \
+    update_employee_data, \
     set_emp_update_form_data, send_leave_request
 import os
 from datetime import datetime
@@ -73,7 +74,8 @@ def uds_user():
                 return message_to_client_403(message_obj.create_new_user_update_not[language])
             data = {
                 "user": {
-                    'emp_id': user.emp_id, 'status': user.status, 'role': {'name':user_role.name, 'name_english': user_role.name_english}
+                    'emp_id': user.emp_id, 'status': user.status,
+                    'role': {'name': user_role.name, 'name_english': user_role.name_english}
                 },
                 'message': message_obj.create_new_user_update[language].format(request.form['employee_id'])
             }
@@ -138,7 +140,6 @@ def login():
             else:
                 flash(message_obj.password_incorrect[session['language']], 'error')
                 return redirect(url_for('login'))
-
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
@@ -318,25 +319,27 @@ def employee_details():
             emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
 
             current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
-                                                (Current_addresses.province_id == Provinces.id)) \
-                                                .join(Districts, (Current_addresses.district_id == Districts.id)) \
-                                                .filter(Current_addresses.emp_id == emp_id).first()
+                                                                                               (
+                                                                                                           Current_addresses.province_id == Provinces.id)) \
+                .join(Districts, (Current_addresses.district_id == Districts.id)) \
+                .filter(Current_addresses.emp_id == emp_id).first()
 
             permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
-                                                (Permanent_addresses.province_id == Provinces.id)) \
-                                                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
-                                                .filter(Permanent_addresses.emp_id == emp_id).first()
+                                                                                                   (
+                                                                                                               Permanent_addresses.province_id == Provinces.id)) \
+                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
+                .filter(Permanent_addresses.emp_id == emp_id).first()
             employee = sel_emp, phones, emails, current_addresses, permanent_addresses
 
         except IOError as exc:
             return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                            translation=translation_obj, message_obj=message_obj)
+                                   translation=translation_obj, message_obj=message_obj)
         return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                            employee=employee, translation=translation_obj, message_obj=message_obj)
+                               employee=employee, translation=translation_obj, message_obj=message_obj)
     else:
         flash(message_obj.invalid_message[session['language']], "error")
         return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                            translation=translation_obj, message_obj=message_obj)
+                               translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
@@ -424,7 +427,8 @@ def profile():
 @app.route('/upload_profile_pic', methods=["POST"])
 @login_required
 def uploadProfile():
-        return uploadProfilePic(request)
+    return uploadProfilePic(request)
+
 
 @app.route('/leave_request', methods=["GET", "POST"])
 @login_required
@@ -439,5 +443,6 @@ def leave_request():
         else:
             flash(message_obj.leave_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
-    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list, title=translation_obj.forms[session['language']], language=session['language'],
-                    translation=translation_obj, message_obj=message_obj)
+    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
