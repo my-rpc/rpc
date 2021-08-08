@@ -26,13 +26,14 @@ class Employees(db.Model, UserMixin):
     tazkira = db.Column(db.Integer, unique=True, nullable=False)
     gender = db.Column(db.Boolean, nullable=False)
     blood = db.Column(db.String(10), nullable=False)
+    profile_pic = db.Column(db.String(255), nullable=True)
     m_status = db.Column(db.Boolean, nullable=False)
     tin = db.Column(db.Integer, unique=True, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
-               f"Last name: {self.lname}, Tazkira: {self.tazkira}, TIN: {self.tin}"
+               f"Last name: {self.lname}, Tazkira: {self.tazkira}, Profile: {self.profile_pic} TIN: {self.tin}"
 
 
 class Users(db.Model, UserMixin):
@@ -225,3 +226,18 @@ class Salary(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Salary ID: {self.id}, Contract ID: {self.cont_id}"
+
+class Leave_form(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    leave_type = db.Column(db.Boolean(1), nullable=False)
+    time_in_minutes = db.Column(db.Integer, nullable=True)
+    start_datetime = db.Column(db.DateTime, nullable=True)
+    end_datetime = db.Column(db.Date, nullable=True)
+    supervisor = db.Column(db.Boolean, nullable=True)
+    hr = db.Column(db.Boolean, nullable=True)
+    requested_at= db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"

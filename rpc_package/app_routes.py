@@ -4,14 +4,15 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
-    Emails, Phone, Provinces
+    Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, update_employee_data, \
-    set_emp_update_form_data
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
+    update_employee_data, \
+    set_emp_update_form_data, send_leave_request
 import os
 from datetime import datetime
 
@@ -50,7 +51,7 @@ def create_new_user():
                                              (Users.role == User_roles.id)).join(Employees,
                                                                                  (Users.emp_id == Employees.id)).all()
 
-    create_new_user_form = update_messages_user(create_new_user_form, language)
+    create_new_user_form = update_messages_user(create_new_user_form, session['language'])
     return render_template('create_new_user.html', title='Create New User', users=users,
                            form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
@@ -67,11 +68,18 @@ def uds_user():
             try:
                 user.status = bool(int(request.form['status']))
                 user.role = request.form['user_role']
+                user_role = User_roles.query.get(user.role)
                 db.session.commit()
             except IOError as exc:
                 return message_to_client_403(message_obj.create_new_user_update_not[language])
-            return message_to_client_200(
-                message_obj.create_new_user_update[language].format(request.form['employee_id']))
+            data = {
+                "user": {
+                    'emp_id': user.emp_id, 'status': user.status,
+                    'role': {'name': user_role.name, 'name_english': user_role.name_english}
+                },
+                'message': message_obj.create_new_user_update[language].format(request.form['employee_id'])
+            }
+            return jsonify(data)
         else:
             return message_to_client_403(message_obj.create_new_user_update_not[language])
     user_id = request.args.get('user_id')
@@ -85,7 +93,23 @@ def uds_user():
                  'translation': translation_obj.__dict__,
                  'message_obj': message_obj.__dict__})
     else:
-        message_to_client_403(message_obj.invalid_message[language])
+        return message_to_client_403(message_obj.invalid_message[language])
+
+
+@app.route("/reset_user_password")
+def reset_user_password():
+    user_id = request.args.get('user_id')
+    if EmployeeValidator.emp_id_validator(user_id):
+        hashed_pass = pass_crypt.generate_password_hash('123456').decode('utf=8')
+        try:
+            sel_user = Users.query.get(user_id)
+            sel_user.password = hashed_pass
+            db.session.commit()
+        except IOError as exc:
+            return message_to_client_403(message_obj.create_new_user_update_not[session['language']])
+        return message_to_client_200("Password has been reset")
+    else:
+        return message_to_client_403(message_obj.invalid_message[session['language']])
 
 
 @app.route("/logout")
@@ -96,31 +120,26 @@ def logout():
 
 
 # Login part
+@app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("blank"))
+        return redirect(url_for("profile"))
     login_form = LoginForm()
-    if login_form.validate_on_submit():
-        user = Users.query.filter_by(emp_id=login_form.username.data).first()
-        if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
-            employee = Employees.query.filter_by(id=user.emp_id).first()
-            session['language'] = login_form.prefer_language.data
-            session['emp_id'] = user.emp_id
-            if session['language'] == 'dari':
-                session['emp_name'] = employee.name
-                session['emp_lname'] = employee.lname
+    if request.method == 'POST':
+        if login_form.validate_on_submit():
+            user = Users.query.filter_by(emp_id=login_form.username.data).first()
+            if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+                session['language'] = login_form.prefer_language.data
+                login_user(user, remember=login_form.remember_me.data)
+                request_user_page = request.args.get('next')
+                if request_user_page:
+                    return redirect(request_user_page)
+                else:
+                    return redirect(url_for("profile"))
             else:
-                session['emp_name'] = employee.name_english
-                session['emp_lname'] = employee.lname_english
-            login_user(user, remember=login_form.remember_me.data)
-            request_user_page = request.args.get('next')
-            if request_user_page:
-                return redirect(request_user_page)
-            else:
-                return redirect('/profile')
-        else:
-            return message_to_client_403(message_obj.password_incorrect[session['language']])
+                flash(message_obj.password_incorrect[session['language']], 'error')
+                return redirect(url_for('login'))
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
@@ -277,7 +296,7 @@ def employee_settings():
     emails = {}
     for x, emp in enumerate(employees):
         phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
-        email = db.session.query(Emails).filter_by(emp_id=emp.id)
+        email = db.session.query(Emails).filter_by(emp_id=emp.id).all()
         if phone is not None:
             phones[x] = phone
         if email is not None:
@@ -291,9 +310,36 @@ def employee_settings():
 @app.route('/employee_details', methods=['GET', "POST"])
 @login_required
 def employee_details():
-    language = 'en'
-    return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                           translation=translation_obj, message_obj=message_obj)
+    emp_id = request.args.get('emp_id')
+
+    if EmployeeValidator.emp_id_validator(emp_id):
+        try:
+            sel_emp = Employees.query.get(emp_id)
+            phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
+            emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
+
+            current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
+                                                                                               (
+                                                                                                           Current_addresses.province_id == Provinces.id)) \
+                .join(Districts, (Current_addresses.district_id == Districts.id)) \
+                .filter(Current_addresses.emp_id == emp_id).first()
+
+            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
+                                                                                                   (
+                                                                                                               Permanent_addresses.province_id == Provinces.id)) \
+                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
+                .filter(Permanent_addresses.emp_id == emp_id).first()
+            employee = sel_emp, phones, emails, current_addresses, permanent_addresses
+
+        except IOError as exc:
+            return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                                   translation=translation_obj, message_obj=message_obj)
+        return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                               employee=employee, translation=translation_obj, message_obj=message_obj)
+    else:
+        flash(message_obj.invalid_message[session['language']], "error")
+        return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                               translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
@@ -375,4 +421,28 @@ def profile():
                            doc_tazkira=doc_tazkira,
                            doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
                            doc_extra=doc_extra,
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/upload_profile_pic', methods=["POST"])
+@login_required
+def upload_profile():
+    return upload_profile_pic(request)
+
+
+@app.route('/leave_request', methods=["GET", "POST"])
+@login_required
+def leave_request():
+    leave_form = leaveRequestForm()
+    if request.method == "GET":
+        my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
+    if request.method == 'POST':
+        leave = send_leave_request(leave_form, current_user.emp_id)
+        if leave == "success":
+            flash(message_obj.leave_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.leave_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
