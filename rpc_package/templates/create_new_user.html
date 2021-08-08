@@ -27,7 +27,7 @@
             </thead>
             <tbody>
                 {% for user in users %}
-                    <tr>
+                    <tr id="{{user[0].emp_id}}">
                         <td>
                             {{user[0].emp_id}}
                         </td>
@@ -46,9 +46,14 @@
                             {% endif %}
                         </td>
                         <td>
-                            <span><i class="fad fa-times text-danger"></i></span>
+                            <a href="javascript:void(0)" class="" onclick="updateUserOpenModel('{{user[0].emp_id}}')">
+                                <i class="fad fa-edit text-info"></i> 
+                            </a>
                             <span class="px-4 text-secondary font-weight-bolder">|</span>
-                            <span class="" onclick="updateUserOpenModel('{{user[0].emp_id}}')"><i class="fad fa-edit text-info"></i></span>
+                            <a href="javascript:void(0)" class="text-primary" onclick="resetPassword('{{user[0].emp_id}}')"> 
+                                <i class="fad fa-sync text-primary"></i> 
+                                Reset Password 
+                            </a>
                         </td>
                         
                     </tr>
@@ -200,7 +205,6 @@ updateUserOpenModel = function(userID){
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log(response.user);
             $('#update_user [name="employee_id"]').val(response.user.emp_id);
             $('#update_user [name="user_role"]').val(response.user.role);
             if(response.user.status == true)
@@ -212,11 +216,20 @@ updateUserOpenModel = function(userID){
     });
 }
 
-deleteEmployee = function(empID){
-    if (confirm("Are you sure you want to delete employee with "+empID+ " number?")) {
-        toastSuccess('employee deleted!')
-    } else {
-        toastError('Canceled')
+resetPassword = function(userID){
+    if (confirm("Are you sure you want to reset user password with "+userID+ " ID?")) {
+        $.ajax({
+            type: "GET",
+            url: "/reset_user_password?user_id="+userID,
+            // data: {'user_id':userID},
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                toastSuccess(response.message) 
+            },error: function(response){
+                toastError('Password has not reset')
+            }
+        });
     }
 }
 
@@ -255,12 +268,21 @@ $(document).on( 'submit', '#update_user', function(e){
         processData: false,
         contentType: false,
         success: function (response) {
-            console.log(response)
-            toastSuccess(response.message);
             $('.update_user_modal').modal('hide');
+            user = response.user;
+            toastSuccess(response.message);
+            rowCell2 = '#'+user.emp_id+ ' td:eq(2)';
+            rowCell3 = '#'+user.emp_id+ ' td:eq(3)';
+            alert(user.role.name)
+            $(rowCell2).html(user.role.name);
+            if(user.status){
+                $(rowCell3).text('Active');
+            }else{
+                $(rowCell3).text('Inactive');
+            }
+            $('#'+user.emp_id).addClass('bg-success');
 
         },error: function(response){
-            console.log(response)
 
             var statusCode = response.status;
             var r = '';

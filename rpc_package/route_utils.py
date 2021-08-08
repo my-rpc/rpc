@@ -28,15 +28,15 @@ def upload_docs(emp_id, request, file_type):
 def get_profile_info(emp_id):
     profile = db.session.query(Users, User_roles, Employees).join(Users,
                                                                   (Users.role == User_roles.id)).join(Employees, (
-                Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
+            Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
     current_address = db.session.query(Current_addresses, Provinces, Districts).join(
         Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (
-                Current_addresses.district_id == Districts.id)
+            Current_addresses.district_id == Districts.id)
                                                                                  ).filter(
         Current_addresses.emp_id == session['emp_id']).first()
     permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
         Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (
-                Permanent_addresses.district_id == Districts.id)
+            Permanent_addresses.district_id == Districts.id)
                                                                                      ).filter(
         Permanent_addresses.emp_id == session['emp_id']).first()
     doc_cv = Documents.query.filter_by(emp_id=session['emp_id'], name="cv").first()
@@ -60,23 +60,25 @@ def get_documents(emp_id):
     return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
 
 
-def uploadProfilePic(request):
+def upload_profile_pic(request):
     request_file = request.files['profilePic']
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
     ext = request_file.filename.split('.')[1]
     if ext in ALLOWED_EXTENSIONS:
-        request_file.filename = f"profile-" + session['emp_id'] +"."+ext
+        request_file.filename = f"profile-" + session['emp_id'] + "." + ext
         workingdir = os.path.abspath(os.getcwd())
-        path = os.path.join(workingdir+"/rpc_package/static/images/profiles", request_file.filename)
+        path = os.path.join(workingdir + "/rpc_package/static/images/profiles", request_file.filename)
         print(workingdir)
         emp = Employees.query.filter_by(id=session['emp_id']).first()
-        emp.profile_pic=f"/static/images/profiles/" + request_file.filename
+        emp.profile_pic = f"/static/images/profiles/" + request_file.filename
         assert isinstance(db, object)
         request_file.save(path)
         db.session.commit()
         return 'success'
     else:
         return "invalid extention"
+
+
 def update_employee_data(update_employee_form):
     sel_emp = Employees.query.filter_by(id=update_employee_form.employee_id.data).first()
     phones = Phone.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
@@ -302,19 +304,19 @@ def set_emp_update_form_data(emp_id, update_employee_form):
 
 
 def send_leave_request(leave_form, emp_id):
-    if leave_form.leave_type.data=='1':
+    if leave_form.leave_type.data == '1':
         leave = Leave_form(
             emp_id=emp_id,
             leave_type=True,
-            start_datetime= leave_form.start_datetime.data,
-            end_datetime= leave_form.end_datetime.data)
+            start_datetime=leave_form.start_datetime.data,
+            end_datetime=leave_form.end_datetime.data)
         db.session.add(leave)
     elif leave_form.leave_type.data == '0':
         leave = Leave_form(
             emp_id=emp_id,
             leave_type=False,
-            start_datetime= leave_form.start_datetime.data,
-            end_datetime= leave_form.end_datetime.data)
+            start_datetime=leave_form.start_datetime.data,
+            end_datetime=leave_form.end_datetime.data)
         db.session.add(leave)
     if db.session.commit():
         return "success"

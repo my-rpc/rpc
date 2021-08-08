@@ -160,5 +160,9 @@
     "provinces_current": "This field is required.", 
     "district_permanent": "This field is required.", 
     "district_current": "This field is required."
-}
+  },
+  "invalid_message": {
+    "dari": "درخواست اشتباه",
+    "en": "invalid request"
+  }
 }
