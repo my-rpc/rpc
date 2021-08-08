@@ -331,6 +331,18 @@
     "dari": "قرارداد",
     "en": "Contract"
   },
+  "contract_type":{
+    "dari": "نوع قرارداد",
+    "en": "Contrac Type"
+  },
+  "contract_settings": {
+    "dari": "تنظیمات قرارداد",
+    "en": "Contract Settings"
+  },
+  "contract_duration": {
+    "dari": "مدت قرارداد",
+    "en": "Contract Duration"
+  },
   "job_responsibilities": {
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
@@ -507,14 +519,6 @@
     "dari": "مبلغ معاش",
     "en": "Salary"
   },
-  "male": {
-    "dari": "مرد",
-    "en": "Male"
-  },
-  "female": {
-    "dari": "زن",
-    "en": "Female"
-  },
   "single": {
     "dari": "مجرد",
     "en": "Single"
@@ -671,9 +675,9 @@
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
   },
-  "employee_setting": {
+  "employee_settings": {
     "dari": "تنظیمات کامند",
-    "en": "Employee Setting"
+    "en": "Employee Settings"
   },
   "active":{
     "dari": "فعال",

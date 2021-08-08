@@ -7,8 +7,7 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Districts, \
-    Emails, Phone, Provinces
+    Districts, Emails, Phone, Provinces, Contracts, Contract_types, Positions, Position_history, Salary, Departments
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, update_employee_data, \
     set_emp_update_form_data
@@ -413,3 +412,37 @@ def profile():
                            doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
                            doc_extra=doc_extra,
                            translation=translation_obj, message_obj=message_obj)
+
+@app.route('/contract_settings')
+def contract_settings():
+    employees = db.session.query(Employees).all()
+    phones = {}
+    emails = {}
+    contracts = {}
+    for x, emp in enumerate(employees):
+        phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
+        email = db.session.query(Emails).filter_by(emp_id=emp.id).all()
+        contract = db.session.query(Contracts, Contract_types, Position_history, Positions, Salary ) \
+                                    .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
+                                    .join(Salary, Contracts.id == Salary.contract_id) \
+                                    .join(Position_history, (Contracts.id == Position_history.contract_id)) \
+                                    .join(Positions, Positions.id == Position_history.position_id) \
+                                    .join(Departments, Departments.id == Position_history.department_id) \
+                                    .filter(Contracts.emp_id == emp.id).first()
+        if phone is not None:
+            phones[x] = phone
+        if email is not None:
+            emails[x] = email
+        if contracts is not None:
+            contracts[x] = contract
+    print(contract)
+    return render_template('contract_settings.html', title='Contact Setting', language=session['language'], 
+                            employees=employees, emails=emails, phones=phones, contract=contract,
+                            translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/add_contract')
+def add_contract():
+    return render_template('add_contract.html', title='Add Contract', language=session['language'], 
+                            
+                            translation=translation_obj, message_obj=message_obj)

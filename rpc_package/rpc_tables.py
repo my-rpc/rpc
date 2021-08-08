@@ -151,8 +151,8 @@ class Contracts(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'),
                        primary_key=True, nullable=False)
-    pos_id = db.Column(db.Integer, db.ForeignKey('positions.id'), nullable=False)
-    sal_id = db.Column(db.Integer, db.ForeignKey('salary.id'), nullable=False)
+    position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), nullable=False)
+    salary_id = db.Column(db.Integer, db.ForeignKey('salary.id'), nullable=False)
     contract_type = db.Column(db.Integer, db.ForeignKey('contract_types.id'), nullable=False)
     contract_duration = db.Column(db.Integer, nullable=False)
     start_date = db.Column(db.String(255), nullable=False)
@@ -207,9 +207,9 @@ class Positions(db.Model, UserMixin):
 class Position_history(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    cont_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
-    pos_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
-    dep_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
+    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
 
     def __repr__(self):
         return f"Position History ID: {self.id}"
@@ -218,7 +218,7 @@ class Position_history(db.Model, UserMixin):
 class Salary(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    cont_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
     base = db.Column(db.String, nullable=False)
     transportation = db.Column(db.String, nullable=False)
     house_hold = db.Column(db.String, nullable=False)
