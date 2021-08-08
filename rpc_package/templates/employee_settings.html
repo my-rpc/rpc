@@ -23,17 +23,17 @@
         <table class="table table-striped table-hover" id="employee_setting">
             <thead>
                 <tr>
-                    <th>Select</th>
-                    <th>Employee ID</th>
-                    <th>Name</th>
-                    <th>Father Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Tazkira</th>
-                    <th>Birthday</th>
-                    <th>Blood Group</th>
-                    <th>TIN</th>
+                    <th>{{translation.select[language]}}</th>
+                    <th>{{translation.employee_id[language]}}</th>
+                    <th>{{translation.first_name[language]}}</th>
+                    <th>{{translation.father_name[language]}}</th>
+                    <th>{{translation.phone[language]}}</th>
+                    <th>{{translation.email[language]}}</th>
+                    <th>{{translation.gender[language]}}</th>
+                    <th>{{translation.tazkira[language]}}</th>
+                    <th>{{translation.date_of_birth[language]}}</th>
+                    <th>{{translation.blood_group[language]}}</th>
+                    <th>{{translation.tin[language]}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -132,7 +132,7 @@
                 'excel',
                 'print',
                 {
-                    text: '<i class="fad fa-eye"></i> View Employee',
+                    text: '<i class="fad fa-eye"></i> {{translation.view_employee[language]}}',
                     attr: {'class': 'btn btn-info'},
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
@@ -144,7 +144,7 @@
                     }
                 },
                 {
-                    text: '<i class="fad fa-edit"></i> Edit Employee',
+                    text: '<i class="fad fa-edit"></i> {{translation.edit_employee[language]}}',
                     attr: {'class': 'btn btn-primary'},
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
@@ -156,7 +156,7 @@
                     }
                 },
                 {
-                    text: '<i class="fad fa-plus"></i> Add Documents',
+                    text: '<i class="fad fa-plus"></i> {{translation.add_document[language]}}',
                     attr: {'class': 'btn btn-primary'},
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
@@ -168,7 +168,7 @@
                     }
                 },
                 {
-                    text: '<i class="fad fa-times"></i> Delete Employee',
+                    text: '<i class="fad fa-times"></i> {{translation.delete_employee[language]}}',
                     attr: {'class': 'btn btn-warning'},
                     action: function () {
                         empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()

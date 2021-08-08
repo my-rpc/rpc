@@ -2,7 +2,7 @@ import os
 
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses
+    Current_addresses, Permanent_addresses, Leave_form
 from flask import session
 
 
@@ -60,6 +60,23 @@ def get_documents(emp_id):
     return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
 
 
+def uploadProfilePic(request):
+    request_file = request.files['profilePic']
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+    ext = request_file.filename.split('.')[1]
+    if ext in ALLOWED_EXTENSIONS:
+        request_file.filename = f"profile-" + session['emp_id'] +"."+ext
+        workingdir = os.path.abspath(os.getcwd())
+        path = os.path.join(workingdir+"/rpc_package/static/images/profiles", request_file.filename)
+        print(workingdir)
+        emp = Employees.query.filter_by(id=session['emp_id']).first()
+        emp.profile_pic=f"/static/images/profiles/" + request_file.filename
+        assert isinstance(db, object)
+        request_file.save(path)
+        db.session.commit()
+        return 'success'
+    else:
+        return "invalid extention"
 def update_employee_data(update_employee_form):
     sel_emp = Employees.query.filter_by(id=update_employee_form.employee_id.data).first()
     phones = Phone.query.filter_by(emp_id=update_employee_form.employee_id.data).all()
@@ -282,3 +299,24 @@ def set_emp_update_form_data(emp_id, update_employee_form):
                           + str(per_address_eng) + ", " + str(per_district_name_eng) + ", " + str(per_province_name_eng) \
                           + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
     return current_addresses, permanent_addresses
+
+
+def send_leave_request(leave_form, emp_id):
+    if leave_form.leave_type.data=='1':
+        leave = Leave_form(
+            emp_id=emp_id,
+            leave_type=True,
+            start_datetime= leave_form.start_datetime.data,
+            end_datetime= leave_form.end_datetime.data)
+        db.session.add(leave)
+    elif leave_form.leave_type.data == '0':
+        leave = Leave_form(
+            emp_id=emp_id,
+            leave_type=False,
+            start_datetime= leave_form.start_datetime.data,
+            end_datetime= leave_form.end_datetime.data)
+        db.session.add(leave)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"

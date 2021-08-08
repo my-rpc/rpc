@@ -4,17 +4,22 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
-    Emails, Phone, Provinces
+    Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, update_employee_data, \
-    set_emp_update_form_data
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, update_employee_data, \
+    set_emp_update_form_data, send_leave_request
 import os
 from datetime import datetime
 
+
+@app.route("/", methods=['GET', 'POST'])
+@login_required
+def blank():
+    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -45,7 +50,7 @@ def create_new_user():
                                              (Users.role == User_roles.id)).join(Employees,
                                                                                  (Users.emp_id == Employees.id)).all()
 
-    create_new_user_form = update_messages_user(create_new_user_form, language)
+    create_new_user_form = update_messages_user(create_new_user_form, session['language'])
     return render_template('create_new_user.html', title='Create New User', users=users,
                            form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
@@ -133,8 +138,8 @@ def login():
             else:
                 flash(message_obj.password_incorrect[session['language']], 'error')
                 return redirect(url_for('login'))
-    
-    
+
+
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
                            translation=translation_obj, message_obj=message_obj)
@@ -305,7 +310,7 @@ def employee_settings():
 @login_required
 def employee_details():
     emp_id = request.args.get('emp_id')
-    
+
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
             sel_emp = Employees.query.get(emp_id)
@@ -322,7 +327,7 @@ def employee_details():
                                                 .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
                                                 .filter(Permanent_addresses.emp_id == emp_id).first()
             employee = sel_emp, phones, emails, current_addresses, permanent_addresses
-            
+
         except IOError as exc:
             return render_template('employee_details.html', title='Employee Details', language=session['language'],
                             translation=translation_obj, message_obj=message_obj)
@@ -332,6 +337,7 @@ def employee_details():
         flash(message_obj.invalid_message[session['language']], "error")
         return render_template('employee_details.html', title='Employee Details', language=session['language'],
                             translation=translation_obj, message_obj=message_obj)
+
 
 @app.route('/uds_employee', methods=['GET', "POST"])
 @login_required
@@ -413,3 +419,25 @@ def profile():
                            doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
                            doc_extra=doc_extra,
                            translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/upload_profile_pic', methods=["POST"])
+@login_required
+def uploadProfile():
+        return uploadProfilePic(request)
+
+@app.route('/leave_request', methods=["GET", "POST"])
+@login_required
+def leave_request():
+    leave_form = leaveRequestForm()
+    if request.method == "GET":
+        my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
+    if request.method == 'POST':
+        leave = send_leave_request(leave_form, current_user.emp_id)
+        if leave == "success":
+            flash(message_obj.leave_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.leave_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list, title=translation_obj.forms[session['language']], language=session['language'],
+                    translation=translation_obj, message_obj=message_obj)
