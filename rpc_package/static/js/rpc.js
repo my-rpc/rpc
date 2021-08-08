@@ -62,3 +62,15 @@ toastSuccess = function (message){
     });
     
 };
+
+$(document).ready(function() {
+    $('#birthday').MdPersianDateTimePicker({
+        targetTextSelector: '#birthday',
+        // targetDateSelector: '#birthday-1',
+        // dateFormat: 'yyyy-MM-dd',
+        textFormat: 'yyyy-MM-dd',
+        isGregorian: false,
+        englishNumber: true,
+        enableTimePicker: false,
+    });
+});
