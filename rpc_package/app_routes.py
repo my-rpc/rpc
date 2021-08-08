@@ -10,7 +10,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Districts, \
     Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
-from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, uploadProfilePic, \
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, \
     set_emp_update_form_data, send_leave_request
 import os
@@ -426,8 +426,8 @@ def profile():
 
 @app.route('/upload_profile_pic', methods=["POST"])
 @login_required
-def uploadProfile():
-    return uploadProfilePic(request)
+def upload_profile():
+    return upload_profile_pic(request)
 
 
 @app.route('/leave_request', methods=["GET", "POST"])
