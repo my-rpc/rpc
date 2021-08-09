@@ -1,0 +1,168 @@
+{
+  "create_new_user_save": {
+    "dari": "کاربر جدید با آیدی {} موفقانه اضافه شد",
+    "en": "User created for {} ID"
+  },
+  "create_new_user_delete": {
+    "dari": "کاربر با آیدی {} موفقانه حذف شد",
+    "en": "User deleted for {} ID"
+  },
+  "create_new_user_update": {
+    "dari": "اطلاعات کاربر با آیدی {} بروزرسانی شد",
+    "en": "User updated for {} ID"
+  },
+  "create_new_user_update_not": {
+    "dari": "اطلاعات کاربر با آیدی {} بروزرسانی نشد",
+    "en": "User not updated for {} ID"
+  },
+  "create_new_user_not": {
+    "dari": "کاربر جدید اضافه نشد",
+    "en": "User was not created"
+  },
+  "create_new_employee_save": {
+    "dari": "کارمند جدید با آیدی {} موفقانه اضافه شد",
+    "en": "Employee created for {} ID"
+  },
+  "create_new_employee_delete": {
+    "dari": "کارمند با آیدی {} موفقانه حذف شد",
+    "en": "Employee deleted for {} ID"
+  },
+  "create_new_employee_delete_not": {
+    "dari": "کارمند با آیدی {}  حذف نشد",
+    "en": "Employee not deleted for {} ID"
+  },
+  "create_new_employee_update": {
+    "dari": "اطلاعات کارمند با آیدی {} بروزرسانی شد",
+    "en": "Employee updated for {} ID"
+  },
+  "create_new_employee_update_not": {
+    "dari": "اطلاعات کارمند با آیدی {} بروزرسانی نشد",
+    "en": "Employee not updated for {} ID"
+  },
+  "create_new_employee_not": {
+    "dari": "کارمند جدید اضافه نشد",
+    "en": "Employee was not created"
+  },
+  "email_incorrect": {
+    "dari": "ایمیل شما اشتباه است",
+    "en": "Your email is incorrect"
+  },
+  "password_incorrect": {
+    "dari": "پسورد شما اشتباه است",
+    "en": "Your password is incorrect"
+  },
+  "are_you_sure": {
+    "dari": "آیا شما مطمئن هستید؟",
+    "en": "Are you sure?"
+  },
+  "email": {
+    "dari": "فورمت ایمیل اشتباه است",
+    "en": "Wrong email format"
+  },
+  "required_field": {
+  "dari": "الزامی است  {}",
+    "en": "{} is required"
+  },
+  "required_upload": {
+    "dari": "آپلود {} فایل الزامی است",
+    "en": "Uploading {} file is required"
+  },
+  "leave_time": {
+    "dari": "روز های رخصتی شما خلاص شده است",
+    "en": "Your leave time is up"
+  },
+  "wrong_phone_number": {
+    "dari": "فورمت شماره تماس اشتباه است",
+    "en": "Wrong phone number format"
+  },
+  "length_phone_number": {
+    "dari": "طول شماره تماس باید 10 عدد باشد.",
+    "en": "length of phone number should be 10 number"
+  },
+  "exist_in_system": {
+    "dari": " در سیستم موجود است{} ",
+    "en": "{} exist in system"
+  },
+  "not_access": {
+  "dari": "شما اجازه ورود به این قسمت از سیستم را ندارید",
+    "en": "You are not allowed to log in to this part of the system"
+  },
+  "system_error": {
+  "dari": "خطای سیستم",
+    "en": "System Error"
+  },
+  "call_admin": {
+  "dari": "با ادمین در ارتباط شوید",
+    "en": "Cantact with admin"
+  },
+  "check_length": {
+    "dari": " طول فیلد {} باید برای {}  فیلد است ",
+    "en": "The length must be at least {} for field {}"
+  },
+  "wrong_format": {
+    "dari": "فرمت داده وارد شده اشتباه است. {}",
+    "en": "Please check the {} format."
+  },
+  "equal": {
+    "dari": "پسورد و تاییدیه پسورد یکی نیست",
+    "en": "Confirm password must be equal to password"
+  },
+  "contact_details": {
+    "dari": "اطلاعات مربوط به آدرس و شماره تماس ذخیره شد",
+    "en": "The information about phone and address has bees saved!"
+  },
+  "contact_details_not": {
+    "dari": "اطلاعات مربوط به آدرس و شماره تماس ذخیره نشد",
+    "en": "The information about phone and address has not bees saved!"
+  },
+  "employee_id": {
+    "dari": "فورمت شماره کارمندی اشتباه است لطفا درست تایپ کنید(RPC-000)",
+    "en": "Wrong employee ID please type correct (RPC-000)"
+  },
+  "first_name": {
+    "dari": "نام الزامی است",
+    "en": "Name is required"
+  },
+  "father_name": {
+    "dari": "نام پدر الزامی است",
+    "en": "Father name is required"
+  },
+  "last_name": {
+    "dari": "تخلص الزامی است",
+    "en": "Last name is required"
+  },
+  "user_inactive": {
+    "dari": "حساب کاربر فعال نیست",
+    "en": "User Acoount is not active"
+  },
+  "blood_type": {
+    "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
+    "en": "wrong format of blood type correct one is (B+)"
+  },
+  "leave_request_sent": {
+    "dari": "درخواست رخصتی ارسال شد",
+    "en": "Leave request has been sent"
+  },
+    "leave_request_not_sent": {
+    "dari": "درخواست رخصتی ارسال نشد",
+    "en": "Leave request has been not sent"
+  },
+  "val_dic" : {
+    "employee_id": "Employee already exi...mployee ID",
+    "email": "ایمیل شما موجود است",
+    "phone": "تلفون شما موجود است",
+    "phone_second": "تلفون شما موجود است",
+    "permanent_address": "This field is required.", 
+    "permanent_address_dari": "This field is required.",
+    "current_address": "This field is required.",
+    "current_address_dari": "This field is required.",
+    "provinces_permanent": "This field is required.", 
+    "provinces_current": "This field is required.", 
+    "district_permanent": "This field is required.", 
+    "district_current": "This field is required."
+  },
+  "invalid_message": {
+    "dari": "درخواست اشتباه",
+    "en": "invalid request"
+  }
+}

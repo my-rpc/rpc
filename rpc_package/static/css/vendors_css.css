@@ -2,5 +2,6 @@
 /** Imports Plugin css **/
 /****************************/
 @import '../assets/vendor_components/bootstrap/dist/css/bootstrap.css';
+@import '../assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.css';
 
 /*# sourceMappingURL=vendors_css.css.map */

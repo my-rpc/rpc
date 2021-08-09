@@ -101,7 +101,7 @@ $light5: #bac0c7;
 $dx-blue: #485e90;
 $white:#ffffff;
 $black:#000000;
-$primary:#8950fc;
+$primary:#E64A19;
 $secondary:#e5eaee;
 $info:#6993ff;
 $success:#1bc5bd;
@@ -121,7 +121,7 @@ $danger-lite:#ffe2e5;
 
 /*Theme Colors For Dark*/
 $body-dark: #1a233a;
-$dark-text: #a5b2cb;
+$dark-text:#E64A19 ;
 $dark2: #8c9ab5;
 $dark3: #272e48;
 $dark-title: #bdd1f8;
@@ -150,7 +150,7 @@ $gray-800:      #3f4254;
 $gray-900:      #181c32;
 
 
-$theme-primary-primary: #8950fc;
+$theme-primary-primary: #E64A19;
 $theme-primary-secondary:#e5eaee;
 $theme-primary-info: #6993ff;
 $theme-primary-success: #1bc5bd;
@@ -169,7 +169,7 @@ $theme-primary-grd-dark: linear-gradient(45deg, darken($theme-primary-primary, 2
 
 
 $theme-secondary-primary: #e5eaee;
-$theme-secondary-secondary:#8950fc;
+$theme-secondary-secondary:#E64A19;
 $theme-secondary-info: #6993ff;
 $theme-secondary-success: #1bc5bd;
 $theme-secondary-danger: #f64e60;
@@ -187,7 +187,7 @@ $theme-secondary-grd-dark: linear-gradient(45deg, darken($theme-secondary-primar
 
 $theme-info-primary: #6993ff;
 $theme-info-secondary:#e5eaee;
-$theme-info-info: #8950fc;
+$theme-info-info: #E64A19;
 $theme-info-success: #1bc5bd;
 $theme-info-danger: #f64e60;
 $theme-info-warning: #ffa800;
@@ -205,7 +205,7 @@ $theme-info-grd-dark: linear-gradient(45deg, darken($theme-info-primary, 20%), d
 $theme-success-primary: #1bc5bd;
 $theme-success-secondary:#e5eaee;
 $theme-success-info: #6993ff;
-$theme-success-success: #8950fc;
+$theme-success-success: #E64A19;
 $theme-success-danger: #f64e60;
 $theme-success-warning: #ffa800;
 
@@ -223,7 +223,7 @@ $theme-danger-primary: #f64e60;
 $theme-danger-secondary:#e5eaee;
 $theme-danger-info: #6993ff;
 $theme-danger-success: #1bc5bd;
-$theme-danger-danger: #8950fc;
+$theme-danger-danger: #E64A19;
 $theme-danger-warning: #ffa800;
 
 $theme-danger-primary-lite: #ffe2e5;
@@ -241,7 +241,7 @@ $theme-warning-secondary:#e5eaee;
 $theme-warning-info: #6993ff;
 $theme-warning-success: #1bc5bd;
 $theme-warning-danger: #f64e60;
-$theme-warning-warning: #8950fc;
+$theme-warning-warning: #E64A19;
 
 $theme-warning-primary-lite: #fff4de;
 $theme-warning-secondary-lite:#e9edf2;

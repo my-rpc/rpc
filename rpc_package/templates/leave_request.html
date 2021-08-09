@@ -1,0 +1,144 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.leave_request[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    #start_datetime-icon,#end_datetime-icon {
+        cursor: pointer;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box col-md-12">
+        <div class="box-header">
+            <div class="box-title">{{translation.leave_request[language]}}</div>
+        </div>
+        <div class="box-body">
+            <form method="POST" , action="" id="leave_request">
+                {{ form.hidden_tag()}}
+            <div class="row">
+                <div class="form-group col-md-4">
+                    {{ form.leave_type.label(class="form-control-label")}}
+                    {{ form.leave_type(onChange="chooseLeaveTpe(1)", class="")}}
+                </div>
+                <div class="col-md-8" id="timeType">
+                    <div class="row">
+                        <div class="form-group col-md-5">
+                            {{ form.start_datetime.label(class="form-control-label")}}
+                            <div class="input-group mb-3">
+                                <div id="start_datetime-icon" class="input-group-prepend">
+                                    <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                </div>
+                                {{ form.start_datetime( type="text", class="form-control form-control-lg")}}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-5">
+                            {{ form.end_datetime.label(class="form-control-label")}}
+                            <div class="input-group mb-3">
+                                <div id="end_datetime-icon" class="input-group-prepend">
+                                    <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                </div>
+                                {{ form.end_datetime(type="text", class="form-control form-control-lg")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                {{form.submit(class="btn btn-primary")}}
+            </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">{{translation.list_of_leave_request[language]}}</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <tr>
+                        <th>{{translation.leave_type[language]}}</th>
+                        <th>{{translation.start_date[language]}}</th>
+                        <th>{{translation.end_date[language]}}</th>
+                        <th>{{translation.total_days[language]}}</th>
+                        <th>{{translation.supervisor[language]}}</th>
+                        <th>{{translation.hr[language]}}</th>
+                        <th>{{translation.request_date[language]}}</th>
+                      </tr>
+                      {% for leave in my_leave_list %}
+                      <tr>
+                        <td>{% if leave.leave_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
+                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
+                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
+                        <td>0</td>
+                        <td>
+                            {% if leave.supervisor == None %}
+                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                            {% elif leave.supervisor == True %}
+                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                            {% elif leave.supervisor == False %}
+                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                            {% endif %}
+
+                        </td>
+                        <td>
+                            {% if leave.hr == None %}
+                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                            {% elif leave.hr == True %}
+                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                            {% elif leave.hr == False %}
+                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                            {% endif %}
+
+                        </td>
+                        <td>{{leave.requested_at}}</td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js">
+</script>
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+                toastError("{{message}}")
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+{% endblock js_code %}

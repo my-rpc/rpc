@@ -10,7 +10,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -131,3 +130,6 @@ dmypy.json
 #IDE personal config
 .vscode
 .idea
+
+#config file
+rpc_package/config/config.json

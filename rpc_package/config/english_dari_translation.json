@@ -3,9 +3,25 @@
     "dari": "ایجاد کاربر جدید",
     "en": "Create New User"
   },
+  "add_new_employee": {
+    "dari" : "اضافه کردن کارمند",
+    "en" : "Add Employee"
+  },
+  "name_language": {
+    "dari": "اطلاعات شخصی به دری",
+    "en": "Personal Information"
+  },
   "user_login": {
     "dari": "ورود به سیستم",
     "en": "Login"
+  },
+  "login": {
+    "dari": "ورود",
+    "en": "Login"
+  },
+  "login_message": {
+    "dari": "برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید",
+    "en": "Please check your username and password."
   },
   "hr_department": {
     "dari": "دیپارتمنت منابع بشری",
@@ -34,6 +50,729 @@
   "submit_user": {
     "dari": "ایجاد کاربر جدید",
     "en": "Create New User"
+  },
+  "dashboard": {
+    "dari": "داشبورد",
+    "en": "Dashboard"
+  },
+  "chart": {
+    "dari": "چارت",
+    "en": "Chart"
+  },
+  "HR_department": {
+    "dari": "دیپارتمنت منابع بشری",
+    "en": "HR Department"
+  },
+  "employee": {
+    "dari": "کارمند",
+    "en": "Employee"
+  },
+  "performance_evaluation": {
+    "dari": "ارزیابی عملکرد",
+    "en": "Performance Evaluation"
+  },
+  "setting": {
+    "dari": "تنظیمات",
+    "en": "Setting"
+  },
+  "forms": {
+    "dari": "فرم ها",
+    "en": "Forms"
+  },
+  "employee_form": {
+    "dari": "فورم کارمند",
+    "en": "Employee Form"
+  },
+  "leave_form": {
+    "dari": "فورم رخصتی",
+    "en": "Leave Form"
+  },
+  "request_date": {
+    "dari": "تاریخ درخواست",
+    "en": "Request Date"
+  },
+  "hr": {
+    "dari": "منابع بشری",
+    "en": "HR"
+  },
+  "supervisor": {
+    "dari": "سوپروایز",
+    "en": "Supervisor"
+  },
+  "total_days": {
+    "dari": "کل روزها",
+    "en": "Total Days"
+  },
+  "employee_request_form": {
+    "dari": "فورم درخواست کارمند",
+    "en": "Employee Request Form"
+  },
+  "resign_form": {
+    "dari": "فورم استعفا",
+    "en": "Resign Form"
+  },
+  "tazkira": {
+    "dari": "تذکره",
+    "en": "Tazkira"
+  },
+  "employee_profile": {
+    "dari": "پروفایل کارمند",
+    "en": "Employee Profile"
+  },
+  "list_of_leave_request": {
+    "dari": "لیست درخواست رخصتی",
+    "en": "List of Leave Request"
+  },
+  "overtime_form": {
+    "dari": "فورم اضافه کاری",
+    "en": "Overtime Form"
+  },
+  "prepayment_form": {
+    "dari": "فورم پیش پرداخت",
+    "en": "Prepayment Form"
+  },
+  "notification": {
+    "dari": "اعلان",
+    "en": "Notification"
+  },
+  "task": {
+    "dari": "وظیفه",
+    "en": "Task"
+  },
+  "search": {
+    "dari": "جستجو",
+    "en": "Search"
+  },
+  "user": {
+    "dari": "کاربر",
+    "en": "User"
+  },
+  "full_screen": {
+    "dari": "تمام صفحه",
+    "en": "Full Screen"
+  },
+  "logout": {
+    "dari": "خروج",
+    "en": "Logout"
+  },
+  "title": {
+    "dari": "عنوان",
+    "en": "Title"
+  },
+  "attendance": {
+    "dari": "حاضری",
+    "en": "Attendance"
+  },
+  "absent": {
+    "dari": "غیر حاضر",
+    "en": "Absent"
+  },
+  "send_request": {
+    "dari": "ارسال درخواست",
+    "en": "Send Request"
+  },
+  "job_announcement_form": {
+    "dari": "فورم اعلان وظیفه",
+    "en": "Job Announcement Form"
+  },
+  "leave": {
+    "dari": "رخصتی",
+    "en": "Leave"
+  },
+  "taskboard": {
+    "dari": "وظایف",
+    "en": "Taskboard"
+  },
+  "date": {
+    "dari": "تاریخ",
+    "en": "Date"
+  },
+  "number": {
+    "dari": "شماره",
+    "en": "Number"
+  },
+  "attachment": {
+    "dari": "ضمایم",
+    "en": "Attachment"
+  },
+  "first_name": {
+    "dari": "نام",
+    "en": "Name"
+  },
+  "grand_name": {
+    "dari": "نام پدر کلان",
+    "en": "Grand Father Name"
+  },
+  "last_name": {
+    "dari": "تخلص",
+    "en": "Last Name"
+  },
+  "position": {
+    "dari": "وظیفه",
+    "en": "Position"
+  },
+  "operations": {
+    "dari": "عملیات",
+    "en": "Operations"
+  },
+  "blood_group": {
+    "dari": "گروپ خونی",
+    "en": "Blood Group"
+  },
+  "fill": {
+    "dari": "پر کردن",
+    "en": "Fill"
+  },
+  "employee_number": {
+    "dari": "شماره کارمندی",
+    "en": "Employee Number"
+  },
+  "overtime_type": {
+    "dari": "نوع اضافه کاری",
+    "en": "Overtime Type"
+  },
+  "daily": {
+    "dari": "روزانه",
+    "en": "Daily"
+  },
+  "hourly": {
+    "dari": "ساعتی",
+    "en": "Hourly"
+  },
+  "overtime_duration": {
+    "dari": "مدت اضافه کاری",
+    "en": "Overtime Duration"
+  },
+  "loan_form": {
+    "dari": "فورم قرضه",
+    "en": "Loan Form"
+  },
+  "employee_signature": {
+    "dari": "امضا کارمند",
+    "en": "Employee Signature"
+  },
+  "accepted": {
+    "dari": "پذیرفته شده",
+    "en": "Accepted"
+  },
+  "not_accepted": {
+    "dari": "موافقت نمیشود",
+    "en": "Not Accepted"
+  },
+  "rejected": {
+    "dari": "رد شده",
+    "en": "Rejected"
+  },
+  "pending": {
+    "dari": "انتظار",
+    "en": "pending"
+  },
+  "reason": {
+    "dari": "علت عدم موافقت",
+    "en": "Reason"
+  },
+  "form_number": {
+    "dari": "شماره فورم",
+    "en": "Form Number"
+  },
+  "department": {
+    "dari": "دیپارتمنت",
+    "en": "Department"
+  },
+  "start_time": {
+    "dari": "زمان شروع",
+    "en": "Start Time"
+  },
+  "end_time": {
+    "dari": "زمان ختم",
+    "en": "End Time"
+  },
+  "overtime_description": {
+    "dari": "شرح اضافه کاری",
+    "en": "Overtime Description"
+  },
+  "id_number": {
+    "dari": "نمبر آی دی",
+    "en": "ID Number"
+  },
+  "base_salary": {
+    "dari": "پایه معاش",
+    "en": "Base Salary"
+  },
+  "amount request": {
+    "dari": "مبلغ درخواستی",
+    "en": "Amount Request"
+  },
+  "refund_per_month": {
+    "dari": "بازپرداخت به ماه",
+    "en": "Refund Per Month"
+  },
+  "monthly_amount": {
+    "dari": "مبلغ ماهانه",
+    "en": "Monthly Amount"
+  },
+  "start_date": {
+    "dari": "تاریخ شروع",
+    "en": "Start Date"
+  },
+  "end_date": {
+    "dari": "تاریخ ختم",
+    "en": "End Date"
+  },
+  "name_and_last_name": {
+    "dari": "نام و تخلص",
+    "en": "Name and Last Name"
+  },
+  "father_name": {
+    "dari": "نام پدر",
+    "en": "Father Name"
+  },
+  "date_and_signature": {
+    "dari": "تاریخ و امضا",
+    "en": "Date and Signature"
+  },
+  "department_manager": {
+    "dari": " مدیر دیپارتمنت",
+    "en": "Department Manager"
+  },
+  "logistic_manager": {
+    "dari": "مدیر تدارکات",
+    "en": "Logistic Manager"
+  },
+  "IT_manager": {
+    "dari": "مدیر آی تی ",
+    "en": "IT Manager"
+  },
+  "finance_manager": {
+    "dari": "مدیر مالی",
+    "en": "Finance Manager"
+  },
+  "job_number": {
+    "dari": "شماره وظیفه",
+    "en": "Job Number"
+  },
+  "position_number": {
+    "dari": "شماره بست",
+    "en": "Position Number"
+  },
+  "position_title": {
+    "dari": "عنوان بست",
+    "en": "Position Title"
+  },
+  "location": {
+    "dari": "موقعیت",
+    "en": "Location"
+  },
+  "Contract": {
+    "dari": "قرارداد",
+    "en": "Contract"
+  },
+  "job_responsibilities": {
+    "dari": "لایحه وظایف",
+    "en": "Job Responsibilities"
+  },
+  "request_leave_form":{
+    "dari": " درخواست رخصتی",
+    "en": "Leave Form"
+  },
+  "copy_of_national_id": {
+    "dari": "کاپی تذکره",
+    "en": "Copy of National ID"
+  },
+  "tin": {
+    "dari": "نمبر تشخصیه",
+    "en": "TIN Number"
+  },
+  "select": {
+    "dari": "انتخاب",
+    "en": "Select"
+  },
+  "view_employee": {
+    "dari": "مشاهده کارمند",
+    "en": "View Employee"
+  },
+  "edit_employee": {
+    "dari": "تغییرات کارمند",
+    "en": "Edit Employee"
+  },
+  "delete_employee": {
+    "dari": "حذف کارمند",
+    "en": "Delete Employee"
+  },
+  "add_document": {
+    "dari": "اضافه کردن اسناد",
+    "en": "Add Document"
+  },
+  "print": {
+    "dari": "پرینت",
+    "en": "Print"
+  },
+  "excel": {
+    "dari": "اکسل",
+    "en": "Excel"
+  },
+  "column_visibility": {
+    "dari": "نمایش ردیف",
+    "en": "Column Visibility"
+  },
+  "cv": {
+    "dari": "سی وی",
+    "en": "CV"
+  },
+  "educational_documents": {
+    "dari": "اسناد تحصیلی",
+    "en": "Educational Documents"
+  },
+  "add_documents": {
+    "dari": "اضافه کردن اسناد",
+    "en": "Add Documents"
+  },
+  "guarantors": {
+    "dari": "ضمانت خط",
+    "en": "Guarantors"
+  },
+  "employee_card": {
+    "dari": "کارت کارمند",
+    "en": "Employee Card"
+  },
+  "relevant_documents": {
+    "dari": "مکتوب های مرتبط",
+    "en": "Relevant Documents"
+  },
+  "documents": {
+    "dari": "اسناد",
+    "en": "Documents"
+  },
+  "call": {
+    "dari": "تماس",
+    "en": "Call"
+  },
+  "about": {
+    "dari": "درباره",
+    "en": "About"
+  },
+  "contact": {
+    "dari": "ارتباط",
+    "en": "Contact"
+  },
+  "evaluation_form": {
+    "dari": "فورم ارزیابی",
+    "en": "Evaluation Form"
+  },
+  "announcement_date": {
+    "dari": "تاریخ اعلان ",
+    "en": "Announcement Date"
+  },
+  "closing_date": {
+    "dari": "تاریخ ختم اعلان",
+    "en": "Closing Date"
+  },
+  "responsibilities": {
+    "dari": "وظایف و مسئولیت ها",
+    "en": "Responsibilities"
+  },
+  "educations": {
+    "dari": "تحصیلات",
+    "en": "Educations"
+  },
+  "job_exprience": {
+    "dari": "تجربه کاری",
+    "en": "Job Exprience"
+  },
+  "resume": {
+    "dari": "خلص سوانح",
+    "en": "Resume"
+  },
+  "leave_type": {
+    "dari": "نوع رخصتی",
+    "en": "Leave Type"
+  },
+  "leave_request": {
+    "dari": "در خواست رخصتی",
+    "en": "Leave Request"
+  },
+  "leave_duration": {
+    "dari": "مدت رخصتی",
+    "en": "Leave Duration"
+  },
+  "new_task": {
+    "dari": "وظیفه جدید",
+    "en": "New Task"
+  },
+  "new_mail": {
+    "dari": "ایمیل جدید",
+    "en": "New Mail"
+  },
+  "work_duration": {
+    "dari": "مدت همکاری با شرکت",
+    "en": "Work Duration"
+  },
+  "relevant_responsibilities": {
+    "dari": "وظایف مربوطه",
+    "en": "Employee Card"
+  },
+  "relevant_equipment": {
+    "dari": "تجهیزات مربوطه ",
+    "en": "Relevant Equipment"
+  },
+  "resign_reason": {
+    "dari": "دلیل استعفا",
+    "en": "Resign Reason"
+  },
+  "gender": {
+    "dari": "جنسیت",
+    "en": "Gender"
+  },
+  "m_status": {
+    "dari": "حالت مدنی",
+    "en": "Marital Status"
+  },
+  "need_date": {
+    "dari": "شروع ضرورت",
+    "en": "Need Date"
+  },
+  "job_request_form": {
+    "dari": "فورم درخواست کار",
+    "en": "Job Request Form"
+  },
+  "personal_information": {
+    "dari": "معلومات شخصی",
+    "en": "Personal Information"
+  },
+  "major": {
+    "dari": "رشته تحصیلی ",
+    "en": "Major"
+  },
+  "high_school": {
+    "dari": "بکلوریا",
+    "en": "High School"
+  },
+  "associated_degree": {
+    "dari": "فوق بکلوریا",
+    "en": "Associated Degree"
+  },
+  "bachelor_degree": {
+    "dari": "لیسانس",
+    "en": "Bachelor Degree"
+  },
+  "master": {
+    "dari": "ماستری",
+    "en": "Master"
+  },
+  "organization": {
+    "dari": "نام اداره",
+    "en": "Organization"
+  },
+  "salary": {
+    "dari": "مبلغ معاش",
+    "en": "Salary"
+  },
+  "single": {
+    "dari": "مجرد",
+    "en": "Single"
+  },
+  "married": {
+    "dari": "متاهل",
+    "en": "Married"
+  },
+  "communication_skills": {
+    "dari": "توانایی ارتباطات",
+    "en": "Communication Skills"
+  },
+  "languages": {
+    "dari": "زبان ها",
+    "en": "Languages"
+  },
+  "language": {
+    "dari": "زبان",
+    "en": "Language"
+  },
+  "date_of_birth": {
+    "dari": "تاریخ تولد",
+    "en": "Date of Birth"
+  },
+  "birthday": {
+    "dari": "تاریخ تولد",
+    "en": "Birthday"
+  },
+  "phone": {
+    "dari": "شماره تماس",
+    "en": "Phone Address"
+  },
+  "phone_second": {
+    "dari": "شماره تماس دوم",
+    "en": "Second Phone Number"
+  },
+  "permanent_address": {
+    "dari": "سکونت اصلی",
+    "en": "Permanenet Address"
+  },
+  "address": {
+    "dari": "آدرس",
+    "en": "Address"
+  },
+  "current_address": {
+    "dari": "سکونت فعلی",
+    "en": "Current Address"
+  },
+  "status": {
+    "dari": "وضعیت تاهل",
+    "en": "Status"
+  },
+  "email": {
+    "dari": "ایمیل",
+    "en": "Email"
+  },
+  "email_second": {
+    "dari": "ایمیل دوم",
+    "en": "Second Email"
+  },
+  "educational_background": {
+    "dari": "سوابق تحصیلی",
+    "en": "Educational Background"
+  },
+  "school": {
+    "dari": "مکتب",
+    "en": "School"
+  },
+  "university": {
+    "dari": "دانشگاه ",
+    "en": "University"
+  },
+  "country": {
+    "dari": "کشور",
+    "en": "Country"
+  },
+  "district": {
+    "dari": "ولسوالی",
+    "en": "District"
+  },
+  "َadditional_information": {
+    "dari": "معلومات تکمیلی",
+    "en": "Additional Information"
+  },
+  "performance_evaluation_form": {
+    "dari": "فورم ارزیابی عملکرد",
+    "en": "Performance Evaluation Form"
+  },
+  "evaluation_period": {
+    "dari": "دوره ارزیابی",
+    "en": "Evaluation Period"
+  },
+  "reading": {
+    "dari": "خواندن",
+    "en": "Reading"
+  },
+  "writing": {
+    "dari": "نوشتن",
+    "en": "Writing"
+  },
+  "speaking": {
+    "dari": "مکالمه",
+    "en": "Speaking"
+  },
+  "computer": {
+    "dari": "کمپیوتر",
+    "en": "Computer"
+  },
+  "program": {
+    "dari": "برنامه",
+    "en": "Program"
+  },
+  "provinces": {
+    "dari": "ولایت",
+    "en": "Provinces"
+  },
+  "fair": {
+    "dari": "نسبتا خوب",
+    "en": "Fair"
+  },
+  "good": {
+    "dari": "خوب",
+    "en": "Good"
+  },
+  "very_good": {
+    "dari": "عالی",
+    "en": "Very Good"
+  },
+  "excellent": {
+    "dari": "مسلط",
+    "en": "Excellent"
+  },
+  "references": {
+    "dari": "منابع معلوماتی",
+    "en": "References"
+  },
+  "quality_of_work": {
+    "dari": "کیفیت کاری",
+    "en": "Quality of Work"
+  },
+  "clear_all": {
+    "dari": "پاک کردن همه",
+    "en": "Clear All"
+  },
+  "clearance_form": {
+    "dari": "فورم عدم مسئولیت",
+    "en": "Clearance Form"
+  },
+  "my_wallet": {
+    "dari": "",
+    "en": "My Wallet"
+  },
+  "contact_details": {
+    "dari": "اطلاعات تماس و آدرس ",
+    "en": "Contact Details"
+  },
+  "user_setting": {
+    "dari": " تنظیمات کاربر ",
+    "en": "User Setting"
+  },
+  "employee_setting": {
+    "dari": "تنظیمات کارمند",
+    "en": "Employee Setting"
+  },
+  "active":{
+    "dari": "فعال",
+    "en": "Active"
+  },
+  "inactive":{
+    "dari": "غیرفعال",
+    "en": "Inactive"
+  },
+  "activate":{
+    "dari": "فعال کردن",
+    "en": "Activate"
+  },
+  "deactivate":{
+    "dari": "غیرفعال کردن",
+    "en": "Deactivate"
+  },
+  "operation":{
+    "dari": "عملیات",
+    "en": "Operation"
+  },
+  "user_status":{
+    "dari": "وضعیت",
+    "en": "status"
+  },
+  "update_employee": {
+    "dari": " تغییرات کارمندان",
+    "en": "Update Employee"
+  },
+  "search_employee": {
+    "dari": "جستجو کارمندان",
+    "en": "Search Employee"
+  },
+  "update_user": {
+    "dari": " تغییرات کاربر",
+    "en": "Update user"
+  },
+  "male": {
+    "dari": "مرد",
+    "en": "Male"
+  },
+  "female": {
+    "dari": "مرد",
+    "en": "Female"
   }
-
 }
