@@ -50,37 +50,37 @@
                 <div class="col-12">
                     <div class="box box-default">
                       <div class="box-header with-border">
-                        <h4 class="box-title">Fill</h4>
+                        <h4 class="box-title">{{translation.employee_profile[language]}}</h4>
                       </div>
                       <!-- /.box-header -->
                       <div class="box-body">
                           <!-- Nav tabs -->
                           <ul class="nav nav-tabs nav-fill" role="tablist">
-                              <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">معلومات شخصی</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">آدرس</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">اسناد</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">تماس</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#about11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">About</span></a> </li>
-                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#contact11" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ml-15">Contact</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">{{translation.personal_information[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">{{translation.address[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">{{translation.documents[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">{{translation.call[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#about11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">{{translation.about[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#contact11" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ml-15">{{translation.contact[language]}}</span></a> </li>
                           </ul>
                           <!-- Tab panes -->
                           <div class="tab-content tabcontent-border">
                               <div class="tab-pane active" id="home11" role="tabpanel">
                                   <div class="p-15">
-                                    <table class="table table-bordered mb-0">
+                                    <table class="table table-responsive table-bordered mb-0">
                                         <thead>
                                           <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">نام</th>  
-                                            <th scope="col">تخلص</th>
-                                            <th scope="col">نام پدر</th>
-                                            <th scope="col">نام پدر کلان</th>
-                                            <th scope="col">تاریخ تولد</th>
-                                            <th scope="col">جنسیت</th>
-                                            <th scope="col">گروپ خون</th>
-                                            <th scope="col">شماره تذکره</th>
-                                            <th scope="col">نمبر تشخصیه</th>
-                                            <th scope="col">حالت مدنی</th>
+                                            <th scope="col">{{translation.first_name[language]}}</th>  
+                                            <th scope="col">{{translation.last_name[language]}}</th>
+                                            <th scope="col">{{translation.father_name[language]}}</th>
+                                            <th scope="col">{{translation.grand_name[language]}}</th>
+                                            <th scope="col">{{translation.date_of_birth[language]}}</th>
+                                            <th scope="col">{{translation.gender[language]}}</th>
+                                            <th scope="col">{{translation.blood_group[language]}}</th>
+                                            <th scope="col">{{translation.tazkira[language]}}</th>
+                                            <th scope="col">{{translation.tin[language]}}</th>
+                                            <th scope="col">{{translation.status[language]}}</th>
                                           </tr>
                                         </thead>
                                         <tbody>
@@ -158,7 +158,7 @@
                                                 </div>
                                                 <div class="box-body p-0 m-0">
                                                     <div class="table-responsive-sm">
-                                                        <table class="table table-bordered mb-0">
+                                                        <table class="table table-responsive table-bordered mb-0">
                                                           <thead>
                                                             <tr>
                                                               <th scope="col">#</th>
@@ -286,7 +286,10 @@
             <div class="box">
                 <div class="box-body text-center">
                     <div class="mb-20 mt-20">
-                        <img src="../images/avatar/avatar-12.png" width="150" class="rounded-circle bg-info-light" alt="user">
+                        <form id="upload_profile_pic" enctype="multipart/form-data">
+                            <input type="file" onchange="uploadProfile()" name="profilePic">
+                        </form>
+                        <img src="{{profile[2].profile_pic}}" width="150" class="rounded-circle bg-info-light" alt="user">
                         <h4 class="mt-20 mb-0">{{session['emp_name'] +" "+ session['emp_lname']}}</h4>
                         <a href="mailto:dummy@gmail.com">{{email.email}}</a>
                     </div>
@@ -308,7 +311,7 @@
                     </div>
                 </div>
             </div>					
-            <div class="box">		
+            <!-- <div class="box">		
                 <div class="box-header no-border">
                     <h4 class="box-title">Revenue Overview</h4>
                     <ul class="box-controls pull-right">
@@ -356,7 +359,7 @@
                     <div id="revenue4" class="text-dark"></div>
                 </div>
 
-            </div>
+            </div> -->
        </div>
     </div>
     </section>
@@ -372,146 +375,30 @@
 
 <script>
 
-
-    $(document).ready(function() {
-        $('#employee_setting').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'colvis',
-                'excel',
-                'print',
-                {
-                    text: '<i class="fad fa-eye"></i> View Employee',
-                    attr: {'class': 'btn btn-info'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
-                        if(empID != '' && empID != undefined){
-                            window.open('/employee_details?emp_id='+empID, '_blank');
-                        }else{
-                            toastWarning('Please select an employee');
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-edit"></i> Edit Employee',
-                    attr: {'class': 'btn btn-primary'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
-                        if(empID != '' && empID != undefined){
-                            updateEmployee(empID);
-                        }else{
-                            toastWarning('Please select an employee');
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-times"></i> Delete Employee',
-                    attr: {'class': 'btn btn-warning'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
-                        if(empID != '' && empID != undefined){
-                            alert('This opthion is for employee deletion!')
-                        }else{
-                            toastWarning('Please select an employee')
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-times"></i> Add Documents',
-                    attr: {'class': 'btn btn-warning'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
-                        if(empID != '' && empID != undefined){
-                            window.open('/add_documents?emp_id='+empID, '_blank');
-                        }else{
-                            toastWarning('Please select an employee')
-                        }
-                    }
+function uploadProfile(){
+        $form = $("#upload_profile_pic");
+        var formData = new FormData($form[0]);
+        $.ajax({
+            type: "POST",
+            url: "upload_profile_pic",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              if(response == "success")
+                location.reload()
+                toastSuccess(response);
+            },
+            error: function (response) {
+                var statusCode = response.status;
+                var r = '';
+                if (statusCode == '403') {
+                    r = formValidateErrors(response);
                 }
-                
-            ],
-        }
-        );
-    });
-
-updateEmployee = function(empID){
-    spinner = "<i class='fad fa-spinner fa-spin text-info'></i>";
-    $('#loader').html(spinner);
-    $('.update_employee_modal').modal('show');
-    $.ajax({
-        type: "GET",
-        url: "uds_employee?emp_id="+empID,
-        // data: {'user_id':userID},
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            $('#employee_update_modal').html(response[0])   
-            $('.per-address-col').html(response[1].permanent_add);   
-            $('.cur-address-col').html(response[1].current_add);
-            $("#employee_id").prop('readonly', true);
-        },
-        // error: function(response){
-        //     var statusCode = response.status;
-        //     var r = '';
-        //     if(statusCode == '403'){
-        //         r = formValidateErrors(response);
-        //     }
-        //     toastError(r);
-        // }
-    });
-};
-
-function load_districts(province, target){
-    $.ajax({
-        type: "POST",
-        url: "/load_districts?province="+province,
-        contentType: "application/json",
-        dataType: 'json',
-        success: function(result) {
-            var options="";
-            for(var x in result)
-            {
-                options+= "<option value="+x+">"+result[x]+"</>";
+                toastError(r);
             }
-            $("#"+target).html(options)
-        } 
-    });
-}
-
-showAddress = function(address){
-    $('.'+address).toggleClass('d-none');
-
-    if( $('.'+address + ' input:text, .'+address + ' select').is('[disabled = disabled]') ){
-        $('.'+address + ' input:text, .'+address + ' select').prop("disabled", false)
-    }else{
-        $('.'+address + ' input:text, .'+address + ' select').prop("disabled", true)
-
-    }
-};
-
-$(document).on('submit', '#update_employee', function(e){
-    e.preventDefault();
-    $form = $(this);
-    var formData = new FormData($form[0]);
-    $.ajax({
-        type: "POST",
-        url: 'uds_employee',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response){
-        toastSuccess(response.message);
-        $('.update_employee_modal').modal('hide');
-            console.log(response);
-        },error: function(response){
-            var statusCode = response.status;
-            var r = '';
-            if(statusCode == '403'){
-                r = formValidateErrors(response);
-            }
-            toastError(r);
-        }
-    });
-});
+        });
+    };
+  
 </script>
 {% endblock js_code %}

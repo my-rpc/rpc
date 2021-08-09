@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
-    FileField
+from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
+    FileField, DecimalField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
@@ -191,3 +191,10 @@ class UploadExtraDocsForm(FlaskForm):
 class ContractForm(FlaskForm):
     
     pass
+
+class leaveRequestForm(FlaskForm):
+    leave_type = RadioField('Leave Type', default=1, choices=[(1, 'Hourly'), (0, 'Daily')], validators=[DataRequired()])
+    start_datetime = DateTimeField('From', validators=[DataRequired()])
+    end_datetime = DateTimeField('To', validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+    
