@@ -15,6 +15,10 @@
     "dari": "ورود به سیستم",
     "en": "Login"
   },
+  "login": {
+    "dari": "ورود",
+    "en": "Login"
+  },
   "login_message": {
     "dari": "برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید",
     "en": "Please check your username and password."
@@ -83,6 +87,22 @@
     "dari": "فورم رخصتی",
     "en": "Leave Form"
   },
+  "request_date": {
+    "dari": "تاریخ درخواست",
+    "en": "Request Date"
+  },
+  "hr": {
+    "dari": "منابع بشری",
+    "en": "HR"
+  },
+  "supervisor": {
+    "dari": "سوپروایز",
+    "en": "Supervisor"
+  },
+  "total_days": {
+    "dari": "کل روزها",
+    "en": "Total Days"
+  },
   "employee_request_form": {
     "dari": "فورم درخواست کارمند",
     "en": "Employee Request Form"
@@ -98,6 +118,10 @@
   "employee_profile": {
     "dari": "پروفایل کارمند",
     "en": "Employee Profile"
+  },
+  "list_of_leave_request": {
+    "dari": "لیست درخواست رخصتی",
+    "en": "List of Leave Request"
   },
   "overtime_form": {
     "dari": "فورم اضافه کاری",
@@ -131,10 +155,6 @@
     "dari": "خروج",
     "en": "Logout"
   },
-  "login": {
-    "dari": "ورود",
-    "en": "Login"
-  },
   "title": {
     "dari": "عنوان",
     "en": "Title"
@@ -146,6 +166,10 @@
   "absent": {
     "dari": "غیر حاضر",
     "en": "Absent"
+  },
+  "send_request": {
+    "dari": "ارسال درخواست",
+    "en": "Send Request"
   },
   "job_announcement_form": {
     "dari": "فورم اعلان وظیفه",
@@ -228,12 +252,20 @@
     "en": "Employee Signature"
   },
   "accepted": {
-    "dari": "موافقت میشود",
+    "dari": "پذیرفته شده",
     "en": "Accepted"
   },
   "not_accepted": {
     "dari": "موافقت نمیشود",
     "en": "Not Accepted"
+  },
+  "rejected": {
+    "dari": "رد شده",
+    "en": "Rejected"
+  },
+  "pending": {
+    "dari": "انتظار",
+    "en": "pending"
   },
   "reason": {
     "dari": "علت عدم موافقت",
@@ -454,6 +486,10 @@
   "leave_type": {
     "dari": "نوع رخصتی",
     "en": "Leave Type"
+  },
+  "leave_request": {
+    "dari": "در خواست رخصتی",
+    "en": "Leave Request"
   },
   "leave_duration": {
     "dari": "مدت رخصتی",
