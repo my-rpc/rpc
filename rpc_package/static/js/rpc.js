@@ -64,13 +64,29 @@ toastSuccess = function (message){
 };
 
 $(document).ready(function() {
-    $('#birthday').MdPersianDateTimePicker({
+    $('#birthday-icon, #birthday').MdPersianDateTimePicker({
         targetTextSelector: '#birthday',
-        // targetDateSelector: '#birthday-1',
-        // dateFormat: 'yyyy-MM-dd',
         textFormat: 'yyyy-MM-dd',
         isGregorian: false,
         englishNumber: true,
         enableTimePicker: false,
+    });
+    $('#start_datetime-icon').MdPersianDateTimePicker({
+        targetTextSelector: '#start_datetime',
+        textFormat: 'yyyy-MM-dd HH:mm:ss',
+        isGregorian: false,
+        englishNumber: true,
+        enableTimePicker: true,
+        fromDate: true,
+        groupId: 'leave_request_date',
+    });
+    $('#end_datetime-icon').MdPersianDateTimePicker({
+        targetTextSelector: '#end_datetime',
+        textFormat: 'yyyy-MM-dd HH:mm:ss',
+        isGregorian: false,
+        englishNumber: true,
+        enableTimePicker: true,
+        toDate: true,
+        groupId: 'leave_request_date',
     });
 });

@@ -9,6 +9,9 @@
         left: auto;
         opacity: 1 !important;
     }
+    #start_datetime-icon,#end_datetime-icon {
+        cursor: pointer;
+    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -27,13 +30,23 @@
                 </div>
                 <div class="col-md-8" id="timeType">
                     <div class="row">
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-5">
                             {{ form.start_datetime.label(class="form-control-label")}}
-                            {{ form.start_datetime( type="date", class="form-control")}}
+                            <div class="input-group mb-3">
+                                <div id="start_datetime-icon" class="input-group-prepend">
+                                    <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                </div>
+                                {{ form.start_datetime( type="text", class="form-control form-control-lg")}}
+                            </div>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-5">
                             {{ form.end_datetime.label(class="form-control-label")}}
-                            {{ form.end_datetime(type="date", class="form-control")}}
+                            <div class="input-group mb-3">
+                                <div id="end_datetime-icon" class="input-group-prepend">
+                                    <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                </div>
+                                {{ form.end_datetime(type="text", class="form-control form-control-lg")}}
+                            </div>
                         </div>
                     </div>
                 </div>

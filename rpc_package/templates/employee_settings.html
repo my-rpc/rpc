@@ -10,6 +10,9 @@
             right: auto;
             opacity: 1 !important;
         }
+        #birthday-icon {
+            cursor: pointer;
+        }
         
     </style>
 {% endblock  css_or_js_code %}
@@ -200,7 +203,7 @@ updateEmployee = function(empID){
             $('.per-address-col').html(response[1].permanent_add);   
             $('.cur-address-col').html(response[1].current_add);
             $("#employee_id").prop('readonly', true);
-            $('#birthday').MdPersianDateTimePicker({
+            $('#birthday-icon, #birthday').MdPersianDateTimePicker({
                 targetTextSelector: '#birthday',
                 textFormat: 'yyyy-MM-dd',
                 isGregorian: false,
