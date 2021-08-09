@@ -2,7 +2,7 @@ import os
 
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses, Leave_form
+    Current_addresses, Permanent_addresses, Leave_form, Resign_form
 from flask import session
 
 
@@ -318,6 +318,18 @@ def send_leave_request(leave_form, emp_id):
             start_datetime=leave_form.start_datetime.data,
             end_datetime=leave_form.end_datetime.data)
         db.session.add(leave)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+def send_resign_request(resign_form, emp_id):
+    resign = Resign_form(
+        emp_id = emp_id,
+        reason= resign_form.reason.data,
+        responsibilities= resign_form.reason.data,
+        equipments= resign_form.reason.data)
+    db.session.add(resign)
     if db.session.commit():
         return "success"
     else:

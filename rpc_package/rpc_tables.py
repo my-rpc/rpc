@@ -241,3 +241,17 @@ class Leave_form(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"
+
+class Resign_form(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    reason = db.Column(db.Text, nullable=False)
+    responsibilities = db.Column(db.Text, nullable=False)
+    equipments = db.Column(db.Text, nullable=False)
+    supervisor = db.Column(db.Boolean, nullable=True)
+    hr = db.Column(db.Boolean, nullable=True)
+    requested_at= db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"Resign ID: {self.id}, Employee ID: {self.emp_id}, Reason: {self.reason}"

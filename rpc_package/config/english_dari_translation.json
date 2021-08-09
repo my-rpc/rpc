@@ -343,6 +343,10 @@
     "dari": " درخواست رخصتی",
     "en": "Leave Form"
   },
+  "request_resign_form":{
+    "dari": " درخواست استعفا",
+    "en": "Resign Form"
+  },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
     "en": "Copy of National ID"

@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    UploadEducationalDocsForm, \
+    UploadEducationalDocsForm, ResignRequestForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
@@ -12,7 +12,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, \
-    set_emp_update_form_data, send_leave_request
+    set_emp_update_form_data, send_leave_request, send_resign_request
 import os
 from datetime import datetime
 
@@ -445,4 +445,19 @@ def leave_request():
         return redirect(request.referrer)
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/resign_request', methods=["GET", "POST"])
+@login_required
+def resign_request():
+    resign_form = ResignRequestForm()
+    if request.method == "POST":
+        resign = send_resign_request(resign_form, current_user.emp_id)
+        if resign == "success":
+            flash(message_obj.resign_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.resign_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('resign_request.html',
+                           title=translation_obj.forms[session['language']], form=resign_form, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
