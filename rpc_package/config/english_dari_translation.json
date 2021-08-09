@@ -15,6 +15,10 @@
     "dari": "ورود به سیستم",
     "en": "Login"
   },
+  "login": {
+    "dari": "ورود",
+    "en": "Login"
+  },
   "login_message": {
     "dari": "برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید",
     "en": "Please check your username and password."
@@ -150,10 +154,6 @@
   "logout": {
     "dari": "خروج",
     "en": "Logout"
-  },
-  "login": {
-    "dari": "ورود",
-    "en": "Login"
   },
   "title": {
     "dari": "عنوان",
