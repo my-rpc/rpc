@@ -189,7 +189,7 @@ class UploadExtraDocsForm(FlaskForm):
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
 class leaveRequestForm(FlaskForm):
-    leave_type = RadioField('Leave Type', default=1, choices=[(1, 'Hourly'), (0, 'Daily')], validators=[DataRequired()])
+    leave_type = RadioField('Leave Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired()])
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')

@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} Add Employee {% endblock %}
+{% block title %} {{ super() }} {{translation.leave_request[language]}} {% endblock %}
 {% block css_or_js_code %}
 <style>
     [type=radio]:not(:checked).rd,
@@ -15,7 +15,7 @@
 <section class="content">
     <div class="box col-md-12">
         <div class="box-header">
-            <div class="box-title">Leave Request</div>
+            <div class="box-title">{{translation.leave_request[language]}}</div>
         </div>
         <div class="box-body">
             <form method="POST" , action="" id="leave_request">
@@ -48,44 +48,44 @@
         <div class="col-12">
             <div class="box">
               <div class="box-header with-border">
-                <div class="box-title">List of leave requests</div>
+                <div class="box-title">{{translation.list_of_leave_request[language]}}</div>
               </div>
               <!-- /.box-header -->
               <div class="box-body no-padding">
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <tr>
-                        <th>Leave Type</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Total Days</th>
-                        <th>Supervisor</th>
-                        <th>HR</th>
-                        <th>Requested Date</th>
+                        <th>{{translation.leave_type[language]}}</th>
+                        <th>{{translation.start_date[language]}}</th>
+                        <th>{{translation.end_date[language]}}</th>
+                        <th>{{translation.total_days[language]}}</th>
+                        <th>{{translation.supervisor[language]}}</th>
+                        <th>{{translation.hr[language]}}</th>
+                        <th>{{translation.request_date[language]}}</th>
                       </tr>
                       {% for leave in my_leave_list %}
                       <tr>
-                        <td>{% if leave.leave_type %} Hourly {% else %} Daily {% endif %}</td>
+                        <td>{% if leave.leave_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
                         <td>0</td>
                         <td>
                             {% if leave.supervisor == None %}
-                            <span class="badge badge-pill badge-warning">Pending</span>
+                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
                             {% elif leave.supervisor == True %}
-                            <span class="badge badge-pill badge-success">Accepted</span>
+                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
                             {% elif leave.supervisor == False %}
-                            <span class="badge badge-pill badge-danger">Rejected</span>
+                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                             {% endif %}
 
                         </td>
                         <td>
                             {% if leave.hr == None %}
-                            <span class="badge badge-pill badge-warning">Pending</span>
+                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
                             {% elif leave.hr == True %}
-                            <span class="badge badge-pill badge-success">Accepted</span>
+                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
                             {% elif leave.hr == False %}
-                            <span class="badge badge-pill badge-danger">Rejected</span>
+                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                             {% endif %}
 
                         </td>

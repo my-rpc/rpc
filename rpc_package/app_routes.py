@@ -443,6 +443,7 @@ def leave_request():
         else:
             flash(message_obj.leave_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
+    leave_form = update_messages_leave(leaveRequestForm(),session['language'])
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
