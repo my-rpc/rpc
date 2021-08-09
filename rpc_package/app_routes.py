@@ -3,8 +3,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
+    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, \
+        ContractForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, Departments
@@ -14,12 +14,6 @@ from rpc_package.route_utils import upload_docs, get_profile_info, get_documents
     set_emp_update_form_data, send_leave_request
 import os
 from datetime import datetime
-
-
-@app.route("/", methods=['GET', 'POST'])
-@login_required
-def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -452,8 +446,12 @@ def contract_settings():
 
 @app.route('/add_contract')
 def add_contract():
+    contract_form = ContractForm()
+    emp_id = request.args.get('emp_id')
+    if EmployeeValidator.emp_id_validator(emp_id):
+        contract_form.emp_id.data = emp_id
     return render_template('add_contract.html', title='Add Contract', language=session['language'], 
-                            
+                            form=contract_form,
                             translation=translation_obj, message_obj=message_obj)
 
 @app.route('/upload_profile_pic', methods=["POST"])
