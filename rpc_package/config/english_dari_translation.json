@@ -199,6 +199,10 @@
     "dari": "نام",
     "en": "Name"
   },
+  "guarantor": {
+    "dari": "ضامن",
+    "en": "Guarantor"
+  },
   "grand_name": {
     "dari": "نام پدر کلان",
     "en": "Grand Father Name"
@@ -422,6 +426,10 @@
   "educational_documents": {
     "dari": "اسناد تحصیلی",
     "en": "Educational Documents"
+  },
+  "other_document": {
+    "dari": "اسناد اضافی",
+    "en": "Other Document"
   },
   "add_documents": {
     "dari": "اضافه کردن اسناد",
@@ -681,7 +689,7 @@
   },
   "provinces": {
     "dari": "ولایت",
-    "en": "Provinces"
+    "en": "Province"
   },
   "fair": {
     "dari": "نسبتا خوب",
