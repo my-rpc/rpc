@@ -132,13 +132,63 @@
     <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
     <script>
         $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
             if("{{category}}" == "success")
-                toastSuccess("{{message}}")
+                toastSuccess(message)
             else
-                toastError("{{message}}")
+                toastError(formValidationDisplay(message))
         }); 
         
     </script>
     {% endfor %}
 {% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+        // Leaving form, set persian date picker for start date time field.
+        $('#start_datetime-icon').MdPersianDateTimePicker({
+            targetTextSelector: '#start_datetime',
+            textFormat: 'yyyy-MM-dd HH:mm:ss',
+            isGregorian: false,
+            englishNumber: true,
+            enableTimePicker: true,
+            fromDate: true,
+            groupId: 'leave_request_date',
+        });
+        // Leaving form, set persian date picker for end date time field.
+        $('#end_datetime-icon').MdPersianDateTimePicker({
+            targetTextSelector: '#end_datetime',
+            textFormat: 'yyyy-MM-dd HH:mm:ss',
+            isGregorian: false,
+            englishNumber: true,
+            enableTimePicker: true,
+            toDate: true,
+            groupId: 'leave_request_date',
+        });
+
+        // On change of leave type, if the type is daily
+        // we set format only date else type format is date and time.
+        $('input[type=radio][name=leave_type]').change(function() {
+            if (this.value == '0') {
+                $('#start_datetime-icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', false)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd 00:00:00');
+                $('#end_datetime-icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', false)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd 00:00:00');
+            }
+            else {
+                $('#start_datetime-icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:ss')
+                $('#end_datetime-icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:ss')
+            }
+        });
+    });
+</script>
 {% endblock js_code %}

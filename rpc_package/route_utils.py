@@ -304,21 +304,22 @@ def set_emp_update_form_data(emp_id, update_employee_form):
 
 
 def send_leave_request(leave_form, emp_id):
-    if leave_form.leave_type.data == '1':
-        leave = Leave_form(
-            emp_id=emp_id,
-            leave_type=True,
-            start_datetime=leave_form.start_datetime.data,
-            end_datetime=leave_form.end_datetime.data)
-        db.session.add(leave)
-    elif leave_form.leave_type.data == '0':
-        leave = Leave_form(
-            emp_id=emp_id,
-            leave_type=False,
-            start_datetime=leave_form.start_datetime.data,
-            end_datetime=leave_form.end_datetime.data)
-        db.session.add(leave)
-    if db.session.commit():
+    try:
+        if leave_form.leave_type.data == '1':
+            leave = Leave_form(
+                emp_id=emp_id,
+                leave_type=True,
+                start_datetime=leave_form.start_datetime.data,
+                end_datetime=leave_form.end_datetime.data)
+            db.session.add(leave)
+        elif leave_form.leave_type.data == '0':
+            leave = Leave_form(
+                emp_id=emp_id,
+                leave_type=False,
+                start_datetime=leave_form.start_datetime.data,
+                end_datetime=leave_form.end_datetime.data)
+            db.session.add(leave)
+        db.session.commit()
         return "success"
-    else:
-        return "error"
+    except IOError as io:
+        return 'error'
