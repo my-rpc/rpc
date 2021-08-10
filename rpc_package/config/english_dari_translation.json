@@ -99,9 +99,9 @@
     "dari": "سوپروایز",
     "en": "Supervisor"
   },
-  "total_days": {
-    "dari": "کل روزها",
-    "en": "Total Days"
+  "total_days_hours": {
+    "dari": "کل روزها/ساعتها",
+    "en": "Total Days/Hours"
   },
   "employee_request_form": {
     "dari": "فورم درخواست کارمند",
