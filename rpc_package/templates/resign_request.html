@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} Add Employee {% endblock %}
+{% block title %} {{ super() }} {{translation.resign_request[language]}} {% endblock %}
 {% block css_or_js_code %}
 <style>
     [type=radio]:not(:checked).rd,
@@ -16,7 +16,7 @@
    <div class="box">
        <div class="box-header">
            <div class="box-title">
-               Resign Request
+            {{translation.resign_request[language]}}
            </div>
        </div>
        <div class="box-body">

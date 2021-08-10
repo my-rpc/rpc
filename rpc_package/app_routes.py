@@ -459,6 +459,7 @@ def resign_request():
         else:
             flash(message_obj.resign_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
+    resign_form = update_messages_resign(ResignRequestForm(),session['language'])
     return render_template('resign_request.html',
                            title=translation_obj.forms[session['language']], form=resign_form, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)

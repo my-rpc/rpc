@@ -471,10 +471,6 @@
     "dari": "تاریخ ختم اعلان",
     "en": "Closing Date"
   },
-  "responsibilities": {
-    "dari": "وظایف و مسئولیت ها",
-    "en": "Responsibilities"
-  },
   "educations": {
     "dari": "تحصیلات",
     "en": "Educations"
@@ -511,17 +507,21 @@
     "dari": "مدت همکاری با شرکت",
     "en": "Work Duration"
   },
-  "relevant_responsibilities": {
+  "responsibilities": {
     "dari": "وظایف مربوطه",
-    "en": "Employee Card"
+    "en": "Relevant Responsibilities"
   },
-  "relevant_equipment": {
+  "equipments": {
     "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipment"
+    "en": "Relevant Equipments"
   },
   "resign_reason": {
     "dari": "دلیل استعفا",
     "en": "Resign Reason"
+  },
+  "resign_request": {
+    "dari": "درخواست استعفا",
+    "en": "Resign Request"
   },
   "gender": {
     "dari": "جنسیت",
