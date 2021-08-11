@@ -4,11 +4,11 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, OvertimeRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
-    Emails, Phone, Provinces, Leave_form
+    Emails, Phone, Provinces, Leave_form, Overtime_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, \
@@ -444,5 +444,25 @@ def leave_request():
             flash(message_obj.leave_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/overtime_request', methods=["GET", "POST"])
+@login_required
+def overtime_request():
+    overtime_form = OvertimeRequestForm()
+    if request.method == "GET":
+        emp_overtime_list = Overtime_form.query.filter_by(emp_id=current_user.emp_id).all()
+    if request.method == 'POST':
+        if overtime_form.validate_on_submit():
+            leave = send_leave_request(overtime_form, current_user.emp_id)
+            if leave == "success":
+                flash(message_obj.leave_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.leave_request_not_sent[session['language']], 'error')
+        else:
+            flash(overtime_form.errors)
+        return redirect(url_for('overtime_request'))
+    return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
