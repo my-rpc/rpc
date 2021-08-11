@@ -437,12 +437,15 @@ def leave_request():
     if request.method == "GET":
         my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
     if request.method == 'POST':
-        leave = send_leave_request(leave_form, current_user.emp_id)
-        if leave == "success":
-            flash(message_obj.leave_request_sent[session['language']], 'success')
+        if leave_form.validate_on_submit():
+            leave = send_leave_request(leave_form, current_user.emp_id)
+            if leave == "success":
+                flash(message_obj.leave_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.leave_request_not_sent[session['language']], 'error')
         else:
-            flash(message_obj.leave_request_not_sent[session['language']], 'error')
-        return redirect(request.referrer)
+            flash(leave_form.errors)
+        return redirect(url_for('leave_request'))
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
