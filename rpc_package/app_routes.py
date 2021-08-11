@@ -12,7 +12,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, \
-    set_emp_update_form_data, send_leave_request
+    set_emp_update_form_data, send_leave_request, add_overtime_request
 import os
 from datetime import datetime
 
@@ -455,14 +455,16 @@ def leave_request():
 def overtime_request():
     overtime_form = OvertimeRequestForm()
     if request.method == "GET":
-        emp_overtime_list = Overtime_form.query.filter_by(emp_id=current_user.emp_id).all()
+        emp_overtime_list = Overtime_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Overtime_form.requested_at.desc()).all()
     if request.method == 'POST':
         if overtime_form.validate_on_submit():
-            leave = send_leave_request(overtime_form, current_user.emp_id)
-            if leave == "success":
-                flash(message_obj.leave_request_sent[session['language']], 'success')
+            overtime = add_overtime_request(overtime_form, current_user.emp_id)
+            if overtime == "success":
+                flash(message_obj.overtime_request_sent[session['language']], 'success')
             else:
-                flash(message_obj.leave_request_not_sent[session['language']], 'error')
+                flash(message_obj.overtime_request_not_sent[session['language']], 'error')
         else:
             flash(overtime_form.errors)
         return redirect(url_for('overtime_request'))

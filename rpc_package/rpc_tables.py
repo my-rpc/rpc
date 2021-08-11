@@ -1,6 +1,7 @@
 from rpc_package import db, login_manager
 from flask_login import UserMixin
 from rpc_package.utils import EmployeeValidator
+from datetime import datetime
 
 
 @login_manager.user_loader
@@ -253,7 +254,7 @@ class Overtime_form(db.Model, UserMixin):
     description = db.Column(db.Text, nullable=True)
     supervisor = db.Column(db.Boolean, nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
-    requested_at= db.Column(db.DateTime, nullable=False)
+    requested_at= db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
     def __repr__(self):
         return f"Overtime ID: {self.id}, Employee ID: {self.emp_id}, Overtime Type: {self.overtime_type}"
