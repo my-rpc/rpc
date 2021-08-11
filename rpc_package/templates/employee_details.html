@@ -37,20 +37,25 @@
     </div>
     <div class=""> 
       <h4>Contact Info</h4>
+      {{employee[1]}}
       {% if employee[1]|length > 1 %}
       <div class="">{{employee[1][0].phone}}, {{employee[1][1].phone}}</div>
-      {% else %}
+      {% elif employee[1]|length == 1 %}
       <div class="font-size-16">{{employee[1][0].phone}}</div>
-      {% endif %}
-
-
-      {% if employee[2] is none %}
-        <span class="text-danger"> No Email Provided</span>
-      {% elif employee[2]|length > 1 %}
-        <div class="font-size-16">{{employee[2][0].email}} {{employee[2][1].email}}</div>
       {% else %}
-        <div class="font-size-16">{{employee[2][0].email}}</div>
+      <div class="font-size-16">No phone number provided</div>
       {% endif %}
+
+
+      
+      {% if employee[2]|length > 1 %}
+      <div class="font-size-16">{{employee[2][0].email}} {{employee[2][1].email}}</div>
+      {% elif employee[2]|length == 1 %}
+      <div class="font-size-16">{{employee[2][0].email}}</div>
+      {% else %}
+        <span class="text-danger"> No Email Provided</span>
+      {% endif %}
+
     </div>
     
 
@@ -63,11 +68,15 @@
       <h4>Address</h4>
       <div class="my-3">
         <span class="font-size-16 text-info"> Current Address: </span>
+        {% if employee[3] %}
         <span>{{employee[3][0].address_dari}}, {{employee[3][2].district_name}}, {{employee[3][1].province_name}}  </span>
+        {% endif %}
       </div>
       <div class="my-3">
         <span class="font-size-16 text-info"> Permanent Address: </span>
+        {% if employee[4] %}
         <span>{{employee[4][0].address_dari}}, {{employee[4][2].district_name}}, {{employee[4][1].province_name}}  </span>
+        {% endif %}
       </div>
     </div>
     

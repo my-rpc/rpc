@@ -15,7 +15,7 @@
       <h4 class="box-title">Add Contract</h4>
     </div>
     <div class="box-body">
-      <form action="" id="">
+      <form action="" method="POST" id="">
         <div class="row">
           {{ form.hidden_tag()}}
           <div class="col-md-6 form-group">
@@ -38,8 +38,28 @@
             {{ form.start_date.label(class='form-control-label')}}
             {{ form.start_date(class='form-control', type='date')}}
           </div>
-          <div class="col-md-6 form-group"></div>
-          <div class="col-md-6 form-group"></div>
+          <div class="col-md-6 form-group">
+            {{ form.base.label(class='form-control-label')}}
+            {{ form.base(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.transportation.label(class='form-control-label')}}
+            {{ form.transportation(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.house_hold.label(class='form-control-label')}}
+            {{ form.house_hold(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.currency.label(class='form-check-label')}} <br>
+            {% for radio in form.currency %}
+            {{ radio(class="form-check-input")}}
+            {{ radio.label(class="form-check-label")}}
+            {% endfor %}
+          </div>
+          <div class="col-md-12 form-group">
+            {{ form.submit(class='btn btn-primary')}}
+          </div>
         </div>
       </form>
     </div>
@@ -56,4 +76,27 @@
         add js code or library here as need 
         This code will be add to the footer of the page
     -->
+    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+    </script>
+    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+
+                toastSuccess("{{message}}")
+            else
+              msg = formValidationDisplay(message);
+              toastError(msg)
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+
+
 {% endblock js_code %}

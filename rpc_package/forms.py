@@ -202,9 +202,15 @@ class ContractForm(FlaskForm):
     position = SelectField('Position', choices=position_list, validators=[DataRequired()])
     department = SelectField('Department', choices=department_list, validators=[DataRequired()])
 
-    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    base = StringField('Base Salary', validators=[DataRequired()])
+    transportation = StringField('Transportation', validators=[DataRequired()])
+    house_hold = StringField('House Hold', validators=[DataRequired()])
+    currency = RadioField('Currency', choices=[[1, 'Afghani'], [0, 'Dollar']], validators=[DataRequired()])
 
-    pass
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add Contract')
+
+    # TODO validation 
 
 class leaveRequestForm(FlaskForm):
     leave_type = RadioField('Leave Type', default=1, choices=[(1, 'Hourly'), (0, 'Daily')], validators=[DataRequired()])

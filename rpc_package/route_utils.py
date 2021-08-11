@@ -2,8 +2,11 @@ import os
 
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses, Leave_form
+    Current_addresses, Permanent_addresses, Leave_form, Contracts, Contract_types, Positions, Position_history, \
+    Salary, Departments
 from flask import session
+from flask_login import current_user
+import datetime
 
 
 def upload_docs(emp_id, request, file_type):
@@ -28,25 +31,25 @@ def upload_docs(emp_id, request, file_type):
 def get_profile_info(emp_id):
     profile = db.session.query(Users, User_roles, Employees).join(Users,
                                                                   (Users.role == User_roles.id)).join(Employees, (
-            Users.emp_id == Employees.id)).filter(Employees.id == session['emp_id']).first()
+            Users.emp_id == Employees.id)).filter(Employees.id == emp_id).first()
     current_address = db.session.query(Current_addresses, Provinces, Districts).join(
         Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (
             Current_addresses.district_id == Districts.id)
                                                                                  ).filter(
-        Current_addresses.emp_id == session['emp_id']).first()
+        Current_addresses.emp_id == emp_id).first()
     permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
         Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (
             Permanent_addresses.district_id == Districts.id)
                                                                                      ).filter(
-        Permanent_addresses.emp_id == session['emp_id']).first()
-    doc_cv = Documents.query.filter_by(emp_id=session['emp_id'], name="cv").first()
-    doc_tazkira = Documents.query.filter_by(emp_id=session['emp_id'], name="tazkira").first()
-    doc_guarantor = Documents.query.filter_by(emp_id=session['emp_id'], name="guarantor").first()
-    doc_tin = Documents.query.filter_by(emp_id=session['emp_id'], name="tin").first()
-    doc_education = Documents.query.filter_by(emp_id=session['emp_id'], name="education").first()
-    doc_extra = Documents.query.filter_by(emp_id=session['emp_id'], name="extra").first()
-    email = Emails.query.filter_by(emp_id=session['emp_id']).first()
-    phone = Phone.query.filter_by(emp_id=session['emp_id']).first()
+        Permanent_addresses.emp_id == emp_id).first()
+    doc_cv = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
+    doc_tazkira = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
+    doc_guarantor = Documents.query.filter_by(emp_id=emp_id, name="guarantor").first()
+    doc_tin = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
+    doc_education = Documents.query.filter_by(emp_id=emp_id, name="education").first()
+    doc_extra = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+    email = Emails.query.filter_by(emp_id=emp_id).first()
+    phone = Phone.query.filter_by(emp_id=emp_id).first()
     return profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra
 
 
@@ -322,3 +325,44 @@ def send_leave_request(leave_form, emp_id):
         return "success"
     else:
         return "error"
+
+
+def add_contract_form(contract_form):
+    try: 
+        add_contract = Contracts(
+            emp_id = contract_form.emp_id.data,
+            contract_duration = contract_form.contract_duration.data,
+            contract_type = contract_form.contract_type.data,
+            start_date = contract_form.start_date.data,
+            inserted_by = current_user.emp_id,
+            inserted_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        )
+        db.session.add(add_contract)
+        db_commit = db.session.commit()
+        db.session.flush(add_contract)
+
+        if add_contract.id is not None:
+            add_contract_position = Position_history(
+                position_id = contract_form.position.data,
+                contract_id = add_contract.id,
+                department_id = contract_form.department.data,
+                inserted_by = current_user.emp_id,
+                inserted_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            )
+
+            add_contract_salary = Salary(
+                contract_id = add_contract.id,
+                base = contract_form.base.data,
+                transportation = contract_form.transportation.data,
+                house_hold = contract_form.house_hold.data,
+                currency = contract_form.currency.data,
+                inserted_by = current_user.emp_id,
+                inserted_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            )
+        db.session.add(add_contract_position)
+        db.session.add(add_contract_salary)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+ 
