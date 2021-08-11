@@ -15,6 +15,22 @@
     "dari": "ورود به سیستم",
     "en": "Login"
   },
+  "general_setting": {
+    "dari": "تنظیمات عمومی",
+    "en": "General Setting"
+  },
+  "department_setting": {
+    "dari": "تنظیمات دیپارتمنت",
+    "en": "Department Setting"
+  },
+  "position_setting": {
+    "dari": "تنظیمات پوزیشن",
+    "en": "Position Setting"
+  },
+  "contract_setting": {
+    "dari": "تنظیمات قرارداد",
+    "en": "Contract Setting"
+  },
   "login": {
     "dari": "ورود",
     "en": "Login"
