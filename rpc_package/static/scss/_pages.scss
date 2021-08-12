@@ -5085,18 +5085,3 @@ time {
         left: 0;
     }
 }
-
-@media max {
-    
-}
-
-
-@media screen and (max-width: 992px) {
-    table.table{
-        tr{
-            >td, >th{
-                font-size: .8rem !important;
-            }
-        }
-    }
-}

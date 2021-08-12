@@ -439,7 +439,6 @@ def contract_settings():
             emails[x] = email
         if contracts is not None:
             contracts[x] = contract
-    print(contracts)
     return render_template('contract_settings.html', title='Contact Setting', language=session['language'], 
                             employees=employees, emails=emails, phones=phones, contract=contracts,
                             translation=translation_obj, message_obj=message_obj)

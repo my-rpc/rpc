@@ -85,7 +85,7 @@ Waves
 @import '../assets/vendor_components/animate/animate.css';
 html {
   height: 100%;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 body {
@@ -111,7 +111,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   color: #525d80;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   font-family: "IBM Plex Sans", sans-serif;
@@ -23202,11 +23202,6 @@ time {
   left: 0;
 }
 
-@media screen and (max-width: 992px) {
-  table.table tr > td, table.table tr > th {
-    font-size: 0.8rem !important;
-  }
-}
 /* ps-scrollbar */
 .ps-container {
   -ms-touch-action: auto;
