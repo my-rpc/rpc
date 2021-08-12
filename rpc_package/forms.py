@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
-    SelectField, \
-    FileField, DecimalField, DateField, TimeField, IntegerField, TextAreaField
+    SelectField, FileField, DecimalField, DateField, TimeField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
