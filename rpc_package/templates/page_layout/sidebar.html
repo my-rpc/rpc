@@ -40,7 +40,21 @@
       <li class="treeview">
         <a href="#">
           <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
-          <span>{{translation.forms[language] }}</span>
+          <span>{{translation.employee_forms[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">			
+          <li><a href="{{ url_for('emp_leave_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_leave_form[language] }}</a></li>
+          <li><a href="{{ url_for('emp_resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
+        </ul>
+
+      </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.my_forms[language] }}</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-right pull-right"></i>
           </span>

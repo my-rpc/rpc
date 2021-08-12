@@ -75,6 +75,14 @@
     "dari": "تنظیمات",
     "en": "Setting"
   },
+  "employee_forms": {
+    "dari": "فرم های کارمند",
+    "en": "Employee Forms"
+  },
+  "my_forms": {
+    "dari": "فرم های من",
+    "en": "My Forms"
+  },
   "forms": {
     "dari": "فرم ها",
     "en": "Forms"
@@ -122,6 +130,10 @@
   "list_of_leave_request": {
     "dari": "لیست درخواست رخصتی",
     "en": "List of Leave Request"
+  },
+  "list_of_resign_request": {
+    "dari": "لیست درخواست استعفا",
+    "en": "List of Resign Request"
   },
   "overtime_form": {
     "dari": "فورم اضافه کاری",
