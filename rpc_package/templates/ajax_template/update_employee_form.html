@@ -83,7 +83,9 @@
                         {{ form.birthday.label(class="form-control-label")}}
                         <div class="input-group mb-3">
                             <div id="birthday-icon" class="input-group-prepend">
-                                <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                    <i class="fad fa-calendar"></i>
+                                </span>
                             </div>
                             {{ form.birthday(class="form-control form-control-lg")}}
                         </div>

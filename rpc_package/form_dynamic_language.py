@@ -47,6 +47,16 @@ def update_messages_leave(form_obj, language):
     form_obj.end_datetime.label.text = translation_obj.end_date[language]
     return form_obj
 
+def update_messages_overtime(form_obj, language):
+    form_obj.overtime_type.choices[0][1] = translation_obj.hourly[language]
+    form_obj.overtime_type.choices[1][1] = translation_obj.daily[language]
+    form_obj.overtime_type.label.text = translation_obj.overtime_type[language]
+    form_obj.description.label.text = translation_obj.overtime_description[language]
+    form_obj.submit.label.text = translation_obj.send_request[language]
+    form_obj.start_datetime.label.text = translation_obj.start_date[language]
+    form_obj.end_datetime.label.text = translation_obj.end_date[language]
+    return form_obj
+
 
 
 
