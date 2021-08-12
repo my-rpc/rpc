@@ -50,20 +50,22 @@
         </ul>
 
       </li>
-      <li>
-        <a href="contact_app.html">
-          <i class="icon-Clipboard-check"><span class="path1"></span><span class="path2"></span></i>
-
-
-          <span>{{translation.performance_evaluation[language] }}</span>
+      <li class="treeview">
+        <a href="#">
+          <i class="icon-Settings-2"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.general_setting[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
         </a>
+        <ul class="treeview-menu">			
+          <li><a href="{{ url_for('department_setting') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.department_setting[language] }}</a></li>	
+          <li><a href="{{ url_for('position_setting') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.position_setting[language] }}</a></li>
+          <li><a href="{{ url_for('contract_setting') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.contract_setting[language] }}</a></li>
+        </ul>
+
       </li>
-      <li>
-        <a href="contact_app_chat.html">
-          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
-          <span> {{translation.forms[language] }}</span>
-        </a>
-      </li>
+      
       <li>
         <a href="{{ url_for('create_new_user') }}">
           <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>

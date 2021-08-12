@@ -20,7 +20,7 @@ from datetime import datetime
 @app.route("/", methods=['GET', 'POST'])
 @login_required
 def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
+    return render_template('blank.html', language=session['language'], translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -446,3 +446,20 @@ def leave_request():
     leave_form = update_messages_leave(leaveRequestForm(),session['language'])
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list, title=translation_obj.forms[session['language']], language=session['language'],
                     translation=translation_obj, message_obj=message_obj)
+
+@app.route("/department_setting", methods=['GET', 'POST'])
+@login_required
+def department_setting():
+    return render_template('department_setting.html', language=session['language'], translation=translation_obj)
+
+
+@app.route("/position_setting", methods=['GET', 'POST'])
+@login_required
+def position_setting():
+    return render_template('position_setting.html', language=session['language'], translation=translation_obj)
+
+
+@app.route("/contract_setting", methods=['GET', 'POST'])
+@login_required
+def contract_setting():
+    return render_template('contract_setting.html', language=session['language'], translation=translation_obj)

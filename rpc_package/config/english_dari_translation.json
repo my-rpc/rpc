@@ -15,6 +15,22 @@
     "dari": "ورود به سیستم",
     "en": "Login"
   },
+  "general_setting": {
+    "dari": "تنظیمات عمومی",
+    "en": "General Setting"
+  },
+  "department_setting": {
+    "dari": "تنظیمات دیپارتمنت",
+    "en": "Department Setting"
+  },
+  "position_setting": {
+    "dari": "تنظیمات پوزیشن",
+    "en": "Position Setting"
+  },
+  "contract_setting": {
+    "dari": "تنظیمات قرارداد",
+    "en": "Contract Setting"
+  },
   "login": {
     "dari": "ورود",
     "en": "Login"
@@ -99,9 +115,9 @@
     "dari": "سوپروایز",
     "en": "Supervisor"
   },
-  "total_days": {
-    "dari": "کل روزها",
-    "en": "Total Days"
+  "total_days_hours": {
+    "dari": "کل روزها/ساعتها",
+    "en": "Total Days/Hours"
   },
   "employee_request_form": {
     "dari": "فورم درخواست کارمند",
@@ -198,6 +214,10 @@
   "first_name": {
     "dari": "نام",
     "en": "Name"
+  },
+  "guarantor": {
+    "dari": "ضامن",
+    "en": "Guarantor"
   },
   "grand_name": {
     "dari": "نام پدر کلان",
@@ -422,6 +442,10 @@
   "educational_documents": {
     "dari": "اسناد تحصیلی",
     "en": "Educational Documents"
+  },
+  "other_document": {
+    "dari": "اسناد اضافی",
+    "en": "Other Document"
   },
   "add_documents": {
     "dari": "اضافه کردن اسناد",
@@ -681,7 +705,7 @@
   },
   "provinces": {
     "dari": "ولایت",
-    "en": "Provinces"
+    "en": "Province"
   },
   "fair": {
     "dari": "نسبتا خوب",
