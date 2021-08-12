@@ -12,6 +12,9 @@
     #start_datetime-icon,#end_datetime-icon {
         cursor: pointer;
     }
+    .border-radius-dari{
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -34,7 +37,9 @@
                             {{ form.start_datetime.label(class="form-control-label")}}
                             <div class="input-group mb-3">
                                 <div id="start_datetime-icon" class="input-group-prepend">
-                                    <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                    <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                        <i class="fad fa-calendar"></i>
+                                    </span>
                                 </div>
                                 {{ form.start_datetime( type="text", class="form-control form-control-lg")}}
                             </div>
@@ -43,7 +48,9 @@
                             {{ form.end_datetime.label(class="form-control-label")}}
                             <div class="input-group mb-3">
                                 <div id="end_datetime-icon" class="input-group-prepend">
-                                    <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                    <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                        <i class="fad fa-calendar"></i>
+                                    </span>
                                 </div>
                                 {{ form.end_datetime(type="text", class="form-control form-control-lg")}}
                             </div>

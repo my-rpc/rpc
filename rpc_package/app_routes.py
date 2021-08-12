@@ -523,6 +523,7 @@ def overtime_request():
         else:
             flash(overtime_form.errors)
         return redirect(url_for('overtime_request'))
+    overtime_form = update_messages_overtime(OvertimeRequestForm(),session['language'])
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)

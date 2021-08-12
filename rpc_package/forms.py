@@ -222,6 +222,14 @@ class leaveRequestForm(FlaskForm):
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
+    def validate_start_datetime(self, start_datetime):
+        if start_datetime.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', start_datetime.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    def validate_end_datetime(self, end_datetime):
+        if end_datetime.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', end_datetime.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
 
 class OvertimeRequestForm(FlaskForm):
