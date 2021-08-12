@@ -4,15 +4,15 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, OvertimeRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
-    Emails, Phone, Provinces, Leave_form
+    Emails, Phone, Provinces, Leave_form, Overtime_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, \
-    set_emp_update_form_data, send_leave_request
+    set_emp_update_form_data, send_leave_request, add_overtime_request
 import os
 from datetime import datetime
 
@@ -437,15 +437,41 @@ def leave_request():
     if request.method == "GET":
         my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
     if request.method == 'POST':
-        leave = send_leave_request(leave_form, current_user.emp_id)
-        if leave == "success":
-            flash(message_obj.leave_request_sent[session['language']], 'success')
+        if leave_form.validate_on_submit():
+            leave = send_leave_request(leave_form, current_user.emp_id)
+            if leave == "success":
+                flash(message_obj.leave_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.leave_request_not_sent[session['language']], 'error')
         else:
-            flash(message_obj.leave_request_not_sent[session['language']], 'error')
-        return redirect(request.referrer)
+            flash(leave_form.errors)
+        return redirect(url_for('leave_request'))
     leave_form = update_messages_leave(leaveRequestForm(),session['language'])
-    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list, title=translation_obj.forms[session['language']], language=session['language'],
-                    translation=translation_obj, message_obj=message_obj)
+    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/overtime_request', methods=["GET", "POST"])
+@login_required
+def overtime_request():
+    overtime_form = OvertimeRequestForm()
+    if request.method == "GET":
+        emp_overtime_list = Overtime_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Overtime_form.requested_at.desc()).all()
+    if request.method == 'POST':
+        if overtime_form.validate_on_submit():
+            overtime = add_overtime_request(overtime_form, current_user.emp_id)
+            if overtime == "success":
+                flash(message_obj.overtime_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.overtime_request_not_sent[session['language']], 'error')
+        else:
+            flash(overtime_form.errors)
+        return redirect(url_for('overtime_request'))
+    return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
 
 @app.route("/department_setting", methods=['GET', 'POST'])
 @login_required

@@ -395,6 +395,10 @@
     "dari": " درخواست رخصتی",
     "en": "Leave Form"
   },
+  "request_overtime_form":{
+    "dari": " درخواست اضافه کاری",
+    "en": "Overtime Form"
+  },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
     "en": "Copy of National ID"

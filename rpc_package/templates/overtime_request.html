@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} {{translation.leave_request[language]}} {% endblock %}
+{% block title %} {{ super() }} Employee Overtime {% endblock %}
 {% block css_or_js_code %}
 <style>
     [type=radio]:not(:checked).rd,
@@ -18,41 +18,47 @@
 <section class="content">
     <div class="box col-md-12">
         <div class="box-header">
-            <div class="box-title">{{translation.leave_request[language]}}</div>
+            <div class="box-title">Overtime Request</div>
         </div>
         <div class="box-body">
-            <form method="POST" , action="" id="leave_request">
+            <form method="POST" , action="" id="overtime_request">
                 {{ form.hidden_tag()}}
             <div class="row">
-                <div class="form-group col-md-4">
-                    {{ form.leave_type.label(class="form-control-label")}}
-                    {{ form.leave_type(onChange="chooseLeaveTpe(1)", class="")}}
+                <div class="form-group col-md-3">
+                    {{ form.overtime_type.label(class="form-control-label")}}
+                    {{ form.overtime_type(onChange="chooseLeaveTpe(1)", class="")}}
                 </div>
-                <div class="col-md-8" id="timeType">
+                <div class="col-md-9">
                     <div class="row">
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-6">
                             {{ form.start_datetime.label(class="form-control-label")}}
-                            <div class="input-group mb-3">
+                            <div class="input-group">
                                 <div id="start_datetime-icon" class="input-group-prepend">
                                     <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
                                 </div>
                                 {{ form.start_datetime( type="text", class="form-control form-control-lg")}}
                             </div>
                         </div>
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-6">
                             {{ form.end_datetime.label(class="form-control-label")}}
-                            <div class="input-group mb-3">
+                            <div class="input-group">
                                 <div id="end_datetime-icon" class="input-group-prepend">
                                     <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
                                 </div>
                                 {{ form.end_datetime(type="text", class="form-control form-control-lg")}}
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.description.label(class="form-control-label")}}
+                                {{ form.description(class="form-control form-control-lg")}}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
-                {{form.submit(class="btn btn-primary")}}
-            </div>
+                    {{form.submit(class="btn btn-primary")}}
+                </div>
             </div>
             </form>
         </div>
@@ -61,48 +67,48 @@
         <div class="col-12">
             <div class="box">
               <div class="box-header with-border">
-                <div class="box-title">{{translation.list_of_leave_request[language]}}</div>
+                <div class="box-title">List of overtime requests</div>
               </div>
               <!-- /.box-header -->
               <div class="box-body no-padding">
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <tr>
-                        <th>{{translation.leave_type[language]}}</th>
-                        <th>{{translation.start_date[language]}}</th>
-                        <th>{{translation.end_date[language]}}</th>
-                        <th>{{translation.total_days_hours[language]}}</th>
-                        <th>{{translation.supervisor[language]}}</th>
-                        <th>{{translation.hr[language]}}</th>
-                        <th>{{translation.request_date[language]}}</th>
+                        <th>Overtime Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Total Days</th>
+                        <th>Supervisor</th>
+                        <th>HR</th>
+                        <th>Requested Date</th>
                       </tr>
-                      {% for leave in my_leave_list %}
+                      {% for overtime in emp_overtime_list %}
                       <tr>
-                        <td>{% if leave.leave_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
-                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
-                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
+                        <td>{% if overtime.overtime_type %} Hourly {% else %} Daily {% endif %}</td>
+                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
+                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
                         <td>0</td>
                         <td>
-                            {% if leave.supervisor == None %}
-                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
-                            {% elif leave.supervisor == True %}
-                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
-                            {% elif leave.supervisor == False %}
-                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                            {% if overtime.supervisor == None %}
+                            <span class="badge badge-pill badge-warning">Pending</span>
+                            {% elif overtime.supervisor == True %}
+                            <span class="badge badge-pill badge-success">Accepted</span>
+                            {% elif overtime.supervisor == False %}
+                            <span class="badge badge-pill badge-danger">Rejected</span>
                             {% endif %}
 
                         </td>
                         <td>
-                            {% if leave.hr == None %}
-                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
-                            {% elif leave.hr == True %}
-                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
-                            {% elif leave.hr == False %}
-                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                            {% if overtime.hr == None %}
+                            <span class="badge badge-pill badge-warning">Pending</span>
+                            {% elif overtime.hr == True %}
+                            <span class="badge badge-pill badge-success">Accepted</span>
+                            {% elif overtime.hr == False %}
+                            <span class="badge badge-pill badge-danger">Rejected</span>
                             {% endif %}
 
                         </td>
-                        <td>{{leave.requested_at}}</td>
+                        <td>{{overtime.requested_at}}</td>
                       </tr>
                       {% endfor %}
                     </table>
@@ -152,7 +158,7 @@
             englishNumber: true,
             enableTimePicker: true,
             fromDate: true,
-            groupId: 'leave_request_date',
+            groupId: 'overtime_request_date',
         });
         // Leaving form, set persian date picker for end date time field.
         $('#end_datetime-icon').MdPersianDateTimePicker({
@@ -162,12 +168,12 @@
             englishNumber: true,
             enableTimePicker: true,
             toDate: true,
-            groupId: 'leave_request_date',
+            groupId: 'overtime_request_date',
         });
 
-        // On change of leave type, if the type is daily
+        // On change of overtime type, if the type is daily
         // we set format only date else type format is date and time.
-        $('input[type=radio][name=leave_type]').change(function() {
+        $('input[type=radio][name=overtime_type]').change(function() {
             if (this.value == '0') {
                 $('#start_datetime-icon')
                 .MdPersianDateTimePicker('clearDate')

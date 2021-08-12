@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
-    FileField, DecimalField, DateField, TimeField
+    FileField, DecimalField, DateField, TimeField, TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
@@ -192,4 +192,10 @@ class leaveRequestForm(FlaskForm):
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
-    
+
+class OvertimeRequestForm(FlaskForm):
+    overtime_type = RadioField('Overtime Type', default=1, choices=[(1, 'Hourly'), (0, 'Daily')], validators=[DataRequired()])
+    start_datetime = DateTimeField('From', validators=[DataRequired()])
+    end_datetime = DateTimeField('To', validators=[DataRequired()])
+    description = TextAreaField('Overtime Description')
+    submit = SubmitField('Send Request')

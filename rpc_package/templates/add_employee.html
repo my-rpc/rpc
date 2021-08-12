@@ -251,5 +251,15 @@
             }
         });
     });
+    $(document).ready(function() {
+        // Add employee, set persian date picker for birthday field.
+        $('#birthday-icon, #birthday').MdPersianDateTimePicker({
+            targetTextSelector: '#birthday',
+            textFormat: 'yyyy-MM-dd',
+            isGregorian: false,
+            englishNumber: true,
+            enableTimePicker: false,
+        });
+    });
 </script>
 {% endblock js_code %}

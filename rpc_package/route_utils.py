@@ -2,7 +2,7 @@ import os
 
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses, Leave_form
+    Current_addresses, Permanent_addresses, Leave_form, Overtime_form
 from flask import session
 
 
@@ -304,21 +304,41 @@ def set_emp_update_form_data(emp_id, update_employee_form):
 
 
 def send_leave_request(leave_form, emp_id):
-    if leave_form.leave_type.data == '1':
-        leave = Leave_form(
-            emp_id=emp_id,
-            leave_type=True,
-            start_datetime=leave_form.start_datetime.data,
-            end_datetime=leave_form.end_datetime.data)
-        db.session.add(leave)
-    elif leave_form.leave_type.data == '0':
-        leave = Leave_form(
-            emp_id=emp_id,
-            leave_type=False,
-            start_datetime=leave_form.start_datetime.data,
-            end_datetime=leave_form.end_datetime.data)
-        db.session.add(leave)
-    if db.session.commit():
+    try:
+        if leave_form.leave_type.data == '1':
+            leave = Leave_form(
+                emp_id=emp_id,
+                leave_type=True,
+                start_datetime=leave_form.start_datetime.data,
+                end_datetime=leave_form.end_datetime.data)
+            db.session.add(leave)
+        elif leave_form.leave_type.data == '0':
+            leave = Leave_form(
+                emp_id=emp_id,
+                leave_type=False,
+                start_datetime=leave_form.start_datetime.data,
+                end_datetime=leave_form.end_datetime.data)
+            db.session.add(leave)
+        db.session.commit()
         return "success"
-    else:
-        return "error"
+    except IOError as io:
+        return 'error'
+
+def add_overtime_request(overtime_form, emp_id):
+    try:
+        if overtime_form.overtime_type.data == '1':
+            overtime_type = True
+        elif overtime_form.overtime_type.data == '0':
+            overtime_type = False
+
+        overtime = Overtime_form(
+            emp_id=emp_id,
+            overtime_type=overtime_type,
+            start_datetime=overtime_form.start_datetime.data,
+            end_datetime=overtime_form.end_datetime.data,
+            description=overtime_form.description.data)
+        db.session.add(overtime)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'

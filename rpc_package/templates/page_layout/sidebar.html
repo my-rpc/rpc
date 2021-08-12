@@ -46,7 +46,18 @@
           </span>
         </a>
         <ul class="treeview-menu">			
-          <li><a href="{{ url_for('leave_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_leave_form[language] }}</a></li>
+          <li>
+            <a href="{{ url_for('leave_request') }}">
+              <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+              {{translation.request_leave_form[language] }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('overtime_request') }}">
+              <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+              {{translation.request_overtime_form[language] }}
+            </a>
+          </li>
         </ul>
 
       </li>

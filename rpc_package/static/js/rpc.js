@@ -14,6 +14,21 @@ formValidateErrors = function(response){
     return ul;
 };
 
+formValidationDisplay = function(messages){
+    var ul = "<ul>";
+    for(var i in messages) {
+        if(messages[i].length > 1 ){
+            for(var j in messages[i]){
+                ul += "<li>" + i +": " + messages[i][j] + "</li>";
+            }
+        }else{
+            ul += "<li>"+i +": " + messages[i] + "</li>";
+        }
+    }
+    ul += "</ul>";
+    return ul;
+};
+
 toastInfo = function (message){
     $.toast({
         heading: 'Error',
@@ -62,31 +77,3 @@ toastSuccess = function (message){
     });
     
 };
-
-$(document).ready(function() {
-    $('#birthday-icon, #birthday').MdPersianDateTimePicker({
-        targetTextSelector: '#birthday',
-        textFormat: 'yyyy-MM-dd',
-        isGregorian: false,
-        englishNumber: true,
-        enableTimePicker: false,
-    });
-    $('#start_datetime-icon').MdPersianDateTimePicker({
-        targetTextSelector: '#start_datetime',
-        textFormat: 'yyyy-MM-dd HH:mm:ss',
-        isGregorian: false,
-        englishNumber: true,
-        enableTimePicker: true,
-        fromDate: true,
-        groupId: 'leave_request_date',
-    });
-    $('#end_datetime-icon').MdPersianDateTimePicker({
-        targetTextSelector: '#end_datetime',
-        textFormat: 'yyyy-MM-dd HH:mm:ss',
-        isGregorian: false,
-        englishNumber: true,
-        enableTimePicker: true,
-        toDate: true,
-        groupId: 'leave_request_date',
-    });
-});
