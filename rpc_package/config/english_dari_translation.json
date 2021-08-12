@@ -543,6 +543,12 @@
     "dari": "مبلغ معاش",
     "en": "Salary"
   },
+  {
+    "base_salary":{
+      "dari": "معاش پایه",
+      "en": "‌Base Salary"
+    }
+  },
   "single": {
     "dari": "مجرد",
     "en": "Single"
