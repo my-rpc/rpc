@@ -2,7 +2,7 @@ import os
 
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses, Leave_form, Resign_form
+    Current_addresses, Permanent_addresses, Leave_form, Resign_form, Employee_equipment
 from flask import session
 
 
@@ -330,6 +330,20 @@ def send_resign_request(resign_form, emp_id):
         responsibilities= resign_form.reason.data,
         equipments= resign_form.reason.data)
     db.session.add(resign)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+def assign_equipment(request, emp_id):
+    equipment=""
+    for eq in request.form.getlist('equipment'):
+        have_equipment = Employee_equipment.query.filter_by(emp_id=emp_id, equipment_id=eq).first()
+        if have_equipment is None:
+            equipment = Employee_equipment(
+            emp_id = emp_id,
+            equipment_id= eq)
+            db.session.add(equipment)
     if db.session.commit():
         return "success"
     else:

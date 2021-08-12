@@ -2,16 +2,16 @@ from flask import render_template, url_for, redirect, request, jsonify, flash, s
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
     UploadEducationalDocsForm, ResignRequestForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Districts, \
+    Districts, Equipment, \
     Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    update_employee_data, \
+    update_employee_data, assign_equipment, \
     set_emp_update_form_data, send_leave_request, send_resign_request
 import os
 from datetime import datetime
@@ -462,4 +462,23 @@ def resign_request():
     resign_form = update_messages_resign(ResignRequestForm(),session['language'])
     return render_template('resign_request.html',
                            title=translation_obj.forms[session['language']], form=resign_form, language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/add_equipments', methods=["GET", "POST"])
+@login_required
+def add_equipments():
+    emp_id = request.args.get("emp_id")
+    form = AddEquipmentForm()
+    all_equipments = ""
+    if request.method == "GET":
+        all_equipments = Equipment.query.all()
+    if request.method == "POST":
+        result = assign_equipment(request, emp_id)
+        if result == "success":
+            flash(message_obj.equipment_added[session['language']], 'success')
+        else:
+            flash(message_obj.equipment_not_added[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('add_equipments.html', emp_id=emp_id,
+                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)

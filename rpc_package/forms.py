@@ -199,4 +199,8 @@ class ResignRequestForm(FlaskForm):
     responsibilities = StringField(u'Responsibilities', widget=TextArea(),validators=[DataRequired()])
     equipments = StringField(u'Equipments', widget=TextArea(),validators=[DataRequired()])
     submit = SubmitField('Send Request')
-    
+
+class AddEquipmentForm(FlaskForm):
+    equipment = BooleanField('equipment', default=[])
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add Equipment')

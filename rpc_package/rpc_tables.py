@@ -255,3 +255,24 @@ class Resign_form(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Resign ID: {self.id}, Employee ID: {self.emp_id}, Reason: {self.reason}"
+
+class Equipment(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    name_english = db.Column(db.String(20), nullable=False)
+    equipment_category = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self):
+        return f"Equipment ID: {self.id}, Employee ID: {self.emp_id}, Equipment Name: {self.name}"
+
+class Employee_equipment(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    equipment_id = db.Column(db.Integer, db.ForeignKey('equipment.id'), nullable=False)
+    received = db.Column(db.Boolean)
+    delivered = db.Column(db.Boolean)
+
+    def __repr__(self):
+        return f"Employee_equipment ID: {self.id}, Employee ID: {self.emp_id}"

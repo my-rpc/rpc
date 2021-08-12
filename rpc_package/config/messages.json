@@ -139,6 +139,14 @@
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
     "en": "wrong format of blood type correct one is (B+)"
   },
+  "equipment_added": {
+    "dari": "تجهیزات اضافه شد",
+    "en": "Equipment has been added"
+  },
+  "equipment_not_added": {
+    "dari": "تجهیزات اضافه نشد",
+    "en": "Equipment has not been added"
+  },
   "leave_request_sent": {
     "dari": "درخواست رخصتی ارسال شد",
     "en": "Leave request has been sent"
