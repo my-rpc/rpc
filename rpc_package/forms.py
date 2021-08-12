@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
-    FileField, DecimalField, DateField, TimeField, TextAreaField
+    FileField, DecimalField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
-from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
+from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, Position_history, Positions, Departments, Salary
 from rpc_package.utils import check_language
 
 
@@ -186,6 +186,31 @@ class UploadExtraDocsForm(FlaskForm):
     extra_docs = FileField('extra Document Files', validators=[DataRequired(), Regexp("\w+\.pdf$")])
     flag = HiddenField('flag', default="extra_docs")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+
+class ContractForm(FlaskForm):
+    # options = [('', '------')]
+    contract_type_list = [(con_type.id, con_type.name_english + ' / ' + con_type.name) for con_type in Contract_types.query.all()]
+    position_list = [(position.id, position.name_english + ' / ' + position.name ) for position in Positions.query.all()]
+    department_list = [(department.id, department.name_english + ' / ' + department.name ) for department in Departments.query.all()]
+    contract_type_list.insert(0, ('', '------'))
+    position_list.insert(0, ('', '------'))
+    department_list.insert(0, ('', '------'))
+    contract_type = SelectField('Contract Type', choices=contract_type_list, validators=[DataRequired()])
+    contract_duration = IntegerField('Contract Duration', validators=[DataRequired()])
+    start_date = DateField('Start Date', validators=[DataRequired()])
+    position = SelectField('Position', choices=position_list, validators=[DataRequired()])
+    department = SelectField('Department', choices=department_list, validators=[DataRequired()])
+
+    base = StringField('Base Salary', validators=[DataRequired()])
+    transportation = StringField('Transportation', validators=[DataRequired()])
+    house_hold = StringField('House Hold', validators=[DataRequired()])
+    currency = RadioField('Currency', choices=[[1, 'Afghani'], [0, 'Dollar']], validators=[DataRequired()])
+
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add Contract')
+
+    # TODO validation
 
 class leaveRequestForm(FlaskForm):
     leave_type = RadioField('Leave Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired()])
