@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} Employee Overtime {% endblock %}
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
 {% block css_or_js_code %}
 <style>
     [type=radio]:not(:checked).rd,
@@ -91,7 +91,7 @@
                       </tr>
                       {% for overtime in emp_overtime_list %}
                       <tr>
-                        <td>{% if overtime.overtime_type %} Hourly {% else %} Daily {% endif %}</td>
+                        <td>{% if overtime.overtime_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
                         <td>0</td>
