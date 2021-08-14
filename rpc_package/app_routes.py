@@ -6,10 +6,10 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, OvertimeRequestForm, ContractForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, Departments
+    Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, Departments, Overtime_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form
+    update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form, add_overtime_request
 import os
 from datetime import datetime
 
