@@ -15,6 +15,26 @@
     "dari": "ورود به سیستم",
     "en": "Login"
   },
+  "general_setting": {
+    "dari": "تنظیمات عمومی",
+    "en": "General Setting"
+  },
+  "department_setting": {
+    "dari": "تنظیمات دیپارتمنت",
+    "en": "Department Setting"
+  },
+  "position_setting": {
+    "dari": "تنظیمات پوزیشن",
+    "en": "Position Setting"
+  },
+  "contract_setting": {
+    "dari": "تنظیمات قرارداد",
+    "en": "Contract Setting"
+  },
+  "login": {
+    "dari": "ورود",
+    "en": "Login"
+  },
   "login_message": {
     "dari": "برای وارد شدن به صفحه مورد نظر لطفا اطلاعات خود را وارد کنید",
     "en": "Please check your username and password."
@@ -83,6 +103,22 @@
     "dari": "فورم رخصتی",
     "en": "Leave Form"
   },
+  "request_date": {
+    "dari": "تاریخ درخواست",
+    "en": "Request Date"
+  },
+  "hr": {
+    "dari": "منابع بشری",
+    "en": "HR"
+  },
+  "supervisor": {
+    "dari": "سوپروایز",
+    "en": "Supervisor"
+  },
+  "total_days_hours": {
+    "dari": "کل روزها/ساعتها",
+    "en": "Total Days/Hours"
+  },
   "employee_request_form": {
     "dari": "فورم درخواست کارمند",
     "en": "Employee Request Form"
@@ -99,9 +135,17 @@
     "dari": "پروفایل کارمند",
     "en": "Employee Profile"
   },
+  "list_of_leave_request": {
+    "dari": "لیست درخواست رخصتی",
+    "en": "List of Leave Request"
+  },
   "overtime_form": {
     "dari": "فورم اضافه کاری",
     "en": "Overtime Form"
+  },
+  "list_of_overtime_request": {
+    "dari": "لیست درخواست اضافه کاری",
+    "en": "List of Overtime Request"
   },
   "prepayment_form": {
     "dari": "فورم پیش پرداخت",
@@ -131,10 +175,6 @@
     "dari": "خروج",
     "en": "Logout"
   },
-  "login": {
-    "dari": "ورود",
-    "en": "Login"
-  },
   "title": {
     "dari": "عنوان",
     "en": "Title"
@@ -146,6 +186,10 @@
   "absent": {
     "dari": "غیر حاضر",
     "en": "Absent"
+  },
+  "send_request": {
+    "dari": "ارسال درخواست",
+    "en": "Send Request"
   },
   "job_announcement_form": {
     "dari": "فورم اعلان وظیفه",
@@ -174,6 +218,10 @@
   "first_name": {
     "dari": "نام",
     "en": "Name"
+  },
+  "guarantor": {
+    "dari": "ضامن",
+    "en": "Guarantor"
   },
   "grand_name": {
     "dari": "نام پدر کلان",
@@ -228,12 +276,20 @@
     "en": "Employee Signature"
   },
   "accepted": {
-    "dari": "موافقت میشود",
+    "dari": "پذیرفته شده",
     "en": "Accepted"
   },
   "not_accepted": {
     "dari": "موافقت نمیشود",
     "en": "Not Accepted"
+  },
+  "rejected": {
+    "dari": "رد شده",
+    "en": "Rejected"
+  },
+  "pending": {
+    "dari": "انتظار",
+    "en": "pending"
   },
   "reason": {
     "dari": "علت عدم موافقت",
@@ -355,6 +411,10 @@
     "dari": " درخواست رخصتی",
     "en": "Leave Form"
   },
+  "request_overtime_form":{
+    "dari": " درخواست اضافه کاری",
+    "en": "Overtime Form"
+  },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
     "en": "Copy of National ID"
@@ -402,6 +462,10 @@
   "educational_documents": {
     "dari": "اسناد تحصیلی",
     "en": "Educational Documents"
+  },
+  "other_document": {
+    "dari": "اسناد اضافی",
+    "en": "Other Document"
   },
   "add_documents": {
     "dari": "اضافه کردن اسناد",
@@ -466,6 +530,10 @@
   "leave_type": {
     "dari": "نوع رخصتی",
     "en": "Leave Type"
+  },
+  "leave_request": {
+    "dari": "در خواست رخصتی",
+    "en": "Leave Request"
   },
   "leave_duration": {
     "dari": "مدت رخصتی",
@@ -542,12 +610,6 @@
   "salary": {
     "dari": "مبلغ معاش",
     "en": "Salary"
-  },
-  {
-    "base_salary":{
-      "dari": "معاش پایه",
-      "en": "‌Base Salary"
-    }
   },
   "single": {
     "dari": "مجرد",
@@ -663,7 +725,7 @@
   },
   "provinces": {
     "dari": "ولایت",
-    "en": "Provinces"
+    "en": "Province"
   },
   "fair": {
     "dari": "نسبتا خوب",
