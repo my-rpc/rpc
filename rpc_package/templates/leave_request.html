@@ -13,6 +13,7 @@
         cursor: pointer;
     }
     .border-radius-dari{
+        border-left: none;
         border-radius: 0 0.25rem 0.25rem 0 !important;
     }
 </style>
@@ -29,11 +30,16 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     {{ form.leave_type.label(class="form-control-label")}}
-                    {{ form.leave_type(onChange="chooseLeaveTpe(1)", class="")}}
+                    <div class="form-check1">
+                        {% for item in form.leave_type %}
+                        {{ item(class="form-check-input")}}
+                        {{ item.label(class="form-check-label")}}
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="col-md-8" id="timeType">
                     <div class="row">
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-6">
                             {{ form.start_datetime.label(class="form-control-label")}}
                             <div class="input-group mb-3">
                                 <div id="start_datetime-icon" class="input-group-prepend">
@@ -44,7 +50,7 @@
                                 {{ form.start_datetime( type="text", class="form-control form-control-lg")}}
                             </div>
                         </div>
-                        <div class="form-group col-md-5">
+                        <div class="form-group col-md-6">
                             {{ form.end_datetime.label(class="form-control-label")}}
                             <div class="input-group mb-3">
                                 <div id="end_datetime-icon" class="input-group-prepend">

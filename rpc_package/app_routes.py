@@ -3,15 +3,15 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    OvertimeRequestForm, \
-    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, ContractForm
+    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, \
+    OvertimeRequestForm, ContractForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Overtime_form, Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, \
-    Position_history, Salary, Departments
+    Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, \
+    Departments, Overtime_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    add_overtime_request, update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form
+    update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form, add_overtime_request
 import os
 from datetime import datetime
 
@@ -361,10 +361,12 @@ def uds_employee():
             data = {
                 'employee': {
                     'emp_id': update_employee_form.employee_id.data,
-                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data,
-                    'name_english': update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
-                    'father_name': update_employee_form.father_name.data,
-                    'father_name_english': update_employee_form.father_name_english.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data
+                    if session['language'] == 'dari'
+                    else update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data
+                    if session['language'] == 'dari'
+                    else update_employee_form.father_name_english.data,
                     'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
                     'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
                     'gender': update_employee_form.gender.data,
@@ -394,6 +396,7 @@ def uds_employee():
 
 
 @app.route('/delete_employee', methods=['DELETE'])
+@login_required
 def delete_employee():
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
@@ -488,7 +491,9 @@ def upload_profile():
 def leave_request():
     leave_form = leaveRequestForm()
     if request.method == "GET":
-        my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
+        my_leave_list = Leave_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Leave_form.requested_at.desc()).all()
     if request.method == 'POST':
         if leave_form.validate_on_submit():
             leave = send_leave_request(leave_form, current_user.emp_id)
@@ -523,25 +528,7 @@ def overtime_request():
         else:
             flash(overtime_form.errors)
         return redirect(url_for('overtime_request'))
-    overtime_form = update_messages_overtime(OvertimeRequestForm(),session['language'])
+    overtime_form = update_messages_overtime(OvertimeRequestForm(), session['language'])
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
-
-
-@app.route("/department_setting", methods=['GET', 'POST'])
-@login_required
-def department_setting():
-    return render_template('department_setting.html', language=session['language'], translation=translation_obj)
-
-
-@app.route("/position_setting", methods=['GET', 'POST'])
-@login_required
-def position_setting():
-    return render_template('position_setting.html', language=session['language'], translation=translation_obj)
-
-
-@app.route("/contract_setting", methods=['GET', 'POST'])
-@login_required
-def contract_setting():
-    return render_template('contract_setting.html', language=session['language'], translation=translation_obj)

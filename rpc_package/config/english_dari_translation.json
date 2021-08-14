@@ -43,6 +43,10 @@
     "dari": "دیپارتمنت منابع بشری",
     "en": "HR Department"
   },
+  "employee_overtime": {
+    "dari": "اضافه کاری کارمند",
+    "en": "Employee Overtime"
+  },
   "employees": {
     "dari": "کارمندان",
     "en": "Employees"
