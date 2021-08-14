@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} {{translation.employee_setting[language]}} {% endblock %}
+{% block title %} {{ super() }} {{translation.employee_settings[language]}} {% endblock %}
 {% block css_or_js_code %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
     <style>
@@ -156,8 +156,7 @@
             ],
         });
 
-
-        $('.btn-function').on('click', function(fun){
+$('.btn-function').on('click', function(fun){
             var btnValue = $.trim($(this).text());
             empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
             switch(true){
@@ -180,29 +179,6 @@
                         window.open('/add_documents?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee')
-                },
-                {
-                    text: '<i class="fad fa-edit"></i> {{translation.add_equipments[language]}}',
-                    attr: {'class': 'btn btn-secondary'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
-                        if(empID != '' && empID != undefined){
-                            window.open('/add_equipments?emp_id='+empID, '_blank');
-                        }else{
-                            toastWarning('Please select an employee');
-                        }
-                    }
-                },
-                {
-                    text: '<i class="fad fa-plus"></i> {{translation.add_document[language]}}',
-                    attr: {'class': 'btn btn-primary'},
-                    action: function () {
-                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
-                        if(empID != '' && empID != undefined){
-                            window.open('/add_documents?emp_id='+empID, '_blank');
-                        }else{
-                            toastWarning('Please select an employee')
-                        }
                     }
                     break;
                 case(btnValue === 'Add Contract'):
