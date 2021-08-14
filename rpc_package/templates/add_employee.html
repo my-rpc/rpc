@@ -9,6 +9,9 @@
         #birthday-icon {
             cursor: pointer;
         }
+        .border-radius-dari{
+            border-radius: 0 0.25rem 0.25rem 0 !important;
+        }
     </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -128,7 +131,9 @@
                                 {{ form.birthday.label(class="form-control-label")}}
                                 <div class="input-group mb-3">
                                     <div id="birthday-icon" class="input-group-prepend">
-                                        <span class="input-group-text  bg-transparent"><i class="fad fa-calendar"></i></span>
+                                        <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                            <i class="fad fa-calendar"></i>
+                                        </span>
                                     </div>
                                     {{ form.birthday(class="form-control form-control-lg")}}
                                 </div>
@@ -249,6 +254,16 @@
                 }
                 toastError(r);
             }
+        });
+    });
+    $(document).ready(function() {
+        // Add employee, set persian date picker for birthday field.
+        $('#birthday-icon, #birthday').MdPersianDateTimePicker({
+            targetTextSelector: '#birthday',
+            textFormat: 'yyyy-MM-dd',
+            isGregorian: false,
+            englishNumber: true,
+            enableTimePicker: false,
         });
     });
 </script>

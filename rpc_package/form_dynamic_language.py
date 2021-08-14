@@ -2,6 +2,17 @@ from rpc_package import translation_obj, message_obj
 
 
 def update_messages_user(form_obj, language):
+    """
+    This function is created for translation of user form in two languages (dari and english) that have two argument
+    first is form_obj that get from forms.py and second is language that get from dari_english_translation.js 
+
+    Args:
+        form_obj (form): The type of this variable is form and name of this variable from forms.py
+        language (string): The type of this variable is string and get value from dari_english_translation.js
+
+    Returns:
+        form: return value of variable in each language that we want
+    """
     form_obj.employee_id.label.text = translation_obj.employee_id[language]
     form_obj.employee_id.validators[2].message = message_obj.wrong_format[language].format("Employee ID")
     form_obj.password.label.text = translation_obj.password[language]
@@ -15,6 +26,18 @@ def update_messages_user(form_obj, language):
 
 
 def update_messages_employee(form_obj, language):
+    """
+    This function is created for translation of employee form in two languages (dari and english) that have two argument
+    first is form_obj that get from forms.py and second is language that get from dari_english_translation.js 
+    
+    Args:
+        form_obj (form): The type of this variable is form and name of this variable from forms.py
+        language (string): The type of this variable is string and get value from dari_english_translation.js
+
+    Returns:
+        form: return value of variable in each language that we want
+    """
+
     form_obj.employee_id.label.text = translation_obj.employee_id[language]
     form_obj.tazkira.label.text = translation_obj.tazkira[language]
     form_obj.birthday.label.text = translation_obj.date_of_birth[language]
@@ -39,9 +62,30 @@ def update_messages_employee(form_obj, language):
 
 
 def update_messages_leave(form_obj, language):
+    """
+    This function is created for translation of leave form in two languages (dari and english) that have two argument
+    first is form_obj that get from forms.py and second is language that get from dari_english_translation.js 
+
+    Args:
+        form_obj (form): The type of this variable is form and name of this variable from forms.py
+        language (string): The type of this variable is string and get value from dari_english_translation.js
+
+    Returns:
+        form: return value of variable in each language that we want
+    """
     form_obj.leave_type.choices[0][1] = translation_obj.hourly[language]
     form_obj.leave_type.choices[1][1] = translation_obj.daily[language]
     form_obj.leave_type.label.text = translation_obj.leave_type[language]
+    form_obj.submit.label.text = translation_obj.send_request[language]
+    form_obj.start_datetime.label.text = translation_obj.start_date[language]
+    form_obj.end_datetime.label.text = translation_obj.end_date[language]
+    return form_obj
+
+def update_messages_overtime(form_obj, language):
+    form_obj.overtime_type.choices[0][1] = translation_obj.hourly[language]
+    form_obj.overtime_type.choices[1][1] = translation_obj.daily[language]
+    form_obj.overtime_type.label.text = translation_obj.overtime_type[language]
+    form_obj.description.label.text = translation_obj.overtime_description[language]
     form_obj.submit.label.text = translation_obj.send_request[language]
     form_obj.start_datetime.label.text = translation_obj.start_date[language]
     form_obj.end_datetime.label.text = translation_obj.end_date[language]

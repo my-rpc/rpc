@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
-    FileField, DecimalField, DateField, TimeField
+from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
+    SelectField, FileField, DecimalField, DateField, TimeField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
-from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone
+from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
+    Position_history, Positions, Departments, Salary
 from rpc_package.utils import check_language
 
 
@@ -187,9 +188,53 @@ class UploadExtraDocsForm(FlaskForm):
     flag = HiddenField('flag', default="extra_docs")
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
 
+
+class ContractForm(FlaskForm):
+    # options = [('', '------')]
+    contract_type_list = [(con_type.id, con_type.name_english + ' / ' + con_type.name) for con_type in
+                          Contract_types.query.all()]
+    position_list = [(position.id, position.name_english + ' / ' + position.name) for position in Positions.query.all()]
+    department_list = [(department.id, department.name_english + ' / ' + department.name) for department in
+                       Departments.query.all()]
+    contract_type_list.insert(0, ('', '------'))
+    position_list.insert(0, ('', '------'))
+    department_list.insert(0, ('', '------'))
+    contract_type = SelectField('Contract Type', choices=contract_type_list, validators=[DataRequired()])
+    contract_duration = IntegerField('Contract Duration', validators=[DataRequired()])
+    start_date = DateField('Start Date', validators=[DataRequired()])
+    position = SelectField('Position', choices=position_list, validators=[DataRequired()])
+    department = SelectField('Department', choices=department_list, validators=[DataRequired()])
+
+    base = StringField('Base Salary', validators=[DataRequired()])
+    transportation = StringField('Transportation', validators=[DataRequired()])
+    house_hold = StringField('House Hold', validators=[DataRequired()])
+    currency = RadioField('Currency', choices=[[1, 'Afghani'], [0, 'Dollar']], validators=[DataRequired()])
+
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add Contract')
+
+    # TODO validation
+
+
 class leaveRequestForm(FlaskForm):
     leave_type = RadioField('Leave Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired()])
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
-    
+    def validate_start_datetime(self, start_datetime):
+        if start_datetime.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', start_datetime.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    def validate_end_datetime(self, end_datetime):
+        if end_datetime.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', end_datetime.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
+
+
+class OvertimeRequestForm(FlaskForm):
+    overtime_type = RadioField('Overtime Type', default=1, choices=[(1, 'Hourly'), (0, 'Daily')],
+                               validators=[DataRequired()])
+    start_datetime = DateTimeField('From', validators=[DataRequired()])
+    end_datetime = DateTimeField('To', validators=[DataRequired()])
+    description = TextAreaField('Overtime Description')
+    submit = SubmitField('Send Request')
