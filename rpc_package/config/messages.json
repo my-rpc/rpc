@@ -139,6 +139,14 @@
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
     "en": "wrong format of blood type correct one is (B+)"
   },
+  "equipment_added": {
+    "dari": "تجهیزات اضافه شد",
+    "en": "Equipment has been added"
+  },
+  "equipment_not_added": {
+    "dari": "تجهیزات اضافه نشد",
+    "en": "Equipment has not been added"
+  },
   "leave_request_sent": {
     "dari": "درخواست رخصتی ارسال شد",
     "en": "Leave request has been sent"
@@ -147,6 +155,14 @@
     "dari": "درخواست رخصتی ارسال نشد",
     "en": "Leave request has been not sent"
   },
+  "overtime_request_sent": {
+    "dari": "درخواست اضافه کاری ارسال شد",
+    "en": "Overtime request has been sent"
+  },
+  "overtime_request_not_sent": {
+    "dari": "درخواست اضافه کاری ارسال نشد",
+    "en": "Overtime request has been not sent"
+  },
   "contract_added":{
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه شد",
     "en": "Contract added for employe with {} ID"
@@ -154,6 +170,22 @@
   "contract_not_added":{
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
     "en": "Contract not added for employe with {} ID"
+  },
+  "resign_request_sent": {
+    "dari": "درخواست استعفا ارسال شد",
+    "en": "Resign request has been sent"
+  },
+    "resign_request_not_sent": {
+    "dari": "درخواست استعفا ارسال نشد",
+    "en": "Resign request has been not sent"
+  },
+  "add_department": {
+    "dari": "دیپارتمنت اضافه شد",
+    "en": "Department Added"
+  },
+    "add_department_not": {
+    "dari": "دیپارتمنت اضافه نشد",
+    "en": "Department not Added"
   },
   "val_dic" : {
     "employee_id": "Employee already exi...mployee ID",

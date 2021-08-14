@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} Add Employee {% endblock %}
+{% block title %} {{ super() }} {{translation.employee_settings[language]}} {% endblock %}
 {% block css_or_js_code %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
     <style>
@@ -10,7 +10,14 @@
             right: auto;
             opacity: 1 !important;
         }
-        
+        #birthday-icon {
+            cursor: pointer;
+        }
+        .border-radius-dari{
+            border-left: none;
+            border-radius: 0 0.25rem 0.25rem 0 !important;
+        }
+
     </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -52,8 +59,13 @@
                         </div>
                     </td>
                     <td>{{emp.id}}</td>
-                    <td>{{emp.name}} {{emp.lname}}</td>
-                    <td>{{emp.fname}}</td>
+                    {% if language == 'dari' %}
+                        <td>{{emp.name}} {{emp.lname}}</td>
+                        <td>{{emp.fname}}</td>
+                    {% else %}
+                        <td>{{emp.name_english}} {{emp.lname_english}}</td>
+                        <td>{{emp.fname_english}}</td>
+                    {% endif %}
                     <td>
                         {% if phones[loop.index0] %}
                         {% for ph in phones[loop.index0] %}
@@ -144,8 +156,7 @@
             ],
         });
 
-
-        $('.btn-function').on('click', function(fun){
+$('.btn-function').on('click', function(fun){
             var btnValue = $.trim($(this).text());
             empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
             switch(true){
@@ -184,8 +195,8 @@
                         toastWarning('Please select an employee')
                     }
                     break;
-            }   
-            
+            }
+
         })
     });
 
@@ -204,6 +215,13 @@ updateEmployee = function(empID){
             $('.per-address-col').html(response[1].permanent_add);   
             $('.cur-address-col').html(response[1].current_add);
             $("#employee_id").prop('readonly', true);
+            $('#birthday-icon, #birthday').MdPersianDateTimePicker({
+                targetTextSelector: '#birthday',
+                textFormat: 'yyyy-MM-dd',
+                isGregorian: false,
+                englishNumber: true,
+                enableTimePicker: false,
+            }); 
         },
     });
 };
@@ -280,7 +298,7 @@ $(document).on('submit', '#update_employee', function(e){
     });
 });
 
- 
+
 
 deleteEmployee = function(empID){
     if(confirm('Are you sure you want to delete this Employee?')){

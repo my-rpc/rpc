@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} Add Employee {% endblock %}
+{% block title %} {{ super() }} {{translation.employee_profile[language]}} {% endblock %}
 {% block css_or_js_code %}
     <style>
         [type=radio]:not(:checked).rd, [type=radio]:checked.rd {

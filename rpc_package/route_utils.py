@@ -1,9 +1,9 @@
 import os
-
+import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses, Leave_form, Contracts, Contract_types, Positions, Position_history, \
-    Salary, Departments
+    Contracts, Position_history, Salary, Overtime_form,  Resign_form, \
+    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments
 from flask import session
 from flask_login import current_user
 import datetime
@@ -307,35 +307,59 @@ def set_emp_update_form_data(emp_id, update_employee_form):
 
 
 def send_leave_request(leave_form, emp_id):
-    if leave_form.leave_type.data == '1':
-        leave = Leave_form(
-            emp_id=emp_id,
-            leave_type=True,
-            start_datetime=leave_form.start_datetime.data,
-            end_datetime=leave_form.end_datetime.data)
-        db.session.add(leave)
-    elif leave_form.leave_type.data == '0':
-        leave = Leave_form(
-            emp_id=emp_id,
-            leave_type=False,
-            start_datetime=leave_form.start_datetime.data,
-            end_datetime=leave_form.end_datetime.data)
-        db.session.add(leave)
-    if db.session.commit():
+    try:
+        if leave_form.leave_type.data == '1':
+            leave = Leave_form(
+                emp_id=emp_id,
+                leave_type=True,
+                start_datetime=leave_form.start_datetime.data,
+                end_datetime=leave_form.end_datetime.data,
+                requested_at=jdatetime.datetime.now())
+            db.session.add(leave)
+        elif leave_form.leave_type.data == '0':
+            leave = Leave_form(
+                emp_id=emp_id,
+                leave_type=False,
+                start_datetime=leave_form.start_datetime.data,
+                end_datetime=leave_form.end_datetime.data,
+                requested_at=jdatetime.datetime.now())
+            db.session.add(leave)
+        db.session.commit()
         return "success"
-    else:
-        return "error"
+    except IOError as io:
+        return 'error'
+
+
+def add_overtime_request(overtime_form, emp_id):
+    try:
+        if overtime_form.overtime_type.data == '1':
+            overtime_type = True
+        elif overtime_form.overtime_type.data == '0':
+            overtime_type = False
+
+        overtime = Overtime_form(
+            emp_id=emp_id,
+            overtime_type=overtime_type,
+            start_datetime=overtime_form.start_datetime.data,
+            end_datetime=overtime_form.end_datetime.data,
+            description=overtime_form.description.data,
+            requested_at=jdatetime.datetime.now())
+        db.session.add(overtime)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
 
 
 def add_contract_form(contract_form):
-    try: 
+    try:
         add_contract = Contracts(
-            emp_id = contract_form.emp_id.data,
-            contract_duration = contract_form.contract_duration.data,
-            contract_type = contract_form.contract_type.data,
-            start_date = contract_form.start_date.data,
-            inserted_by = current_user.emp_id,
-            inserted_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            emp_id=contract_form.emp_id.data,
+            contract_duration=contract_form.contract_duration.data,
+            contract_type=contract_form.contract_type.data,
+            start_date=contract_form.start_date.data,
+            inserted_by=current_user.emp_id,
+            inserted_date=datetime.datetime.now().strftime("%Y-%m-%d")
         )
         db.session.add(add_contract)
         db_commit = db.session.commit()
@@ -343,21 +367,21 @@ def add_contract_form(contract_form):
 
         if add_contract.id is not None:
             add_contract_position = Position_history(
-                position_id = contract_form.position.data,
-                contract_id = add_contract.id,
-                department_id = contract_form.department.data,
-                inserted_by = current_user.emp_id,
-                inserted_date = datetime.datetime.now().strftime("%Y-%m-%d")
+                position_id=contract_form.position.data,
+                contract_id=add_contract.id,
+                department_id=contract_form.department.data,
+                inserted_by=current_user.emp_id,
+                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d")
             )
 
             add_contract_salary = Salary(
-                contract_id = add_contract.id,
-                base = contract_form.base.data,
-                transportation = contract_form.transportation.data,
-                house_hold = contract_form.house_hold.data,
-                currency = contract_form.currency.data,
-                inserted_by = current_user.emp_id,
-                inserted_date = datetime.datetime.now().strftime("%Y-%m-%d")
+                contract_id=add_contract.id,
+                base=contract_form.base.data,
+                transportation=contract_form.transportation.data,
+                house_hold=contract_form.house_hold.data,
+                currency=contract_form.currency.data,
+                inserted_by=current_user.emp_id,
+                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d")
             )
         db.session.add(add_contract_position)
         db.session.add(add_contract_salary)
@@ -365,4 +389,42 @@ def add_contract_form(contract_form):
         return "success"
     except IOError as io:
         return 'error'
- 
+
+
+def send_resign_request(resign_form, emp_id):
+    resign = Resign_form(
+        emp_id=emp_id,
+        reason=resign_form.reason.data,
+        responsibilities=resign_form.reason.data,
+        equipments=resign_form.reason.data)
+    db.session.add(resign)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+
+def assign_equipment(request, emp_id):
+    equipment = ""
+    for eq in request.form.getlist('equipment'):
+        have_equipment = Employee_equipment.query.filter_by(emp_id=emp_id, equipment_id=eq).first()
+        if have_equipment is None:
+            equipment = Employee_equipment(
+                emp_id=emp_id,
+                equipment_id=eq)
+            db.session.add(equipment)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+
+def send_department(department_form):
+    department = Departments(
+        name=department_form.name_department.data,
+        name_english=department_form.name_english_department.data)
+    db.session.add(department)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
