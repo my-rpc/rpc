@@ -92,6 +92,25 @@ def update_messages_overtime(form_obj, language):
     return form_obj
 
 
+def update_messages_resign(form_obj, language):
+    """
+    This function is created for translation of leave form in two languages (dari and english) that have two argument
+    first is form_obj that get from forms.py and second is language that get from dari_english_translation.js 
+
+    Args:
+        form_obj (form): The type of this variable is form and name of this variable from forms.py
+        language (string): The type of this variable is string and get value from dari_english_translation.js
+
+    Returns:
+        form: return value of variable in each language that we want
+    """
+    form_obj.reason.label.text = translation_obj.resign_reason[language]
+    form_obj.submit.label.text = translation_obj.send_request[language]
+    form_obj.responsibilities.label.text = translation_obj.responsibilities[language]
+    form_obj.equipments.label.text = translation_obj.equipments[language]
+    return form_obj
+
+
 
 
 

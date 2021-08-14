@@ -91,6 +91,14 @@
     "dari": "تنظیمات",
     "en": "Setting"
   },
+  "employee_forms": {
+    "dari": "فرم های کارمند",
+    "en": "Employee Request"
+  },
+  "my_forms": {
+    "dari": "فرم های من",
+    "en": "My Forms"
+  },
   "forms": {
     "dari": "فرم ها",
     "en": "Forms"
@@ -139,9 +147,21 @@
     "dari": "لیست درخواست رخصتی",
     "en": "List of Leave Request"
   },
+  "list_of_resign_request": {
+    "dari": "لیست درخواست استعفا",
+    "en": "List of Resign Request"
+  },
   "overtime_form": {
     "dari": "فورم اضافه کاری",
     "en": "Overtime Form"
+  },
+  "total_days": {
+    "dari": "کل روزها",
+    "en": "Total Days"
+  },
+  "employee_overtime": {
+    "dari": "اضافه کاری کارمند",
+    "en": "Employee Overtime"
   },
   "list_of_overtime_request": {
     "dari": "لیست درخواست اضافه کاری",
@@ -411,6 +431,10 @@
     "dari": " درخواست رخصتی",
     "en": "Leave Form"
   },
+  "request_resign_form":{
+    "dari": " درخواست استعفا",
+    "en": "Resign Form"
+  },
   "request_overtime_form":{
     "dari": " درخواست اضافه کاری",
     "en": "Overtime Form"
@@ -495,6 +519,10 @@
     "dari": "درباره",
     "en": "About"
   },
+  "add_equipments": {
+    "dari": "تحویل تجهیزات",
+    "en": "Add Equipments"
+  },
   "contact": {
     "dari": "ارتباط",
     "en": "Contact"
@@ -510,10 +538,6 @@
   "closing_date": {
     "dari": "تاریخ ختم اعلان",
     "en": "Closing Date"
-  },
-  "responsibilities": {
-    "dari": "وظایف و مسئولیت ها",
-    "en": "Responsibilities"
   },
   "educations": {
     "dari": "تحصیلات",
@@ -551,17 +575,21 @@
     "dari": "مدت همکاری با شرکت",
     "en": "Work Duration"
   },
-  "relevant_responsibilities": {
+  "responsibilities": {
     "dari": "وظایف مربوطه",
-    "en": "Employee Card"
+    "en": "Relevant Responsibilities"
   },
-  "relevant_equipment": {
+  "equipments": {
     "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipment"
+    "en": "Relevant Equipments"
   },
   "resign_reason": {
     "dari": "دلیل استعفا",
     "en": "Resign Reason"
+  },
+  "resign_request": {
+    "dari": "درخواست استعفا",
+    "en": "Resign Request"
   },
   "gender": {
     "dari": "جنسیت",
