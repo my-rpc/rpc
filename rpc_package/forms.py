@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from wtforms.widgets import TextArea
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
     SelectField, \
     TextAreaField, FileField, DecimalField, DateField, TimeField, IntegerField
@@ -222,6 +223,17 @@ class leaveRequestForm(FlaskForm):
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
+
+class ResignRequestForm(FlaskForm):
+    reason = StringField(u'Reason', widget=TextArea(),validators=[DataRequired()])
+    responsibilities = StringField(u'Responsibilities', widget=TextArea(),validators=[DataRequired()])
+    equipments = StringField(u'Equipments', widget=TextArea(),validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class AddEquipmentForm(FlaskForm):
+    equipment = BooleanField('equipment', default=[])
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add Equipment')
 
 
 class OvertimeRequestForm(FlaskForm):

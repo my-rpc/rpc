@@ -17,7 +17,7 @@
             border-left: none;
             border-radius: 0 0.25rem 0.25rem 0 !important;
         }
-        
+
     </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -180,6 +180,29 @@
                         window.open('/add_documents?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee')
+                },
+                {
+                    text: '<i class="fad fa-edit"></i> {{translation.add_equipments[language]}}',
+                    attr: {'class': 'btn btn-secondary'},
+                    action: function () {
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
+                        if(empID != '' && empID != undefined){
+                            window.open('/add_equipments?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee');
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fad fa-plus"></i> {{translation.add_document[language]}}',
+                    attr: {'class': 'btn btn-primary'},
+                    action: function () {
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
+                        if(empID != '' && empID != undefined){
+                            window.open('/add_documents?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee')
+                        }
                     }
                     break;
                 case(btnValue === 'Add Contract'):
@@ -196,8 +219,8 @@
                         toastWarning('Please select an employee')
                     }
                     break;
-            }   
-            
+            }
+
         })
     });
 
@@ -299,7 +322,7 @@ $(document).on('submit', '#update_employee', function(e){
     });
 });
 
- 
+
 
 deleteEmployee = function(empID){
     if(confirm('Are you sure you want to delete this Employee?')){

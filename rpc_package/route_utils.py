@@ -2,7 +2,7 @@ import os
 import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-     Contracts, Position_history, Salary, Current_addresses, Permanent_addresses, Leave_form, Overtime_form
+     Contracts, Position_history, Salary, Overtime_form, Current_addresses, Permanent_addresses, Leave_form, Resign_form, Employee_equipment
 from flask import session
 from flask_login import current_user
 import datetime
@@ -387,3 +387,29 @@ def add_contract_form(contract_form):
         return "success"
     except IOError as io:
         return 'error'
+
+def send_resign_request(resign_form, emp_id):
+    resign = Resign_form(
+        emp_id = emp_id,
+        reason= resign_form.reason.data,
+        responsibilities= resign_form.reason.data,
+        equipments= resign_form.reason.data)
+    db.session.add(resign)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+def assign_equipment(request, emp_id):
+    equipment=""
+    for eq in request.form.getlist('equipment'):
+        have_equipment = Employee_equipment.query.filter_by(emp_id=emp_id, equipment_id=eq).first()
+        if have_equipment is None:
+            equipment = Employee_equipment(
+            emp_id = emp_id,
+            equipment_id= eq)
+            db.session.add(equipment)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
