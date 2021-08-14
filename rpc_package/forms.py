@@ -193,3 +193,7 @@ class leaveRequestForm(FlaskForm):
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
     
+class departmentForm(FlaskForm):
+    name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
+    name_english_department = StringField('Name of Department', validators=[DataRequired()])
+    submit = SubmitField('Send Request')

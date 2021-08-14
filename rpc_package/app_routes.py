@@ -4,15 +4,15 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
+from rpc_package.rpc_tables import Departments, Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, \
     Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, \
-    set_emp_update_form_data, send_leave_request
+    set_emp_update_form_data, send_leave_request, send_department
 import os
 from datetime import datetime
 
@@ -450,8 +450,22 @@ def leave_request():
 @app.route("/department_setting", methods=['GET', 'POST'])
 @login_required
 def department_setting():
-    return render_template('department_setting.html', language=session['language'], translation=translation_obj)
+    department_form = departmentForm()
+    departments = Departments.query.all()
+    if request.method == 'POST':
+        department = send_department(department_form)
+        if department == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    department_form = update_messages_department(departmentForm(),session['language'])
+    return render_template('department_setting.html', form=department_form, departments=departments, title=translation_obj.forms[session['language']], language=session['language'],
+                    translation=translation_obj, message_obj=message_obj)
 
+
+
+    
 
 @app.route("/position_setting", methods=['GET', 'POST'])
 @login_required
