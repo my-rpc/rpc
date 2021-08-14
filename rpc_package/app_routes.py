@@ -3,10 +3,12 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, OvertimeRequestForm, ContractForm
+    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, \
+    OvertimeRequestForm, ContractForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, Departments, Overtime_form
+    Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, \
+    Departments, Overtime_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form, add_overtime_request
@@ -317,13 +319,13 @@ def employee_details():
 
             current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
                                                                                                (
-                                                                                                           Current_addresses.province_id == Provinces.id)) \
+                                                                                                       Current_addresses.province_id == Provinces.id)) \
                 .join(Districts, (Current_addresses.district_id == Districts.id)) \
                 .filter(Current_addresses.emp_id == emp_id).first()
 
             permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
                                                                                                    (
-                                                                                                               Permanent_addresses.province_id == Provinces.id)) \
+                                                                                                           Permanent_addresses.province_id == Provinces.id)) \
                 .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
                 .filter(Permanent_addresses.emp_id == emp_id).first()
             employee = sel_emp, phones, emails, current_addresses, permanent_addresses
@@ -360,11 +362,11 @@ def uds_employee():
                 'employee': {
                     'emp_id': update_employee_form.employee_id.data,
                     'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data
-                        if session['language'] == 'dari'
-                        else update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    if session['language'] == 'dari'
+                    else update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
                     'father_name': update_employee_form.father_name.data
-                        if session['language'] == 'dari'
-                        else update_employee_form.father_name_english.data,
+                    if session['language'] == 'dari'
+                    else update_employee_form.father_name_english.data,
                     'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
                     'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
                     'gender': update_employee_form.gender.data,
@@ -423,6 +425,7 @@ def profile():
                            doc_extra=doc_extra,
                            translation=translation_obj, message_obj=message_obj)
 
+
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
@@ -434,12 +437,12 @@ def contract_settings():
         phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
         email = db.session.query(Emails).filter_by(emp_id=emp.id).all()
         contract = db.session.query(Contracts, Contract_types, Position_history, Positions, Salary, Departments) \
-                                    .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
-                                    .join(Salary, Contracts.id == Salary.contract_id) \
-                                    .join(Position_history, (Contracts.id == Position_history.contract_id)) \
-                                    .join(Positions, (Positions.id == Position_history.position_id)) \
-                                    .join(Departments, Departments.id == Position_history.department_id) \
-                                    .filter(Contracts.emp_id == emp.id).first()
+            .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
+            .join(Salary, Contracts.id == Salary.contract_id) \
+            .join(Position_history, (Contracts.id == Position_history.contract_id)) \
+            .join(Positions, (Positions.id == Position_history.position_id)) \
+            .join(Departments, Departments.id == Position_history.department_id) \
+            .filter(Contracts.emp_id == emp.id).first()
         if phone is not None:
             phones[x] = phone
         if email is not None:
@@ -447,8 +450,8 @@ def contract_settings():
         if contracts is not None:
             contracts[x] = contract
     return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
-                            employees=employees, emails=emails, phones=phones, contract=contracts,
-                            translation=translation_obj, message_obj=message_obj)
+                           employees=employees, emails=emails, phones=phones, contract=contracts,
+                           translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
@@ -473,8 +476,9 @@ def add_contract():
         if EmployeeValidator.emp_id_validator(emp_id):
             contract_form.emp_id.data = emp_id
             return render_template('add_contract.html', title='Add Contract', language=session['language'],
-                                form=contract_form,
-                                translation=translation_obj, message_obj=message_obj)
+                                   form=contract_form,
+                                   translation=translation_obj, message_obj=message_obj)
+
 
 @app.route('/upload_profile_pic', methods=["POST"])
 @login_required
@@ -487,9 +491,9 @@ def upload_profile():
 def leave_request():
     leave_form = leaveRequestForm()
     if request.method == "GET":
-        my_leave_list = Leave_form.query\
-        .filter_by(emp_id=current_user.emp_id)\
-        .order_by(Leave_form.requested_at.desc()).all()
+        my_leave_list = Leave_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Leave_form.requested_at.desc()).all()
     if request.method == 'POST':
         if leave_form.validate_on_submit():
             leave = send_leave_request(leave_form, current_user.emp_id)
@@ -500,10 +504,11 @@ def leave_request():
         else:
             flash(leave_form.errors)
         return redirect(url_for('leave_request'))
-    leave_form = update_messages_leave(leaveRequestForm(),session['language'])
+    leave_form = update_messages_leave(leaveRequestForm(), session['language'])
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
+
 
 @app.route('/overtime_request', methods=["GET", "POST"])
 @login_required
@@ -523,8 +528,7 @@ def overtime_request():
         else:
             flash(overtime_form.errors)
         return redirect(url_for('overtime_request'))
-    overtime_form = update_messages_overtime(OvertimeRequestForm(),session['language'])
+    overtime_form = update_messages_overtime(OvertimeRequestForm(), session['language'])
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
-

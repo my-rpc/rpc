@@ -198,7 +198,7 @@ class Departments(db.Model, UserMixin):
 
 class Positions(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True, nullable=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
     name = db.Column(db.String(255), nullable=True)
     name_english = db.Column(db.String(255), nullable=True)
 
@@ -233,6 +233,7 @@ class Salary(db.Model, UserMixin):
     def __repr__(self):
         return f"Salary ID: {self.id}, Contract ID: {self.contract_id}"
 
+
 class Leave_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
@@ -243,10 +244,11 @@ class Leave_form(db.Model, UserMixin):
     end_datetime = db.Column(db.Date, nullable=True)
     supervisor = db.Column(db.Boolean, nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
-    requested_at= db.Column(db.DateTime, nullable=False)
+    requested_at = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"
+
 
 class Overtime_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
@@ -259,7 +261,7 @@ class Overtime_form(db.Model, UserMixin):
     description = db.Column(db.Text, nullable=True)
     supervisor = db.Column(db.Boolean, nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
-    requested_at= db.Column(db.DateTime, nullable=False)
+    requested_at = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return f"Overtime ID: {self.id}, Employee ID: {self.emp_id}, Overtime Type: {self.overtime_type}"
