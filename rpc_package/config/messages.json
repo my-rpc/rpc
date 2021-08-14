@@ -147,6 +147,22 @@
     "dari": "درخواست رخصتی ارسال نشد",
     "en": "Leave request has been not sent"
   },
+  "overtime_request_sent": {
+    "dari": "درخواست اضافه کاری ارسال شد",
+    "en": "Overtime request has been sent"
+  },
+  "overtime_request_not_sent": {
+    "dari": "درخواست اضافه کاری ارسال نشد",
+    "en": "Overtime request has been not sent"
+  },
+  "contract_added":{
+    "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه شد",
+    "en": "Contract added for employe with {} ID"
+  },
+  "contract_not_added":{
+    "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
+    "en": "Contract not added for employe with {} ID"
+  },
   "val_dic" : {
     "employee_id": "Employee already exi...mployee ID",
     "email": "ایمیل شما موجود است",
