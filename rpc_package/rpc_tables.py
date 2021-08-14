@@ -150,13 +150,14 @@ class Documents(db.Model, UserMixin):
 
 class Contracts(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.employees.id'),
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'),
                        primary_key=True, nullable=False)
-    pos_id = db.Column(db.Integer, db.ForeignKey('positions.id'), nullable=False)
-    sal_id = db.Column(db.Integer, db.ForeignKey('salary.id'), nullable=False)
     contract_type = db.Column(db.Integer, db.ForeignKey('contract_types.id'), nullable=False)
     contract_duration = db.Column(db.Integer, nullable=False)
+    start_date = db.Column(db.String(255), nullable=False)
+    inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    inserted_date = db.Column(db.Date, nullable=True)
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"
@@ -164,7 +165,7 @@ class Contracts(db.Model, UserMixin):
 
 class Contract_types(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True, nullable=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
     name = db.Column(db.String(255), nullable=True)
     name_english = db.Column(db.String(255), nullable=True)
 
@@ -187,7 +188,7 @@ class Attendance(db.Model, UserMixin):
 
 class Departments(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True, nullable=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
     name = db.Column(db.String(255), nullable=True)
     name_english = db.Column(db.String(255), nullable=True)
 
@@ -197,7 +198,7 @@ class Departments(db.Model, UserMixin):
 
 class Positions(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True, nullable=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True, nullable=True)
     name = db.Column(db.String(255), nullable=True)
     name_english = db.Column(db.String(255), nullable=True)
 
@@ -207,10 +208,12 @@ class Positions(db.Model, UserMixin):
 
 class Position_history(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True)
-    cont_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
-    pos_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
-    dep_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
+    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
+    inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    inserted_date = db.Column(db.Date, nullable=True)
 
     def __repr__(self):
         return f"Position History ID: {self.id}"
@@ -218,15 +221,17 @@ class Position_history(db.Model, UserMixin):
 
 class Salary(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
-    id = db.Column(db.Integer, primary_key=True)
-    cont_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
+    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
     base = db.Column(db.String, nullable=False)
     transportation = db.Column(db.String, nullable=False)
     house_hold = db.Column(db.String, nullable=False)
     currency = db.Column(db.String(10), nullable=False)
+    inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    inserted_date = db.Column(db.Date, nullable=True)
 
     def __repr__(self):
-        return f"Salary ID: {self.id}, Contract ID: {self.cont_id}"
+        return f"Salary ID: {self.id}, Contract ID: {self.contract_id}"
 
 class Leave_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}

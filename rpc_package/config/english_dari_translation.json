@@ -371,9 +371,21 @@
     "dari": "موقعیت",
     "en": "Location"
   },
-  "Contract": {
+  "contract": {
     "dari": "قرارداد",
     "en": "Contract"
+  },
+  "contract_type":{
+    "dari": "نوع قرارداد",
+    "en": "Contrac Type"
+  },
+  "contract_settings": {
+    "dari": "تنظیمات قرارداد",
+    "en": "Contract Settings"
+  },
+  "contract_duration": {
+    "dari": "مدت قرارداد",
+    "en": "Contract Duration"
   },
   "job_responsibilities": {
     "dari": "لایحه وظایف",
@@ -579,6 +591,12 @@
     "dari": "مبلغ معاش",
     "en": "Salary"
   },
+  {
+    "base_salary":{
+      "dari": "معاش پایه",
+      "en": "‌Base Salary"
+    }
+  },
   "single": {
     "dari": "مجرد",
     "en": "Single"
@@ -739,9 +757,9 @@
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
   },
-  "employee_setting": {
-    "dari": "تنظیمات کارمند",
-    "en": "Employee Setting"
+  "employee_settings": {
+    "dari": "تنظیمات کامند",
+    "en": "Employee Settings"
   },
   "active":{
     "dari": "فعال",
