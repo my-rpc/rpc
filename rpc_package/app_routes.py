@@ -2,16 +2,17 @@ from flask import render_template, url_for, redirect, request, jsonify, flash, s
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    OvertimeRequestForm, \
-    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, ContractForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
+    UploadEducationalDocsForm, ResignRequestForm, \
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Overtime_form, Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, \
-    Position_history, Salary, Departments
+    Districts, Equipment, Resign_form, \
+    Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    add_overtime_request, update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form
+    update_employee_data, assign_equipment, \
+    set_emp_update_form_data, send_leave_request, send_resign_request
 import os
 from datetime import datetime
 
@@ -545,3 +546,57 @@ def position_setting():
 @login_required
 def contract_setting():
     return render_template('contract_setting.html', language=session['language'], translation=translation_obj)
+@app.route('/resign_request', methods=["GET", "POST"])
+@login_required
+def resign_request():
+    resign_form = ResignRequestForm()
+    if request.method == "POST":
+        if resign_form.validate_on_submit():
+            resign = send_resign_request(resign_form, current_user.emp_id)
+            if resign == "success":
+                flash(message_obj.resign_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.resign_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
+    resign_form = update_messages_resign(ResignRequestForm(),session['language'])
+    return render_template('resign_request.html',
+                           title=translation_obj.forms[session['language']], form=resign_form, language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/add_equipments', methods=["GET", "POST"])
+@login_required
+def add_equipments():
+    emp_id = request.args.get("emp_id")
+    form = AddEquipmentForm()
+    all_equipments = ""
+    if request.method == "GET":
+        all_equipments = Equipment.query.all()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            result = assign_equipment(request, emp_id)
+            if result == "success":
+                flash(message_obj.equipment_added[session['language']], 'success')
+            else:
+                flash(message_obj.equipment_not_added[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('add_equipments.html', emp_id=emp_id,
+                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments, language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+
+@app.route('/emp_leave_request', methods=["GET", "POST"])
+@login_required
+def emp_leave_request():
+    return render_template('emp_leave_request.html',
+                        title=translation_obj.employee_forms[session['language']], language=session['language'],
+                        translation=translation_obj, message_obj=message_obj)
+
+@app.route('/emp_resign_request', methods=["GET", "POST"])
+@login_required
+def emp_resign_request():
+    if request.method == "GET":
+        list_of_resigns = Resign_form.query.all()
+    return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
+                        title=translation_obj.employee_forms[session['language']], language=session['language'],
+                        translation=translation_obj, message_obj=message_obj)

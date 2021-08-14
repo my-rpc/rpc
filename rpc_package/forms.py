@@ -1,6 +1,12 @@
 from flask_wtf import FlaskForm
+<<<<<<< HEAD
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
     SelectField, FileField, DecimalField, DateField, TimeField, IntegerField, TextAreaField
+=======
+from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, SelectField, \
+    FileField, DecimalField, DateField, TimeField
+from wtforms.widgets import TextArea
+>>>>>>> d5da687080301ba191575024d469a4361276637b
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
@@ -221,6 +227,7 @@ class leaveRequestForm(FlaskForm):
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
+<<<<<<< HEAD
     def validate_start_datetime(self, start_datetime):
         if start_datetime.data:
             if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', start_datetime.data)):
@@ -238,3 +245,16 @@ class OvertimeRequestForm(FlaskForm):
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     description = TextAreaField('Overtime Description')
     submit = SubmitField('Send Request')
+=======
+    
+class ResignRequestForm(FlaskForm):
+    reason = StringField(u'Reason', widget=TextArea(),validators=[DataRequired()])
+    responsibilities = StringField(u'Responsibilities', widget=TextArea(),validators=[DataRequired()])
+    equipments = StringField(u'Equipments', widget=TextArea(),validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class AddEquipmentForm(FlaskForm):
+    equipment = BooleanField('equipment', default=[])
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add Equipment')
+>>>>>>> d5da687080301ba191575024d469a4361276637b

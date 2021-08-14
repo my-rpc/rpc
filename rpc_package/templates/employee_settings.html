@@ -166,12 +166,38 @@
                     }else{
                         toastWarning('Please select an employee');
                     }
+<<<<<<< HEAD
                     break
                 case(btnValue === 'Add Documents'):
                     if(empID != '' && empID != undefined){
                         window.open('/add_documents?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee')
+=======
+                },
+                {
+                    text: '<i class="fad fa-edit"></i> {{translation.add_equipments[language]}}',
+                    attr: {'class': 'btn btn-secondary'},
+                    action: function () {
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
+                        if(empID != '' && empID != undefined){
+                            window.open('/add_equipments?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee');
+                        }
+                    }
+                },
+                {
+                    text: '<i class="fad fa-plus"></i> {{translation.add_document[language]}}',
+                    attr: {'class': 'btn btn-primary'},
+                    action: function () {
+                        empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val()
+                        if(empID != '' && empID != undefined){
+                            window.open('/add_documents?emp_id='+empID, '_blank');
+                        }else{
+                            toastWarning('Please select an employee')
+                        }
+>>>>>>> d5da687080301ba191575024d469a4361276637b
                     }
                     break;
                 case(btnValue === 'Add Contract'):

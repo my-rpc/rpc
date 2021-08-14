@@ -386,3 +386,31 @@ def add_contract_form(contract_form):
         return "success"
     except IOError as io:
         return 'error'
+    else:
+        return "error"
+
+def send_resign_request(resign_form, emp_id):
+    resign = Resign_form(
+        emp_id = emp_id,
+        reason= resign_form.reason.data,
+        responsibilities= resign_form.reason.data,
+        equipments= resign_form.reason.data)
+    db.session.add(resign)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+def assign_equipment(request, emp_id):
+    equipment=""
+    for eq in request.form.getlist('equipment'):
+        have_equipment = Employee_equipment.query.filter_by(emp_id=emp_id, equipment_id=eq).first()
+        if have_equipment is None:
+            equipment = Employee_equipment(
+            emp_id = emp_id,
+            equipment_id= eq)
+            db.session.add(equipment)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
