@@ -93,7 +93,7 @@
   },
   "employee_forms": {
     "dari": "فرم های کارمند",
-    "en": "Employee Forms"
+    "en": "Employee Request"
   },
   "my_forms": {
     "dari": "فرم های من",
@@ -154,6 +154,14 @@
   "overtime_form": {
     "dari": "فورم اضافه کاری",
     "en": "Overtime Form"
+  },
+  "total_days": {
+    "dari": "کل روزها",
+    "en": "Total Days"
+  },
+  "employee_overtime": {
+    "dari": "اضافه کاری کارمند",
+    "en": "Employee Overtime"
   },
   "list_of_overtime_request": {
     "dari": "لیست درخواست اضافه کاری",

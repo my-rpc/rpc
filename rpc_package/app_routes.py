@@ -5,7 +5,8 @@ from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, \
     OvertimeRequestForm, ContractForm
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
+    AddEquipmentForm, \
     UploadEducationalDocsForm, ResignRequestForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
 from rpc_package.form_dynamic_language import *
@@ -132,20 +133,31 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("profile"))
     login_form = LoginForm()
-    if request.method == 'POST':
-        if login_form.validate_on_submit():
-            user = Users.query.filter_by(emp_id=login_form.username.data).first()
-            if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+    if login_form.validate_on_submit():
+        user = Users.query.filter_by(emp_id=login_form.username.data).first()
+        if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            if user.status:
+                employee = Employees.query.filter_by(id=user.emp_id).first()
                 session['language'] = login_form.prefer_language.data
+                session['emp_id'] = user.emp_id
+                if session['language'] == 'dari':
+                    session['emp_name'] = employee.name
+                    session['emp_lname'] = employee.lname
+                else:
+                    session['emp_name'] = employee.name_english
+                    session['emp_lname'] = employee.lname_english
                 login_user(user, remember=login_form.remember_me.data)
                 request_user_page = request.args.get('next')
                 if request_user_page:
                     return redirect(request_user_page)
                 else:
-                    return redirect(url_for("profile"))
+                    return redirect('/profile')
             else:
-                flash(message_obj.password_incorrect[request.form['prefer_language']], 'error')
-                return redirect(url_for('login'))
+                flash(message_obj.user_inactive[session['language']], 'error')
+                return redirect(request.referrer)
+        else:
+            flash(message_obj.password_incorrect[session['language']], 'error')
+            return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
@@ -553,10 +565,12 @@ def resign_request():
             else:
                 flash(message_obj.resign_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
-    resign_form = update_messages_resign(ResignRequestForm(),session['language'])
+    resign_form = update_messages_resign(ResignRequestForm(), session['language'])
     return render_template('resign_request.html',
-                           title=translation_obj.forms[session['language']], form=resign_form, language=session['language'],
+                           title=translation_obj.forms[session['language']], form=resign_form,
+                           language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
+
 
 @app.route('/add_equipments', methods=["GET", "POST"])
 @login_required
@@ -575,17 +589,18 @@ def add_equipments():
                 flash(message_obj.equipment_not_added[session['language']], 'error')
         return redirect(request.referrer)
     return render_template('add_equipments.html', emp_id=emp_id,
-                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments, language=session['language'],
+                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments,
+                           language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
-
 
 
 @app.route('/emp_leave_request', methods=["GET", "POST"])
 @login_required
 def emp_leave_request():
     return render_template('emp_leave_request.html',
-                        title=translation_obj.employee_forms[session['language']], language=session['language'],
-                        translation=translation_obj, message_obj=message_obj)
+                           title=translation_obj.employee_forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
 
 @app.route('/emp_resign_request', methods=["GET", "POST"])
 @login_required
@@ -593,5 +608,5 @@ def emp_resign_request():
     if request.method == "GET":
         list_of_resigns = Resign_form.query.all()
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
-                        title=translation_obj.employee_forms[session['language']], language=session['language'],
-                        translation=translation_obj, message_obj=message_obj)
+                           title=translation_obj.employee_forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
