@@ -2,8 +2,8 @@ import os
 import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Contracts, Position_history, Salary, Overtime_form, Current_addresses, Permanent_addresses, Leave_form, Resign_form, \
-    Employee_equipment
+    Contracts, Position_history, Salary, Overtime_form,  Resign_form, \
+    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments
 from flask import session
 from flask_login import current_user
 import datetime
@@ -413,6 +413,17 @@ def assign_equipment(request, emp_id):
                 emp_id=emp_id,
                 equipment_id=eq)
             db.session.add(equipment)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+
+def send_department(department_form):
+    department = Departments(
+        name=department_form.name_department.data,
+        name_english=department_form.name_english_department.data)
+    db.session.add(department)
     if db.session.commit():
         return "success"
     else:

@@ -371,6 +371,22 @@
     "dari": "نام پدر",
     "en": "Father Name"
   },
+  "add_department": {
+    "dari": "اضافه کردن دیپارتمنت",
+    "en": "Add Department"
+  },
+  "department_id": {
+    "dari": "ایدی دیپارتمنت",
+    "en": "Department ID"
+  },
+  "name_department": {
+    "dari": "نام دیپارتمنت به فارسی",
+    "en": "Name of department in Persian"
+  },
+  "name_english_department": {
+    "dari": "نام دیپارتمنت به اینگلیسی",
+    "en": "Name of Department in English"
+  },
   "date_and_signature": {
     "dari": "تاریخ و امضا",
     "en": "Date and Signature"
