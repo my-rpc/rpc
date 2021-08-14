@@ -14,6 +14,7 @@
             cursor: pointer;
         }
         .border-radius-dari{
+            border-left: none;
             border-radius: 0 0.25rem 0.25rem 0 !important;
         }
         
@@ -51,8 +52,13 @@
                         </div>
                     </td>
                     <td>{{emp.id}}</td>
-                    <td>{{emp.name}} {{emp.lname}}</td>
-                    <td>{{emp.fname}}</td>
+                    {% if language == 'dari' %}
+                        <td>{{emp.name}} {{emp.lname}}</td>
+                        <td>{{emp.fname}}</td>
+                    {% else %}
+                        <td>{{emp.name_english}} {{emp.lname_english}}</td>
+                        <td>{{emp.fname_english}}</td>
+                    {% endif %}
                     <td>
                         {% if phones[loop.index0] %}
                         {% for ph in phones[loop.index0] %}

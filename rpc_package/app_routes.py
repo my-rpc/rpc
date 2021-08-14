@@ -362,10 +362,12 @@ def uds_employee():
             data = {
                 'employee': {
                     'emp_id': update_employee_form.employee_id.data,
-                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data,
-                    'name_english': update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
-                    'father_name': update_employee_form.father_name.data,
-                    'father_name_english': update_employee_form.father_name_english.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data 
+                        if session['language'] == 'dari'
+                        else update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data
+                        if session['language'] == 'dari'
+                        else update_employee_form.father_name_english.data,
                     'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
                     'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
                     'gender': update_employee_form.gender.data,
@@ -435,7 +437,9 @@ def upload_profile():
 def leave_request():
     leave_form = leaveRequestForm()
     if request.method == "GET":
-        my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
+        my_leave_list = Leave_form.query\
+        .filter_by(emp_id=current_user.emp_id)\
+        .order_by(Leave_form.requested_at.desc()).all()
     if request.method == 'POST':
         if leave_form.validate_on_submit():
             leave = send_leave_request(leave_form, current_user.emp_id)

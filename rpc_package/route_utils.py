@@ -1,5 +1,5 @@
 import os
-
+import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Current_addresses, Permanent_addresses, Leave_form, Overtime_form
@@ -310,14 +310,16 @@ def send_leave_request(leave_form, emp_id):
                 emp_id=emp_id,
                 leave_type=True,
                 start_datetime=leave_form.start_datetime.data,
-                end_datetime=leave_form.end_datetime.data)
+                end_datetime=leave_form.end_datetime.data,
+                requested_at=jdatetime.datetime.now())
             db.session.add(leave)
         elif leave_form.leave_type.data == '0':
             leave = Leave_form(
                 emp_id=emp_id,
                 leave_type=False,
                 start_datetime=leave_form.start_datetime.data,
-                end_datetime=leave_form.end_datetime.data)
+                end_datetime=leave_form.end_datetime.data,
+                requested_at=jdatetime.datetime.now())
             db.session.add(leave)
         db.session.commit()
         return "success"
@@ -336,7 +338,8 @@ def add_overtime_request(overtime_form, emp_id):
             overtime_type=overtime_type,
             start_datetime=overtime_form.start_datetime.data,
             end_datetime=overtime_form.end_datetime.data,
-            description=overtime_form.description.data)
+            description=overtime_form.description.data,
+            requested_at=jdatetime.datetime.now())
         db.session.add(overtime)
         db.session.commit()
         return "success"
