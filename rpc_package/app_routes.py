@@ -2,24 +2,18 @@ from flask import render_template, url_for, redirect, request, jsonify, flash, s
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
+
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    UploadEducationalDocsForm, UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, \
-    OvertimeRequestForm, ContractForm
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    AddEquipmentForm, \
-    UploadEducationalDocsForm, ResignRequestForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
+    AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, ContractForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Districts, Emails, Phone, Provinces, Leave_form, Contracts, Contract_types, Positions, Position_history, Salary, \
-    Departments, Overtime_form, \
-    Districts, Equipment, Resign_form, \
-    Emails, Phone, Provinces, Leave_form
+    Contracts, Contract_types, Positions, Position_history, Salary, \
+    Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    update_employee_data, set_emp_update_form_data, send_leave_request, add_contract_form, add_overtime_request, \
-    update_employee_data, assign_equipment, \
-    set_emp_update_form_data, send_leave_request, send_resign_request
+    add_contract_form, add_overtime_request, assign_equipment, send_resign_request,\
+    update_employee_data, set_emp_update_form_data, send_leave_request, send_department
 import os
 from datetime import datetime
 
@@ -120,7 +114,6 @@ def reset_user_password():
 
 
 @app.route("/logout")
-@login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
@@ -523,7 +516,7 @@ def leave_request():
         else:
             flash(leave_form.errors)
         return redirect(url_for('leave_request'))
-    leave_form = update_messages_leave(leaveRequestForm(), session['language'])
+    # leave_form = update_messages_leave(leaveRequestForm(), session['language'])
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
@@ -610,3 +603,32 @@ def emp_resign_request():
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
                            title=translation_obj.employee_forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
+
+@app.route("/department_setting", methods=['GET', 'POST'])
+@login_required
+def department_setting():
+    department_form = departmentForm()
+    departments = Departments.query.all()
+    if request.method == 'POST':
+        department = send_department(department_form)
+        if department == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    department_form = update_messages_department(departmentForm(),session['language'])
+    return render_template('department_setting.html', form=department_form, departments=departments, title=translation_obj.forms[session['language']], language=session['language'],
+                    translation=translation_obj, message_obj=message_obj)
+
+
+@app.route("/contract_setting", methods=['GET', 'POST'])
+@login_required
+def contract_setting():
+    return render_template('contract_setting.html', language=session['language'], translation=translation_obj)
+
+
+@app.route("/position_setting", methods=['GET', 'POST'])
+@login_required
+def position_setting():
+    return render_template('position_setting.html', language=session['language'], translation=translation_obj)
+

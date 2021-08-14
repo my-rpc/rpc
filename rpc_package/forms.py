@@ -224,11 +224,13 @@ class leaveRequestForm(FlaskForm):
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
 
+
 class ResignRequestForm(FlaskForm):
-    reason = StringField(u'Reason', widget=TextArea(),validators=[DataRequired()])
-    responsibilities = StringField(u'Responsibilities', widget=TextArea(),validators=[DataRequired()])
-    equipments = StringField(u'Equipments', widget=TextArea(),validators=[DataRequired()])
+    reason = StringField(u'Reason', widget=TextArea(), validators=[DataRequired()])
+    responsibilities = StringField(u'Responsibilities', widget=TextArea(), validators=[DataRequired()])
+    equipments = StringField(u'Equipments', widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField('Send Request')
+
 
 class AddEquipmentForm(FlaskForm):
     equipment = BooleanField('equipment', default=[])
@@ -242,4 +244,10 @@ class OvertimeRequestForm(FlaskForm):
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     description = TextAreaField('Overtime Description')
+    submit = SubmitField('Send Request')
+
+
+class departmentForm(FlaskForm):
+    name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
+    name_english_department = StringField('Name of Department', validators=[DataRequired()])
     submit = SubmitField('Send Request')
