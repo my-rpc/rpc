@@ -47,7 +47,7 @@
                                         <i class="fad fa-calendar"></i>
                                     </span>
                                 </div>
-                                {{ form.start_datetime( type="text", class="form-control form-control-lg")}}
+                                {{ form.start_datetime( type="text", readonly="true", class="form-control form-control-lg")}}
                             </div>
                         </div>
                         <div class="form-group col-md-6">
@@ -58,7 +58,7 @@
                                         <i class="fad fa-calendar"></i>
                                     </span>
                                 </div>
-                                {{ form.end_datetime(type="text", class="form-control form-control-lg")}}
+                                {{ form.end_datetime(type="text", readonly="true", class="form-control form-control-lg")}}
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                         <td>{% if leave.leave_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
-                        <td>0</td>
+                        <td>{{leave.end_datetime - leave.start_datetime}}</td>
                         <td>
                             {% if leave.supervisor == None %}
                             <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
@@ -160,7 +160,7 @@
         // Leaving form, set persian date picker for start date time field.
         $('#start_datetime-icon').MdPersianDateTimePicker({
             targetTextSelector: '#start_datetime',
-            textFormat: 'yyyy-MM-dd HH:mm:ss',
+            textFormat: 'yyyy-MM-dd HH:mm:00',
             isGregorian: false,
             englishNumber: true,
             enableTimePicker: true,
@@ -170,7 +170,7 @@
         // Leaving form, set persian date picker for end date time field.
         $('#end_datetime-icon').MdPersianDateTimePicker({
             targetTextSelector: '#end_datetime',
-            textFormat: 'yyyy-MM-dd HH:mm:ss',
+            textFormat: 'yyyy-MM-dd HH:mm:00',
             isGregorian: false,
             englishNumber: true,
             enableTimePicker: true,
@@ -195,11 +195,11 @@
                 $('#start_datetime-icon')
                 .MdPersianDateTimePicker('clearDate')
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
-                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:ss')
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')
                 $('#end_datetime-icon')
                 .MdPersianDateTimePicker('clearDate')
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
-                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:ss')
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')
             }
         });
     });
