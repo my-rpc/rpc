@@ -180,5 +180,9 @@
   "invalid_message": {
     "dari": "درخواست اشتباه",
     "en": "invalid request"
+  },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
   }
 }
