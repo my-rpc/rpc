@@ -1,9 +1,9 @@
 import os
-
+import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Current_addresses, Permanent_addresses, Leave_form, Contracts, Contract_types, Positions, Position_history, \
-    Salary, Departments, Overtime_form
+    Contracts, Position_history, Salary, Overtime_form,  Resign_form, \
+    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments
 from flask import session
 from flask_login import current_user
 import datetime
@@ -313,14 +313,16 @@ def send_leave_request(leave_form, emp_id):
                 emp_id=emp_id,
                 leave_type=True,
                 start_datetime=leave_form.start_datetime.data,
-                end_datetime=leave_form.end_datetime.data)
+                end_datetime=leave_form.end_datetime.data,
+                requested_at=jdatetime.datetime.now())
             db.session.add(leave)
         elif leave_form.leave_type.data == '0':
             leave = Leave_form(
                 emp_id=emp_id,
                 leave_type=False,
                 start_datetime=leave_form.start_datetime.data,
-                end_datetime=leave_form.end_datetime.data)
+                end_datetime=leave_form.end_datetime.data,
+                requested_at=jdatetime.datetime.now())
             db.session.add(leave)
         db.session.commit()
         return "success"
@@ -340,7 +342,8 @@ def add_overtime_request(overtime_form, emp_id):
             overtime_type=overtime_type,
             start_datetime=overtime_form.start_datetime.data,
             end_datetime=overtime_form.end_datetime.data,
-            description=overtime_form.description.data)
+            description=overtime_form.description.data,
+            requested_at=jdatetime.datetime.now())
         db.session.add(overtime)
         db.session.commit()
         return "success"
@@ -386,15 +389,14 @@ def add_contract_form(contract_form):
         return "success"
     except IOError as io:
         return 'error'
-    else:
-        return "error"
+
 
 def send_resign_request(resign_form, emp_id):
     resign = Resign_form(
-        emp_id = emp_id,
-        reason= resign_form.reason.data,
-        responsibilities= resign_form.reason.data,
-        equipments= resign_form.reason.data)
+        emp_id=emp_id,
+        reason=resign_form.reason.data,
+        responsibilities=resign_form.reason.data,
+        equipments=resign_form.reason.data)
     db.session.add(resign)
     if db.session.commit():
         return "success"
@@ -410,6 +412,17 @@ def assign_equipment(request, emp_id):
             emp_id = emp_id,
             equipment_id= eq)
             db.session.add(equipment)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+
+def send_department(department_form):
+    department = Departments(
+        name=department_form.name_department.data,
+        name_english=department_form.name_english_department.data)
+    db.session.add(department)
     if db.session.commit():
         return "success"
     else:

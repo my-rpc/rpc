@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} Employee Overtime {% endblock %}
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
 {% block css_or_js_code %}
 <style>
     [type=radio]:not(:checked).rd,
@@ -13,6 +13,7 @@
         cursor: pointer;
     }
     .border-radius-dari{
+        border-left: none;
         border-radius: 0 0.25rem 0.25rem 0 !important;
     }
 </style>
@@ -27,11 +28,16 @@
             <form method="POST" , action="" id="overtime_request">
                 {{ form.hidden_tag()}}
             <div class="row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     {{ form.overtime_type.label(class="form-control-label")}}
-                    {{ form.overtime_type(onChange="chooseLeaveTpe(1)", class="")}}
+                    <div class="form-check1">
+                        {% for item in form.overtime_type %}
+                        {{ item(class="form-check-input")}}
+                        {{ item.label(class="form-check-label")}}
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-8">
                     <div class="row">
                         <div class="form-group col-md-6">
                             {{ form.start_datetime.label(class="form-control-label")}}
@@ -55,12 +61,12 @@
                                 {{ form.end_datetime(type="text", class="form-control form-control-lg")}}
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                {{ form.description.label(class="form-control-label")}}
-                                {{ form.description(class="form-control form-control-lg")}}
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {{ form.description.label(class="form-control-label")}}
+                        {{ form.description(class="form-control form-control-lg")}}
                     </div>
                 </div>
                 <div class="form-group">
@@ -79,44 +85,66 @@
               <!-- /.box-header -->
               <div class="box-body no-padding">
                   <div class="table-responsive">
-                    <table class="table table-hover">
-                      <tr>
-                        <th>{{translation.overtime_type[language]}}</th>
-                        <th>{{translation.start_date[language]}}</th>
-                        <th>{{translation.end_date[language]}}</th>
-                        <th>{{translation.total_days[language]}}</th>
-                        <th>{{translation.supervisor[language]}}</th>
-                        <th>{{translation.hr[language]}}</th>
-                        <th>{{translation.request_date[language]}}</th>
-                      </tr>
-                      {% for overtime in emp_overtime_list %}
-                      <tr>
-                        <td>{% if overtime.overtime_type %} Hourly {% else %} Daily {% endif %}</td>
-                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
-                        <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
-                        <td>0</td>
-                        <td>
-                            {% if overtime.supervisor == None %}
-                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
-                            {% elif overtime.supervisor == True %}
-                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
-                            {% elif overtime.supervisor == False %}
-                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
-                            {% endif %}
+                    <table class="table table-hover" id="overitme_list">
+                        <tr>
+                            <th></th>
+                            <th>{{translation.overtime_type[language]}}</th>
+                            <th>{{translation.start_date[language]}}</th>
+                            <th>{{translation.end_date[language]}}</th>
+                            <th>{{translation.total_days[language]}}</th>
+                            <th>{{translation.supervisor[language]}}</th>
+                            <th>{{translation.hr[language]}}</th>
+                            <th>{{translation.request_date[language]}}</th>
+                        </tr>
+                        {% for overtime in emp_overtime_list %}
+                        <tr>
+                            <td>
+                                <div
+                                    class="btn m-0 p-0 mx-1"
+                                    role="button"
+                                    data-toggle="collapse"
+                                    data-target="#more_{{overtime.id}}"
+                                    aria-expanded="false"
+                                    aria-controls="more_{{overtime.id}}">
+                                    <li class="fad fa-angle-down text-success"></li>
+                                </div>
+                            </td>
+                            <td>{% if overtime.overtime_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
+                            <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
+                            <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
+                            <td>0</td>
+                            <td>
+                                {% if overtime.supervisor == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif overtime.supervisor == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif overtime.supervisor == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
 
-                        </td>
-                        <td>
-                            {% if overtime.hr == None %}
-                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
-                            {% elif overtime.hr == True %}
-                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
-                            {% elif overtime.hr == False %}
-                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
-                            {% endif %}
+                            </td>
+                            <td>
+                                {% if overtime.hr == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif overtime.hr == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif overtime.hr == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
 
-                        </td>
-                        <td>{{overtime.requested_at}}</td>
-                      </tr>
+                            </td>
+                            <td>{{overtime.requested_at}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" class="no-padding">
+                                <table class="collapse table" id="more_{{overtime.id}}" data-parent="#overitme_list">
+                                    <tr>
+                                        <th>{{ form.description.label() }}</th>
+                                        <td>{{ overtime.description }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                       {% endfor %}
                     </table>
                   </div>

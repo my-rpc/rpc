@@ -12,7 +12,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, assign_equipment, \
-    set_emp_update_form_data, send_leave_request, send_resign_request
+    set_emp_update_form_data, send_leave_request, send_resign_request, send_department
 import os
 from datetime import datetime
 
@@ -113,7 +113,6 @@ def reset_user_password():
 
 
 @app.route("/logout")
-@login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
@@ -126,20 +125,31 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("profile"))
     login_form = LoginForm()
-    if request.method == 'POST':
-        if login_form.validate_on_submit():
-            user = Users.query.filter_by(emp_id=login_form.username.data).first()
-            if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+    if login_form.validate_on_submit():
+        user = Users.query.filter_by(emp_id=login_form.username.data).first()
+        if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
+            if user.status:
+                employee = Employees.query.filter_by(id=user.emp_id).first()
                 session['language'] = login_form.prefer_language.data
+                session['emp_id'] = user.emp_id
+                if session['language'] == 'dari':
+                    session['emp_name'] = employee.name
+                    session['emp_lname'] = employee.lname
+                else:
+                    session['emp_name'] = employee.name_english
+                    session['emp_lname'] = employee.lname_english
                 login_user(user, remember=login_form.remember_me.data)
                 request_user_page = request.args.get('next')
                 if request_user_page:
                     return redirect(request_user_page)
                 else:
-                    return redirect(url_for("profile"))
+                    return redirect('/profile')
             else:
-                flash(message_obj.password_incorrect[request.form['prefer_language']], 'error')
-                return redirect(url_for('login'))
+                flash(message_obj.user_inactive[session['language']], 'error')
+                return redirect(request.referrer)
+        else:
+            flash(message_obj.password_incorrect[session['language']], 'error')
+            return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
                            form=login_form, language='en',
@@ -362,10 +372,12 @@ def uds_employee():
             data = {
                 'employee': {
                     'emp_id': update_employee_form.employee_id.data,
-                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data,
-                    'name_english': update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
-                    'father_name': update_employee_form.father_name.data,
-                    'father_name_english': update_employee_form.father_name_english.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data
+                    if session['language'] == 'dari'
+                    else update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data
+                    if session['language'] == 'dari'
+                    else update_employee_form.father_name_english.data,
                     'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
                     'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
                     'gender': update_employee_form.gender.data,
@@ -395,6 +407,7 @@ def uds_employee():
 
 
 @app.route('/delete_employee', methods=['DELETE'])
+@login_required
 def delete_employee():
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
@@ -489,7 +502,9 @@ def upload_profile():
 def leave_request():
     leave_form = leaveRequestForm()
     if request.method == "GET":
-        my_leave_list = Leave_form.query.filter_by(emp_id=current_user.emp_id).all()
+        my_leave_list = Leave_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Leave_form.requested_at.desc()).all()
     if request.method == 'POST':
         if leave_form.validate_on_submit():
             leave = send_leave_request(leave_form, current_user.emp_id)
@@ -500,7 +515,7 @@ def leave_request():
         else:
             flash(leave_form.errors)
         return redirect(url_for('leave_request'))
-    leave_form = update_messages_leave(leaveRequestForm(), session['language'])
+    # leave_form = update_messages_leave(leaveRequestForm(), session['language'])
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
@@ -524,22 +539,85 @@ def overtime_request():
         else:
             flash(overtime_form.errors)
         return redirect(url_for('overtime_request'))
-    overtime_form = update_messages_overtime(OvertimeRequestForm(),session['language'])
+    overtime_form = update_messages_overtime(OvertimeRequestForm(), session['language'])
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
+@app.route('/resign_request', methods=["GET", "POST"])
+@login_required
+def resign_request():
+    resign_form = ResignRequestForm()
+    if request.method == "POST":
+        if resign_form.validate_on_submit():
+            resign = send_resign_request(resign_form, current_user.emp_id)
+            if resign == "success":
+                flash(message_obj.resign_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.resign_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
+    resign_form = update_messages_resign(ResignRequestForm(), session['language'])
+    return render_template('resign_request.html',
+                           title=translation_obj.forms[session['language']], form=resign_form,
+                           language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/add_equipments', methods=["GET", "POST"])
+@login_required
+def add_equipments():
+    emp_id = request.args.get("emp_id")
+    form = AddEquipmentForm()
+    all_equipments = ""
+    if request.method == "GET":
+        all_equipments = Equipment.query.all()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            result = assign_equipment(request, emp_id)
+            if result == "success":
+                flash(message_obj.equipment_added[session['language']], 'success')
+            else:
+                flash(message_obj.equipment_not_added[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('add_equipments.html', emp_id=emp_id,
+                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments,
+                           language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/emp_leave_request', methods=["GET", "POST"])
+@login_required
+def emp_leave_request():
+    return render_template('emp_leave_request.html',
+                           title=translation_obj.employee_forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/emp_resign_request', methods=["GET", "POST"])
+@login_required
+def emp_resign_request():
+    if request.method == "GET":
+        list_of_resigns = Resign_form.query.all()
+    return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
+                           title=translation_obj.employee_forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
 @app.route("/department_setting", methods=['GET', 'POST'])
 @login_required
 def department_setting():
-    return render_template('department_setting.html', language=session['language'], translation=translation_obj)
-
-
-@app.route("/position_setting", methods=['GET', 'POST'])
-@login_required
-def position_setting():
-    return render_template('position_setting.html', language=session['language'], translation=translation_obj)
+    department_form = departmentForm()
+    departments = Departments.query.all()
+    if request.method == 'POST':
+        department = send_department(department_form)
+        if department == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    department_form = update_messages_department(departmentForm(),session['language'])
+    return render_template('department_setting.html', form=department_form, departments=departments, title=translation_obj.forms[session['language']], language=session['language'],
+                    translation=translation_obj, message_obj=message_obj)
 
 
 @app.route("/contract_setting", methods=['GET', 'POST'])
@@ -600,3 +678,10 @@ def emp_resign_request():
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
                         title=translation_obj.employee_forms[session['language']], language=session['language'],
                         translation=translation_obj, message_obj=message_obj)
+
+
+@app.route("/position_setting", methods=['GET', 'POST'])
+@login_required
+def position_setting():
+    return render_template('position_setting.html', language=session['language'], translation=translation_obj)
+
