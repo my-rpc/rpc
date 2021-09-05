@@ -1,0 +1,61 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.resign_request[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+   <div class="box">
+       <div class="box-header">
+           <div class="box-title">
+            {{translation.my_equipments[language]}}
+           </div>
+       </div>
+       <div class="box-body">
+        {% if my_equipments %}
+        <ul>
+            {% for equipment in my_equipments %}
+            <li>
+                {{equipment[1].name}}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+       </div>
+   </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js">
+</script>
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+                toastError("{{message}}")
+        }); 
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+{% endblock js_code %}

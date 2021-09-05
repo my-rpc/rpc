@@ -155,7 +155,6 @@
     "dari": "درخواست رخصتی ارسال نشد",
     "en": "Leave request has been not sent"
   },
-<<<<<<< HEAD
   "overtime_request_sent": {
     "dari": "درخواست اضافه کاری ارسال شد",
     "en": "Overtime request has been sent"
@@ -171,7 +170,7 @@
   "contract_not_added":{
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
     "en": "Contract not added for employe with {} ID"
-=======
+  },
   "resign_request_sent": {
     "dari": "درخواست استعفا ارسال شد",
     "en": "Resign request has been sent"
@@ -179,7 +178,6 @@
     "resign_request_not_sent": {
     "dari": "درخواست استعفا ارسال نشد",
     "en": "Resign request has been not sent"
->>>>>>> d5da687080301ba191575024d469a4361276637b
   },
   "resign_request_sent": {
     "dari": "درخواست استعفا ارسال شد",

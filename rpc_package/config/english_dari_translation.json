@@ -866,5 +866,9 @@
   "female": {
     "dari": "مرد",
     "en": "Female"
+  },
+  "my_equipments": {
+    "dari": "تجهیزات من", 
+    "en": "My Equipments"
   }
 }

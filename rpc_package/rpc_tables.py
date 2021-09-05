@@ -287,7 +287,7 @@ class Equipment(db.Model, UserMixin):
     equipment_category = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
-        return f"Equipment ID: {self.id}, Employee ID: {self.emp_id}, Equipment Name: {self.name}"
+        return f"Equipment ID: {self.id}, Equipment Name: {self.name}"
 
 class Employee_equipment(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
