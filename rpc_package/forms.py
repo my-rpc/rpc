@@ -236,7 +236,6 @@ class leaveRequestForm(FlaskForm):
 class ResignRequestForm(FlaskForm):
     reason = StringField(u'Reason', widget=TextArea(), validators=[DataRequired()])
     responsibilities = StringField(u'Responsibilities', widget=TextArea(), validators=[DataRequired()])
-    equipments = StringField(u'Equipments', widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField('Send Request')
 
 

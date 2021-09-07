@@ -26,8 +26,14 @@
                         <th>position</th>
                         <th>department</th>
                         <th>view</th>
-    
                       </tr>
+                      {% if list_of_resigns %}
+                        {% for resign in list_of_resigns %}
+                          <tr>
+                            <td>{{resign.emp_id}}</td>
+                          </tr>
+                        {% endfor %}
+                      {% endif %}
                     </table>
                   </div>
               </div>

@@ -396,8 +396,7 @@ def send_resign_request(resign_form, emp_id):
     resign = Resign_form(
         emp_id=emp_id,
         reason=resign_form.reason.data,
-        responsibilities=resign_form.reason.data,
-        equipments=resign_form.reason.data)
+        responsibilities=resign_form.responsibilities.data)
     db.session.add(resign)
     if db.session.commit():
         return "success"

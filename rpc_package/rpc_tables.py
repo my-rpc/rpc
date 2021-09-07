@@ -271,7 +271,6 @@ class Resign_form(db.Model, UserMixin):
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     reason = db.Column(db.Text, nullable=False)
     responsibilities = db.Column(db.Text, nullable=False)
-    equipments = db.Column(db.Text, nullable=False)
     supervisor = db.Column(db.Boolean, nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
     requested_at= db.Column(db.DateTime, nullable=False)

@@ -105,7 +105,6 @@ def update_messages_resign(form_obj, language):
     form_obj.reason.label.text = translation_obj.resign_reason[language]
     form_obj.submit.label.text = translation_obj.send_request[language]
     form_obj.responsibilities.label.text = translation_obj.responsibilities[language]
-    form_obj.equipments.label.text = translation_obj.equipments[language]
     return form_obj
 
 

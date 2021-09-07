@@ -550,12 +550,11 @@ def overtime_request():
 def resign_request():
     resign_form = ResignRequestForm()
     if request.method == "POST":
-        if resign_form.validate_on_submit():
-            resign = send_resign_request(resign_form, current_user.emp_id)
-            if resign == "success":
-                flash(message_obj.resign_request_sent[session['language']], 'success')
-            else:
-                flash(message_obj.resign_request_not_sent[session['language']], 'error')
+        resign = send_resign_request(resign_form, current_user.emp_id)
+        if resign == "success":
+            flash(message_obj.resign_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.resign_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
     resign_form = update_messages_resign(ResignRequestForm(), session['language'])
     return render_template('resign_request.html',
