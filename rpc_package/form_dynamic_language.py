@@ -89,6 +89,14 @@ def update_messages_overtime(form_obj, language):
     form_obj.end_datetime.label.text = translation_obj.end_date[language]
     return form_obj
 
+def update_messages_loan(form_obj, language):
+    form_obj.requested_amount.label.text = translation_obj.requested_amount[language]
+    form_obj.guarantor.label.text = translation_obj.guarantor[language]
+    form_obj.submit.label.text = translation_obj.send_request[language]
+    form_obj.start_date.label.text = translation_obj.repayment_start_date[language]
+    form_obj.end_date.label.text = translation_obj.repayment_end_date[language]
+    return form_obj
+
 
 def update_messages_resign(form_obj, language):
     """

@@ -5,15 +5,18 @@ from werkzeug.utils import secure_filename
 
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, ContractForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
+    ContractForm, LoanRequestForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, \
-    Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form
+    Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
+    Loan_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, assign_equipment, send_resign_request,\
-    update_employee_data, set_emp_update_form_data, send_leave_request, send_department
+    update_employee_data, set_emp_update_form_data, send_leave_request, send_department, \
+    add_loan_request
 import os
 from datetime import datetime
 
@@ -542,6 +545,29 @@ def overtime_request():
         return redirect(url_for('overtime_request'))
     overtime_form = update_messages_overtime(OvertimeRequestForm(), session['language'])
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_request', methods=["GET", "POST"])
+@login_required
+def loan_request():
+    loan_form = LoanRequestForm()
+    if request.method == "GET":
+        emp_loan_list = Loan_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Loan_form.requested_at.desc()).all()
+    if request.method == 'POST':
+        if loan_form.validate_on_submit():
+            loan = add_loan_request(loan_form, current_user.emp_id)
+            if loan == "success":
+                flash(message_obj.loan_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.loan_request_not_sent[session['language']], 'error')
+        else:
+            flash(loan_form.errors)
+        return redirect(url_for('loan_request'))
+    loan_form = update_messages_loan(LoanRequestForm(), session['language'])
+    return render_template('loan_request.html', form=loan_form, emp_loan_list=emp_loan_list,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 

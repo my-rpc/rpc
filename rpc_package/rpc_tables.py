@@ -14,6 +14,7 @@ def load_user(user_id):
 
 class Employees(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
+    __tablename__ = "employees"
     id = db.Column(db.String(20, collation='utf8_general_ci'), primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)
@@ -265,6 +266,28 @@ class Overtime_form(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Overtime ID: {self.id}, Employee ID: {self.emp_id}, Overtime Type: {self.overtime_type}"
+
+class Loan_form(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "loan_form"
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    requested_amount = db.Column(db.Integer, nullable=False)
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
+    guarantor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    guarantor_emp = db.relationship('Employees', foreign_keys=[guarantor_id])
+    guarantor = db.Column(db.Boolean, nullable=True)
+    producer = db.Column(db.Boolean, nullable=True)
+    verifier = db.Column(db.Boolean, nullable=True)
+    executor = db.Column(db.Boolean, nullable=True)
+    requested_at = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, guarantor_emp):
+        self.guarantor_emp = guarantor_emp
+
+    def __repr__(self):
+        return f"Loan ID: {self.id}, Employee ID: {self.emp_id}, Requested Amount : {self.requested_amount}"
 
 class Resign_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}

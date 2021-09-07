@@ -3,7 +3,8 @@ import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, \
-    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments
+    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
+    Loan_form
 from flask import session
 from flask_login import current_user
 import datetime
@@ -345,6 +346,21 @@ def add_overtime_request(overtime_form, emp_id):
             description=overtime_form.description.data,
             requested_at=jdatetime.datetime.now())
         db.session.add(overtime)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+def add_loan_request(loan_form, emp_id):
+    try:
+        loan = Loan_form(
+            emp_id=emp_id,
+            requested_amount=loan_form.requested_amount.data,
+            start_date=loan_form.start_date.data,
+            end_date=loan_form.end_date.data,
+            guarantor_id=loan_form.guarantor.data,
+            requested_at=jdatetime.datetime.now())
+        db.session.add(loan)
         db.session.commit()
         return "success"
     except IOError as io:

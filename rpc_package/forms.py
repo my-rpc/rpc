@@ -246,6 +246,15 @@ class OvertimeRequestForm(FlaskForm):
     description = TextAreaField('Overtime Description')
     submit = SubmitField('Send Request')
 
+class LoanRequestForm(FlaskForm):
+    emp_list = [(emp.id, emp.name_english + ' ' + emp.lname_english + '/' + emp.name + ' ' + emp.lname) for emp in Employees.query.all()]
+    emp_list.insert(0, ('', '------'))
+    requested_amount = IntegerField('Requested Amount', validators=[DataRequired()])
+    start_date = DateField('From', validators=[DataRequired()])
+    end_date = DateField('To', validators=[DataRequired()])
+    guarantor = SelectField('Guarantor', choices=emp_list, validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])

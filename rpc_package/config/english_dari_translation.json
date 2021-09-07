@@ -175,6 +175,10 @@
     "dari": "لیست درخواست اضافه کاری",
     "en": "List of Overtime Request"
   },
+  "list_of_loan_request": {
+    "dari": "لیست درخواست قرضه",
+    "en": "List of Loan Request"
+  },
   "prepayment_form": {
     "dari": "فورم پیش پرداخت",
     "en": "Prepayment Form"
@@ -250,6 +254,10 @@
   "guarantor": {
     "dari": "ضامن",
     "en": "Guarantor"
+  },
+  "guarantor_name": {
+    "dari": "نام ضامن",
+    "en": "Guarantor Name"
   },
   "grand_name": {
     "dari": "نام پدر کلان",
@@ -351,17 +359,25 @@
     "dari": "پایه معاش",
     "en": "Base Salary"
   },
-  "amount request": {
+  "requested_amount": {
     "dari": "مبلغ درخواستی",
-    "en": "Amount Request"
+    "en": "Requested Amount"
   },
-  "refund_per_month": {
-    "dari": "بازپرداخت به ماه",
-    "en": "Refund Per Month"
+  "repayment_period_in_months": {
+    "dari": "مدت بازپرداخت به ماه",
+    "en": "Repayment period in months"
   },
   "monthly_amount": {
     "dari": "مبلغ ماهانه",
     "en": "Monthly Amount"
+  },
+  "repayment_start_date": {
+    "dari": "تاریخ شروع بازپرداخت",
+    "en": "Repayment Start Date"
+  },
+  "repayment_end_date": {
+    "dari": "تاریخ ختم باز پرداخت",
+    "en": "Repayment End Date"
   },
   "start_date": {
     "dari": "تاریخ شروع",
@@ -461,6 +477,10 @@
   },
   "request_overtime_form":{
     "dari": " درخواست اضافه کاری",
+    "en": "Overtime Form"
+  },
+  "request_loan_form":{
+    "dari": "درخواست قرضه",
     "en": "Overtime Form"
   },
   "copy_of_national_id": {
@@ -870,5 +890,17 @@
   "female": {
     "dari": "مرد",
     "en": "Female"
+  },
+  "producer": {
+    "dari": "تهیه کننده",
+    "en": "Producer"
+  },
+  "verifier": {
+    "dari": "تائید کننده",
+    "en": "Verifier"
+  },
+  "executor": {
+    "dari": "اجرا کننده",
+    "en": "Executor"
   }
 }
