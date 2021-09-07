@@ -94,7 +94,10 @@
                         <td>{% if leave.leave_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
-                        <td>{{leave.end_datetime - leave.start_datetime}}</td>
+                        <td>
+                            {{ ((leave.end_datetime - leave.start_datetime)|string)
+                                .replace('days', translation.days[language]).replace('day', translation.day[language])}}
+                        </td>
                         <td>
                             {% if leave.supervisor == None %}
                             <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>

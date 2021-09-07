@@ -159,6 +159,14 @@
     "dari": "کل روزها",
     "en": "Total Days"
   },
+  "days": {
+    "dari": "روز",
+    "en": "days"
+  },
+  "day": {
+    "dari": "روز",
+    "en": "day"
+  },
   "employee_overtime": {
     "dari": "اضافه کاری کارمند",
     "en": "Employee Overtime"

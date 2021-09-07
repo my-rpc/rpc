@@ -112,7 +112,10 @@
                             <td>{% if overtime.overtime_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
                             <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
                             <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
-                            <td>{{overtime.end_datetime - overtime.start_datetime}}</td>
+                            <td>
+                                {{ ((overtime.end_datetime - overtime.start_datetime)|string)
+                                    .replace('days', translation.days[language]).replace('day', translation.day[language])}}
+                            </td>
                             <td>
                                 {% if overtime.supervisor == None %}
                                 <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
