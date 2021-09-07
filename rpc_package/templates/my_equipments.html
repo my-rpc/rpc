@@ -9,28 +9,80 @@
         left: auto;
         opacity: 1 !important;
     }
+    .equipmentCheckbox
+    {
+    opacity: 1 !important;
+    position: relative !important;
+    left: 0 !important;
+    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <section class="content">
+    {% if my_equipments %}
    <div class="box">
        <div class="box-header">
            <div class="box-title">
             {{translation.my_equipments[language]}}
            </div>
        </div>
+       <form method="POST">
+        {{ form.hidden_tag()}}
        <div class="box-body">
-        {% if my_equipments %}
-        <ul>
-            {% for equipment in my_equipments %}
-            <li>
-                {{equipment[1].name}}
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+              <tr>
+                <th>{{translation.leave_type[language]}}</th>
+                <th>{{translation.leave_type[language]}}</th>
+                <th>{{translation.start_date[language]}}</th>
+                <th>{{translation.end_date[language]}}</th>
+              </tr>
+              {% for equipment in my_equipments %}
+              <tr>
+                <td>{{form.equipment(value=equipment[1].id, class="equipmentCheckbox")}}</td>
+                <td>{{equipment[1].name}}</td>
+                <td>{{equipment[1].name_english}}</td>
+                <td>{{equipment[1].equipment_catgory}}</td>
+            
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
        </div>
+       <div class="box-footer">
+        {{ form.submit(class="btn btn-primary")}}
+      </div>
+    </form>
    </div>
+   {% endif %}
+   <div class="box">
+    <div class="box-header">
+        <div class="box-title">
+         {{translation.received_equipment[language]}}
+        </div>
+    </div>
+    <div class="box-body">
+     {% if received_equipment %}
+     <div class="table-responsive">
+         <table class="table table-hover">
+           <tr>
+             <th>{{translation.leave_type[language]}}</th>
+             <th>{{translation.start_date[language]}}</th>
+             <th>{{translation.end_date[language]}}</th>
+           </tr>
+           {% for equipment in received_equipment %}
+           <tr>
+             <td>{{equipment[1].name}}</td>
+             <td>{{equipment[1].name_english}}</td>
+             <td>{{equipment[1].equipment_catgory}}</td>
+         
+           </tr>
+           {% endfor %}
+         </table>
+       </div>
+     {% endif %}
+    </div>
+</div>
 </section>
 {% endblock main_content%}
 {% block js_code %}

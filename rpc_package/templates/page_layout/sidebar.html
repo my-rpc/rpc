@@ -62,10 +62,6 @@
         <ul class="treeview-menu">
 
           <li><a href="{{ url_for('contract_settings') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.contract_settings[language] }}</a></li>
-
-          <li><a href="{{ url_for('leave_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_leave_form[language] }}</a></li>
-          <li><a href="{{ url_for('resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
-
         </ul>
 
       </li>
@@ -84,24 +80,6 @@
           <li><a href="{{ url_for('resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
         </ul>
       </li>
-
-    <li class="treeview">
-        <a href="#">
-          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
-          <span>{{translation.employee_forms[language] }}</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-right pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li><a href="{{ url_for('emp_leave_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_leave_form[language] }}</a></li>
-          <li><a href="{{ url_for('emp_resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
-        </ul>
-
-      </li>
-
-
-
       <li>
         <a href="{{ url_for('create_new_user') }}">
           <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>

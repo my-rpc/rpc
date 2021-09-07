@@ -870,5 +870,9 @@
   "my_equipments": {
     "dari": "تجهیزات من", 
     "en": "My Equipments"
+  },
+  "received_equipment": {
+    "dari": "تجهیزات دریافت شده",
+    "en": "Received Equipment"
   }
 }

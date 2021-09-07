@@ -7,6 +7,7 @@ from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phon
 from flask import session
 from flask_login import current_user
 import datetime
+from flask_login import current_user
 
 
 def upload_docs(emp_id, request, file_type):
@@ -423,6 +424,18 @@ def send_department(department_form):
         name=department_form.name_department.data,
         name_english=department_form.name_english_department.data)
     db.session.add(department)
+    if db.session.commit():
+        return "success"
+    else:
+        return "error"
+
+def accept_equipment(request):
+    equipment=""
+    for eq in request.form.getlist('equipment'):
+        my_equipment = Employee_equipment.query.filter_by(emp_id = current_user.emp_id, equipment_id=eq).first()
+        # if my_equipment is None:
+        my_equipment.received = True
+        db.session.add(my_equipment)
     if db.session.commit():
         return "success"
     else:

@@ -4,7 +4,7 @@ from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
     UploadEducationalDocsForm, ResignRequestForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, AcceptEquipmentForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Districts, Equipment, Employee_equipment, Resign_form, \
@@ -12,7 +12,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, assign_equipment, \
-    set_emp_update_form_data, send_leave_request, send_resign_request, send_department
+    set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment
 import os
 from datetime import datetime
 
@@ -633,7 +633,19 @@ def position_setting():
 @app.route("/my_equipments", methods=['GET', 'POST'])
 @login_required
 def my_equipments():
-    my_equipments = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
-            (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id).all()
-    return render_template('my_equipments.html', my_equipments=my_equipments, language=session['language'], translation=translation_obj)
+    form = AcceptEquipmentForm()
+    if request.method == "GET":
+        my_equipments = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+            (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == None).all()
+    received_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == True).all()
+
+    if request.method == "POST":
+        result = accept_equipment(request)
+        if result == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('my_equipments.html', form=form, received_equipment=received_equipment, my_equipments=my_equipments, language=session['language'], translation=translation_obj)
 
