@@ -179,6 +179,10 @@
     "dari": "لیست درخواست قرضه",
     "en": "List of Loan Request"
   },
+  "list_of_loan_guarantor": {
+    "dari": "لیست ضمانت قرضه",
+    "en": "List of Loan Guarantor"
+  },
   "prepayment_form": {
     "dari": "فورم پیش پرداخت",
     "en": "Prepayment Form"
@@ -322,6 +326,14 @@
   "rejected": {
     "dari": "رد شده",
     "en": "Rejected"
+  },
+  "reject": {
+    "dari": "رد کردن",
+    "en": "Rejected"
+  },
+  "accept": {
+    "dari": "پذیرفتن",
+    "en": "Accept"
   },
   "pending": {
     "dari": "انتظار",
@@ -481,7 +493,11 @@
   },
   "request_loan_form":{
     "dari": "درخواست قرضه",
-    "en": "Overtime Form"
+    "en": "Loan Form"
+  },
+  "loan_applicant":{
+    "dari": "درخواست کننده قرضه",
+    "en": "Loan Applicant"
   },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
@@ -642,6 +658,10 @@
   "m_status": {
     "dari": "حالت مدنی",
     "en": "Marital Status"
+  },
+  "record_status": {
+    "dari": "حالت",
+    "en": "Status"
   },
   "need_date": {
     "dari": "شروع ضرورت",

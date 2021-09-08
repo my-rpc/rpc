@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
-    ContractForm, LoanRequestForm
+    ContractForm, LoanRequestForm, LoanGuarantorForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, \
@@ -568,6 +568,34 @@ def loan_request():
         return redirect(url_for('loan_request'))
     loan_form = update_messages_loan(LoanRequestForm(), session['language'])
     return render_template('loan_request.html', form=loan_form, emp_loan_list=emp_loan_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_guarantor', methods=["GET", "POST"])
+@login_required
+def loan_guarantor():
+    loan_guarantor_form = LoanGuarantorForm()
+    if request.method == "GET":
+        emp_loan_guarantor = Loan_form.query \
+            .filter_by(guarantor_id=current_user.emp_id) \
+            .order_by(Loan_form.requested_at.desc()).all()
+    if request.method == 'POST':
+        if loan_guarantor_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(request.form['id'])
+                loan_form.guarantor = bool(int(request.form['guarantor']))
+                db.session.commit()
+                if request.form['guarantor'] == '0':
+                    flash(message_obj.loan_request_guarantor_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_guarantor_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_guarantor_accepted[session['language']], 'error')
+        else:
+            flash(loan_guarantor_form.errors)
+        return redirect(url_for('loan_guarantor'))
+    loan_guarantor_form = update_messages_loan_guarantor(LoanGuarantorForm(), session['language'])
+    return render_template('loan_guarantor.html', form=loan_guarantor_form, emp_loan_guarantor=emp_loan_guarantor,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 

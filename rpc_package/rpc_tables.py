@@ -272,19 +272,23 @@ class Loan_form(db.Model, UserMixin):
     __tablename__ = "loan_form"
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    employee = db.relationship('Employees', foreign_keys=[emp_id])
     requested_amount = db.Column(db.Integer, nullable=False)
     start_date = db.Column(db.Date, nullable=True)
     end_date = db.Column(db.Date, nullable=True)
     guarantor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     guarantor_emp = db.relationship('Employees', foreign_keys=[guarantor_id])
     guarantor = db.Column(db.Boolean, nullable=True)
-    producer = db.Column(db.Boolean, nullable=True)
-    verifier = db.Column(db.Boolean, nullable=True)
-    executor = db.Column(db.Boolean, nullable=True)
+    hr = db.Column(db.Boolean, nullable=True)
+    hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    re_hr = db.relationship('Employees', foreign_keys=[hr_id])
+    chairman = db.Column(db.Boolean, nullable=True)
+    chairman_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    re_chairman = db.relationship('Employees', foreign_keys=[chairman_id])
+    finance = db.Column(db.Boolean, nullable=True)
+    finance_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    re_finance = db.relationship('Employees', foreign_keys=[finance_id])
     requested_at = db.Column(db.DateTime, nullable=False)
-
-    def __init__(self, guarantor_emp):
-        self.guarantor_emp = guarantor_emp
 
     def __repr__(self):
         return f"Loan ID: {self.id}, Employee ID: {self.emp_id}, Requested Amount : {self.requested_amount}"

@@ -255,6 +255,12 @@ class LoanRequestForm(FlaskForm):
     guarantor = SelectField('Guarantor', choices=emp_list, validators=[DataRequired()])
     submit = SubmitField('Send Request')
 
+class LoanGuarantorForm(FlaskForm):
+    guarantor = RadioField('Guarantor', default=1,
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
