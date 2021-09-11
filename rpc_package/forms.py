@@ -3,10 +3,10 @@ from wtforms.widgets import TextArea
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
     SelectField, \
     TextAreaField, FileField, DecimalField, DateField, TimeField, IntegerField
-from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
+from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError, AnyOf
 import re
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
-    Position_history, Positions, Departments, Salary
+    Position_history, Positions, Departments, Salary, Contracts
 from rpc_package.utils import check_language
 
 
@@ -70,9 +70,9 @@ class EmployeeForm(FlaskForm):
     # TODO adding datetime picker.
     birthday = StringField('Birthday/تارخ تولد')
     tazkira = StringField('Tazkira/تذکره', validators=[Regexp('\d+')])
-    gender = RadioField('Gender', choices=[[1, 'Male'], [0, 'Female']], validators=[DataRequired()])
+    gender = RadioField('Gender', choices=[[1, 'Male'], [0, 'Female']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
     blood = StringField("Blood Type/گروپ خون", validators=[Regexp('(A|B|AB|O|C)[+-]')], default='C+')
-    m_status = RadioField('Marital Status', choices=[[1, 'Married'], [0, 'Single']], validators=[DataRequired()])
+    m_status = RadioField('Marital Status', choices=[[1, 'Married'], [0, 'Single']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
     tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name + '/' + province.province_name_english) for province in
                       Provinces.query.all()]
@@ -202,24 +202,27 @@ class ContractForm(FlaskForm):
     position_list.insert(0, ('', '------'))
     department_list.insert(0, ('', '------'))
     contract_type = SelectField('Contract Type', choices=contract_type_list, validators=[DataRequired()])
-    contract_duration = IntegerField('Contract Duration', validators=[DataRequired()])
-    start_date = DateField('Start Date', validators=[DataRequired()])
+    end_date = StringField('End Date', validators=[DataRequired()])
+    start_date = StringField('Start Date', validators=[DataRequired()])
     position = SelectField('Position', choices=position_list, validators=[DataRequired()])
     department = SelectField('Department', choices=department_list, validators=[DataRequired()])
 
-    base = StringField('Base Salary', validators=[DataRequired()])
-    transportation = StringField('Transportation', validators=[DataRequired()])
-    house_hold = StringField('House Hold', validators=[DataRequired()])
-    currency = RadioField('Currency', choices=[[1, 'Afghani'], [0, 'Dollar']], validators=[DataRequired()])
+    base = StringField('Base Salary', validators=[DataRequired(), Regexp('(\d+\.\d+|\d+)', message='Invalid Value')])
+    transportation = StringField('Transportation', validators=[DataRequired(), Regexp('(\d+\.\d+|\d+)')])
+    house_hold = StringField('House Hold', validators=[DataRequired(), Regexp('(\d+\.\d+|\d+)')])
+    currency = RadioField('Currency', choices=[[1, 'Afghani'], [0, 'Dollar']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
 
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
     submit = SubmitField('Add Contract')
 
     # TODO validation
-
+    def validate_start_date(self, start_date):
+        if start_date.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', start_date.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
 class leaveRequestForm(FlaskForm):
-    leave_type = RadioField('Leave Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired()])
+    leave_type = RadioField('Leave Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
@@ -239,7 +242,7 @@ class AddEquipmentForm(FlaskForm):
 
 
 class OvertimeRequestForm(FlaskForm):
-    overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']],
+    overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily'], AnyOf(values=["1", "0"])],
                                validators=[DataRequired()])
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])

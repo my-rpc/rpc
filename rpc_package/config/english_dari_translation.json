@@ -439,6 +439,30 @@
     "dari": "مدت قرارداد",
     "en": "Contract Duration"
   },
+  "contract_update": {
+    "dari": "تغییرات قراداد",
+    "en": "َUpdate Contract"
+  },
+  "afghani":{
+    "dari":"افغانی",
+    "en":"AFG"
+  },
+  "dollar":{
+    "dari":"دالر",
+    "en":"َUSD"
+  },
+  "transportation":{
+    "dari":"حمله",
+    "en":"Transportation"
+  },
+  "house_hold":{
+    "dari":"خرج دسترخوان",
+    "en":"House Hold"
+  },
+  "currency":{
+    "dari":"نوع پول",
+    "en":"Currency"
+  },
   "job_responsibilities": {
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
