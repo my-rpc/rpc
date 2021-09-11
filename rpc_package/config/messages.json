@@ -202,11 +202,12 @@
     "en": "Department not Added"
   },
   "val_dic" : {
-    "employee_id": "Employee already exi...mployee ID",
+    "employee_id": "Employee already exist, please check your employee ID",
     "email": "ایمیل شما موجود است",
     "phone": "تلفون شما موجود است",
     "phone_second": "تلفون شما موجود است",
-    "permanent_address": "This field is required.", 
+    "email_second": "ایمیل شما موجود است",
+    "permanent_address": "This field is required.",
     "permanent_address_dari": "This field is required.",
     "current_address": "This field is required.",
     "current_address_dari": "This field is required.",
