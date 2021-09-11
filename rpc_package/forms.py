@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms.widgets import TextArea
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
     SelectField, \
     TextAreaField, FileField, DecimalField, DateField, TimeField, IntegerField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError, AnyOf
 import re
+    SelectField, FileField, DecimalField, DateField, TimeField, IntegerField, TextAreaField
+from wtforms.widgets import TextArea
+
+from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
     Position_history, Positions, Departments, Salary, Contracts
 from rpc_package.utils import check_language
@@ -226,12 +229,20 @@ class leaveRequestForm(FlaskForm):
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     submit = SubmitField('Send Request')
+    def validate_start_datetime(self, start_datetime):
+        if start_datetime.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', start_datetime.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    def validate_end_datetime(self, end_datetime):
+        if end_datetime.data:
+            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', end_datetime.data)):
+                raise ValidationError('Date format is incorrect yyyy-mm-dd')
+
 
 
 class ResignRequestForm(FlaskForm):
     reason = StringField(u'Reason', widget=TextArea(), validators=[DataRequired()])
     responsibilities = StringField(u'Responsibilities', widget=TextArea(), validators=[DataRequired()])
-    equipments = StringField(u'Equipments', widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField('Send Request')
 
 
@@ -239,7 +250,6 @@ class AddEquipmentForm(FlaskForm):
     equipment = BooleanField('equipment', default=[])
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
     submit = SubmitField('Add Equipment')
-
 
 class OvertimeRequestForm(FlaskForm):
     overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily'], AnyOf(values=["1", "0"])],
@@ -249,8 +259,11 @@ class OvertimeRequestForm(FlaskForm):
     description = TextAreaField('Overtime Description')
     submit = SubmitField('Send Request')
 
-
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
     name_english_department = StringField('Name of Department', validators=[DataRequired()])
     submit = SubmitField('Send Request')
+
+class AcceptEquipmentForm(FlaskForm):
+    equipment = BooleanField('equipment', default=[])
+    submit = SubmitField('Accept')

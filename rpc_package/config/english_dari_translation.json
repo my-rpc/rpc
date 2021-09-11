@@ -143,6 +143,10 @@
     "dari": "پروفایل کارمند",
     "en": "Employee Profile"
   },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
+  },
   "list_of_leave_request": {
     "dari": "لیست درخواست رخصتی",
     "en": "List of Leave Request"
@@ -559,9 +563,9 @@
     "dari": "درباره",
     "en": "About"
   },
-  "add_equipments": {
+  "add_equipment": {
     "dari": "تحویل تجهیزات",
-    "en": "Add Equipments"
+    "en": "Add equipment"
   },
   "contact": {
     "dari": "ارتباط",
@@ -619,9 +623,25 @@
     "dari": "وظایف مربوطه",
     "en": "Relevant Responsibilities"
   },
-  "equipments": {
+  "resign_summary": {
+    "dari": "خلاصه استعفا",
+    "en": "Resign Summary"
+  },
+  "equipment": {
     "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipments"
+    "en": "Relevant Equipment"
+  },
+  "equipment_name": {
+    "dari": "نام",
+    "en": "Name"
+  },
+  "equipment_name_english": {
+    "dari": "نام به لاتین",
+    "en": "English Name"
+  },
+  "equipment_status": {
+    "dari": "وضعیت",
+    "en": "Status"
   },
   "resign_reason": {
     "dari": "دلیل استعفا",
@@ -886,5 +906,13 @@
   "female": {
     "dari": "مرد",
     "en": "Female"
+  },
+  "my_equipment": {
+    "dari": "تجهیزات من", 
+    "en": "My equipment"
+  },
+  "received_equipment": {
+    "dari": "تجهیزات دریافت شده",
+    "en": "Received Equipment"
   }
 }

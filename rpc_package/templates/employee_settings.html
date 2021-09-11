@@ -32,6 +32,8 @@
         <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-documents" type="button"><span><i class="fad fa-file-alt"></i> Add Documents</span></button>
         <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-contract" type="button"><span><i class="fad fa-file-signature" ></i> Add Contract</span></button>
         <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" id="delete-employee" type="button"><span><i class="fad fa-times"></i> Delete Employee</span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-equipment" type="button"><span><i class="fad fa-file-signature" ></i> Add Equipment</span></button>
+
     </div>
     <div class="box-body table-responsive">
         <table class="table table-striped table-hover" id="employee_setting">
@@ -177,6 +179,14 @@ $('.btn-function').on('click', function(fun){
                 case(btnID === 'add-documents'):
                     if(empID != '' && empID != undefined){
                         window.open('/add_documents?emp_id='+empID, '_blank');
+                    }else{
+                        toastWarning('Please select an employee')
+                    }
+                    break;
+                case(btnID === 'add-contract'):
+                case(btnID === 'add-equipment'):
+                    if(empID != '' && empID != undefined){
+                        window.open('/add_equipment?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee')
                     }

@@ -1,0 +1,298 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.resign_request[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    .equipmentCheckbox
+    {
+    opacity: 1 !important;
+    position: relative !important;
+    left: 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    {% if resign %}
+   {{resign}}
+
+   {% endif %}
+   <div class="">
+    <div class="container-full">
+      <!-- Content Header (Page header) -->	  
+      <div class="content-header">
+          <div class="d-flex align-items-center">
+              <div class="mr-auto">
+                  <h3 class="page-title">Resign Request</h3>
+              </div>
+          </div>
+      </div>
+
+      <!-- Main content -->
+      <section class="content">
+
+        <div class="row">
+          <div class="col-12 col-lg-7 col-xl-8">
+              
+            <div class="nav-tabs-custom">
+              <ul class="nav nav-tabs">
+                <li><a class="active" href="#usertimeline" data-toggle="tab">{{translation.resign_summary[language]}}</a></li>
+                <li><a href="#activity" data-toggle="tab">{{translation.equipment[language]}}</a></li>
+              </ul>
+
+              <div class="tab-content">
+
+               <div class="active tab-pane" id="usertimeline">
+                  <div class="box p-15"> 
+                      <div class="timeline timeline-single-column timeline-single-full-column">
+                          <div class="timeline-item">
+                            <div class="timeline-point timeline-point-info">
+                                <i class="ion ion-chatbubble-working"></i>
+                            </div>
+                              <div class="timeline-event">
+                                  <div class="timeline-heading">
+                                      <h4 class="timeline-title"><a href="#">{{translation.resign_reason[language]}}</a></h4>
+                                  </div>
+                                  <div class="timeline-body">
+                                      <p>{{resign[0].reason}}</p>
+                                  </div>
+                                  <!-- <div class="timeline-footer">
+                                      <p class="text-right"><i class="fa fa-clock-o"></i> 8 days ago</p>
+                                  </div> -->
+                              </div>
+                          </div>
+
+                          <div class="timeline-item">
+                              <div class="timeline-point timeline-point-info">
+                                  <i class="ion ion-chatbubble-working"></i>
+                              </div>
+                              <div class="timeline-event">
+                                  <div class="timeline-heading">
+                                      <h4 class="timeline-title"><a href="#">{{translation.responsibilities[language]}}</a></h4>
+                                  </div>
+                                  <div class="timeline-body">
+                                      <p>{{resign[0].responsibilities}}</p>									
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="box-footer">
+                        {% if resign and resign[0].hr == True %}
+                        <!-- <div class="col-lg-4">
+                          <div class="box">
+                            <div class="box-body ribbon-box">
+                              <div class="ribbon ribbon-success">Success Ribbon</div>
+                              <p class="mb-0">Quisque nec turpis at urna dictum luctus. Suspendisse convallis dignissim eros at volutpat. In egestas mattis dui. Aliquam mattis dictum aliquet. Nulla sapien mauris, eleifend et sem ac, commodo dapibus odio.</p>
+                            </div> 
+                          </div>
+                        </div>  -->
+                        accepted
+                        {% elif resign[0].hr == False %}
+                          rejected
+                        {% else %}
+                        <a href="/accept_reject_resign_request?resign={{resign[0].id}}&action=1"><button class="btn btn-success">Accept</button></a>
+                        <a href="/accept_reject_resign_request?resign={{resign[0].id}}&action=0"><button class="btn btn-danger">Reject</button></a>
+                        {% endif %}
+                      </div>
+                  </div>  
+                </div>    
+
+                <div class=" tab-pane" id="activity">			
+                  <div class="box">
+                    <form method="POST" action="/deliver_equipment">
+                      {{ form.hidden_tag()}}
+                      <!-- <input type="hidden" name="emp_id" -->
+                    <div class="box-body">
+                     {% if equipment %}
+                     <div class="table-responsive">
+                         <table class="table table-hover">
+                           <tr>
+                             <th><input type="checkbox" class="equipmentCheckbox" /></th>
+                             <th>{{translation.equipment_name[language]}}</th>
+                             <th>{{translation.equipment_name_english[language]}}</th>
+                             <th>{{translation.status[language]}}</th>
+                           </tr>
+                           {% for eq in equipment %}
+                           <tr>
+                            <td>{{form.equipment(value=eq[0].id, class="equipmentCheckbox")}}</td>
+                            <td>{{eq[1].name}}</td>
+                            <td>{{eq[1].name_english}}</td>
+                            <td>{{eq[1].static}}</td>
+                           </tr>
+                           {% endfor %}
+                         </table>
+                       </div>
+                     {% endif %}
+                    </div>
+                    <div class="box-footer">
+                        {{ form.submit(value = "Delivery", class="btn btn-primary")}}
+                    </div>
+                    </form>
+                </div>
+                  <div class="box p-15">				
+                  <!-- Post -->
+                 
+                 
+                 </div>
+
+                </div>
+                <!-- /.tab-pane -->
+              </div>
+              <!-- /.tab-content -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+          </div>
+          <!-- /.col -->		
+
+            <div class="col-12 col-lg-5 col-xl-4">
+               <div class="box box-widget widget-user">
+                  <!-- Add the bg color to the header using any of the bg-* classes -->
+                  <div class="widget-user-header bg-black" style="background: url('../images/gallery/full/10.jpg') center center;">
+                    <h3 class="widget-user-username">Michael Jorden</h3>
+                    <h6 class="widget-user-desc">Designer</h6>
+                  </div>
+                  <div class="widget-user-image">
+                    <img class="rounded-circle" src="{{resign[1].profile_pic}}" alt="User Avatar">
+                  </div>
+                  <div class="box-footer">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="description-block">
+                          <h5 class="description-header">12K</h5>
+                          <span class="description-text">FOLLOWERS</span>
+                        </div>
+                        <!-- /.description-block -->
+                      </div>
+                      <!-- /.col -->
+                      <div class="col-sm-4 br-1 bl-1">
+                        <div class="description-block">
+                          <h5 class="description-header">550</h5>
+                          <span class="description-text">FOLLOWERS</span>
+                        </div>
+                        <!-- /.description-block -->
+                      </div>
+                      <!-- /.col -->
+                      <div class="col-sm-4">
+                        <div class="description-block">
+                          <h5 class="description-header">158</h5>
+                          <span class="description-text">TWEETS</span>
+                        </div>
+                        <!-- /.description-block -->
+                      </div>
+                      <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                  </div>
+                </div>
+                <div class="box">
+                  <div class="box-body box-profile">            
+                    <div class="row">
+                      <div class="col-12">
+                          <div>
+                              <p>Email :<span class="text-gray pl-10">David@yahoo.com</span> </p>
+                              <p>Phone :<span class="text-gray pl-10">+11 123 456 7890</span></p>
+                              <p>Address :<span class="text-gray pl-10">123, Lorem Ipsum, Florida, USA</span></p>
+                          </div>
+                      </div>
+                      <div class="col-12">
+                          <div class="pb-15">						
+                              <p class="mb-10">Social Profile</p>
+                              <div class="user-social-acount">
+                                  <button class="btn btn-circle btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></button>
+                                  <button class="btn btn-circle btn-social-icon btn-twitter"><i class="fa fa-twitter"></i></button>
+                                  <button class="btn btn-circle btn-social-icon btn-instagram"><i class="fa fa-instagram"></i></button>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-12">
+                          <div>
+                              <div class="map-box">
+                                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2805244.1745767146!2d-86.32675167439648!3d29.383165774894163!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88c1766591562abf%3A0xf72e13d35bc74ed0!2sFlorida%2C+USA!5e0!3m2!1sen!2sin!4v1501665415329" width="100%" height="100" frameborder="0" style="border:0" allowfullscreen></iframe>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+              <div class="box">
+                  <div class="box-body">
+                      <div class="flexbox align-items-baseline mb-20">
+                        <h6 class="text-uppercase ls-2">Friends</h6>
+                        <small>20</small>
+                      </div>
+                      <div class="gap-items-2 gap-y">
+                        <a class="avatar" href="#"><img src="../images/avatar/1.jpg" alt="..."></a>
+                        <a class="avatar" href="#"><img src="../images/avatar/3.jpg" alt="..."></a>
+                        <a class="avatar" href="#"><img src="../images/avatar/4.jpg" alt="..."></a>
+                        <a class="avatar" href="#"><img src="../images/avatar/5.jpg" alt="..."></a>
+                        <a class="avatar" href="#"><img src="../images/avatar/6.jpg" alt="..."></a>
+                        <a class="avatar" href="#"><img src="../images/avatar/7.jpg" alt="..."></a>
+                        <a class="avatar" href="#"><img src="../images/avatar/8.jpg" alt="..."></a>
+                        <a class="avatar avatar-more" href="#">+15</a>
+                      </div>
+                  </div>
+                  <div class="box-footer">
+                      <a class="text-uppercase d-blockls-1 text-fade" href="#">Invite People</a>
+                  </div>
+              </div>
+              <div class="box box-inverse" style="background-color: #3b5998">
+                <div class="box-header no-border">
+                  <span class="fa fa-facebook font-size-30"></span>
+                    <div class="box-tools pull-right">
+                      <h5 class="box-title box-title-bold">Facebook feed</h5>
+                    </div>
+                </div>
+
+                <blockquote class="blockquote blockquote-inverse no-border m-0 py-15">
+                  <p>Holisticly benchmark plug imperatives for multifunctional deliverables. Seamlessly incubate cross functional action.</p>
+                  <div class="flexbox">
+                    <time class="text-white" datetime="2017-11-21 20:00">21 November, 2017</time>
+                    <span><i class="fa fa-heart"></i> 75</span>
+                  </div>
+                </blockquote>
+              </div>
+
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+</div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js">
+</script>
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+                toastError("{{message}}")
+        }); 
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+{% endblock js_code %}

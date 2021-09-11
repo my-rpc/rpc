@@ -11,7 +11,7 @@
     }
     .equipmentCheckbox
     {
-      opacity: 1 !important;
+    opacity: 1 !important;
     position: relative !important;
     left: 0 !important;
     }
@@ -42,7 +42,7 @@
                         <th>{{translation.hr[language]}}</th>
                         <th>{{translation.request_date[language]}}</th> -->
                       </tr>
-                      {% for equipment in all_equipments %}
+                      {% for equipment in all_equipment %}
                       <tr>
                         <td>{{form.equipment(value=equipment.id, class="equipmentCheckbox")}}</td>
                         <td>{{equipment.name}}</td>

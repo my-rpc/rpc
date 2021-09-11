@@ -2,24 +2,29 @@ from flask import render_template, url_for, redirect, request, jsonify, flash, s
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
-    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, ContractForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
+    UploadEducationalDocsForm, ResignRequestForm, \
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, AcceptEquipmentForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Contracts, Contract_types, Positions, Position_history, Salary, \
-    Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form
+    Districts, Equipment, Employee_equipment, Resign_form, \
+    Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, send_leave_request, send_department, set_contact_update_form_data, \
     update_contract
+    update_employee_data, assign_equipment, \
+    set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment, accept_reject_resign
 import os
 from datetime import datetime
 import jdatetime
 
 
+@app.route("/", methods=['GET', 'POST'])
+@login_required
+def blank():
+    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -501,10 +506,10 @@ def edit_contract():
     if request.method == "POST":
         if contract_form.validate_on_submit():
             updated_contract = update_contract(request, contract_form)
-            
+
             if update_contract != 'error':
                 return jsonify({
-                    "contract": updated_contract, 
+                    "contract": updated_contract,
                     'message': message_obj.contract_update[session['language']].format(request.form['emp_id'])
                 })
             else:
@@ -513,7 +518,7 @@ def edit_contract():
             return message_to_client_403(contract_form.errors)
 
     contract_id = request.args.get('contract_id')
-    
+
     contract_update_data = set_contact_update_form_data(contract_id, contract_form)
     data = jsonify(render_template('ajax_template/update_contract_form.html', language=session['language'],
                     form=contract_form, translation=translation_obj, message_obj=message_obj)
@@ -522,7 +527,7 @@ def edit_contract():
         return 'error'
     else:
         return data
-    
+
 
 
 @app.route('/delete_contract', methods=['delete'])
@@ -598,12 +603,11 @@ def overtime_request():
 def resign_request():
     resign_form = ResignRequestForm()
     if request.method == "POST":
-        if resign_form.validate_on_submit():
-            resign = send_resign_request(resign_form, current_user.emp_id)
-            if resign == "success":
-                flash(message_obj.resign_request_sent[session['language']], 'success')
-            else:
-                flash(message_obj.resign_request_not_sent[session['language']], 'error')
+        resign = send_resign_request(resign_form, current_user.emp_id)
+        if resign == "success":
+            flash(message_obj.resign_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.resign_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
     resign_form = update_messages_resign(ResignRequestForm(), session['language'])
     return render_template('resign_request.html',
@@ -612,24 +616,23 @@ def resign_request():
                            translation=translation_obj, message_obj=message_obj)
 
 
-@app.route('/add_equipments', methods=["GET", "POST"])
+@app.route('/add_equipment', methods=["GET", "POST"])
 @login_required
-def add_equipments():
+def add_equipment():
     emp_id = request.args.get("emp_id")
     form = AddEquipmentForm()
-    all_equipments = ""
+    all_equipment = ""
     if request.method == "GET":
-        all_equipments = Equipment.query.all()
+        all_equipment = Equipment.query.all()
     if request.method == "POST":
-        if form.validate_on_submit():
-            result = assign_equipment(request, emp_id)
-            if result == "success":
-                flash(message_obj.equipment_added[session['language']], 'success')
-            else:
-                flash(message_obj.equipment_not_added[session['language']], 'error')
+        result = assign_equipment(request, emp_id)
+        if result == "success":
+            flash(message_obj.equipment_added[session['language']], 'success')
+        else:
+            flash(message_obj.equipment_not_added[session['language']], 'error')
         return redirect(request.referrer)
-    return render_template('add_equipments.html', emp_id=emp_id,
-                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments,
+    return render_template('add_equipment.html', emp_id=emp_id,
+                           title=translation_obj.forms[session['language']], form=form, all_equipment=all_equipment,
                            language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
@@ -646,7 +649,9 @@ def emp_leave_request():
 @login_required
 def emp_resign_request():
     if request.method == "GET":
-        list_of_resigns = Resign_form.query.all()
+         list_of_resigns = db.session.query(Resign_form, Employees).join(Resign_form,
+        (Resign_form.emp_id == Employees.id)).all()
+
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
                            title=translation_obj.employee_forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
@@ -679,3 +684,52 @@ def contract_setting():
 def position_setting():
     return render_template('position_setting.html', language=session['language'], translation=translation_obj)
 
+@app.route("/my_equipment", methods=['GET', 'POST'])
+@login_required
+def my_equipment():
+    form = AcceptEquipmentForm()
+    if request.method == "GET":
+        my_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+            (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == None).all()
+    received_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == True, Employee_equipment.delivered == None).all()
+
+    if request.method == "POST":
+        result = accept_equipment(request, "employee")
+        if result == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('my_equipment.html', form=form, received_equipment=received_equipment, my_equipment=my_equipment, language=session['language'], translation=translation_obj)
+
+
+@app.route("/view_resign_request", methods=['GET', 'POST'])
+@login_required
+def view_resign_request():
+    form = AcceptEquipmentForm()
+    resign_id = request.args.get('resign')
+    resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
+    equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==resign[0].emp_id, Employee_equipment.delivered == None).all()
+    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'], translation=translation_obj)
+
+@app.route("/deliver_equipment", methods=['POST'])
+@login_required
+def deliver_equipment():
+    result = accept_equipment(request, "admin")
+    if result == "success":
+        flash(message_obj.delivered[session['language']], 'success')
+    else:
+        flash(message_obj.not_delivered[session['language']], 'error')
+    return redirect(request.referrer)
+
+@app.route("/accept_reject_resign_request", methods=['GET'])
+@login_required
+def accept_reject_resign_request():
+    resin = accept_reject_resign(request)
+    if resin == "success":
+        flash(message_obj.action_performed[session['language']], 'success')
+    else:
+        flash(message_obj.action_not_performed[session['language']], 'error')
+    return redirect(request.referrer)
