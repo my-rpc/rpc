@@ -154,10 +154,13 @@ class Contracts(db.Model, UserMixin):
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'),
                        primary_key=True, nullable=False)
     contract_type = db.Column(db.Integer, db.ForeignKey('contract_types.id'), nullable=False)
-    contract_duration = db.Column(db.Integer, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
     start_date = db.Column(db.String(255), nullable=False)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
-    inserted_date = db.Column(db.Date, nullable=True)
+    updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    inserted_date = db.Column(db.DateTime, nullable=True)
+    updated_date = db.Column(db.DateTime, nullable=True)
+    status = db.Column(db.Boolean(1), nullable=False,)
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"
@@ -213,7 +216,10 @@ class Position_history(db.Model, UserMixin):
     position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
-    inserted_date = db.Column(db.Date, nullable=True)
+    updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    inserted_date = db.Column(db.DateTime, nullable=True)
+    updated_date = db.Column(db.DateTime, nullable=True)
+    status = db.Column(db.Boolean(1), nullable=False,)
 
     def __repr__(self):
         return f"Position History ID: {self.id}"
@@ -228,7 +234,10 @@ class Salary(db.Model, UserMixin):
     house_hold = db.Column(db.String, nullable=False)
     currency = db.Column(db.String(10), nullable=False)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
-    inserted_date = db.Column(db.Date, nullable=True)
+    updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    inserted_date = db.Column(db.DateTime, nullable=True)
+    updated_date = db.Column(db.DateTime, nullable=True)
+    status = db.Column(db.Boolean(1), nullable=False,)
 
     def __repr__(self):
         return f"Salary ID: {self.id}, Contract ID: {self.contract_id}"

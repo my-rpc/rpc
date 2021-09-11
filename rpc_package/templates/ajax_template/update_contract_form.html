@@ -1,0 +1,61 @@
+<form action="" method="POST" id="update_contract">
+    <div class="row">
+      {{ form.hidden_tag()}}
+      <div class="col-md-6 form-group">
+        {{form.contract_type.label(class='form-control-label')}}
+        {{form.contract_type(class='form-control')}}
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.department.label(class='form-control-label')}}
+        {{ form.department(class='form-control')}}
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.position.label(class='form-control-label')}}
+        {{ form.position(class='form-control')}}
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.start_date.label(class='form-control-label')}}
+        <div class="input-group" id="start_date_icon">
+          <div class="input-group-prepend">
+              <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                  <i class="fad fa-calendar"></i>
+              </span>
+          </div>
+          {{ form.start_date(class='form-control', type='text')}}
+        </div>
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.end_date.label(class='form-control-label')}}
+        <div class="input-group" id="end_date_icon">
+          <div class="input-group-prepend">
+            <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+              <i class="fad fa-calendar"></i>
+            </span>
+          </div>
+          {{ form.end_date(class='form-control')}}
+        </div>
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.base.label(class='form-control-label')}}
+        {{ form.base(class='form-control')}}
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.transportation.label(class='form-control-label')}}
+        {{ form.transportation(class='form-control')}}
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.house_hold.label(class='form-control-label')}}
+        {{ form.house_hold(class='form-control')}}
+      </div>
+      <div class="col-md-6 form-group">
+        {{ form.currency.label(class='form-check-label')}} <br>
+        {% for radio in form.currency %}
+        {{ radio(class="form-check-input")}}
+        {{ radio.label(class="form-check-label")}}
+        {% endfor %}
+      </div>
+      <div class="col-md-12 form-group">
+        {{ form.submit(class='btn btn-primary', value = translation.contract_update[language])}}
+      </div>
+    </div>
+  </form>

@@ -13,15 +13,13 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, assign_equipment, send_resign_request,\
-    update_employee_data, set_emp_update_form_data, send_leave_request, send_department
+    update_employee_data, set_emp_update_form_data, send_leave_request, send_department, set_contact_update_form_data, \
+    update_contract
 import os
 from datetime import datetime
+import jdatetime
 
 
-@app.route("/", methods=['GET', 'POST'])
-@login_required
-def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -441,38 +439,38 @@ def profile():
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
-    employees = db.session.query(Employees).all()
-    phones = {}
-    emails = {}
+    employees =  db.session.query(Employees, Contracts).join(Contracts, (Contracts.emp_id == Employees.id)).all()
     contracts = {}
     for x, emp in enumerate(employees):
-        phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
-        email = db.session.query(Emails).filter_by(emp_id=emp.id).all()
+        phone = db.session.query(Phone).filter_by(emp_id=emp[0].id).all()
+        email = db.session.query(Emails).filter_by(emp_id=emp[0].id).all()
         contract = db.session.query(Contracts, Contract_types, Position_history, Positions, Salary, Departments) \
             .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
             .join(Salary, Contracts.id == Salary.contract_id) \
             .join(Position_history, (Contracts.id == Position_history.contract_id)) \
             .join(Positions, (Positions.id == Position_history.position_id)) \
             .join(Departments, Departments.id == Position_history.department_id) \
-            .filter(Contracts.emp_id == emp.id).first()
-        if phone is not None:
-            phones[x] = phone
-        if email is not None:
-            emails[x] = email
+            .filter(Contracts.emp_id == emp[0].id).first()
         if contracts is not None:
             contracts[x] = contract
     return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
-                           employees=employees, emails=emails, phones=phones, contract=contracts,
+                           employees=employees, contract=contracts,
                            translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
 @login_required
 def add_contract():
-    contract_form = ContractForm()
+    contract_form = update_messages_contract(ContractForm(), language=session['language'])
     emp_id = request.args.get('emp_id')
     if request.method == "POST":
         if contract_form.validate_on_submit():
+            con_startdate = Contracts.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
+            date = datetime.strptime(contract_form.start_date.data, '%Y-%m-%d')
+            if con_startdate and con_startdate.start_date >=  datetime.date(date):
+                flash({'start_date':['تاریخ قراداد با تاریخ قراداد قبلی تداخل دارد.']}, 'error')
+                return redirect(request.referrer)
+
             contract = add_contract_form(contract_form)
             if contract == "success":
                 flash(message_obj.contract_added[session['language']].format(emp_id), 'success')
@@ -487,9 +485,55 @@ def add_contract():
         # return 'asd'
         if EmployeeValidator.emp_id_validator(emp_id):
             contract_form.emp_id.data = emp_id
+
             return render_template('add_contract.html', title='Add Contract', language=session['language'],
                                    form=contract_form,
                                    translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/edit_contract', methods=['GET', "POST"])
+@login_required
+def edit_contract():
+    contract_form = update_messages_contract(ContractForm(), language=session['language'])
+    if request.method == "POST":
+        if contract_form.validate_on_submit():
+            updated_contract = update_contract(request, contract_form)
+            
+            if update_contract != 'error':
+                return jsonify({
+                    "contract": updated_contract, 
+                    'message': message_obj.contract_update[session['language']].format(request.form['emp_id'])
+                })
+            else:
+                message_to_client_403(message_obj.contract_update_not[session['language']])
+        else:
+            return message_to_client_403(contract_form.errors)
+
+    contract_id = request.args.get('contract_id')
+    
+    contract_update_data = set_contact_update_form_data(contract_id, contract_form)
+    data = jsonify(render_template('ajax_template/update_contract_form.html', language=session['language'],
+                    form=contract_form, translation=translation_obj, message_obj=message_obj)
+                    ,{"contract_type":contract_update_data[0], "position": contract_update_data[1], "department":contract_update_data[2]})
+    if data == 'error':
+        return 'error'
+    else:
+        return data
+    
+
+
+@app.route('/delete_contract', methods=['delete'])
+@login_required
+def delete_contract():
+    contract_id = request.args.get('contract_id')
+    try:
+        sel_emp = Contracts.query.filter_by(id = contract_id).first()
+        db.session.delete(sel_emp)
+        db.session.commit()
+    except IOError as exc:
+        return message_to_client_403(message_obj.contract_delete_not[session['language']])
+    return message_to_client_200(
+        message_obj.contract_delete[session['language']].format(sel_emp.emp_id))
 
 
 @app.route('/upload_profile_pic', methods=["POST"])

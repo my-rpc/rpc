@@ -2,11 +2,13 @@ import os
 import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Contracts, Position_history, Salary, Overtime_form,  Resign_form, \
-    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments
+    Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
+    Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, Positions
 from flask import session
 from flask_login import current_user
 import datetime
+from wtforms import StringField, HiddenField
+from rpc_package.forms import ContractForm
 
 
 def upload_docs(emp_id, request, file_type):
@@ -355,11 +357,12 @@ def add_contract_form(contract_form):
     try:
         add_contract = Contracts(
             emp_id=contract_form.emp_id.data,
-            contract_duration=contract_form.contract_duration.data,
+            end_date=contract_form.end_date.data,
             contract_type=contract_form.contract_type.data,
             start_date=contract_form.start_date.data,
             inserted_by=current_user.emp_id,
-            inserted_date=datetime.datetime.now().strftime("%Y-%m-%d")
+            inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+            status = 1
         )
         db.session.add(add_contract)
         db_commit = db.session.commit()
@@ -371,7 +374,8 @@ def add_contract_form(contract_form):
                 contract_id=add_contract.id,
                 department_id=contract_form.department.data,
                 inserted_by=current_user.emp_id,
-                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d")
+                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                status=1
             )
 
             add_contract_salary = Salary(
@@ -381,7 +385,8 @@ def add_contract_form(contract_form):
                 house_hold=contract_form.house_hold.data,
                 currency=contract_form.currency.data,
                 inserted_by=current_user.emp_id,
-                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d")
+                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                status=1
             )
         db.session.add(add_contract_position)
         db.session.add(add_contract_salary)
@@ -428,3 +433,138 @@ def send_department(department_form):
         return "success"
     else:
         return "error"
+
+
+def set_contact_update_form_data(contract_id, contract_form):
+    try:
+
+        contract = Contracts.query.filter_by(id = contract_id).first()
+        position = Position_history.query.filter_by(contract_id = contract_id, status = True).first()
+        salary = Salary.query.filter_by(contract_id = contract_id, status = True).first()
+        
+        contract_form.emp_id.data = contract.emp_id
+        contract_form.end_date.data = contract.end_date
+        contract_form.contract_type.data = contract.contract_type
+        contract_form.start_date.data = contract.start_date
+
+        setattr(contract_form, 'contract_id', HiddenField('Contract ID'))
+        contract_id = contract_form.contract_id.bind(contract_form, 'contract_id')
+        contract_form._fields['contract_id'] = contract_id
+        contract_form._fields['contract_id'].data = contract.id
+
+        if position:
+            contract_form.position.data = position.position_id
+            contract_form.department.data = position.department_id
+            # addmin new field for position history ID
+            setattr(contract_form, 'position_id', HiddenField('Position ID'))
+            position_id = contract_form.position_id.bind(contract_form, 'position_id')
+            contract_form._fields['position_id'] = position_id
+            contract_form._fields['position_id'].data = position.id
+        else:
+            contract_form.position.data = ''
+            contract_form.department.data = ''
+            # addmin new field for position history ID
+            setattr(contract_form, 'position_id', HiddenField('Position ID'))
+            position_id = contract_form.position_id.bind(contract_form, 'position_id')
+            contract_form._fields['position_id'] = position_id
+            contract_form._fields['position_id'].data = ''
+
+        if salary:
+            contract_form.base.data = salary.base
+            contract_form.transportation.data = salary.transportation
+            contract_form.house_hold.data = salary.house_hold
+            contract_form.currency.data = salary.currency
+
+            setattr(contract_form, 'salary_id', HiddenField('Salary ID'))
+            salary_id = contract_form.salary_id.bind(contract_form, 'salary_id')
+            contract_form._fields['salary_id'] = salary_id
+            contract_form._fields['salary_id'].data = salary.id
+        else:
+            contract_form.base.data = ''
+            contract_form.transportation.data = ''
+            contract_form.house_hold.data = ''
+            contract_form.currency.data = ''
+            setattr(contract_form, 'salary_id', HiddenField('Salary ID'))
+            salary_id = contract_form.salary_id.bind(contract_form, 'salary_id')
+            contract_form._fields['salary_id'] = salary_id
+            contract_form._fields['salary_id'].data = ''
+        
+
+    except IOError as io:
+        return 'error'
+    return contract_form.contract_type.data, contract_form.position.data, contract_form.department.data
+
+
+def update_contract(req, contract_form):
+    try:
+        contract = Contracts.query.filter_by(id = req.form['contract_id']).first()
+        position = Position_history.query.filter_by(id = req.form['position_id']).first()
+        salary = Salary.query.filter_by(id = req.form['salary_id']).first()
+        pos = Positions.query.filter_by(id = position.position_id).first()
+        dep = Departments.query.filter_by(id = position.department_id).first()
+        contract_type = Contract_types.query.filter_by(id = contract.contract_type).first()
+
+        contract.contract_type = contract_form.contract_type.data
+        contract.end_date = contract_form.end_date.data
+        contract.start_date=contract_form.start_date.data
+        contract.updated_by= current_user.emp_id
+        contract.updated_date = jdatetime.datetime.now()
+
+        salary.base = contract_form.base.data
+        salary.transportation = contract_form.transportation.data
+        salary.house_hold = contract_form.house_hold.data
+        salary.currency = contract_form.currency.data
+        salary.updated_by= current_user.emp_id
+        salary.updated_date = jdatetime.datetime.now()
+
+        position.position_id = contract_form.position.data
+        position.department_id = contract_form.department.data
+        position.updated_by= current_user.emp_id
+        position.updated_date = jdatetime.datetime.now()
+        if session['language'] == 'en': 
+            position_name = pos.name_english
+            department_name = dep.name_english
+            contract_type_name = contract_type.name_english
+            if contract_form.currency.data == '1':
+                currency = 'AFG'
+            else:
+                currency = 'Dollar'
+        else:
+            department_name = dep.name
+            position_name = pos.name
+            contract_type_name = contract_type.name
+            if contract_form.currency.data == '1':
+                currency = 'افغانی'
+            else:
+                currency = 'دالر'
+        delta_time  = datetime.datetime.strptime(contract.end_date, '%Y-%m-%d') - datetime.datetime.strptime(contract.start_date, '%Y-%m-%d')
+        year = delta_time.days / 30 / 12
+        month = delta_time.days / 30 % 12
+        duration = str(int(year)) + 'years and ' if year > 1 else 'year and' \
+            + str(int(month)) + 'months' if month > 1 else 'month' 
+        data = {
+            "contract": {
+                "contract_id": req.form['contract_id'],
+                "contract_type": contract_type_name,
+                "start_date": contract_form.start_date.data,
+                "end_date": contract_form.end_date.data,
+                "duration": duration,
+                "updated_by": current_user.emp_id,                    
+            },"salary": {
+                "base": contract_form.base.data,
+                "transportation": contract_form.transportation.data,
+                "house_hold": contract_form.house_hold.data,
+                "currency": currency,
+            },
+            "position": {
+                "position": position_name,
+                "position_id": contract_form.position.data,
+                "department": department_name,
+                "department_id": contract_form.department.data,
+                "updated_by": current_user.emp_id,
+            },
+        }
+        db.session.commit()
+    except IOError as io:
+        return 'error' 
+    return data 

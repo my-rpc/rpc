@@ -125,3 +125,28 @@ def update_messages_department(form_obj, language):
     form_obj.name_english_department.label.text = translation_obj.name_english_department[language]
     form_obj.submit.label.text = translation_obj.send_request[language]
     return form_obj
+
+def update_messages_contract(form_obj, language):
+    """
+    This function is created for Contract form in two languages (dari and english) that have two argument,
+    first is form_obj that get from forms.py and second is language that get from dari_english_translation.js 
+
+    Args:
+        form_obj (form): The type of this variable is form and name of this variable from forms.py
+        language (string): The type of this variable is string and get value from dari_english_translation.js
+
+    Returns:
+        form: return value of variable in each language that we want
+    """
+    form_obj.contract_type.label.text = translation_obj.contract_type[language]
+    form_obj.end_date.label.text = translation_obj.end_date[language]
+    form_obj.start_date.label.text = translation_obj.start_date[language]
+    form_obj.position.label.text = translation_obj.position[language]
+    form_obj.department.label.text = translation_obj.department[language]
+
+    form_obj.base.label.text = translation_obj.base_salary[language]
+    form_obj.transportation.label.text = translation_obj.transportation[language]
+    form_obj.house_hold.label.text = translation_obj.house_hold[language]
+    form_obj.currency.label.text = translation_obj.currency[language]
+
+    return form_obj

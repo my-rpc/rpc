@@ -171,6 +171,20 @@
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
     "en": "Contract not added for employe with {} ID"
   },
+  "contract_delete":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف شد",
+    "en": "Contract deleted for user with {} ID"
+  },"contract_delete_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف نشد",
+    "en": "Contract not deleted for user with {} ID"
+  },
+  "contract_update":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی شد",
+    "en": "Contract updated for user with {} ID"
+  },"contract_update_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی نشد",
+    "en": "Contract not updated for user with {} ID"
+  },
   "resign_request_sent": {
     "dari": "درخواست استعفا ارسال شد",
     "en": "Resign request has been sent"
