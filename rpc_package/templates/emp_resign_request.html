@@ -19,7 +19,7 @@
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <tr>
-                        <th>#</th>
+                        <!-- <th>#</th> -->
                         <th>id</th>
                         <th>name</th>
                         <th>last name</th>
@@ -28,9 +28,15 @@
                         <th>view</th>
                       </tr>
                       {% if list_of_resigns %}
+                      
                         {% for resign in list_of_resigns %}
                           <tr>
-                            <td>{{resign.emp_id}}</td>
+                            <td>{{resign[0].emp_id}}</td>
+                            <td>{{resign[1].name}}</td>
+                            <td>{{resign[1].lname}}</td>
+                            <td></td>
+                            <td></td>
+                            <td><a href="/view_resign_request?resign={{resign[0].id}}"><i class="fa fa-eye text-primary"></i></a></td>
                           </tr>
                         {% endfor %}
                       {% endif %}

@@ -596,7 +596,9 @@ def emp_leave_request():
 @login_required
 def emp_resign_request():
     if request.method == "GET":
-        list_of_resigns = Resign_form.query.all()
+         list_of_resigns = db.session.query(Resign_form, Employees).join(Resign_form,
+        (Resign_form.emp_id == Employees.id)).all()
+
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
                            title=translation_obj.employee_forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
@@ -648,3 +650,10 @@ def my_equipments():
         return redirect(request.referrer)
     return render_template('my_equipments.html', form=form, received_equipment=received_equipment, my_equipments=my_equipments, language=session['language'], translation=translation_obj)
 
+
+@app.route("/view_resign_request", methods=['GET', 'POST'])
+@login_required
+def view_resign_request():
+    resign_id = request.args.get('resign')
+    resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
+    return render_template('view_resign_request.html', resign=resign, language=session['language'], translation=translation_obj)
