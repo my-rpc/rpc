@@ -450,7 +450,7 @@ def accept_reject_resign(request):
     action = request.args.get("action")
     if action == "1":
         action = True
-    elif acction == "0":
+    elif action == "0":
         action = False
     resign = Resign_form.query.filter_by(id=resign_id).first()
     resign.hr = action

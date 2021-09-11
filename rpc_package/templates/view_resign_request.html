@@ -84,8 +84,15 @@
                       </div>
                       <div class="box-footer">
                         {% if resign and resign[0].hr == True %}
-                       
-                          accepted
+                        <!-- <div class="col-lg-4">
+                          <div class="box">
+                            <div class="box-body ribbon-box">
+                              <div class="ribbon ribbon-success">Success Ribbon</div>
+                              <p class="mb-0">Quisque nec turpis at urna dictum luctus. Suspendisse convallis dignissim eros at volutpat. In egestas mattis dui. Aliquam mattis dictum aliquet. Nulla sapien mauris, eleifend et sem ac, commodo dapibus odio.</p>
+                            </div> 
+                          </div>
+                        </div>  -->
+                        accepted
                         {% elif resign[0].hr == False %}
                           rejected
                         {% else %}
@@ -116,7 +123,7 @@
                             <td>{{form.equipment(value=eq[0].id, class="equipmentCheckbox")}}</td>
                             <td>{{eq[1].name}}</td>
                             <td>{{eq[1].name_english}}</td>
-                            <td>{{eq[1].equipment_catgory}}</td>
+                            <td>{{eq[1].static}}</td>
                            </tr>
                            {% endfor %}
                          </table>
