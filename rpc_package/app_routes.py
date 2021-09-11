@@ -357,13 +357,17 @@ def uds_employee():
     language = 'en'
     update_employee_form = EmployeeForm()
     if request.method == 'POST':
+        ignored_items = False
         if not update_employee_form.validate_on_submit():
-
             for key, value in update_employee_form.errors.items():
-                if value[0] != message_obj.val_dic[key][0]:
-                    update_employee_form.validate_on_submit()
-
+                if key not in message_obj.val_dic.keys():
+                    ignored_items = True
+                    break
+        if ignored_items:
+            return message_to_client_403(update_employee_form.errors)
+        else:
             try:
+                # TODO Phone and Email for duplicate validation and conflict
                 update_employee_data(update_employee_form)
 
             except IOError as exc:
@@ -390,8 +394,7 @@ def uds_employee():
                     request.form['employee_id'])
             }
             return jsonify(data)
-        else:
-            return message_to_client_403(update_employee_form.errors)
+
 
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):

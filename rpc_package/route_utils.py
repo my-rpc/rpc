@@ -41,8 +41,7 @@ def get_profile_info(emp_id):
         Current_addresses.emp_id == emp_id).first()
     permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
         Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (
-            Permanent_addresses.district_id == Districts.id)
-                                                                                     ).filter(
+            Permanent_addresses.district_id == Districts.id)).filter(
         Permanent_addresses.emp_id == emp_id).first()
     doc_cv = Documents.query.filter_by(emp_id=emp_id, name="cv").first()
     doc_tazkira = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
