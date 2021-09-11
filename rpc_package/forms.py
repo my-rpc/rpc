@@ -1,15 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, DateTimeField, HiddenField, SubmitField, BooleanField, RadioField, \
-    SelectField, \
-    TextAreaField, FileField, DecimalField, DateField, TimeField, IntegerField
+     DecimalField, DateField, TimeField, IntegerField, SelectField, FileField,  TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError, AnyOf
 import re
-    SelectField, FileField, DecimalField, DateField, TimeField, IntegerField, TextAreaField
 from wtforms.widgets import TextArea
-
-from wtforms.validators import DataRequired, Length, EqualTo, Regexp, ValidationError
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
-    Position_history, Positions, Departments, Salary, Contracts
+    Positions, Departments, Salary
 from rpc_package.utils import check_language
 
 

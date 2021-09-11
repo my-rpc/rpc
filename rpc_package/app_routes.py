@@ -11,10 +11,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Emails, Phone, Provinces, Leave_form
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    add_contract_form, add_overtime_request, assign_equipment, send_resign_request,\
-    update_employee_data, set_emp_update_form_data, send_leave_request, send_department, set_contact_update_form_data, \
-    update_contract
-    update_employee_data, assign_equipment, \
+    add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, update_employee_data, assign_equipment, \
     set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment, accept_reject_resign
 import os
 from datetime import datetime
