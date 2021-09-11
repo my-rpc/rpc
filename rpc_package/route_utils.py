@@ -5,11 +5,10 @@ from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phon
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, Positions
 from flask import session
-from flask_login import current_user
 import datetime
 from wtforms import StringField, HiddenField
+from flask_login import current_user
 from rpc_package.forms import ContractForm
-
 
 def upload_docs(emp_id, request, file_type):
     try:
@@ -399,14 +398,12 @@ def send_resign_request(resign_form, emp_id):
     resign = Resign_form(
         emp_id=emp_id,
         reason=resign_form.reason.data,
-        responsibilities=resign_form.reason.data,
-        equipments=resign_form.reason.data)
+        responsibilities=resign_form.responsibilities.data)
     db.session.add(resign)
     if db.session.commit():
         return "success"
     else:
         return "error"
-
 
 def assign_equipment(request, emp_id):
     equipment = ""
@@ -414,8 +411,8 @@ def assign_equipment(request, emp_id):
         have_equipment = Employee_equipment.query.filter_by(emp_id=emp_id, equipment_id=eq).first()
         if have_equipment is None:
             equipment = Employee_equipment(
-                emp_id=emp_id,
-                equipment_id=eq)
+            emp_id=emp_id,
+            equipment_id=eq)
             db.session.add(equipment)
     if db.session.commit():
         return "success"
@@ -440,7 +437,7 @@ def set_contact_update_form_data(contract_id, contract_form):
         contract = Contracts.query.filter_by(id = contract_id).first()
         position = Position_history.query.filter_by(contract_id = contract_id, status = True).first()
         salary = Salary.query.filter_by(contract_id = contract_id, status = True).first()
-        
+
         contract_form.emp_id.data = contract.emp_id
         contract_form.end_date.data = contract.end_date
         contract_form.contract_type.data = contract.contract_type
@@ -487,7 +484,7 @@ def set_contact_update_form_data(contract_id, contract_form):
             salary_id = contract_form.salary_id.bind(contract_form, 'salary_id')
             contract_form._fields['salary_id'] = salary_id
             contract_form._fields['salary_id'].data = ''
-        
+
 
     except IOError as io:
         return 'error'
@@ -520,7 +517,7 @@ def update_contract(req, contract_form):
         position.department_id = contract_form.department.data
         position.updated_by= current_user.emp_id
         position.updated_date = jdatetime.datetime.now()
-        if session['language'] == 'en': 
+        if session['language'] == 'en':
             position_name = pos.name_english
             department_name = dep.name_english
             contract_type_name = contract_type.name_english
@@ -540,7 +537,7 @@ def update_contract(req, contract_form):
         year = delta_time.days / 30 / 12
         month = delta_time.days / 30 % 12
         duration = str(int(year)) + 'years and ' if year > 1 else 'year and' \
-            + str(int(month)) + 'months' if month > 1 else 'month' 
+            + str(int(month)) + 'months' if month > 1 else 'month'
         data = {
             "contract": {
                 "contract_id": req.form['contract_id'],
@@ -548,7 +545,7 @@ def update_contract(req, contract_form):
                 "start_date": contract_form.start_date.data,
                 "end_date": contract_form.end_date.data,
                 "duration": duration,
-                "updated_by": current_user.emp_id,                    
+                "updated_by": current_user.emp_id,
             },"salary": {
                 "base": contract_form.base.data,
                 "transportation": contract_form.transportation.data,
@@ -565,5 +562,41 @@ def update_contract(req, contract_form):
         }
         db.session.commit()
     except IOError as io:
-        return 'error' 
-    return data 
+        return 'error'
+    return data
+
+
+def accept_equipment(request, owner):
+    equipment=""
+    for eq in request.form.getlist('equipment'):
+        my_equipment = Employee_equipment.query.filter_by(id=eq).first()
+        # if my_equipment is None:
+        if owner == "employee":
+            my_equipment.received = True
+        elif owner == "admin":
+            my_equipment.delivered = True
+
+    try:
+        db.session.add(my_equipment)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+
+def accept_reject_resign(request):
+    resign_id = request.args.get('resign')
+    action = request.args.get("action")
+    if action == "1":
+        action = True
+    elif action == "0":
+        action = False
+    resign = Resign_form.query.filter_by(id=resign_id).first()
+    resign.hr = action
+
+    try:
+        db.session.add(resign)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
