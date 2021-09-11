@@ -428,14 +428,36 @@ def send_department(department_form):
     else:
         return "error"
 
-def accept_equipment(request):
+def accept_equipment(request, owner):
     equipment=""
     for eq in request.form.getlist('equipment'):
-        my_equipment = Employee_equipment.query.filter_by(emp_id = current_user.emp_id, equipment_id=eq).first()
+        my_equipment = Employee_equipment.query.filter_by(id=eq).first()
         # if my_equipment is None:
-        my_equipment.received = True
+        if owner == "employee":
+            my_equipment.received = True
+        elif owner == "admin":
+            my_equipment.delivered = True  
+
+    try:
         db.session.add(my_equipment)
-    if db.session.commit():
+        db.session.commit()
         return "success"
-    else:
-        return "error"
+    except IOError as io:
+        return 'error'
+
+def accept_reject_resign(request):
+    resign_id = request.args.get('resign')
+    action = request.args.get("action")
+    if action == "1":
+        action = True
+    elif acction == "0":
+        action = False
+    resign = Resign_form.query.filter_by(id=resign_id).first()
+    resign.hr = action
+
+    try:
+        db.session.add(resign)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'

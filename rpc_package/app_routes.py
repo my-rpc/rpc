@@ -12,7 +12,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     update_employee_data, assign_equipment, \
-    set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment
+    set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment, accept_reject_resign
 import os
 from datetime import datetime
 
@@ -563,14 +563,14 @@ def resign_request():
                            translation=translation_obj, message_obj=message_obj)
 
 
-@app.route('/add_equipments', methods=["GET", "POST"])
+@app.route('/add_equipment', methods=["GET", "POST"])
 @login_required
-def add_equipments():
+def add_equipment():
     emp_id = request.args.get("emp_id")
     form = AddEquipmentForm()
-    all_equipments = ""
+    all_equipment = ""
     if request.method == "GET":
-        all_equipments = Equipment.query.all()
+        all_equipment = Equipment.query.all()
     if request.method == "POST":
         result = assign_equipment(request, emp_id)
         if result == "success":
@@ -578,8 +578,8 @@ def add_equipments():
         else:
             flash(message_obj.equipment_not_added[session['language']], 'error')
         return redirect(request.referrer)
-    return render_template('add_equipments.html', emp_id=emp_id,
-                           title=translation_obj.forms[session['language']], form=form, all_equipments=all_equipments,
+    return render_template('add_equipment.html', emp_id=emp_id,
+                           title=translation_obj.forms[session['language']], form=form, all_equipment=all_equipment,
                            language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
@@ -631,29 +631,52 @@ def contract_setting():
 def position_setting():
     return render_template('position_setting.html', language=session['language'], translation=translation_obj)
 
-@app.route("/my_equipments", methods=['GET', 'POST'])
+@app.route("/my_equipment", methods=['GET', 'POST'])
 @login_required
-def my_equipments():
+def my_equipment():
     form = AcceptEquipmentForm()
     if request.method == "GET":
-        my_equipments = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        my_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
             (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == None).all()
     received_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
-        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == True).all()
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == True, Employee_equipment.delivered == None).all()
 
     if request.method == "POST":
-        result = accept_equipment(request)
+        result = accept_equipment(request, "employee")
         if result == "success":
             flash(message_obj.add_department[session['language']], 'success')
         else:
             flash(message_obj.add_department_not[session['language']], 'error')
         return redirect(request.referrer)
-    return render_template('my_equipments.html', form=form, received_equipment=received_equipment, my_equipments=my_equipments, language=session['language'], translation=translation_obj)
+    return render_template('my_equipment.html', form=form, received_equipment=received_equipment, my_equipment=my_equipment, language=session['language'], translation=translation_obj)
 
 
 @app.route("/view_resign_request", methods=['GET', 'POST'])
 @login_required
 def view_resign_request():
+    form = AcceptEquipmentForm()
     resign_id = request.args.get('resign')
     resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
-    return render_template('view_resign_request.html', resign=resign, language=session['language'], translation=translation_obj)
+    equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==resign[0].emp_id, Employee_equipment.delivered == None).all()
+    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'], translation=translation_obj)
+
+@app.route("/deliver_equipment", methods=['POST'])
+@login_required
+def deliver_equipment():
+    result = accept_equipment(request, "admin")
+    if result == "success":
+        flash(message_obj.delivered[session['language']], 'success')
+    else:
+        flash(message_obj.not_delivered[session['language']], 'error')
+    return redirect(request.referrer)
+
+@app.route("/accept_reject_resign_request", methods=['GET'])
+@login_required
+def accept_reject_resign_request():
+    resin = accept_reject_resign(request)
+    if resin == "success":
+        flash(message_obj.action_performed[session['language']], 'success')
+    else:
+        flash(message_obj.action_not_performed[session['language']], 'error')
+    return redirect(request.referrer)

@@ -179,17 +179,26 @@
     "dari": "درخواست استعفا ارسال نشد",
     "en": "Resign request has been not sent"
   },
-  "resign_request_sent": {
-    "dari": "درخواست استعفا ارسال شد",
-    "en": "Resign request has been sent"
+  "action_performed": {
+    "dari": "عملیات انجام شد",
+    "en": "Action Performed"
   },
-    "resign_request_not_sent": {
-    "dari": "درخواست استعفا ارسال نشد",
-    "en": "Resign request has been not sent"
+  "action_not_performed": {
+    "dari": "عملیات انجام نشد",
+    "en": "Action not Performed"
   },
+
   "add_department": {
     "dari": "دیپارتمنت اضافه شد",
     "en": "Department Added"
+  },
+  "delivered": {
+    "dari": "تحویل گرفته شد",
+    "en": "Delivred"
+  },
+  "not_delivered": {
+    "dari": "تحویل گرفته نشد",
+    "en": "Not Delivred"
   },
     "add_department_not": {
     "dari": "دیپارتمنت اضافه نشد",

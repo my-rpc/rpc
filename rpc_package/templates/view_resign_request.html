@@ -42,8 +42,8 @@
               
             <div class="nav-tabs-custom">
               <ul class="nav nav-tabs">
-                <li><a class="active" href="#usertimeline" data-toggle="tab">Summary</a></li>
-                <li><a href="#activity" data-toggle="tab">Activity</a></li>
+                <li><a class="active" href="#usertimeline" data-toggle="tab">{{translation.resign_summary[language]}}</a></li>
+                <li><a href="#activity" data-toggle="tab">{{translation.equipment[language]}}</a></li>
               </ul>
 
               <div class="tab-content">
@@ -57,7 +57,7 @@
                             </div>
                               <div class="timeline-event">
                                   <div class="timeline-heading">
-                                      <h4 class="timeline-title"><a href="#">Resign Reason</a></h4>
+                                      <h4 class="timeline-title"><a href="#">{{translation.resign_reason[language]}}</a></h4>
                                   </div>
                                   <div class="timeline-body">
                                       <p>{{resign[0].reason}}</p>
@@ -74,7 +74,7 @@
                               </div>
                               <div class="timeline-event">
                                   <div class="timeline-heading">
-                                      <h4 class="timeline-title"><a href="#">Employee Responsibilities</a></h4>
+                                      <h4 class="timeline-title"><a href="#">{{translation.responsibilities[language]}}</a></h4>
                                   </div>
                                   <div class="timeline-body">
                                       <p>{{resign[0].responsibilities}}</p>									
@@ -82,11 +82,52 @@
                               </div>
                           </div>
                       </div>
+                      <div class="box-footer">
+                        {% if resign and resign[0].hr == True %}
+                       
+                          accepted
+                        {% elif resign[0].hr == False %}
+                          rejected
+                        {% else %}
+                        <a href="/accept_reject_resign_request?resign={{resign[0].id}}&action=1"><button class="btn btn-success">Accept</button></a>
+                        <a href="/accept_reject_resign_request?resign={{resign[0].id}}&action=0"><button class="btn btn-danger">Reject</button></a>
+                        {% endif %}
+                      </div>
                   </div>  
                 </div>    
 
                 <div class=" tab-pane" id="activity">			
-
+                  <div class="box">
+                    <form method="POST" action="/deliver_equipment">
+                      {{ form.hidden_tag()}}
+                      <!-- <input type="hidden" name="emp_id" -->
+                    <div class="box-body">
+                     {% if equipment %}
+                     <div class="table-responsive">
+                         <table class="table table-hover">
+                           <tr>
+                             <th><input type="checkbox" class="equipmentCheckbox" /></th>
+                             <th>{{translation.equipment_name[language]}}</th>
+                             <th>{{translation.equipment_name_english[language]}}</th>
+                             <th>{{translation.status[language]}}</th>
+                           </tr>
+                           {% for eq in equipment %}
+                           <tr>
+                            <td>{{form.equipment(value=eq[0].id, class="equipmentCheckbox")}}</td>
+                            <td>{{eq[1].name}}</td>
+                            <td>{{eq[1].name_english}}</td>
+                            <td>{{eq[1].equipment_catgory}}</td>
+                           </tr>
+                           {% endfor %}
+                         </table>
+                       </div>
+                     {% endif %}
+                    </div>
+                    <div class="box-footer">
+                        {{ form.submit(value = "Delivery", class="btn btn-primary")}}
+                    </div>
+                    </form>
+                </div>
                   <div class="box p-15">				
                   <!-- Post -->
                  

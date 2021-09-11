@@ -19,11 +19,11 @@
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <section class="content">
-    {% if my_equipments %}
+    {% if my_equipment %}
    <div class="box">
        <div class="box-header">
            <div class="box-title">
-            {{translation.my_equipments[language]}}
+            {{translation.my_equipment[language]}}
            </div>
        </div>
        <form method="POST">
@@ -37,7 +37,7 @@
                 <th>{{translation.start_date[language]}}</th>
                 <th>{{translation.end_date[language]}}</th>
               </tr>
-              {% for equipment in my_equipments %}
+              {% for equipment in my_equipment %}
               <tr>
                 <td>{{form.equipment(value=equipment[1].id, class="equipmentCheckbox")}}</td>
                 <td>{{equipment[1].name}}</td>
