@@ -3,12 +3,15 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
-    UploadEducationalDocsForm, ResignRequestForm, \
+    UploadEducationalDocsForm, ResignRequestForm, ContractForm,  \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, AcceptEquipmentForm
 from rpc_package.form_dynamic_language import *
+
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
-    Districts, Equipment, Employee_equipment, Resign_form, \
-    Emails, Phone, Provinces, Leave_form
+    Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment,\
+    Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form
+
+
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, update_employee_data, assign_equipment, \
