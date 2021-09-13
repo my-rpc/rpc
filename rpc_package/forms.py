@@ -256,13 +256,21 @@ class OvertimeRequestForm(FlaskForm):
     submit = SubmitField('Send Request')
 
 class LoanRequestForm(FlaskForm):
-    emp_list = [(emp.id, emp.name_english + ' ' + emp.lname_english + '/' + emp.name + ' ' + emp.lname) for emp in Employees.query.all()]
+    emp_list = [(emp.id, emp.name_english + ' ' + emp.lname_english + '/' + emp.id + '/' + emp.name + ' ' + emp.lname) for emp in Employees.query.all()]
     emp_list.insert(0, ('', '------'))
-    requested_amount = IntegerField('Requested Amount', validators=[DataRequired()])
+    requested_amount = StringField('Requested Amount', validators=[Regexp('^[1-9]\d*$'), DataRequired()])
     start_date = DateField('From', validators=[DataRequired()])
     end_date = DateField('To', validators=[DataRequired()])
     guarantor = SelectField('Guarantor', choices=emp_list, validators=[DataRequired()])
     submit = SubmitField('Send Request')
+    # def validate_start_date(self, start_date):
+    #     if start_date.data:
+    #         if not bool(re.match(r'^\d{4}-\d{2}-\d{2}$', start_date.data)):
+    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    # def validate_end_date(self, end_date):
+    #     if end_date.data:
+    #         if not bool(re.match(r'^\d{4}-\d{2}-\d{2}$', end_date.data)):
+    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
 class LoanGuarantorForm(FlaskForm):
     guarantor = RadioField('Guarantor',

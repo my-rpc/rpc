@@ -31,7 +31,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ form.requested_amount.label(class="form-control-label")}}
-                        {{ form.requested_amount(class="form-control form-control-lg")}}
+                        {{ form.requested_amount(type="number", min="1", step='0.1', class="form-control form-control-lg")}}
                     </div>
                     <div class="form-group">
                         {{ form.start_date.label(class="form-control-label")}}
@@ -42,7 +42,7 @@
                                 </span>
                             </div>
                             <input type="hidden" id="start_date-date" />
-                            {{ form.start_date( type="text", readonly="true", class="form-control form-control-lg")}}
+                            {{ form.start_date( type="text", class="form-control form-control-lg")}}
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,11 +54,15 @@
                                 </span>
                             </div>
                             <input type="hidden" id="end_date-date" />
-                            {{ form.end_date( type="text", readonly="true", class="form-control form-control-lg")}}
+                            {{ form.end_date( type="text", class="form-control form-control-lg")}}
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.guarantor.label(class="form-control-label")}}
+                        {{ form.guarantor(class="form-control form-control-lg")}}
+                    </div>
                     <div class="form-group">
                         <label class="form-control-label">{{ translation.repayment_period_in_months[language] }}</label>
                         <input id="repayment_period_in_months" class="form-control form-control-lg" readonly />
@@ -66,10 +70,6 @@
                     <div class="form-group">
                         <label class="form-control-label">{{ translation.monthly_amount[language] }}</label>
                         <input id="monthly_amount" class="form-control form-control-lg" readonly />
-                    </div>
-                    <div class="form-group">
-                        {{ form.guarantor.label(class="form-control-label")}}
-                        {{ form.guarantor(class="form-control form-control-lg")}}
                     </div>
                 </div>
                 <div class="form-group col-md-12">
@@ -158,7 +158,6 @@
                                 {% elif loan.finance == False %}
                                 <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                                 {% endif %}
-
                             </td>
                         </tr>
                         <tr>
