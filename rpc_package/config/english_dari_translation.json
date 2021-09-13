@@ -143,6 +143,10 @@
     "dari": "پروفایل کارمند",
     "en": "Employee Profile"
   },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
+  },
   "list_of_leave_request": {
     "dari": "لیست درخواست رخصتی",
     "en": "List of Leave Request"
@@ -503,6 +507,30 @@
     "dari": "مدت قرارداد",
     "en": "Contract Duration"
   },
+  "contract_update": {
+    "dari": "تغییرات قراداد",
+    "en": "َUpdate Contract"
+  },
+  "afghani":{
+    "dari":"افغانی",
+    "en":"AFG"
+  },
+  "dollar":{
+    "dari":"دالر",
+    "en":"َUSD"
+  },
+  "transportation":{
+    "dari":"حمله",
+    "en":"Transportation"
+  },
+  "house_hold":{
+    "dari":"خرج دسترخوان",
+    "en":"House Hold"
+  },
+  "currency":{
+    "dari":"نوع پول",
+    "en":"Currency"
+  },
   "job_responsibilities": {
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
@@ -607,9 +635,9 @@
     "dari": "درباره",
     "en": "About"
   },
-  "add_equipments": {
+  "add_equipment": {
     "dari": "تحویل تجهیزات",
-    "en": "Add Equipments"
+    "en": "Add equipment"
   },
   "contact": {
     "dari": "ارتباط",
@@ -667,9 +695,25 @@
     "dari": "وظایف مربوطه",
     "en": "Relevant Responsibilities"
   },
-  "equipments": {
+  "resign_summary": {
+    "dari": "خلاصه استعفا",
+    "en": "Resign Summary"
+  },
+  "equipment": {
     "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipments"
+    "en": "Relevant Equipment"
+  },
+  "equipment_name": {
+    "dari": "نام",
+    "en": "Name"
+  },
+  "equipment_name_english": {
+    "dari": "نام به لاتین",
+    "en": "English Name"
+  },
+  "equipment_status": {
+    "dari": "وضعیت",
+    "en": "Status"
   },
   "resign_reason": {
     "dari": "دلیل استعفا",
@@ -974,5 +1018,13 @@
   "executor": {
     "dari": "اجرا کننده",
     "en": "Executor"
+  },
+  "my_equipment": {
+    "dari": "تجهیزات من", 
+    "en": "My equipment"
+  },
+  "received_equipment": {
+    "dari": "تجهیزات دریافت شده",
+    "en": "Received Equipment"
   }
 }

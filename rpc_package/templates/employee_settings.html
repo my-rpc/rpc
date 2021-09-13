@@ -29,9 +29,11 @@
     <div class="text-center py-4">
         <button class="btn btn-info my-3 mx-2 btn-function" data-toggle="tooltip" data-placement="top" title="View Employee" id="view-employee" type="button"><span><i class="fad fa-eye"></i> </span></button>
         <button class="btn btn-info-light my-3 mx-2 btn-function" data-toggle="tooltip" data-placement="top" title="Edit Employee" id="edit-employee" type="button"><span><i class="fad fa-edit"></i> </span></button>
-        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-doc" type="button"><span><i class="fad fa-file-alt"></i> Add Documents</span></button>
-        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" type="button"><span><i class="fad fa-file-signature" ></i> Add Contract</span></button>
-        <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" type="button"><span><i class="fad fa-times"></i> Delete Employee</span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-documents" type="button"><span><i class="fad fa-file-alt"></i> Add Documents</span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-contract" type="button"><span><i class="fad fa-file-signature" ></i> Add Contract</span></button>
+        <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" id="delete-employee" type="button"><span><i class="fad fa-times"></i> Delete Employee</span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-equipment" type="button"><span><i class="fad fa-file-signature" ></i> Add Equipment</span></button>
+
     </div>
     <div class="box-body table-responsive">
         <table class="table table-striped table-hover" id="employee_setting">
@@ -148,8 +150,8 @@
             },
             buttons: [
                 {extend: 'colvis', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-eye"></i> Column visibility'},
-                { extend: 'copy', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-copy"></i> Copy'},
-                { extend: 'csv', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-csv"></i> CSV' },
+                // { extend: 'copy', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-copy"></i> Copy'},
+                // { extend: 'csv', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-csv"></i> CSV' },
                 { extend: 'excel', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-excel"></i> Excel' },
                 // { extend: 'pdf', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-pdf"></i> PDF'},
                 { extend: 'print', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-print"></i> Print' }
@@ -157,38 +159,46 @@
         });
 
 $('.btn-function').on('click', function(fun){
-            var btnValue = $.trim($(this).text());
+            var btnID = $(this).prop('id');
             empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
             switch(true){
-                case (btnValue === 'View Employee'):
+                case (btnID === 'view-employee'):
                     if(empID != '' && empID != undefined){
                         window.open('/employee_details?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee');
                     }
                     break;
-                case(btnValue === 'Edit Employee'):
+                case(btnID === 'edit-employee'):
                     if(empID != '' && empID != undefined){
                         updateEmployee(empID);
                     }else{
                         toastWarning('Please select an employee');
                     }
                     break
-                case(btnValue === 'Add Documents'):
+                case(btnID === 'add-documents'):
                     if(empID != '' && empID != undefined){
                         window.open('/add_documents?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
-                case(btnValue === 'Add Contract'):
+                case(btnID === 'add-contract'):
+                case(btnID === 'add-equipment'):
+                    if(empID != '' && empID != undefined){
+                        window.open('/add_equipment?emp_id='+empID, '_blank');
+                    }else{
+                        toastWarning('Please select an employee')
+                    }
+                    break;
+                case(btnID === 'add-contract'):
                     if(empID != '' && empID != undefined){
                         window.open('/add_contract?emp_id='+empID, '_blank');
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
-                case(btnValue === 'Delete Employee'):
+                case(btnID === 'delete-employee'):
                     if(empID != '' && empID != undefined){
                         deleteEmployee(empID);
                     }else{

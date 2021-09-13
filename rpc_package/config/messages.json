@@ -133,7 +133,7 @@
   },
   "user_inactive": {
     "dari": "حساب کاربر فعال نیست",
-    "en": "User Acoount is not active"
+    "en": "Your account is inactive"
   },
   "blood_type": {
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
@@ -195,6 +195,20 @@
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
     "en": "Contract not added for employe with {} ID"
   },
+  "contract_delete":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف شد",
+    "en": "Contract deleted for user with {} ID"
+  },"contract_delete_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف نشد",
+    "en": "Contract not deleted for user with {} ID"
+  },
+  "contract_update":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی شد",
+    "en": "Contract updated for user with {} ID"
+  },"contract_update_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی نشد",
+    "en": "Contract not updated for user with {} ID"
+  },
   "resign_request_sent": {
     "dari": "درخواست استعفا ارسال شد",
     "en": "Resign request has been sent"
@@ -203,20 +217,38 @@
     "dari": "درخواست استعفا ارسال نشد",
     "en": "Resign request has been not sent"
   },
+  "action_performed": {
+    "dari": "عملیات انجام شد",
+    "en": "Action Performed"
+  },
+  "action_not_performed": {
+    "dari": "عملیات انجام نشد",
+    "en": "Action not Performed"
+  },
+
   "add_department": {
     "dari": "دیپارتمنت اضافه شد",
     "en": "Department Added"
+  },
+  "delivered": {
+    "dari": "تحویل گرفته شد",
+    "en": "Delivred"
+  },
+  "not_delivered": {
+    "dari": "تحویل گرفته نشد",
+    "en": "Not Delivred"
   },
     "add_department_not": {
     "dari": "دیپارتمنت اضافه نشد",
     "en": "Department not Added"
   },
   "val_dic" : {
-    "employee_id": "Employee already exi...mployee ID",
+    "employee_id": "Employee already exist, please check your employee ID",
     "email": "ایمیل شما موجود است",
     "phone": "تلفون شما موجود است",
     "phone_second": "تلفون شما موجود است",
-    "permanent_address": "This field is required.", 
+    "email_second": "ایمیل شما موجود است",
+    "permanent_address": "This field is required.",
     "permanent_address_dari": "This field is required.",
     "current_address": "This field is required.",
     "current_address_dari": "This field is required.",
@@ -228,5 +260,9 @@
   "invalid_message": {
     "dari": "درخواست اشتباه",
     "en": "invalid request"
+  },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
   }
 }

@@ -12,7 +12,7 @@
 
 <div class="box">
     <div class="box-header with-border">
-      <h4 class="box-title">Add Contract</h4>
+      <h4 class="box-title text-primary">Add Contract</h4>
     </div>
     <div class="box-body">
       <form action="" method="POST" id="">
@@ -21,10 +21,6 @@
           <div class="col-md-6 form-group">
             {{form.contract_type.label(class='form-control-label')}}
             {{form.contract_type(class='form-control')}}
-          </div>
-          <div class="col-md-6 form-group">
-            {{ form.contract_duration.label(class='form-control-label')}}
-            {{ form.contract_duration(class='form-control')}}
           </div>
           <div class="col-md-6 form-group">
             {{ form.department.label(class='form-control-label')}}
@@ -36,13 +32,24 @@
           </div>
           <div class="col-md-6 form-group">
             {{ form.start_date.label(class='form-control-label')}}
-            <div class="input-group mb-3">
-              <div id="start_date-icon" class="input-group-prepend">
+            <div class="input-group" id="start_date_icon">
+              <div class="input-group-prepend">
+                  <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                      <i class="fad fa-calendar"></i>
+                  </span>
+              </div>
+              {{ form.start_date(class='form-control', type='text')}}
+            </div>
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.end_date.label(class='form-control-label')}}
+            <div class="input-group" id="end_date_icon">
+              <div class="input-group-prepend">
                 <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
                   <i class="fad fa-calendar"></i>
                 </span>
               </div>
-              {{ form.start_date(class='form-control', type='text')}}
+              {{ form.end_date(class='form-control')}}
             </div>
           </div>
           <div class="col-md-6 form-group">
@@ -70,11 +77,7 @@
         </div>
       </form>
     </div>
-    <!-- /.box-body -->
-    <div class="box-footer">
-      Footer
-    </div>
-    <!-- /.box-footer-->
+
 </div>
 
 {% endblock main_content%}
@@ -116,5 +119,24 @@
         });
       });
   </script>
+
+<script>
+  $(document).ready(function(){
+    $('#start_date, #start_date_icon').MdPersianDateTimePicker({
+      targetTextSelector: '#start_date',
+      textFormat: 'yyyy-MM-dd',
+      isGregorian: false,
+      englishNumber: true,
+      enableTimePicker: false,
+    });
+    $('#end_date, #end_date_icon').MdPersianDateTimePicker({
+      targetTextSelector: '#end_date',
+      textFormat: 'yyyy-MM-dd',
+      isGregorian: false,
+      englishNumber: true,
+      enableTimePicker: false,
+    });
+  });
+</script>
 
 {% endblock js_code %}
