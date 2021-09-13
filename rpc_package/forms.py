@@ -248,8 +248,7 @@ class AddEquipmentForm(FlaskForm):
     submit = SubmitField('Add Equipment')
 
 class OvertimeRequestForm(FlaskForm):
-    overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily'], AnyOf(values=["1", "0"])],
-                               validators=[DataRequired()])
+    overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
     start_datetime = DateTimeField('From', validators=[DataRequired()])
     end_datetime = DateTimeField('To', validators=[DataRequired()])
     description = TextAreaField('Overtime Description')
