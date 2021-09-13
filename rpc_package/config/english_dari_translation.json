@@ -935,9 +935,9 @@
     "dari": "جزئیات",
     "en": "Details"
   },
-  "inbox_confirm_form": {
-    "dari": "فرم تأیید صندوق ورودی",
-    "en": "Inbox Confirm Form"
+  "requested_inbox": {
+    "dari": "صندوق درخواست ها",
+    "en": "Requested Inbox"
   },
   "loan_guarantor": {
     "dari": "ضامن قرضه",
