@@ -98,9 +98,31 @@ def update_messages_loan(form_obj, language):
     return form_obj
 
 def update_messages_loan_guarantor(form_obj, language):
-    form_obj.guarantor.choices[0][1] = translation_obj.hourly[language]
-    form_obj.guarantor.choices[1][1] = translation_obj.daily[language]
-    form_obj.guarantor.label.text = translation_obj.overtime_type[language]
+    form_obj.guarantor.choices[0][1] = translation_obj.accept[language]
+    form_obj.guarantor.choices[1][1] = translation_obj.reject[language]
+    form_obj.guarantor.label.text = translation_obj.guarantor_confirm_loan_message[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
+
+def update_messages_loan_hr(form_obj, language):
+    form_obj.hr.choices[0][1] = translation_obj.accept[language]
+    form_obj.hr.choices[1][1] = translation_obj.reject[language]
+    form_obj.hr.label.text = translation_obj.hr_confirm_loan_message[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
+
+def update_messages_loan_presidency(form_obj, language):
+    form_obj.presidency.choices[0][1] = translation_obj.accept[language]
+    form_obj.presidency.choices[1][1] = translation_obj.reject[language]
+    form_obj.presidency.label.text = translation_obj.presidency_confirm_loan_message[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
+
+def update_messages_loan_finance(form_obj, language):
+    form_obj.finance.choices[0][1] = translation_obj.accept[language]
+    form_obj.finance.choices[1][1] = translation_obj.reject[language]
+    form_obj.finance.label.text = translation_obj.finance_confirm_loan_message[language]
+    form_obj.submit.label.text = translation_obj.send[language]
     return form_obj
 
 def update_messages_resign(form_obj, language):

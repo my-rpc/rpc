@@ -67,6 +67,22 @@
         </ul>
       </li>
 
+      <li class="treeview">
+        <a href="#">
+          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.inbox_confirm_form[language]}}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url_for('loan_guarantor') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_guarantor[language]}}</a></li>
+          <li><a href="{{ url_for('loan_hr') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_hr[language]}}</a></li>
+          <li><a href="{{ url_for('loan_presidency') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_presidency[language]}}</a></li>
+          <li><a href="{{ url_for('loan_finance') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_finance[language]}}</a></li>
+        </ul>
+      </li>
+
     <li class="treeview">
         <a href="#">
           <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>

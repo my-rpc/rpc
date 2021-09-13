@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
-    ContractForm, LoanRequestForm, LoanGuarantorForm
+    ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm
 from rpc_package.form_dynamic_language import *
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, \
@@ -571,18 +571,27 @@ def loan_request():
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
-@app.route('/loan_guarantor', methods=["GET", "POST"])
+@app.route('/loan_guarantor', methods=["GET"])
 @login_required
 def loan_guarantor():
+    emp_loan_guarantor = Loan_form.query \
+        .filter_by(guarantor_id=current_user.emp_id, guarantor=None) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_guarantor.html', emp_loan_guarantor=emp_loan_guarantor,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_guarantor/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_guarantor_view(loan_id):
     loan_guarantor_form = LoanGuarantorForm()
     if request.method == "GET":
-        emp_loan_guarantor = Loan_form.query \
-            .filter_by(guarantor_id=current_user.emp_id) \
-            .order_by(Loan_form.requested_at.desc()).all()
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
     if request.method == 'POST':
         if loan_guarantor_form.validate_on_submit():
             try:
-                loan_form = Loan_form.query.get(request.form['id'])
+                loan_form = Loan_form.query.get(loan_id)
                 loan_form.guarantor = bool(int(request.form['guarantor']))
                 db.session.commit()
                 if request.form['guarantor'] == '0':
@@ -595,7 +604,121 @@ def loan_guarantor():
             flash(loan_guarantor_form.errors)
         return redirect(url_for('loan_guarantor'))
     loan_guarantor_form = update_messages_loan_guarantor(LoanGuarantorForm(), session['language'])
-    return render_template('loan_guarantor.html', form=loan_guarantor_form, emp_loan_guarantor=emp_loan_guarantor,
+    return render_template('loan_guarantor_view.html', form=loan_guarantor_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_hr', methods=["GET"])
+@login_required
+def loan_hr():
+    emp_loan_hr = Loan_form.query \
+        .filter_by(guarantor=1,hr=None) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_hr.html', emp_loan_hr=emp_loan_hr,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_hr/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_hr_view(loan_id):
+    loan_hr_form = LoanHRForm()
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_hr_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.hr = bool(int(request.form['hr']))
+                loan_form.hr_id = current_user.emp_id
+                db.session.commit()
+                if request.form['hr'] == '0':
+                    flash(message_obj.loan_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_accepted[session['language']], 'error')
+        else:
+            flash(loan_hr_form.errors)
+        return redirect(url_for('loan_hr'))
+    loan_hr_form = update_messages_loan_hr(LoanHRForm(), session['language'])
+    return render_template('loan_hr_view.html', form=loan_hr_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_presidency', methods=["GET"])
+@login_required
+def loan_presidency():
+    emp_loan_presidency = Loan_form.query \
+        .filter_by(guarantor=1,hr=1) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_presidency.html', emp_loan_presidency=emp_loan_presidency,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_presidency/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_presidency_view(loan_id):
+    loan_presidency_form = LoanPresidencyForm()
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_presidency_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.presidency = bool(int(request.form['presidency']))
+                loan_form.presidency_id = current_user.emp_id
+                db.session.commit()
+                if request.form['presidency'] == '0':
+                    flash(message_obj.loan_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_accepted[session['language']], 'error')
+        else:
+            flash(loan_presidency_form.errors)
+        return redirect(url_for('loan_presidency'))
+    loan_presidency_form = update_messages_loan_presidency(LoanPresidencyForm(), session['language'])
+    return render_template('loan_presidency_view.html', form=loan_presidency_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_finance', methods=["GET"])
+@login_required
+def loan_finance():
+    emp_loan_finance = Loan_form.query \
+        .filter_by(guarantor=1,hr=1,presidency=1) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_finance.html', emp_loan_finance=emp_loan_finance,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_finance/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_finance_view(loan_id):
+    loan_finance_form = LoanFinanceForm()
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_finance_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.finance = bool(int(request.form['finance']))
+                loan_form.finance_id = current_user.emp_id
+                db.session.commit()
+                if request.form['finance'] == '0':
+                    flash(message_obj.loan_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_accepted[session['language']], 'error')
+        else:
+            flash(loan_finance_form.errors)
+        return redirect(url_for('loan_finance'))
+    loan_finance_form = update_messages_loan_finance(LoanFinanceForm(), session['language'])
+    return render_template('loan_finance_view.html', form=loan_finance_form, loan_data=loan_data,
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 

@@ -256,11 +256,28 @@ class LoanRequestForm(FlaskForm):
     submit = SubmitField('Send Request')
 
 class LoanGuarantorForm(FlaskForm):
-    guarantor = RadioField('Guarantor', default=1,
+    guarantor = RadioField('Guarantor',
         choices=[[1, 'Approved'], [0, 'Rejected']],
         validators=[DataRequired()])
     submit = SubmitField('Send Request')
 
+class LoanHRForm(FlaskForm):
+    hr = RadioField('HR',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class LoanPresidencyForm(FlaskForm):
+    presidency = RadioField('Presidency',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class LoanFinanceForm(FlaskForm):
+    finance = RadioField('Finance',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])

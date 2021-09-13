@@ -227,6 +227,10 @@
     "dari": "ارسال درخواست",
     "en": "Send Request"
   },
+  "send": {
+    "dari": "ارسال",
+    "en": "Send"
+  },
   "job_announcement_form": {
     "dari": "فورم اعلان وظیفه",
     "en": "Job Announcement Form"
@@ -262,6 +266,22 @@
   "guarantor_name": {
     "dari": "نام ضامن",
     "en": "Guarantor Name"
+  },
+  "guarantor_confirm_loan_message": {
+    "dari": "آیا شما موافق هستید که ضامن این قرضه شوید؟",
+    "en": "Do you agree to be a guarantor of this loan?"
+  },
+  "hr_confirm_loan_message": {
+    "dari": "آیا دیپارتمنت منابع بشری این درخواست قرضه را تائید می کند؟",
+    "en": "Does the HR department approve this loan request?"
+  },
+  "presidency_confirm_loan_message": {
+    "dari": "آیا ریاست دفتر این درخواست قرضه را تائید می کند؟",
+    "en": "Does the head office approve this loan application?"
+  },
+  "finance_confirm_loan_message": {
+    "dari": "آیا مدیریت مالی این درخواست قرضه را اجرا می کند؟",
+    "en": "Does the financial management execute this loan request?"
   },
   "grand_name": {
     "dari": "نام پدر کلان",
@@ -328,11 +348,11 @@
     "en": "Rejected"
   },
   "reject": {
-    "dari": "رد کردن",
+    "dari": "رد",
     "en": "Rejected"
   },
   "accept": {
-    "dari": "پذیرفتن",
+    "dari": "قبول",
     "en": "Accept"
   },
   "pending": {
@@ -443,6 +463,14 @@
     "dari": "مدیر مالی",
     "en": "Finance Manager"
   },
+  "finance": {
+    "dari": "مالی",
+    "en": "Finance"
+  },
+  "presidency": {
+    "dari": "ریاست",
+    "en": "Presidency"
+  },
   "job_number": {
     "dari": "شماره وظیفه",
     "en": "Job Number"
@@ -493,7 +521,7 @@
   },
   "request_loan_form":{
     "dari": "درخواست قرضه",
-    "en": "Loan Form"
+    "en": "Loan Request"
   },
   "loan_applicant":{
     "dari": "درخواست کننده قرضه",
@@ -858,6 +886,30 @@
   "contact_details": {
     "dari": "اطلاعات تماس و آدرس ",
     "en": "Contact Details"
+  },
+  "details": {
+    "dari": "جزئیات",
+    "en": "Details"
+  },
+  "inbox_confirm_form": {
+    "dari": "فرم تأیید صندوق ورودی",
+    "en": "Inbox Confirm Form"
+  },
+  "loan_guarantor": {
+    "dari": "ضامن قرضه",
+    "en": "Loan Guarantor"
+  },
+  "loan_hr": {
+    "dari": "قرضه منابع بشری",
+    "en": "Laon HR"
+  },
+  "loan_presidency": {
+    "dari": "قرضه ریاست",
+    "en": "Loan Presidency"
+  },
+  "loan_finance": {
+    "dari": "قرضه مالی",
+    "en": "Loan Finance"
   },
   "user_setting": {
     "dari": " تنظیمات کاربر ",

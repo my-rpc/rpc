@@ -18,7 +18,7 @@
         <div class="col-12">
             <div class="box">
               <div class="box-header with-border">
-                <div class="box-title">{{translation.list_of_loan_guarantor[language]}}</div>
+                <div class="box-title">{{translation.list_of_loan_request[language]}}</div>
               </div>
               <!-- /.box-header -->
               <div class="box-body no-padding">
@@ -29,12 +29,13 @@
                             <th>{{translation.requested_amount[language]}}</th>
                             <th>{{translation.repayment_start_date[language]}}</th>
                             <th>{{translation.repayment_end_date[language]}}</th>
-                            <th>{{translation.repayment_period_in_months[language]}}</th>
-                            <th>{{translation.monthly_amount[language]}}</th>
+                            <th>{{translation.guarantor[language]}}</th>
+                            <th>{{translation.record_status[language]}}</th>
+                            <th>{{translation.finance[language]}}</th>
                             <th>{{translation.request_date[language]}}</th>
                             <th>{{translation.details[language]}}</th>
                         </tr>
-                        {% for loan in emp_loan_guarantor %}
+                        {% for loan in emp_loan_presidency %}
                         <tr>
                             <td>
                                 {% if language == 'dari' %}
@@ -47,16 +48,35 @@
                             <td><span class="text-muted">{{loan.start_date}}</span> </td>
                             <td><span class="text-muted">{{loan.end_date}}</span> </td>
                             <td>
-                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1) }}
+                              {% if language == 'dari' %}
+                                {{ loan.re_guarantor.name + ' ' + loan.re_guarantor.lname }}
+                              {% else %}
+                                {{ loan.re_guarantor.name_english + ' ' + loan.re_guarantor.lname_english }}
+                              {% endif %}
                             </td>
                             <td>
-                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1))) }}
+                                {% if loan.presidency == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.presidency == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.presidency == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.finance == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.finance == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.finance == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
                             </td>
                             <td>{{loan.requested_at}}</td>
                             <td>
                                 <div style="white-space: nowrap;">
                                     <a class="btn btn-info my-3 mx-2 btn-function"
-                                        href="/loan_guarantor/{{loan.id}}"
+                                        href="/loan_presidency/{{loan.id}}"
                                         title="View Details"
                                         type="button"
                                     >
@@ -77,7 +97,6 @@
 </section>
 {% endblock main_content%}
 {% block js_code %}
-
 <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
 </script>
 <script src="{{url_for('static', filename='js/rpc.js')}}"></script>

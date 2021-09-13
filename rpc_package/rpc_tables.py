@@ -32,6 +32,8 @@ class Employees(db.Model, UserMixin):
     m_status = db.Column(db.Boolean, nullable=False)
     tin = db.Column(db.Integer, unique=True, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
+    # Relationship
+    contracts = db.relationship("Contracts", foreign_keys='Contracts.emp_id')
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
@@ -159,10 +161,11 @@ class Contracts(db.Model, UserMixin):
     start_date = db.Column(db.String(255), nullable=False)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     inserted_date = db.Column(db.Date, nullable=True)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], backref="employee", overlaps="contracts")
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"
-
 
 class Contract_types(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
@@ -272,23 +275,25 @@ class Loan_form(db.Model, UserMixin):
     __tablename__ = "loan_form"
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
-    employee = db.relationship('Employees', foreign_keys=[emp_id])
     requested_amount = db.Column(db.Integer, nullable=False)
     start_date = db.Column(db.Date, nullable=True)
     end_date = db.Column(db.Date, nullable=True)
     guarantor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
-    guarantor_emp = db.relationship('Employees', foreign_keys=[guarantor_id])
     guarantor = db.Column(db.Boolean, nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
     hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
-    re_hr = db.relationship('Employees', foreign_keys=[hr_id])
-    chairman = db.Column(db.Boolean, nullable=True)
-    chairman_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
-    re_chairman = db.relationship('Employees', foreign_keys=[chairman_id])
+    presidency = db.Column(db.Boolean, nullable=True)
+    presidency_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     finance = db.Column(db.Boolean, nullable=True)
     finance_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
-    re_finance = db.relationship('Employees', foreign_keys=[finance_id])
     requested_at = db.Column(db.DateTime, nullable=False)
+
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id])
+    re_guarantor = db.relationship('Employees', foreign_keys=[guarantor_id])
+    re_hr = db.relationship('Employees', foreign_keys=[hr_id])
+    re_presidency = db.relationship('Employees', foreign_keys=[presidency_id])
+    re_finance = db.relationship('Employees', foreign_keys=[finance_id])
 
     def __repr__(self):
         return f"Loan ID: {self.id}, Employee ID: {self.emp_id}, Requested Amount : {self.requested_amount}"

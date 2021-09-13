@@ -167,6 +167,14 @@
     "dari": "درخواست ضمانت پذیرفته شد",
     "en": "Guarantee request has been accepted"
   },
+  "loan_request_rejected": {
+    "dari": "درخواست قرضه رد شد",
+    "en": "Loan request has been rejected"
+  },
+  "loan_request_accepted": {
+    "dari": "درخواست قرضه پذیرفته شد",
+    "en": "Loan request has been accepted"
+  },
   "loan_request_not_sent": {
     "dari": "درخواست قرضه ارسال نشد",
     "en": "Loan request has been not sent"
