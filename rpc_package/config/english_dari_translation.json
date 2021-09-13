@@ -163,6 +163,14 @@
     "dari": "کل روزها",
     "en": "Total Days"
   },
+  "days": {
+    "dari": "روز",
+    "en": "days"
+  },
+  "day": {
+    "dari": "روز",
+    "en": "day"
+  },
   "employee_overtime": {
     "dari": "اضافه کاری کارمند",
     "en": "Employee Overtime"
@@ -170,6 +178,14 @@
   "list_of_overtime_request": {
     "dari": "لیست درخواست اضافه کاری",
     "en": "List of Overtime Request"
+  },
+  "list_of_loan_request": {
+    "dari": "لیست درخواست قرضه",
+    "en": "List of Loan Request"
+  },
+  "list_of_loan_guarantor": {
+    "dari": "لیست ضمانت قرضه",
+    "en": "List of Loan Guarantor"
   },
   "prepayment_form": {
     "dari": "فورم پیش پرداخت",
@@ -215,6 +231,10 @@
     "dari": "ارسال درخواست",
     "en": "Send Request"
   },
+  "send": {
+    "dari": "ارسال",
+    "en": "Send"
+  },
   "job_announcement_form": {
     "dari": "فورم اعلان وظیفه",
     "en": "Job Announcement Form"
@@ -246,6 +266,26 @@
   "guarantor": {
     "dari": "ضامن",
     "en": "Guarantor"
+  },
+  "guarantor_name": {
+    "dari": "نام ضامن",
+    "en": "Guarantor Name"
+  },
+  "guarantor_confirm_loan_message": {
+    "dari": "آیا شما موافق هستید که ضامن این قرضه شوید؟",
+    "en": "Do you agree to be a guarantor of this loan?"
+  },
+  "hr_confirm_loan_message": {
+    "dari": "آیا دیپارتمنت منابع بشری این درخواست قرضه را تائید می کند؟",
+    "en": "Does the HR department approve this loan request?"
+  },
+  "presidency_confirm_loan_message": {
+    "dari": "آیا ریاست دفتر این درخواست قرضه را تائید می کند؟",
+    "en": "Does the head office approve this loan application?"
+  },
+  "finance_confirm_loan_message": {
+    "dari": "آیا مدیریت مالی این درخواست قرضه را اجرا می کند؟",
+    "en": "Does the financial management execute this loan request?"
   },
   "grand_name": {
     "dari": "نام پدر کلان",
@@ -311,6 +351,14 @@
     "dari": "رد شده",
     "en": "Rejected"
   },
+  "reject": {
+    "dari": "رد",
+    "en": "Rejected"
+  },
+  "accept": {
+    "dari": "قبول",
+    "en": "Accept"
+  },
   "pending": {
     "dari": "انتظار",
     "en": "pending"
@@ -347,17 +395,25 @@
     "dari": "پایه معاش",
     "en": "Base Salary"
   },
-  "amount request": {
+  "requested_amount": {
     "dari": "مبلغ درخواستی",
-    "en": "Amount Request"
+    "en": "Requested Amount"
   },
-  "refund_per_month": {
-    "dari": "بازپرداخت به ماه",
-    "en": "Refund Per Month"
+  "repayment_period_in_months": {
+    "dari": "مدت بازپرداخت به ماه",
+    "en": "Repayment period in months"
   },
   "monthly_amount": {
     "dari": "مبلغ ماهانه",
     "en": "Monthly Amount"
+  },
+  "repayment_start_date": {
+    "dari": "تاریخ شروع بازپرداخت",
+    "en": "Repayment Start Date"
+  },
+  "repayment_end_date": {
+    "dari": "تاریخ ختم باز پرداخت",
+    "en": "Repayment End Date"
   },
   "start_date": {
     "dari": "تاریخ شروع",
@@ -410,6 +466,14 @@
   "finance_manager": {
     "dari": "مدیر مالی",
     "en": "Finance Manager"
+  },
+  "finance": {
+    "dari": "مالی",
+    "en": "Finance"
+  },
+  "presidency": {
+    "dari": "ریاست",
+    "en": "Presidency"
   },
   "job_number": {
     "dari": "شماره وظیفه",
@@ -482,6 +546,14 @@
   "request_overtime_form":{
     "dari": " درخواست اضافه کاری",
     "en": "Overtime Form"
+  },
+  "request_loan_form":{
+    "dari": "درخواست قرضه",
+    "en": "Loan Request"
+  },
+  "loan_applicant":{
+    "dari": "درخواست کننده قرضه",
+    "en": "Loan Applicant"
   },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
@@ -658,6 +730,10 @@
   "m_status": {
     "dari": "حالت مدنی",
     "en": "Marital Status"
+  },
+  "record_status": {
+    "dari": "حالت",
+    "en": "Status"
   },
   "need_date": {
     "dari": "شروع ضرورت",
@@ -855,6 +931,30 @@
     "dari": "اطلاعات تماس و آدرس ",
     "en": "Contact Details"
   },
+  "details": {
+    "dari": "جزئیات",
+    "en": "Details"
+  },
+  "requested_inbox": {
+    "dari": "صندوق درخواست ها",
+    "en": "Requested Inbox"
+  },
+  "loan_guarantor": {
+    "dari": "ضامن قرضه",
+    "en": "Loan Guarantor"
+  },
+  "loan_hr": {
+    "dari": "قرضه منابع بشری",
+    "en": "Laon HR"
+  },
+  "loan_presidency": {
+    "dari": "قرضه ریاست",
+    "en": "Loan Presidency"
+  },
+  "loan_finance": {
+    "dari": "قرضه مالی",
+    "en": "Loan Finance"
+  },
   "user_setting": {
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
@@ -906,6 +1006,18 @@
   "female": {
     "dari": "مرد",
     "en": "Female"
+  },
+  "producer": {
+    "dari": "تهیه کننده",
+    "en": "Producer"
+  },
+  "verifier": {
+    "dari": "تائید کننده",
+    "en": "Verifier"
+  },
+  "executor": {
+    "dari": "اجرا کننده",
+    "en": "Executor"
   },
   "my_equipment": {
     "dari": "تجهیزات من", 

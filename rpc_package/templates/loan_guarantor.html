@@ -1,0 +1,101 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">{{translation.list_of_loan_guarantor[language]}}</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="overitme_list">
+                        <tr>
+                            <th>{{translation.loan_applicant[language]}}</th>
+                            <th>{{translation.requested_amount[language]}}</th>
+                            <th>{{translation.repayment_start_date[language]}}</th>
+                            <th>{{translation.repayment_end_date[language]}}</th>
+                            <th>{{translation.repayment_period_in_months[language]}}</th>
+                            <th>{{translation.monthly_amount[language]}}</th>
+                            <th>{{translation.request_date[language]}}</th>
+                            <th>{{translation.details[language]}}</th>
+                        </tr>
+                        {% for loan in emp_loan_guarantor %}
+                        <tr>
+                            <td>
+                                {% if language == 'dari' %}
+                                  {{ loan.employee.name + ' ' + loan.employee.lname }}
+                                {% else %}
+                                  {{ loan.employee.name_english + ' ' + loan.employee.lname_english }}
+                                {% endif %}
+                            </td>
+                            <td>{{loan.requested_amount}}</td>
+                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
+                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td>
+                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1) }}
+                            </td>
+                            <td>
+                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1))) }}
+                            </td>
+                            <td>{{loan.requested_at}}</td>
+                            <td>
+                                <div style="white-space: nowrap;">
+                                    <a class="btn btn-info my-3 mx-2 btn-function"
+                                        href="/loan_guarantor/{{loan.id}}"
+                                        title="View Details"
+                                        type="button"
+                                    >
+                                        <span><i class="fad fa-eye"></i> </span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+
+{% endblock js_code %}

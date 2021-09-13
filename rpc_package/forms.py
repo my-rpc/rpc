@@ -255,6 +255,47 @@ class OvertimeRequestForm(FlaskForm):
     description = TextAreaField('Overtime Description')
     submit = SubmitField('Send Request')
 
+class LoanRequestForm(FlaskForm):
+    emp_list = [(emp.id, emp.name_english + ' ' + emp.lname_english + '/' + emp.id + '/' + emp.name + ' ' + emp.lname) for emp in Employees.query.all()]
+    emp_list.insert(0, ('', '------'))
+    requested_amount = StringField('Requested Amount', validators=[Regexp('^[1-9]\d*$'), DataRequired()])
+    start_date = DateField('From', validators=[DataRequired()])
+    end_date = DateField('To', validators=[DataRequired()])
+    guarantor = SelectField('Guarantor', choices=emp_list, validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+    # def validate_start_date(self, start_date):
+    #     if start_date.data:
+    #         if not bool(re.match(r'^\d{4}-\d{2}-\d{2}$', start_date.data)):
+    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    # def validate_end_date(self, end_date):
+    #     if end_date.data:
+    #         if not bool(re.match(r'^\d{4}-\d{2}-\d{2}$', end_date.data)):
+    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+
+class LoanGuarantorForm(FlaskForm):
+    guarantor = RadioField('Guarantor',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class LoanHRForm(FlaskForm):
+    hr = RadioField('HR',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class LoanPresidencyForm(FlaskForm):
+    presidency = RadioField('Presidency',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
+class LoanFinanceForm(FlaskForm):
+    finance = RadioField('Finance',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
     name_english_department = StringField('Name of Department', validators=[DataRequired()])
