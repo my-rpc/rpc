@@ -19,10 +19,6 @@
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <section class="content">
-    {% if resign %}
-   {{resign}}
-
-   {% endif %}
    <div class="">
     <div class="container-full">
       <!-- Content Header (Page header) -->	  
@@ -105,11 +101,12 @@
 
                 <div class=" tab-pane" id="activity">			
                   <div class="box">
+                    {% if equipment %}
                     <form method="POST" action="/deliver_equipment">
                       {{ form.hidden_tag()}}
                       <!-- <input type="hidden" name="emp_id" -->
                     <div class="box-body">
-                     {% if equipment %}
+                    
                      <div class="table-responsive">
                          <table class="table table-hover">
                            <tr>
@@ -130,12 +127,15 @@
                            {% endfor %}
                          </table>
                        </div>
-                     {% endif %}
+                    
                     </div>
                     <div class="box-footer">
                         {{ form.submit(value = "Delivery", class="btn btn-primary")}}
                     </div>
                     </form>
+                    {% else %}
+                    <strong>No Equipment</strong>
+                    {% endif %}
                 </div>
                   <div class="box p-15">				
                   <!-- Post -->
