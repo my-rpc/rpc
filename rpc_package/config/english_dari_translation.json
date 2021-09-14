@@ -715,6 +715,10 @@
     "dari": "وضعیت",
     "en": "Status"
   },
+  "equipment_serial": {
+    "dari": "شماره سریال",
+    "en": "Serial Number"
+  },
   "resign_reason": {
     "dari": "دلیل استعفا",
     "en": "Resign Reason"

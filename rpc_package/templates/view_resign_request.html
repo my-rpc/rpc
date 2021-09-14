@@ -116,6 +116,7 @@
                              <th><input type="checkbox" class="equipmentCheckbox" /></th>
                              <th>{{translation.equipment_name[language]}}</th>
                              <th>{{translation.equipment_name_english[language]}}</th>
+                             <th>{{translation.equipment_serial[language]}}</th>
                              <th>{{translation.status[language]}}</th>
                            </tr>
                            {% for eq in equipment %}
@@ -123,6 +124,7 @@
                             <td>{{form.equipment(value=eq[0].id, class="equipmentCheckbox")}}</td>
                             <td>{{eq[1].name}}</td>
                             <td>{{eq[1].name_english}}</td>
+                            <td>{{eq[1].serial}}</td>
                             <td>{{eq[1].static}}</td>
                            </tr>
                            {% endfor %}

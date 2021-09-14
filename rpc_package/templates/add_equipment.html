@@ -33,10 +33,11 @@
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <tr>
-                        <th>{{translation.leave_type[language]}}</th>
-                        <th>{{translation.leave_type[language]}}</th>
-                        <th>{{translation.start_date[language]}}</th>
-                        <th>{{translation.end_date[language]}}</th>
+                        <th><input type="checkbox" class="equipmentCheckbox" /></th>
+                        <th>{{translation.equipment_name[language]}}</th>
+                        <th>{{translation.equipment_name_english[language]}}</th>
+                        <th>{{translation.equipment_serial[language]}}</th>
+                        <th>{{translation.status[language]}}</th>
                         <!-- <th>{{translation.total_days[language]}}</th>
                         <th>{{translation.supervisor[language]}}</th>
                         <th>{{translation.hr[language]}}</th>
@@ -47,7 +48,8 @@
                         <td>{{form.equipment(value=equipment.id, class="equipmentCheckbox")}}</td>
                         <td>{{equipment.name}}</td>
                         <td>{{equipment.name_english}}</td>
-                        <td>{{equipment.equipment_catgory}}</td>
+                        <td>{{equipment.serial}}</td>
+                        <td>{{equipment.status}}</td>
                     
                       </tr>
                       {% endfor %}
