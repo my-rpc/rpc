@@ -39,7 +39,7 @@
               </tr>
               {% for equipment in my_equipment %}
               <tr>
-                <td>{{form.equipment(value=equipment[1].id, class="equipmentCheckbox")}}</td>
+                <td>{{form.equipment(value=equipment[0].id, class="equipmentCheckbox")}}</td>
                 <td>{{equipment[1].name}}</td>
                 <td>{{equipment[1].name_english}}</td>
                 <td>{{equipment[1].equipment_catgory}}</td>

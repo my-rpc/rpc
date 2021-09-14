@@ -326,6 +326,9 @@ class Equipment(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     name_english = db.Column(db.String(20), nullable=False)
+    serial = db.Column(db.String(20), nullable=True)
+    model = db.Column(db.String(255), nullable=True)
+    in_use = db.Column(db.Boolean, default=False, nullable=False)
     equipment_category = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):

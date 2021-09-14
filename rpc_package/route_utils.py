@@ -2,7 +2,7 @@ import os
 import jdatetime
 from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
-    Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
+    Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, Equipment, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
     Positions, Loan_form
 
@@ -427,10 +427,13 @@ def assign_equipment(request, emp_id):
     for eq in request.form.getlist('equipment'):
         have_equipment = Employee_equipment.query.filter_by(emp_id=emp_id, equipment_id=eq).first()
         if have_equipment is None:
+            equip = Equipment.query.filter_by(id=eq).first()
+            equip.in_use=True
             equipment = Employee_equipment(
             emp_id=emp_id,
             equipment_id=eq)
             db.session.add(equipment)
+            db.session.add(equip)
     if db.session.commit():
         return "success"
     else:
@@ -587,14 +590,16 @@ def accept_equipment(request, owner):
     equipment=""
     for eq in request.form.getlist('equipment'):
         my_equipment = Employee_equipment.query.filter_by(id=eq).first()
-        # if my_equipment is None:
         if owner == "employee":
             my_equipment.received = True
         elif owner == "admin":
+            equip = Equipment.query.filter_by(id=my_equipment.equipment_id).first()
+            equip.in_use=False
             my_equipment.delivered = True
 
     try:
         db.session.add(my_equipment)
+        db.session.add(equip)
         db.session.commit()
         return "success"
     except IOError as io:

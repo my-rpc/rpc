@@ -799,7 +799,7 @@ def add_equipment():
     form = AddEquipmentForm()
     all_equipment = ""
     if request.method == "GET":
-        all_equipment = Equipment.query.all()
+        all_equipment = Equipment.query.filter_by(in_use=False).all()
     if request.method == "POST":
         result = assign_equipment(request, emp_id)
         if result == "success":
