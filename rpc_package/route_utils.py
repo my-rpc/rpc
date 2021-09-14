@@ -615,6 +615,10 @@ def accept_reject_resign(request):
         action = False
     resign = Resign_form.query.filter_by(id=resign_id).first()
     resign.hr = action
+    if action:
+        user = Users.query.filter_by(emp_id=resign.emp_id).first()
+        user.status = False
+        db.session.add(user)
 
     try:
         db.session.add(resign)

@@ -826,7 +826,7 @@ def emp_leave_request():
 def emp_resign_request():
     if request.method == "GET":
          list_of_resigns = db.session.query(Resign_form, Employees).join(Resign_form,
-        (Resign_form.emp_id == Employees.id)).all()
+        Resign_form.emp_id == Employees.id).filter(Resign_form.hr==None).all()
 
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
                            title=translation_obj.employee_forms[session['language']], language=session['language'],
