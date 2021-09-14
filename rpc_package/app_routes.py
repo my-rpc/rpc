@@ -886,9 +886,11 @@ def view_resign_request():
     form = AcceptEquipmentForm()
     resign_id = request.args.get('resign')
     resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
+    phone = Phone.query.filter_by(emp_id=resign[1].id).first()
+    email = Emails.query.filter_by(emp_id=resign[1].id).first()
     equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
         (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==resign[0].emp_id, Employee_equipment.delivered == None).all()
-    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'], translation=translation_obj)
+    return render_template('view_resign_request.html', email=email, phone=phone, form=form, equipment=equipment, resign=resign, language=session['language'], translation=translation_obj)
 
 @app.route("/deliver_equipment", methods=['POST'])
 @login_required
