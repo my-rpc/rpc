@@ -79,8 +79,9 @@
               <!-- /.box-header -->
               <div class="box-body no-padding">
                   <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="leave_list">
                       <tr>
+                        <th></th>
                         <th>{{translation.leave_type[language]}}</th>
                         <th>{{translation.start_date[language]}}</th>
                         <th>{{translation.end_date[language]}}</th>
@@ -88,9 +89,21 @@
                         <th>{{translation.supervisor[language]}}</th>
                         <th>{{translation.hr[language]}}</th>
                         <th>{{translation.request_date[language]}}</th>
+                        <th>{{translation.finalized_date[language]}}</th>
                       </tr>
                       {% for leave in my_leave_list %}
                       <tr>
+                        <td>
+                            <div
+                                class="btn m-0 p-0 mx-1"
+                                role="button"
+                                data-toggle="collapse"
+                                data-target="#more_{{leave.id}}"
+                                aria-expanded="false"
+                                aria-controls="more_{{leave.id}}">
+                                <li class="fad fa-angle-down text-success"></li>
+                            </div>
+                        </td>
                         <td>{% if leave.leave_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.start_datetime}}</span> </td>
                         <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{leave.end_datetime}}</span> </td>
@@ -119,7 +132,24 @@
 
                         </td>
                         <td>{{leave.requested_at}}</td>
+                        <td>
+                            {% if leave.finalized_at %}
+                                {{leave.finalized_at}}
+                            {% endif %}
+                        </td>
                       </tr>
+                      <tr>
+                            <td colspan="9" class="no-padding">
+                                <table class="collapse table" id="more_{{leave.id}}" data-parent="#leave_list">
+                                    <tr>
+                                        {% if leave.reason %}
+                                            <th>{{ translation.reason_for_disagreement[language] }}</th>
+                                            <td>{{ leave.reason.reason }}</td>
+                                        {% endif %}
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                       {% endfor %}
                     </table>
                   </div>

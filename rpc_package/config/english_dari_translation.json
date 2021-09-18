@@ -271,6 +271,10 @@
     "dari": "آیا شما این درخواست اضافه کاری را تائید می کنید؟",
     "en": "Do you approve this overtime request?"
   },
+  "confirm_leave_message": {
+    "dari": "آیا شما این درخواست رخصتی را تائید می کنید؟",
+    "en": "Do you approve this leave request?"
+  },
   "guarantor_confirm_loan_message": {
     "dari": "آیا شما موافق هستید که ضامن این قرضه شوید؟",
     "en": "Do you agree to be a guarantor of this loan?"
@@ -982,6 +986,14 @@
   "overtime_supervisor": {
     "dari": "اضافه کاری سوپروایز",
     "en": "Overtime Supervisor"
+  },
+  "leave_hr": {
+    "dari": "رخصتی منابع بشری",
+    "en": "Leave HR"
+  },
+  "leave_supervisor": {
+    "dari": "رخصتی سوپروایز",
+    "en": "Leave Supervisor"
   },
   "user_setting": {
     "dari": " تنظیمات کاربر ",

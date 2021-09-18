@@ -78,6 +78,20 @@ def update_messages_leave(form_obj, language):
     form_obj.submit.label.text = translation_obj.send_request[language]
     return form_obj
 
+def update_messages_leave_supervisor(form_obj, language):
+    form_obj.supervisor.choices[0][1] = translation_obj.accept[language]
+    form_obj.supervisor.choices[1][1] = translation_obj.reject[language]
+    form_obj.supervisor.label.text = translation_obj.confirm_leave_message[language]
+    form_obj.reason.label.text = translation_obj.reason_for_disagreement[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
+
+def update_messages_leave_hr(form_obj, language):
+    form_obj.hr.choices[0][1] = translation_obj.accept[language]
+    form_obj.hr.choices[1][1] = translation_obj.reject[language]
+    form_obj.hr.label.text = translation_obj.confirm_leave_message[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
 
 def update_messages_overtime(form_obj, language):
     form_obj.overtime_type.choices[0][1] = translation_obj.hourly[language]

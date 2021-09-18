@@ -6,14 +6,14 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
-    OvertimeSupervisorForm, OvertimeHRForm
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm
 
 from rpc_package.form_dynamic_language import *
 
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
-    Loan_form, Overtime_reason
+    Loan_form, Overtime_reason, Leave_reason
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
@@ -576,6 +576,88 @@ def leave_request():
                            title=translation_obj.forms[session['language']], language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
+@app.route('/leave_supervisor', methods=["GET"])
+@login_required
+def leave_supervisor():
+    leave_supervisor = Leave_form.query \
+        .order_by(Leave_form.requested_at.desc()).all()
+    return render_template('leave_supervisor.html', leave_supervisor=leave_supervisor,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/leave_supervisor/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def leave_supervisor_view(loan_id):
+    leave_supervisor_form = LeaveSupervisorForm()
+    if request.method == "GET":
+        leave_data = Leave_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if leave_supervisor_form.validate_on_submit():
+            try:
+                leave_form = Leave_form.query.get(loan_id)
+                leave_form.supervisor = bool(int(request.form['supervisor']))
+                leave_form.supervisor_id = current_user.emp_id
+                leave_form.finalized_at=jdatetime.datetime.now()
+                if request.form['supervisor'] == '0':
+                    leave_reason = Leave_reason(
+                        leave_id = leave_form.id,
+                        reason = request.form['reason']
+                    )
+                    db.session.add(leave_reason)
+                db.session.commit()
+                if request.form['supervisor'] == '0':
+                    flash(message_obj.leave_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.leave_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(exe, 'error')
+        else:
+            flash(leave_supervisor_form.errors)
+        return redirect(url_for('leave_supervisor'))
+    leave_supervisor_form = update_messages_leave_supervisor(LeaveSupervisorForm(), session['language'])
+    return render_template('leave_supervisor_view.html', form=leave_supervisor_form, leave_data=leave_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/leave_hr', methods=["GET"])
+@login_required
+def leave_hr():
+    leave_hr = Leave_form.query \
+        .filter_by(supervisor = 1) \
+        .order_by(Leave_form.requested_at.desc()).all()
+    return render_template('leave_hr.html', leave_hr=leave_hr,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/leave_hr/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def leave_hr_view(loan_id):
+    leave_hr_form = LeaveHRForm()
+    if request.method == "GET":
+        leave_data = Leave_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if leave_hr_form.validate_on_submit():
+            try:
+                leave_form = Leave_form.query.get(loan_id)
+                leave_form.hr = bool(int(request.form['hr']))
+                leave_form.hr_id = current_user.emp_id
+                leave_form.finalized_at=jdatetime.datetime.now()
+                db.session.commit()
+                if request.form['hr'] == '0':
+                    flash(message_obj.leave_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.leave_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(exe, 'error')
+        else:
+            flash(leave_hr_form.errors)
+        return redirect(url_for('leave_hr'))
+    leave_hr_form = update_messages_leave_hr(LeaveHRForm(), session['language'])
+    return render_template('leave_hr_view.html', form=leave_hr_form, leave_data=leave_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
 
 @app.route('/overtime_request', methods=["GET", "POST"])
 @login_required
@@ -623,18 +705,19 @@ def overtime_supervisor_view(loan_id):
                 overtime_form.supervisor = bool(int(request.form['supervisor']))
                 overtime_form.supervisor_id = current_user.emp_id
                 overtime_form.finalized_at=jdatetime.datetime.now()
-                overtime_reason = Overtime_reason(
-                    overtime_id = overtime_form.id,
-                    reason = request.form['reason']
-                )
-                db.session.add(overtime_reason)
+                if request.form['supervisor'] == '0':
+                    overtime_reason = Overtime_reason(
+                        overtime_id = overtime_form.id,
+                        reason = request.form['reason']
+                    )
+                    db.session.add(overtime_reason)
                 db.session.commit()
                 if request.form['supervisor'] == '0':
                     flash(message_obj.overtime_request_rejected[session['language']], 'success')
                 else:
                     flash(message_obj.overtime_request_accepted[session['language']], 'success')
             except IOError as exc:
-                flash(message_obj.loan_request_accepted[session['language']], 'error')
+                flash(exc, 'error')
         else:
             flash(overtime_supervisor_form.errors)
         return redirect(url_for('overtime_supervisor'))
@@ -673,7 +756,7 @@ def overtime_hr_view(loan_id):
                 else:
                     flash(message_obj.overtime_request_accepted[session['language']], 'success')
             except IOError as exc:
-                flash(message_obj.loan_request_accepted[session['language']], 'error')
+                flash(exc, 'error')
         else:
             flash(overtime_hr_form.errors)
         return redirect(url_for('overtime_hr'))

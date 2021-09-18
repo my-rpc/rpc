@@ -234,6 +234,19 @@ class leaveRequestForm(FlaskForm):
             if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', end_datetime.data)):
                 raise ValidationError('Date format is incorrect yyyy-mm-dd')
 
+class LeaveSupervisorForm(FlaskForm):
+    supervisor = RadioField('HR',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    reason = TextAreaField('Reason for disagreement')
+    submit = SubmitField('Send')
+
+class LeaveHRForm(FlaskForm):
+    hr = RadioField('HR',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send')
+
 
 
 class ResignRequestForm(FlaskForm):
