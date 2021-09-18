@@ -89,6 +89,21 @@ def update_messages_overtime(form_obj, language):
     form_obj.end_datetime.label.text = translation_obj.end_date[language]
     return form_obj
 
+def update_messages_overtime_supervisor(form_obj, language):
+    form_obj.supervisor.choices[0][1] = translation_obj.accept[language]
+    form_obj.supervisor.choices[1][1] = translation_obj.reject[language]
+    form_obj.supervisor.label.text = translation_obj.confirm_overtime_message[language]
+    form_obj.reason.label.text = translation_obj.reason_for_disagreement[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
+
+def update_messages_overtime_hr(form_obj, language):
+    form_obj.hr.choices[0][1] = translation_obj.accept[language]
+    form_obj.hr.choices[1][1] = translation_obj.reject[language]
+    form_obj.hr.label.text = translation_obj.confirm_overtime_message[language]
+    form_obj.submit.label.text = translation_obj.send[language]
+    return form_obj
+
 def update_messages_loan(form_obj, language):
     form_obj.requested_amount.label.text = translation_obj.requested_amount[language]
     form_obj.guarantor.label.text = translation_obj.guarantor[language]

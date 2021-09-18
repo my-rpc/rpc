@@ -175,6 +175,14 @@
     "dari": "درخواست قرضه پذیرفته شد",
     "en": "Loan request has been accepted"
   },
+  "overtime_request_rejected": {
+    "dari": "درخواست اضافه کاری رد شد",
+    "en": "Overtime request has been rejected"
+  },
+  "overtime_request_accepted": {
+    "dari": "درخواست اضافه کاری پذیرفته شد",
+    "en": "Overtime request has been accepted"
+  },
   "loan_request_not_sent": {
     "dari": "درخواست قرضه ارسال نشد",
     "en": "Loan request has been not sent"

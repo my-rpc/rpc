@@ -91,10 +91,11 @@
                             <th>{{translation.overtime_type[language]}}</th>
                             <th>{{translation.start_date[language]}}</th>
                             <th>{{translation.end_date[language]}}</th>
-                            <th>{{translation.total_days[language]}}</th>
+                            <th>{{translation.total_days_hours[language]}}</th>
                             <th>{{translation.supervisor[language]}}</th>
                             <th>{{translation.hr[language]}}</th>
                             <th>{{translation.request_date[language]}}</th>
+                            <th>{{translation.finalized_date[language]}}</th>
                         </tr>
                         {% for overtime in emp_overtime_list %}
                         <tr>
@@ -109,7 +110,13 @@
                                     <li class="fad fa-angle-down text-success"></li>
                                 </div>
                             </td>
-                            <td>{% if overtime.overtime_type %} {{translation.hourly[language]}} {% else %} {{translation.daily[language]}} {% endif %}</td>
+                            <td>
+                                {% if overtime.overtime_type %}
+                                    {{translation.hourly[language]}}
+                                {% else %}
+                                    {{translation.daily[language]}}
+                                {% endif %}
+                            </td>
                             <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
                             <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
                             <td>
@@ -137,13 +144,22 @@
 
                             </td>
                             <td>{{overtime.requested_at}}</td>
+                            <td>
+                                {% if overtime.finalized_at %}
+                                    {{overtime.finalized_at}}
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="8" class="no-padding">
+                            <td colspan="9" class="no-padding">
                                 <table class="collapse table" id="more_{{overtime.id}}" data-parent="#overitme_list">
                                     <tr>
                                         <th>{{ form.description.label() }}</th>
                                         <td>{{ overtime.description }}</td>
+                                    {% if overtime.reason %}
+                                        <th>{{ translation.reason_for_disagreement[language] }}</th>
+                                        <td>{{ overtime.reason.reason }}</td>
+                                    {% endif %}
                                     </tr>
                                 </table>
                             </td>

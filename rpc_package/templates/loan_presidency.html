@@ -25,6 +25,7 @@
                   <div class="table-responsive">
                     <table class="table table-hover" id="overitme_list">
                         <tr>
+                            <th></th>
                             <th>{{translation.loan_applicant[language]}}</th>
                             <th>{{translation.requested_amount[language]}}</th>
                             <th>{{translation.repayment_start_date[language]}}</th>
@@ -32,11 +33,21 @@
                             <th>{{translation.guarantor[language]}}</th>
                             <th>{{translation.record_status[language]}}</th>
                             <th>{{translation.finance[language]}}</th>
-                            <th>{{translation.request_date[language]}}</th>
                             <th>{{translation.details[language]}}</th>
                         </tr>
                         {% for loan in emp_loan_presidency %}
                         <tr>
+                            <td>
+                              <div
+                                  class="btn m-0 p-0 mx-1"
+                                  role="button"
+                                  data-toggle="collapse"
+                                  data-target="#more_{{loan.id}}"
+                                  aria-expanded="false"
+                                  aria-controls="more_{{loan.id}}">
+                                  <li class="fad fa-angle-down text-success"></li>
+                              </div>
+                            </td>
                             <td>
                                 {% if language == 'dari' %}
                                   {{ loan.employee.name + ' ' + loan.employee.lname }}
@@ -72,13 +83,24 @@
                                 <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                                 {% endif %}
                             </td>
-                            <td>{{loan.requested_at}}</td>
                             <td>
                                 <a  href="/loan_presidency/{{loan.id}}" title="View Details">
                                     <span><i class="fa fa-eye text-primary"></i> </span>
                                 </a>
                             </td>
                         </tr>
+                        <tr>
+                          <td colspan="10" class="no-padding">
+                              <table class="collapse table" id="more_{{loan.id}}" data-parent="#overitme_list">
+                                  <tr>
+                                      <th>{{translation.request_date[language]}}</th>
+                                      <td>{{loan.requested_at}}</td>
+                                      <th>{{translation.finalized_date[language]}}</th>
+                                      <td>{{loan.finalized_at}}</td>
+                                  </tr>
+                              </table>
+                          </td>
+                      </tr>
                       {% endfor %}
                     </table>
                   </div>

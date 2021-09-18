@@ -120,7 +120,7 @@
     "en": "HR"
   },
   "supervisor": {
-    "dari": "سوپروایز",
+    "dari": "مسئول بخش",
     "en": "Supervisor"
   },
   "total_days_hours": {
@@ -158,10 +158,6 @@
   "overtime_form": {
     "dari": "فورم اضافه کاری",
     "en": "Overtime Form"
-  },
-  "total_days": {
-    "dari": "کل روزها",
-    "en": "Total Days"
   },
   "days": {
     "dari": "روز",
@@ -270,6 +266,10 @@
   "guarantor_name": {
     "dari": "نام ضامن",
     "en": "Guarantor Name"
+  },
+  "confirm_overtime_message": {
+    "dari": "آیا شما این درخواست اضافه کاری را تائید می کنید؟",
+    "en": "Do you approve this overtime request?"
   },
   "guarantor_confirm_loan_message": {
     "dari": "آیا شما موافق هستید که ضامن این قرضه شوید؟",
@@ -386,6 +386,10 @@
   "overtime_description": {
     "dari": "شرح اضافه کاری",
     "en": "Overtime Description"
+  },
+  "reason_for_disagreement": {
+    "dari": "علت عدم موافقت",
+    "en": "Reason for Disagreement"
   },
   "id_number": {
     "dari": "نمبر آی دی",
@@ -554,6 +558,18 @@
   "loan_applicant":{
     "dari": "درخواست کننده قرضه",
     "en": "Loan Applicant"
+  },
+  "applicant_info":{
+    "dari": "معلومات درخواست کننده",
+    "en": "Applicant Info"
+  },
+  "applicant_name":{
+    "dari": "نام درخواست دهنده",
+    "en": "Applicant Name"
+  },
+  "view_detials":{
+    "dari": "دیدن جزئیات",
+    "en": "View Detials"
   },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
@@ -939,6 +955,10 @@
     "dari": "صندوق درخواست ها",
     "en": "Requested Inbox"
   },
+  "finalized_date": {
+    "dari": "تاریخ نهایی",
+    "en": "Finalized Date"
+  },
   "loan_guarantor": {
     "dari": "ضامن قرضه",
     "en": "Loan Guarantor"
@@ -954,6 +974,14 @@
   "loan_finance": {
     "dari": "قرضه مالی",
     "en": "Loan Finance"
+  },
+  "overtime_hr": {
+    "dari": "اضافه کاری منابع بشری",
+    "en": "Overtime HR"
+  },
+  "overtime_supervisor": {
+    "dari": "اضافه کاری سوپروایز",
+    "en": "Overtime Supervisor"
   },
   "user_setting": {
     "dari": " تنظیمات کاربر ",

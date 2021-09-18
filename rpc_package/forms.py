@@ -254,6 +254,19 @@ class OvertimeRequestForm(FlaskForm):
     description = TextAreaField('Overtime Description')
     submit = SubmitField('Send Request')
 
+class OvertimeSupervisorForm(FlaskForm):
+    supervisor = RadioField('HR',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    reason = TextAreaField('Reason for disagreement')
+    submit = SubmitField('Send Request')
+
+class OvertimeHRForm(FlaskForm):
+    hr = RadioField('HR',
+        choices=[[1, 'Approved'], [0, 'Rejected']],
+        validators=[DataRequired()])
+    submit = SubmitField('Send Request')
+
 class LoanRequestForm(FlaskForm):
     emp_list = [(emp.id, emp.name_english + ' ' + emp.lname_english + '/' + emp.id + '/' + emp.name + ' ' + emp.lname) for emp in Employees.query.all()]
     emp_list.insert(0, ('', '------'))

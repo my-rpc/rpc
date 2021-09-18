@@ -18,55 +18,63 @@
         <div class="col-12">
             <div class="box">
               <div class="box-header with-border">
-                <div class="box-title">{{translation.list_of_loan_request[language]}}</div>
+                <div class="box-title">{{translation.list_of_overtime_request[language]}}</div>
               </div>
               <!-- /.box-header -->
               <div class="box-body no-padding">
                   <div class="table-responsive">
                     <table class="table table-hover" id="overitme_list">
                         <tr>
-                            <th>{{translation.loan_applicant[language]}}</th>
-                            <th>{{translation.requested_amount[language]}}</th>
-                            <th>{{translation.repayment_start_date[language]}}</th>
-                            <th>{{translation.repayment_end_date[language]}}</th>
-                            <th>{{translation.guarantor[language]}}</th>
+                            <th>{{translation.id_number[language]}}</th>
+                            <th>{{translation.applicant_name[language]}}</th>
+                            <th>{{translation.overtime_type[language]}}</th>
+                            <th>{{translation.start_date[language]}}</th>
+                            <th>{{translation.end_date[language]}}</th>
+                            <th>{{translation.total_days_hours[language]}}</th>
                             <th>{{translation.record_status[language]}}</th>
                             <th>{{translation.request_date[language]}}</th>
                             <th>{{translation.details[language]}}</th>
                         </tr>
-                        {% for loan in emp_loan_finance %}
+                        {% for overtime in overtime_supervisor %}
                         <tr>
+                            <td>{{overtime.emp_id}}</td>
                             <td>
-                                {% if language == 'dari' %}
-                                  {{ loan.employee.name + ' ' + loan.employee.lname }}
-                                {% else %}
-                                  {{ loan.employee.name_english + ' ' + loan.employee.lname_english }}
+                                {% if overtime.employee %}
+                                  {% if language == 'dari' %}
+                                    {{ overtime.employee.name + ' ' + overtime.employee.lname }}
+                                  {% else %}
+                                    {{ overtime.employee.name_english + ' ' + overtime.employee.lname_english }}
+                                  {% endif %}
                                 {% endif %}
                             </td>
-                            <td>{{loan.requested_amount}}</td>
-                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
-                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
                             <td>
-                              {% if language == 'dari' %}
-                                {{ loan.re_guarantor.name + ' ' + loan.re_guarantor.lname }}
+                              {% if overtime.overtime_type %}
+                                {{translation.hourly[language]}}
                               {% else %}
-                                {{ loan.re_guarantor.name_english + ' ' + loan.re_guarantor.lname_english }}
+                                {{translation.daily[language]}}
                               {% endif %}
                             </td>
+                            <td><span class="text-muted">{{overtime.start_datetime}}</span> </td>
+                            <td><span class="text-muted">{{overtime.end_datetime}}</span> </td>
                             <td>
-                                {% if loan.finance == None %}
+                              {{ ((overtime.end_datetime - overtime.start_datetime)|string)
+                                  .replace('days', translation.days[language]).replace('day', translation.day[language])}}
+                            </td>
+                            <td>
+                                {% if overtime.supervisor == None %}
                                 <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
-                                {% elif loan.finance == True %}
+                                {% elif overtime.supervisor == True %}
                                 <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
-                                {% elif loan.finance == False %}
+                                {% elif overtime.supervisor == False %}
                                 <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                                 {% endif %}
+
                             </td>
-                            <td>{{loan.requested_at}}</td>
+                            <td>{{overtime.requested_at}}</td>
                             <td>
-                                <a  href="/loan_finance/{{loan.id}}" title="View Details">
-                                  <span><i class="fa fa-eye text-primary"></i> </span>
-                                </a>
+                              <a  href="/overtime_supervisor/{{overtime.id}}" title="{{translation.view_detials[language]}}">
+                                <span><i class="fa fa-eye text-primary"></i> </span>
+                              </a>
                             </td>
                         </tr>
                       {% endfor %}
@@ -81,7 +89,6 @@
 </section>
 {% endblock main_content%}
 {% block js_code %}
-
 <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
 </script>
 <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
