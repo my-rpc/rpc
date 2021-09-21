@@ -165,7 +165,7 @@ class Contracts(db.Model, UserMixin):
     updated_date = db.Column(db.DateTime, nullable=True)
     status = db.Column(db.Boolean(1), nullable=False)
     # Relationship
-    employee = db.relationship('Employees', foreign_keys=[emp_id], backref="employee", overlaps="contracts")
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="contracts")
 
 
     def __repr__(self):
@@ -253,15 +253,32 @@ class Leave_form(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     leave_type = db.Column(db.Boolean(1), nullable=False)
-    time_in_minutes = db.Column(db.Integer, nullable=True)
     start_datetime = db.Column(db.DateTime, nullable=True)
     end_datetime = db.Column(db.Date, nullable=True)
     supervisor = db.Column(db.Boolean, nullable=True)
+    supervisor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
+    hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
+    finalized_at = db.Column(db.DateTime, nullable=False)
     requested_at = db.Column(db.DateTime, nullable=False)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id])
+    re_supervisor = db.relationship('Employees', foreign_keys=[supervisor_id])
+    re_hr = db.relationship('Employees', foreign_keys=[hr_id])
+    reason = db.relationship("Leave_reason", uselist=False)
 
     def __repr__(self):
         return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"
+
+class Leave_reason(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    leave_id = db.Column(db.Integer, db.ForeignKey('leave_form.id'), nullable=False)
+    reason = db.Column(db.Text, nullable=True)
+    # Relationship
+    leave = db.relationship('Leave_form', foreign_keys=[leave_id], overlaps="reason")
+    def __repr__(self):
+        return f"Reason ID: {self.id}, Leave ID: {self.leave_id}, Reason: {self.reason}"
 
 
 class Overtime_form(db.Model, UserMixin):
@@ -269,16 +286,33 @@ class Overtime_form(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     overtime_type = db.Column(db.Boolean(1), nullable=False)
-    time_in_minutes = db.Column(db.Integer, nullable=True)
     start_datetime = db.Column(db.DateTime, nullable=True)
     end_datetime = db.Column(db.DateTime, nullable=True)
     description = db.Column(db.Text, nullable=True)
     supervisor = db.Column(db.Boolean, nullable=True)
+    supervisor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
+    hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
+    finalized_at = db.Column(db.DateTime, nullable=False)
     requested_at = db.Column(db.DateTime, nullable=False)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id])
+    re_supervisor = db.relationship('Employees', foreign_keys=[supervisor_id])
+    re_hr = db.relationship('Employees', foreign_keys=[hr_id])
+    reason = db.relationship("Overtime_reason", uselist=False)
 
     def __repr__(self):
         return f"Overtime ID: {self.id}, Employee ID: {self.emp_id}, Overtime Type: {self.overtime_type}"
+
+class Overtime_reason(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    overtime_id = db.Column(db.Integer, db.ForeignKey('overtime_form.id'), nullable=False)
+    reason = db.Column(db.Text, nullable=True)
+    # Relationship
+    overtime = db.relationship('Overtime_form', foreign_keys=[overtime_id], overlaps="reason")
+    def __repr__(self):
+        return f"Reason ID: {self.id}, Overtime ID: {self.overtime_id}, reason: {self.reason}"
 
 class Loan_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
@@ -291,11 +325,12 @@ class Loan_form(db.Model, UserMixin):
     guarantor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     guarantor = db.Column(db.Boolean, nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
-    hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
     presidency = db.Column(db.Boolean, nullable=True)
-    presidency_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    presidency_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
     finance = db.Column(db.Boolean, nullable=True)
-    finance_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
+    finance_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
+    finalized_at = db.Column(db.DateTime, nullable=False)
     requested_at = db.Column(db.DateTime, nullable=False)
 
     # Relationship

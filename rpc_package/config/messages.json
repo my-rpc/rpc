@@ -151,9 +151,17 @@
     "dari": "درخواست رخصتی ارسال شد",
     "en": "Leave request has been sent"
   },
-    "leave_request_not_sent": {
+  "leave_request_not_sent": {
     "dari": "درخواست رخصتی ارسال نشد",
     "en": "Leave request has been not sent"
+  },
+  "leave_request_accepted": {
+    "dari": "درخواست رخصتی پذیرفته شد",
+    "en": "Leave request has been accepted"
+  },
+  "leave_request_rejected": {
+    "dari": "درخواست رخصتی  رد شد",
+    "en": "Leave request has been rejected"
   },
   "loan_request_sent": {
     "dari": "درخواست قرضه ارسال شد",
@@ -174,6 +182,14 @@
   "loan_request_accepted": {
     "dari": "درخواست قرضه پذیرفته شد",
     "en": "Loan request has been accepted"
+  },
+  "overtime_request_rejected": {
+    "dari": "درخواست اضافه کاری رد شد",
+    "en": "Overtime request has been rejected"
+  },
+  "overtime_request_accepted": {
+    "dari": "درخواست اضافه کاری پذیرفته شد",
+    "en": "Overtime request has been accepted"
   },
   "loan_request_not_sent": {
     "dari": "درخواست قرضه ارسال نشد",

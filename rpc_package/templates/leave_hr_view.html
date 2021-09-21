@@ -17,12 +17,12 @@
     <div class="col-12">
       <div class="box">
         <div class="box-header with-border">
-          <div class="box-title">{{translation.request_loan_form[language]}}</div>
+          <div class="box-title">{{translation.request_leave_form[language]}}</div>
         </div>
         <div class="mt-15">
           <div class="row">
             <div class="col-md-12">
-              <h4 class="mx-15">{{ translation.loan_applicant[language] }}</h4>
+              <h4 class="mx-15">{{ translation.applicant_info[language] }}</h3>
             </div>
             <div class="col-md-6 mb-15">
               <div class="media bg-white b-1">
@@ -30,7 +30,7 @@
                   <p>
                     <span>{{ translation.id_number[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.employee.id }}
+                      {{ leave_data.emp_id }}
                     </strong>
                   </p>
                 </div>
@@ -40,12 +40,12 @@
               <div class="media bg-white b-1">
                 <div class="media-body">
                   <p>
-                    <span>{{ translation.loan_applicant[language] }}</span>
+                    <span>{{ translation.applicant_name[language] }}</span>
                     <strong class="float-right">
                       {% if language == 'dari' %}
-                        {{ loan_data.employee.name + ' ' + loan_data.employee.lname }}
+                        {{ leave_data.employee.name + ' ' + leave_data.employee.lname }}
                       {% else %}
-                        {{ loan_data.employee.name_english + ' ' + loan_data.employee.lname_english }}
+                        {{ leave_data.employee.name_english + ' ' + leave_data.employee.lname_english }}
                       {% endif %}
                     </strong>
                   </p>
@@ -56,9 +56,13 @@
               <div class="media bg-white b-1">
                 <div class="media-body">
                   <p>
-                    <span>{{ translation.requested_amount[language] }}</span>
+                    <span>{{ translation.leave_type[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.requested_amount }}
+                      {% if leave_data.leave_type %}
+                          {{translation.hourly[language]}}
+                      {% else %}
+                          {{translation.daily[language]}}
+                      {% endif %}
                     </strong>
                   </p>
                 </div>
@@ -68,9 +72,9 @@
               <div class="media bg-white b-1">
                 <div class="media-body">
                   <p>
-                    <span>{{ translation.repayment_start_date[language] }}</span>
+                    <span>{{ translation.start_date[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.start_date }}
+                      {{ leave_data.start_datetime }}
                     </strong>
                   </p>
                 </div>
@@ -80,9 +84,9 @@
               <div class="media bg-white b-1">
                 <div class="media-body">
                   <p>
-                    <span>{{ translation.repayment_end_date[language] }}</span>
+                    <span>{{ translation.end_date[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.end_date }}
+                      {{ leave_data.end_datetime }}
                     </strong>
                   </p>
                 </div>
@@ -92,21 +96,10 @@
               <div class="media bg-white b-1">
                 <div class="media-body">
                   <p>
-                    <span>{{ translation.repayment_period_in_months[language] }}</span>
+                    <span>{{ translation.total_days_hours[language] }}</span>
                     <strong class="float-right">
-                      {{ (loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month + 1) }}
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-15">
-              <div class="media bg-white b-1">
-                <div class="media-body">
-                  <p>
-                    <span>{{ translation.monthly_amount[language] }}</span>
-                    <strong class="float-right">
-                      {{ '{:.2f}'.format(loan_data.requested_amount/((loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month + 1))) }}
+                        {{ ((leave_data.end_datetime - leave_data.start_datetime)|string)
+                            .replace('days', translation.days[language]).replace('day', translation.day[language])}}
                     </strong>
                   </p>
                 </div>
@@ -118,17 +111,31 @@
                   <p>
                     <span>{{ translation.request_date[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.requested_at }}
+                      {{ leave_data.requested_at }}
                     </strong>
                   </p>
                 </div>
               </div>
             </div>
+            {% if leave_data.finalized_at %}
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.finalized_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ leave_data.finalized_at }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endif %}
           </div>
           <div class="mb-15 bb-1"></div>
           <div class="row">
             <div class="col-md-12">
-              <h4 class="mx-15">{{ translation.guarantor[language] }}</h4>
+              <h4 class="mx-15">{{ translation.supervisor[language] }}</h4>
             </div>
             <div class="col-md-6 mb-15">
               <div class="media bg-white b-1">
@@ -136,7 +143,7 @@
                   <p>
                     <span>{{ translation.id_number[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.re_guarantor.id }}
+                      {{ leave_data.re_supervisor.id }}
                     </strong>
                   </p>
                 </div>
@@ -146,12 +153,12 @@
               <div class="media bg-white b-1">
                 <div class="media-body">
                   <p>
-                    <span>{{ translation.guarantor[language] }}</span>
+                    <span>{{ translation.supervisor[language] }}</span>
                     <strong class="float-right">
                       {% if language == 'dari' %}
-                        {{ loan_data.re_guarantor.name + ' ' + loan_data.re_guarantor.lname }}
+                        {{ leave_data.re_supervisor.name + ' ' + leave_data.re_supervisor.lname }}
                       {% else %}
-                        {{ loan_data.re_guarantor.name_english + ' ' + loan_data.re_guarantor.lname_english }}
+                        {{ leave_data.re_supervisor.name_english + ' ' + leave_data.re_supervisor.lname_english }}
                       {% endif %}
                     </strong>
                   </p>
@@ -160,83 +167,16 @@
             </div>
           </div>
           <div class="mb-15 bb-1"></div>
-          <div class="row">
-            <div class="col-md-12">
-              <h4 class="mx-15">{{ translation.hr[language] }}</h4>
-            </div>
-            <div class="col-md-6 mb-15">
-              <div class="media bg-white b-1">
-                <div class="media-body">
-                  <p>
-                    <span>{{ translation.id_number[language] }}</span>
-                    <strong class="float-right">
-                      {{ loan_data.re_hr.id }}
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-15">
-              <div class="media bg-white b-1">
-                <div class="media-body">
-                  <p>
-                    <span>{{translation.name_and_last_name[language]}}</span>
-                    <strong class="float-right">
-                      {% if language == 'dari' %}
-                        {{ loan_data.re_hr.name + ' ' + loan_data.re_hr.lname }}
-                      {% else %}
-                        {{ loan_data.re_hr.name_english + ' ' + loan_data.re_hr.lname_english }}
-                      {% endif %}
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mb-15 bb-1"></div>
-          <div class="row">
-            <div class="col-md-12">
-              <h4 class="mx-15">{{translation.presidency[language]}}</h4>
-            </div>
-            <div class="col-md-6 mb-15">
-              <div class="media bg-white b-1">
-                <div class="media-body">
-                  <p>
-                    <span>{{ translation.id_number[language] }}</span>
-                    <strong class="float-right">
-                      {{ loan_data.re_presidency.id }}
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-15">
-              <div class="media bg-white b-1">
-                <div class="media-body">
-                  <p>
-                    <span>{{translation.name_and_last_name[language]}}</span>
-                    <strong class="float-right">
-                      {% if language == 'dari' %}
-                        {{ loan_data.re_presidency.name + ' ' + loan_data.re_presidency.lname }}
-                      {% else %}
-                        {{ loan_data.re_presidency.name_english + ' ' + loan_data.re_presidency.lname_english }}
-                      {% endif %}
-                    </strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mb-15 bb-1"></div>
+          {% if leave_data.hr == None %}
           <div class="row">
             <div class="mb-15">
               <div class="mx-15">
-                <form  method="POST" , action="" id="loan_finance">
+                <form  method="POST" , action="" id="loan_hr">
                   {{ form.hidden_tag()}}
                   <div class="form-group col-md-12">
-                    {{ form.finance.label(class="form-control-label")}}
+                    {{ form.hr.label(class="form-control-label")}}
                     <div class="form-check1">
-                      {% for item in form.finance %}
+                      {% for item in form.hr %}
                       {{ item(class="form-check-input")}}
                       {{ item.label(class="form-check-label")}}
                       {% endfor %}
@@ -249,6 +189,30 @@
               </div>
             </div>
           </div>
+          {% else %}
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{translation.hr[language]}}</h4>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.record_status[language] }}</span>
+                    <strong class="float-right">
+                      {% if leave_data.hr == True %}
+                      <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                      {% else %}
+                      <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endif %}
         </div>
       </div>
     </div>
@@ -279,7 +243,7 @@
 {% endif %} {% endwith %}
 <script>
     $(document).ready(function() {
-      $("[name='finance']").on('input', function (e) {
+      $("[name='hr']").on('input', function (e) {
         $('#submit').attr('disabled', false);
       });
     });

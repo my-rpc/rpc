@@ -9,7 +9,7 @@
         left: auto;
         opacity: 1 !important;
     }
-    #start_date-icon,#end_date-icon {
+    #start_date-icon {
         cursor: pointer;
     }
     .border-radius-dari{
@@ -46,26 +46,29 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {{ form.end_date.label(class="form-control-label")}}
-                        <div class="input-group">
-                            <div id="end_date-icon" class="input-group-prepend">
-                                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
-                                    <i class="fad fa-calendar"></i>
-                                </span>
-                            </div>
-                            <input type="hidden" id="end_date-date" />
-                            {{ form.end_date( type="text", class="form-control form-control-lg")}}
-                        </div>
+                        <label class="form-control-label">{{ translation.repayment_period_in_months[language] }}</label>
+                        <input id="repayment_period_in_months" name="months" class="form-control form-control-lg" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ form.guarantor.label(class="form-control-label")}}
-                        {{ form.guarantor(class="form-control form-control-lg")}}
+                        <input name="autocomplete" type="text" id="autocomplete" class="form-control form-control-lg"/>
+                        <small class="text-danger" id="guarantor-guide"></small>
+                        <input name="guarantor" type="hidden" id="guarantor" />
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label">{{ translation.repayment_period_in_months[language] }}</label>
-                        <input id="repayment_period_in_months" class="form-control form-control-lg" readonly />
+                        {{ form.end_date.label(class="form-control-label")}}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
+                                    <i class="fad fa-calendar"></i>
+                                    <span id="end_date-icon"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" id="end_date-date" />
+                            {{ form.end_date( readonly="true", type="text", class="form-control form-control-lg")}}
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label">{{ translation.monthly_amount[language] }}</label>
@@ -118,10 +121,10 @@
                             <td><span class="text-muted">{{loan.start_date}}</span> </td>
                             <td><span class="text-muted">{{loan.end_date}}</span> </td>
                             <td>
-                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1) }}
+                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month) }}
                             </td>
                             <td>
-                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1))) }}
+                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month))) }}
                             </td>
                             <td>
                                 {% if loan.guarantor == None %}
@@ -174,6 +177,8 @@
                                         </td>
                                         <th>{{translation.request_date[language]}}</th>
                                         <td>{{loan.requested_at}}</td>
+                                        <th>{{translation.finalized_date[language]}}</th>
+                                        <td>{{loan.finalized_at}}</td>
                                     </tr>
                                 </table>
                             </td>
@@ -194,6 +199,7 @@
 <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
 </script>
 <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+<script src="{{url_for('static', filename='js/jquery_ui.js')}}"></script>
 {% with messages = get_flashed_messages(with_categories=true) %}
 {%if messages %}
     {%for category, message in messages %} 
@@ -235,29 +241,49 @@
 
         function repayment_duration(params) {
             let start = $('#start_date-icon').MdPersianDateTimePicker('getDate');
-            let end = $('#end_date-icon').MdPersianDateTimePicker('getDate');
             let requested_amount = $('#requested_amount').val();
-            var months;
-            if(start != undefined && end != undefined) {
-                months = (end.getFullYear() - start.getFullYear()) * 12;
-                months -= start.getMonth();
-                months += end.getMonth();
-                $('#repayment_period_in_months').val(months);
+            let months = $('#repayment_period_in_months').val();
+            if(start != undefined && months > 0 ) {
+                $('#end_date-icon').MdPersianDateTimePicker('setDate', start);
+                let end = $('#end_date-icon').MdPersianDateTimePicker('getDate');
+                end.setMonth(start.getMonth() + Number(months));
+                $('#end_date-icon').MdPersianDateTimePicker('setDate', end);
                 if(requested_amount != '') {
                     $('#monthly_amount').val((requested_amount / months).toFixed(2));
                 }
+            }
+            if(months <= 0) {
+                $('#end_date').val('');
+                $('#repayment_period_in_months').val('');
             }
         }
 
         $('#start_date').on('change', function(e) {
             repayment_duration(e);
         });
-        $('#end_date').on('change', function(e) {
+        $('#repayment_period_in_months').on('input', function(e) {
             repayment_duration(e);
         });
         $('#requested_amount').on('input', function(e) {
             repayment_duration(e);
         });
     });
+
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('emp_autocomplete')}}",{q: request.term}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#guarantor-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#guarantor').val(ui.item.value);
+        }
+    });
+
 </script>
 {% endblock js_code %}
