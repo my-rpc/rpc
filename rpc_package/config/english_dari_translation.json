@@ -999,6 +999,10 @@
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
   },
+  "not_found": {
+    "dari": "نتیجه ای یافت نشد",
+    "en": "oops! Result not found"
+  },
   "employee_settings": {
     "dari": "تنظیمات کامند",
     "en": "Employee Settings"
