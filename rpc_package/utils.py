@@ -3,6 +3,7 @@ import os
 import re
 from flask import jsonify
 import os
+import jdatetime, datetime
 
 class EmployeeValidator:
 
@@ -48,4 +49,28 @@ def check_language(input_sentence):
             return False
     return True
 
+def datetime_validation(self, value):
+    try:
+        date_format = '%Y-%m-%d %H:%M:%S'
+        if value == None:
+            return True
+        strValue = value
+        if isinstance(value, datetime.datetime):
+            strValue = value.strftime(date_format)
+        jdatetime.datetime.strptime(strValue, date_format)
+        return True
+    except ValueError:
+        return False
 
+def date_validation(self, value):
+    try:
+        date_format = '%Y-%m-%d'
+        if value == None:
+            return True
+        strValue = value
+        if isinstance(value, datetime.datetime):
+            strValue = value.strftime(date_format)
+        jdatetime.datetime.strptime(strValue, date_format)
+        return True
+    except ValueError:
+        return False

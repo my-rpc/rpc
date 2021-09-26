@@ -6,8 +6,9 @@ import re
 from wtforms.widgets import TextArea
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
     Positions, Departments, Salary
-from rpc_package.utils import check_language
-
+from rpc_package.utils import check_language, datetime_validation, date_validation
+from rpc_package import translation_obj, message_obj
+import jdatetime, datetime
 
 class CreateUserForm(FlaskForm):
     role_list = [(role.id, role.name_english) for role in User_roles.query.all()]
@@ -222,17 +223,26 @@ class ContractForm(FlaskForm):
 
 class leaveRequestForm(FlaskForm):
     leave_type = RadioField('Leave Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
-    start_datetime = DateTimeField('From', validators=[DataRequired()])
-    end_datetime = DateTimeField('To', validators=[DataRequired()])
+    start_datetime = DateTimeField('From')
+    end_datetime = DateTimeField('To')
     submit = SubmitField('Send Request')
-    # def validate_start_datetime(self, start_datetime):
-    #     if start_datetime.data:
-    #         if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', start_datetime.data)):
-    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
-    # def validate_end_datetime(self, end_datetime):
-    #     if end_datetime.data:
-    #         if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', end_datetime.data)):
-    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    def __init__(self, language):
+        super(leaveRequestForm, self).__init__()
+        self.language = language
+        self.leave_type.choices[0][1] = translation_obj.hourly[language]
+        self.leave_type.choices[1][1] = translation_obj.daily[language]
+        self.leave_type.label.text = translation_obj.leave_type[language]
+        self.submit.label.text = translation_obj.send_request[language]
+        self.start_datetime.label.text = translation_obj.start_date[language]
+        self.end_datetime.label.text = translation_obj.end_date[language]
+    def validate_start_datetime (self, start_datetime):
+        if not datetime_validation(self, start_datetime.data):
+            raise ValidationError(message_obj.incorrect_datetime_format[self.language])
+    def validate_end_datetime (self, end_datetime):
+        if not datetime_validation(self, end_datetime.data):
+            raise ValidationError(message_obj.incorrect_datetime_format[self.language])
+        # if end_datetime.data is None:
+        #     raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.end_date[self.language] + ' '))
 
 class LeaveSupervisorForm(FlaskForm):
     supervisor = RadioField('HR',
@@ -240,6 +250,22 @@ class LeaveSupervisorForm(FlaskForm):
         validators=[DataRequired()])
     reason = TextAreaField('Reason for disagreement')
     submit = SubmitField('Send')
+    def __init__(self, language):
+        super(LeaveSupervisorForm, self).__init__()
+        self.language = language
+        self.supervisor.choices[0][1] = translation_obj.accept[language]
+        self.supervisor.choices[1][1] = translation_obj.reject[language]
+        self.supervisor.label.text = translation_obj.confirm_leave_message[language]
+        self.reason.label.text = translation_obj.reason_for_disagreement[language]
+        self.submit.label.text = translation_obj.send[language]
+    def validate_reason (self, reason):
+        if reason.data == '':
+            raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.reason_for_disagreement[self.language] + ' '))
+        elif not re.match("^[A-Za-z0-9- آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", reason.data):
+            raise ValidationError(message_obj.invalid_character[self.language])
+        elif len(reason.data) < 20:
+            raise ValidationError(message_obj.less_character[self.language].replace('{}', '20'))
+
 
 class LeaveHRForm(FlaskForm):
     hr = RadioField('HR',
@@ -262,10 +288,26 @@ class AddEquipmentForm(FlaskForm):
 
 class OvertimeRequestForm(FlaskForm):
     overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
-    start_datetime = DateTimeField('From', validators=[DataRequired()])
-    end_datetime = DateTimeField('To', validators=[DataRequired()])
+    start_datetime = DateTimeField('From')
+    end_datetime = DateTimeField('To')
     description = TextAreaField('Overtime Description')
     submit = SubmitField('Send Request')
+    def __init__(self, language):
+        super(OvertimeRequestForm, self).__init__()
+        self.language = language
+        self.overtime_type.choices[0][1] = translation_obj.hourly[language]
+        self.overtime_type.choices[1][1] = translation_obj.daily[language]
+        self.overtime_type.label.text = translation_obj.overtime_type[language]
+        self.description.label.text = translation_obj.overtime_description[language]
+        self.submit.label.text = translation_obj.send_request[language]
+        self.start_datetime.label.text = translation_obj.start_date[language]
+        self.end_datetime.label.text = translation_obj.end_date[language]
+    def validate_start_datetime (self, start_datetime):
+        if not datetime_validation(self, start_datetime.data):
+            raise ValidationError(message_obj.incorrect_datetime_format[self.language])
+    def validate_end_datetime (self, end_datetime):
+        if not datetime_validation(self, end_datetime.data):
+            raise ValidationError(message_obj.incorrect_datetime_format[self.language])
 
 class OvertimeSupervisorForm(FlaskForm):
     supervisor = RadioField('HR',
@@ -273,6 +315,21 @@ class OvertimeSupervisorForm(FlaskForm):
         validators=[DataRequired()])
     reason = TextAreaField('Reason for disagreement')
     submit = SubmitField('Send Request')
+    def __init__(self, language):
+        super(OvertimeSupervisorForm, self).__init__()
+        self.language = language
+        self.supervisor.choices[0][1] = translation_obj.accept[language]
+        self.supervisor.choices[1][1] = translation_obj.reject[language]
+        self.supervisor.label.text = translation_obj.confirm_overtime_message[language]
+        self.reason.label.text = translation_obj.reason_for_disagreement[language]
+        self.submit.label.text = translation_obj.send[language]
+    def validate_reason (self, reason):
+        if reason.data == '':
+            raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.reason_for_disagreement[self.language] + ' '))
+        elif not re.match("^[A-Za-z0-9- آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", reason.data):
+            raise ValidationError(message_obj.invalid_character[self.language])
+        elif len(reason.data) < 20:
+            raise ValidationError(message_obj.less_character[self.language].replace('{}', '20'))
 
 class OvertimeHRForm(FlaskForm):
     hr = RadioField('HR',
@@ -284,18 +341,19 @@ class LoanRequestForm(FlaskForm):
     emp_list = [(emp.id, emp.name_english + ' ' + emp.lname_english + '/' + emp.id + '/' + emp.name + ' ' + emp.lname) for emp in Employees.query.all()]
     emp_list.insert(0, ('', '------'))
     requested_amount = StringField('Requested Amount', validators=[Regexp('^[1-9]\d*$'), DataRequired()])
-    start_date = DateField('From', validators=[DataRequired()])
-    end_date = DateField('To', validators=[DataRequired()])
+    start_date = DateField('Start Date')
+    end_date = DateField('End Date')
     guarantor = SelectField('Guarantor', choices=emp_list, validators=[DataRequired()])
     submit = SubmitField('Send Request')
-    # def validate_start_date(self, start_date):
-    #     if start_date.data:
-    #         if not bool(re.match(r'^\d{4}-\d{2}-\d{2}$', start_date.data)):
-    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
-    # def validate_end_date(self, end_date):
-    #     if end_date.data:
-    #         if not bool(re.match(r'^\d{4}-\d{2}-\d{2}$', end_date.data)):
-    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+    def __init__(self, language):
+        super(LoanRequestForm, self).__init__()
+        self.language = language
+    def validate_start_date (self, start_date):
+        if not date_validation(self, start_date.data):
+            raise ValidationError(message_obj.incorrect_date_format[self.language])
+    def validate_end_date (self, end_date):
+        if not datetime_validation(self, end_date.data):
+            raise ValidationError(message_obj.incorrect_date_format[self.language])
 
 class LoanGuarantorForm(FlaskForm):
     guarantor = RadioField('Guarantor',

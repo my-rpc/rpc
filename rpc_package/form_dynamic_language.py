@@ -73,9 +73,12 @@ def update_messages_leave(form_obj, language):
     Returns:
         form: return value of variable in each language that we want
     """
-    form_obj.name_department.label.text = translation_obj.name_department[language]
-    form_obj.name_english_department.label.text = translation_obj.name_english_department[language]
+    form_obj.leave_type.choices[0][1] = translation_obj.hourly[language]
+    form_obj.leave_type.choices[1][1] = translation_obj.daily[language]
+    form_obj.leave_type.label.text = translation_obj.leave_type[language]
     form_obj.submit.label.text = translation_obj.send_request[language]
+    form_obj.start_datetime.label.text = translation_obj.start_date[language]
+    form_obj.end_datetime.label.text = translation_obj.end_date[language]
     return form_obj
 
 def update_messages_leave_supervisor(form_obj, language):
@@ -101,14 +104,6 @@ def update_messages_overtime(form_obj, language):
     form_obj.submit.label.text = translation_obj.send_request[language]
     form_obj.start_datetime.label.text = translation_obj.start_date[language]
     form_obj.end_datetime.label.text = translation_obj.end_date[language]
-    return form_obj
-
-def update_messages_overtime_supervisor(form_obj, language):
-    form_obj.supervisor.choices[0][1] = translation_obj.accept[language]
-    form_obj.supervisor.choices[1][1] = translation_obj.reject[language]
-    form_obj.supervisor.label.text = translation_obj.confirm_overtime_message[language]
-    form_obj.reason.label.text = translation_obj.reason_for_disagreement[language]
-    form_obj.submit.label.text = translation_obj.send[language]
     return form_obj
 
 def update_messages_overtime_hr(form_obj, language):

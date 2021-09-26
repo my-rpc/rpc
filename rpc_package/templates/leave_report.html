@@ -1,0 +1,149 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                  <div class="box-title">{{translation.list_of_leave_request[language]}}</div>
+                </div>
+              <div class="box-body">
+                <form method="GET" , action="" id="leave_request">
+                <div class="row">
+                    <div class="col-md-8" id="timeType">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="from" class="form-control-label">From</label>
+                                <div class="input-group mb-3">
+                                    <div id="from_date-icon" class="input-group-prepend">
+                                        <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                            <i class="fad fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" name="from" id="from" value="{{request.args.get('from')}}" class="form-control form-control-lg"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">To</label>
+                                <div class="input-group mb-3">
+                                    <div id="to_date-icon" class="input-group-prepend">
+                                        <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                            <i class="fad fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" name="to" id="to" value="{{request.args.get('to')}}" class="form-control form-control-lg" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-4">
+                        <input type="submit" class="btn btn-danger mt-2" value="Generate" />
+                    </div>
+                </div>
+                </form>
+            </div>
+
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="overitme_list">
+                        <tr>
+                          <th>{{translation.id_number[language]}}</th>
+                          <th>{{translation.applicant_name[language]}}</th>
+                          <th>{{translation.leave_type[language]}}</th>
+                          <th>{{translation.start_date[language]}}</th>
+                          <th>{{translation.end_date[language]}}</th>
+                        </tr>
+                        {% for employee in leave_report %}
+                        <tr>
+                            <td>{{employee.id}}</td>
+                            <td>
+                                {% if employee %}
+                                  {% if language == 'dari' %}
+                                    {{ employee.name + ' ' + employee.lname }}
+                                  {% else %}
+                                    {{ employee.name_english + ' ' + employee.lname_english }}
+                                  {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                              {% set hourly='' %}
+                              {% set daily=[] %}
+                              {% for leave in employee.leaves %}
+                                {% if leave.leave_type %}
+                                  {% if daily.append((leave.end_datetime - leave.start_datetime).days) %}{% endif %}
+                                {% else %}
+                                  {{translation.hourly[language]}}
+                                {% endif %}
+                              {% endfor %}
+                              {{ daily | sum }}
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+      // Leaving form, set persian date picker for start date time field.
+      $('#from_date-icon').MdPersianDateTimePicker({
+          targetTextSelector: '#from',
+          textFormat: 'yyyy-MM-dd',
+          isGregorian: false,
+          englishNumber: true,
+          fromDate: true,
+          groupId: 'leave_report_date',
+      });
+      // Leaving form, set persian date picker for end date time field.
+      $('#to_date-icon').MdPersianDateTimePicker({
+          targetTextSelector: '#to',
+          textFormat: 'yyyy-MM-dd',
+          isGregorian: false,
+          englishNumber: true,
+          toDate: true,
+          groupId: 'leave_report_date',
+      });
+    });
+</script>
+
+{% endblock js_code %}
