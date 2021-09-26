@@ -55,7 +55,7 @@ def datetime_validation(self, value):
         if value == None:
             return True
         strValue = value
-        if isinstance(value, datetime.datetime):
+        if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
             strValue = value.strftime(date_format)
         jdatetime.datetime.strptime(strValue, date_format)
         return True
@@ -68,9 +68,31 @@ def date_validation(self, value):
         if value == None:
             return True
         strValue = value
-        if isinstance(value, datetime.datetime):
+        if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
             strValue = value.strftime(date_format)
         jdatetime.datetime.strptime(strValue, date_format)
         return True
     except ValueError:
         return False
+
+def toGregorian(value, date_format='%Y-%m-%d'):
+    strValue = value
+    if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+        strValue = value.strftime(date_format)
+    value = jdatetime.datetime.strptime(strValue, date_format)
+    value = value.togregorian()
+    return value.strftime(date_format)
+
+def toJalali(value, date_format='%Y-%m-%d'):
+    strValue = value
+    if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+        strValue = value.strftime(date_format)
+    value = datetime.datetime.strptime(strValue, date_format)
+    year = value.year
+    month = value.month
+    day = value.day
+    hour = value.hour
+    minute = value.minute
+    second = value.second
+    jvalue = jdatetime.datetime.fromgregorian(day=day, month=month, year=year, hour=hour, minute=minute, second=second)
+    return jvalue.strftime(date_format)

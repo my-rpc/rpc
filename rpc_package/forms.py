@@ -92,6 +92,10 @@ class EmployeeForm(FlaskForm):
     district_current = SelectField('Districts', validators=[DataRequired()], choices=districts_list)
     submit = SubmitField('Add Employee')
 
+    def __init__(self):
+        super(EmployeeForm,self).__init__()
+        self.language = 'dari'
+
     def validate_email(self, email):
         if email.data:
             if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
@@ -150,9 +154,12 @@ class EmployeeForm(FlaskForm):
             raise ValidationError('Employee already exist, please check your employee ID')
 
     def validate_birthday(self, birthday):
-        if birthday.data:
-            if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1])', birthday.data)):
-                raise ValidationError('Date format is incorrect yyyy-mm-dd')
+        if not birthday.data:
+            raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.birthday[self.language] + ' '))
+        elif not date_validation(self, birthday.data):
+            raise ValidationError(message_obj.incorrect_date_format[self.language])
+        # value = jdatetime.datetime.strptime(birthday.data, '%Y-%m-%d')
+        # birthday.data = value.togregorian()
 
 
 class UploadCVForm(FlaskForm):

@@ -14,7 +14,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
     Loan_form, Overtime_reason, Leave_reason
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, toGregorian, toJalali
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, send_leave_request, send_resign_request, send_department, \
@@ -179,7 +179,7 @@ def add_employee():
                 lname_english=add_employee_form.last_name_english.data,
                 fname_english=add_employee_form.father_name_english.data,
                 gname_english=add_employee_form.grand_name_english.data,
-                birthday=add_employee_form.birthday.data,
+                birthday=toGregorian(add_employee_form.birthday.data),
                 tazkira=add_employee_form.tazkira.data,
                 gender=True if add_employee_form.gender.data else False,
                 blood=add_employee_form.blood.data,
@@ -321,7 +321,7 @@ def employee_settings():
 
     return render_template("employee_settings.html", title='Employee Settings',
                            employees=employees, emails=emails, phones=phones, language=session['language'],
-                           translation=translation_obj, message_obj=message_obj)
+                           translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
 
 
 @app.route('/employee_details', methods=['GET', "POST"])
@@ -466,7 +466,7 @@ def contract_settings():
             contracts[x] = contract
     return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
                            employees=employees, contract=contracts,
-                           translation=translation_obj, message_obj=message_obj)
+                           translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
