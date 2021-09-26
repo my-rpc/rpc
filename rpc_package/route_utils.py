@@ -11,6 +11,7 @@ import datetime
 from wtforms import StringField, HiddenField
 from flask_login import current_user
 from rpc_package.forms import ContractForm
+from rpc_package.utils import toGregorian, toJalali
 
 def upload_docs(emp_id, request, file_type):
     try:
@@ -98,7 +99,7 @@ def update_employee_data(update_employee_form):
     sel_emp.gname_english = update_employee_form.grand_name_english.data
     sel_emp.tin = update_employee_form.tin.data
     sel_emp.tazkira = update_employee_form.tazkira.data
-    sel_emp.birthday = update_employee_form.birthday.data
+    sel_emp.birthday = toGregorian(update_employee_form.birthday.data)
     sel_emp.blood = update_employee_form.blood.data
     sel_emp.m_status = bool(int(update_employee_form.m_status.data))
     sel_emp.gender = bool(int(update_employee_form.gender.data))
@@ -214,7 +215,7 @@ def set_emp_update_form_data(emp_id, update_employee_form):
     update_employee_form.grand_name_english.data = emp.gname_english
     update_employee_form.tin.data = emp.tin
     update_employee_form.tazkira.data = emp.tazkira
-    update_employee_form.birthday.data = emp.birthday
+    update_employee_form.birthday.data = toJalali(emp.birthday)
     update_employee_form.blood.data = emp.blood
 
     update_employee_form.gender.data = emp.gender
@@ -372,9 +373,9 @@ def add_contract_form(contract_form):
     try:
         add_contract = Contracts(
             emp_id=contract_form.emp_id.data,
-            end_date=contract_form.end_date.data,
+            end_date=toGregorian(contract_form.end_date.data),
             contract_type=contract_form.contract_type.data,
-            start_date=contract_form.start_date.data,
+            start_date=toGregorian(contract_form.start_date.data),
             inserted_by=current_user.emp_id,
             inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
             status = 1
@@ -518,22 +519,22 @@ def update_contract(req, contract_form):
         contract_type = Contract_types.query.filter_by(id = contract.contract_type).first()
 
         contract.contract_type = contract_form.contract_type.data
-        contract.end_date = contract_form.end_date.data
-        contract.start_date=contract_form.start_date.data
+        contract.end_date = toGregorian(contract_form.end_date.data)
+        contract.start_date= toGregorian(contract_form.start_date.data)
         contract.updated_by= current_user.emp_id
-        contract.updated_date = jdatetime.datetime.now()
+        contract.updated_date = datetime.datetime.now()
 
         salary.base = contract_form.base.data
         salary.transportation = contract_form.transportation.data
         salary.house_hold = contract_form.house_hold.data
         salary.currency = contract_form.currency.data
         salary.updated_by= current_user.emp_id
-        salary.updated_date = jdatetime.datetime.now()
+        salary.updated_date = datetime.datetime.now()
 
         position.position_id = contract_form.position.data
         position.department_id = contract_form.department.data
         position.updated_by= current_user.emp_id
-        position.updated_date = jdatetime.datetime.now()
+        position.updated_date = datetime.datetime.now()
         if session['language'] == 'en':
             position_name = pos.name_english
             department_name = dep.name_english

@@ -60,7 +60,7 @@
     "en": "Wrong email format"
   },
   "required_field": {
-  "dari": "الزامی است  {}",
+  "dari": "{}الزامی است",
     "en": "{} is required"
   },
   "required_upload": {
@@ -202,6 +202,22 @@
   "overtime_request_not_sent": {
     "dari": "درخواست اضافه کاری ارسال نشد",
     "en": "Overtime request has been not sent"
+  },
+  "incorrect_datetime_format": {
+    "dari": "خطا در فارمت دیتا، تاریخ و زمان درست وارید کنید.",
+    "en": "Incorrect data format, should be YYYY-MM-DD hh:mm:ss"
+  },
+  "incorrect_date_format": {
+    "dari": "خطا در فارمت دیتا، تاریخ درست وارید کنید.",
+    "en": "Incorrect data format, should be YYYY-MM-DD"
+  },
+  "less_character": {
+    "dari": "تعداد حروف باید بیشتر از {} باشد",
+    "en": "The input character should be more then {}"
+  },
+  "invalid_character": {
+    "dari": "متن تنها می تواند عدد و حروف باشد",
+    "en": "The text must be letters and number."
   },
   "contract_added":{
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه شد",
