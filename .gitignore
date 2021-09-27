@@ -133,3 +133,6 @@ dmypy.json
 
 #config file
 rpc_package/config/config.json
+
+#uploaded file
+rpc_package/static/files

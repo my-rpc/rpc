@@ -299,7 +299,9 @@ class leaveRequestForm(FlaskForm):
             date_format = '%Y-%m-%d %H:%M:%S'
             diff = jdatetime.datetime.strptime(end_datetime.data, date_format) - jdatetime.datetime.strptime(self.start_datetime.data, date_format)
             if diff > datetime.timedelta(hours=8):
-                raise ValidationError(message_obj.incorrect_leave_duration[self.language])        
+                raise ValidationError(message_obj.more_leave_duration[self.language])
+            elif diff < datetime.timedelta(hours=1):
+                raise ValidationError(message_obj.less_leave_duration[self.language])     
 
 class LeaveSupervisorForm(FlaskForm):
     supervisor = RadioField('HR',
@@ -348,7 +350,6 @@ class ResignRequestForm(FlaskForm):
         self.submit.label.text = translation_obj.send_request[language]
         self.responsibilities.label.text = translation_obj.responsibilities[language]
 
-
 class AddEquipmentForm(FlaskForm):
     equipment = BooleanField('equipment', default=[])
     emp_id = HiddenField('Employee ID', validators=[DataRequired()])
@@ -384,7 +385,9 @@ class OvertimeRequestForm(FlaskForm):
             date_format = '%Y-%m-%d %H:%M:%S'
             diff = jdatetime.datetime.strptime(end_datetime.data, date_format) - jdatetime.datetime.strptime(self.start_datetime.data, date_format)
             if diff > datetime.timedelta(hours=8):
-                raise ValidationError(message_obj.incorrect_leave_duration[self.language])   
+                raise ValidationError(message_obj.more_overtime_duration[self.language])
+            elif diff < datetime.timedelta(hours=1):
+                raise ValidationError(message_obj.less_overtime_duration[self.language])
 
 class OvertimeSupervisorForm(FlaskForm):
     supervisor = RadioField('HR',

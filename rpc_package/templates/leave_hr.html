@@ -54,8 +54,8 @@
                                 {{translation.daily[language]}}
                               {% endif %}
                             </td>
-                            <td><span class="text-muted">{{toJalali(leave.start_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
-                            <td><span class="text-muted">{{toJalali(leave.end_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
+                            <td><span class="text-muted">{{to_jalali(leave.start_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
+                            <td><span class="text-muted">{{to_jalali(leave.end_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
                             <td>
                               {{ ((leave.end_datetime - leave.start_datetime)|string)
                                   .replace('days', translation.days[language]).replace('day', translation.day[language])}}
