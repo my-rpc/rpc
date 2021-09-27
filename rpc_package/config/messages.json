@@ -27,9 +27,17 @@
     "dari": "کارمند با آیدی {} موفقانه حذف شد",
     "en": "Employee deleted for {} ID"
   },
+  "create_new_employee_delete_not": {
+    "dari": "کارمند با آیدی {}  حذف نشد",
+    "en": "Employee not deleted for {} ID"
+  },
   "create_new_employee_update": {
     "dari": "اطلاعات کارمند با آیدی {} بروزرسانی شد",
     "en": "Employee updated for {} ID"
+  },
+  "create_new_employee_update_not": {
+    "dari": "اطلاعات کارمند با آیدی {} بروزرسانی نشد",
+    "en": "Employee not updated for {} ID"
   },
   "create_new_employee_not": {
     "dari": "کارمند جدید اضافه نشد",
@@ -52,7 +60,7 @@
     "en": "Wrong email format"
   },
   "required_field": {
-  "dari": "الزامی است  {}",
+  "dari": "{} الزامی است",
     "en": "{} is required"
   },
   "required_upload": {
@@ -123,8 +131,178 @@
     "dari": "تخلص الزامی است",
     "en": "Last name is required"
   },
+  "user_inactive": {
+    "dari": "حساب کاربر فعال نیست",
+    "en": "Your account is inactive"
+  },
   "blood_type": {
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
     "en": "wrong format of blood type correct one is (B+)"
+  },
+  "equipment_added": {
+    "dari": "تجهیزات اضافه شد",
+    "en": "Equipment has been added"
+  },
+  "equipment_not_added": {
+    "dari": "تجهیزات اضافه نشد",
+    "en": "Equipment has not been added"
+  },
+  "leave_request_sent": {
+    "dari": "درخواست رخصتی ارسال شد",
+    "en": "Leave request has been sent"
+  },
+  "leave_request_not_sent": {
+    "dari": "درخواست رخصتی ارسال نشد",
+    "en": "Leave request has been not sent"
+  },
+  "leave_request_accepted": {
+    "dari": "درخواست رخصتی پذیرفته شد",
+    "en": "Leave request has been accepted"
+  },
+  "leave_request_rejected": {
+    "dari": "درخواست رخصتی  رد شد",
+    "en": "Leave request has been rejected"
+  },
+  "loan_request_sent": {
+    "dari": "درخواست قرضه ارسال شد",
+    "en": "Loan request has been sent"
+  },
+  "loan_request_guarantor_rejected": {
+    "dari": "درخواست ضمانت  رد شد",
+    "en": "Guarantee request has been rejected"
+  },
+  "loan_request_guarantor_accepted": {
+    "dari": "درخواست ضمانت پذیرفته شد",
+    "en": "Guarantee request has been accepted"
+  },
+  "loan_request_rejected": {
+    "dari": "درخواست قرضه رد شد",
+    "en": "Loan request has been rejected"
+  },
+  "loan_request_accepted": {
+    "dari": "درخواست قرضه پذیرفته شد",
+    "en": "Loan request has been accepted"
+  },
+  "overtime_request_rejected": {
+    "dari": "درخواست اضافه کاری رد شد",
+    "en": "Overtime request has been rejected"
+  },
+  "overtime_request_accepted": {
+    "dari": "درخواست اضافه کاری پذیرفته شد",
+    "en": "Overtime request has been accepted"
+  },
+  "loan_request_not_sent": {
+    "dari": "درخواست قرضه ارسال نشد",
+    "en": "Loan request has been not sent"
+  },
+  "overtime_request_sent": {
+    "dari": "درخواست اضافه کاری ارسال شد",
+    "en": "Overtime request has been sent"
+  },
+  "overtime_request_not_sent": {
+    "dari": "درخواست اضافه کاری ارسال نشد",
+    "en": "Overtime request has been not sent"
+  },
+  "incorrect_datetime_format": {
+    "dari": "خطا در فارمت دیتا، تاریخ و زمان درست وارید کنید.",
+    "en": "Incorrect data format, should be YYYY-MM-DD hh:mm:ss"
+  },
+  "incorrect_date_format": {
+    "dari": "خطا در فارمت دیتا، تاریخ درست وارید کنید.",
+    "en": "Incorrect data format, should be YYYY-MM-DD"
+  },
+  "incorrect_leave_duration": {
+    "dari": "مدت رخصتی نباید بیش از 8 ساعت باشد",
+    "en": "Leave duration has not been more then 8 hours."
+  },
+  "incorrect_overtime_duration": {
+    "dari": "مدت اضافه کاری نباید بیش از 8 ساعت باشد",
+    "en": "Overtime duration has not been more then 8 hours."
+  },
+  "less_character": {
+    "dari": "تعداد حروف باید بیشتر از {} باشد",
+    "en": "The input character should be more then {}"
+  },
+  "invalid_character": {
+    "dari": "متن تنها می تواند عدد و حروف باشد",
+    "en": "The text must be letters and number."
+  },
+  "contract_added":{
+    "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه شد",
+    "en": "Contract added for employe with {} ID"
+  },
+  "contract_not_added":{
+    "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
+    "en": "Contract not added for employe with {} ID"
+  },
+  "contract_delete":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف شد",
+    "en": "Contract deleted for user with {} ID"
+  },"contract_delete_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف نشد",
+    "en": "Contract not deleted for user with {} ID"
+  },
+  "contract_update":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی شد",
+    "en": "Contract updated for user with {} ID"
+  },"contract_update_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی نشد",
+    "en": "Contract not updated for user with {} ID"
+  },
+  "resign_request_sent": {
+    "dari": "درخواست استعفا ارسال شد",
+    "en": "Resign request has been sent"
+  },
+    "resign_request_not_sent": {
+    "dari": "درخواست استعفا ارسال نشد",
+    "en": "Resign request has been not sent"
+  },
+  "action_performed": {
+    "dari": "عملیات انجام شد",
+    "en": "Action Performed"
+  },
+  "action_not_performed": {
+    "dari": "عملیات انجام نشد",
+    "en": "Action not Performed"
+  },
+
+  "add_department": {
+    "dari": "دیپارتمنت اضافه شد",
+    "en": "Department Added"
+  },
+  "delivered": {
+    "dari": "تحویل گرفته شد",
+    "en": "Delivred"
+  },
+  "not_delivered": {
+    "dari": "تحویل گرفته نشد",
+    "en": "Not Delivred"
+  },
+    "add_department_not": {
+    "dari": "دیپارتمنت اضافه نشد",
+    "en": "Department not Added"
+  },
+  "val_dic" : {
+    "employee_id": "Employee already exist, please check your employee ID",
+    "email": "ایمیل شما موجود است",
+    "phone": "تلفون شما موجود است",
+    "phone_second": "تلفون شما موجود است",
+    "email_second": "ایمیل شما موجود است",
+    "permanent_address": "This field is required.",
+    "permanent_address_dari": "This field is required.",
+    "current_address": "This field is required.",
+    "current_address_dari": "This field is required.",
+    "provinces_permanent": "This field is required.", 
+    "provinces_current": "This field is required.", 
+    "district_permanent": "This field is required.", 
+    "district_current": "This field is required."
+  },
+  "invalid_message": {
+    "dari": "درخواست اشتباه",
+    "en": "invalid request"
+  },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
   }
 }

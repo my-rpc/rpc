@@ -1,0 +1,111 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">{{translation.list_of_leave_request[language]}}</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="overitme_list">
+                        <tr>
+                            <th>{{translation.id_number[language]}}</th>
+                            <th>{{translation.applicant_name[language]}}</th>
+                            <th>{{translation.leave_type[language]}}</th>
+                            <th>{{translation.start_date[language]}}</th>
+                            <th>{{translation.end_date[language]}}</th>
+                            <th>{{translation.total_days_hours[language]}}</th>
+                            <th>{{translation.record_status[language]}}</th>
+                            <th>{{translation.request_date[language]}}</th>
+                            <th>{{translation.details[language]}}</th>
+                        </tr>
+                        {% for leave in leave_supervisor %}
+                        <tr>
+                            <td>{{leave.emp_id}}</td>
+                            <td>
+                                {% if leave.employee %}
+                                  {% if language == 'dari' %}
+                                    {{ leave.employee.name + ' ' + leave.employee.lname }}
+                                  {% else %}
+                                    {{ leave.employee.name_english + ' ' + leave.employee.lname_english }}
+                                  {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                              {% if leave.leave_type %}
+                                {{translation.hourly[language]}}
+                              {% else %}
+                                {{translation.daily[language]}}
+                              {% endif %}
+                            </td>
+                            <td><span class="text-muted">{{toJalali(leave.start_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
+                            <td><span class="text-muted">{{toJalali(leave.end_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
+                            <td>
+                              {{ ((leave.end_datetime - leave.start_datetime)|string)
+                                  .replace('days', translation.days[language]).replace('day', translation.day[language])}}
+                            </td>
+                            <td>
+                                {% if leave.supervisor == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif leave.supervisor == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif leave.supervisor == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{toJalali(leave.requested_at,'%Y-%m-%d %H:%M:%S')}}</td>
+                            <td>
+                              <a  href="/leave_supervisor/{{leave.id}}" title="{{translation.view_detials[language]}}">
+                                <span><i class="fa fa-eye text-primary"></i> </span>
+                              </a>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+
+{% endblock js_code %}

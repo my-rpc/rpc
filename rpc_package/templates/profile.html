@@ -1,0 +1,404 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_profile[language]}} {% endblock %}
+{% block css_or_js_code %}
+    <style>
+        [type=radio]:not(:checked).rd, [type=radio]:checked.rd {
+            position: absolute !important;
+            left: auto;
+            opacity: 1 !important;
+        }
+    </style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="row">
+        <div class="col-xl-8 col-12">
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="info-box pull-up">
+                        <span class="info-box-icon bg-primary-light rounded-circle"><span class="icon-Fan"></span></span>
+
+                        <div class="info-box-content text-right">
+                          <span class="info-box-number">90%</span>
+                          <span class="info-box-text">Store Traffic</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="info-box pull-up">
+                        <span class="info-box-icon bg-primary-light rounded-circle"><span class="icon-Dollar"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span></span>
+
+                        <div class="info-box-content text-right">
+                          <span class="info-box-number">$41,410k</span>
+                          <span class="info-box-text">Income</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="info-box pull-up">
+                        <span class="info-box-icon bg-primary-light rounded-circle"><span class="icon-User"><span class="path1"></span><span class="path2"></span></span></span>
+
+                        <div class="info-box-content text-right">
+                          <span class="info-box-number">40k</span>
+                          <span class="info-box-text">Average Visitor</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="col-12">
+                    <div class="box box-default">
+                      <div class="box-header with-border">
+                        <h4 class="box-title">{{translation.employee_profile[language]}}</h4>
+                      </div>
+                      <!-- /.box-header -->
+                      <div class="box-body">
+                          <!-- Nav tabs -->
+                          <ul class="nav nav-tabs nav-fill" role="tablist">
+                              <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home11" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ml-15">{{translation.personal_information[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">{{translation.address[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages11" role="tab"><span><i class="ion-email"></i></span> <span class="hidden-xs-down ml-15">{{translation.documents[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#setting11" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ml-15">{{translation.call[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#about11" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ml-15">{{translation.about[language]}}</span></a> </li>
+                              <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#contact11" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ml-15">{{translation.contact[language]}}</span></a> </li>
+                          </ul>
+                          <!-- Tab panes -->
+                          <div class="tab-content tabcontent-border">
+                              <div class="tab-pane active" id="home11" role="tabpanel">
+                                  <div class="p-15">
+                                    <table class="table table-responsive table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">{{translation.first_name[language]}}</th>  
+                                            <th scope="col">{{translation.last_name[language]}}</th>
+                                            <th scope="col">{{translation.father_name[language]}}</th>
+                                            <th scope="col">{{translation.grand_name[language]}}</th>
+                                            <th scope="col">{{translation.date_of_birth[language]}}</th>
+                                            <th scope="col">{{translation.gender[language]}}</th>
+                                            <th scope="col">{{translation.blood_group[language]}}</th>
+                                            <th scope="col">{{translation.tazkira[language]}}</th>
+                                            <th scope="col">{{translation.tin[language]}}</th>
+                                            <th scope="col">{{translation.status[language]}}</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if profile %}
+                                          <tr>
+                                            <th rowspan="2" scope="row">1</th>
+                                            <td class="text-center">{{profile[2].name}}</td>
+                                            <td class="text-center">{{profile[2].lname}}</td>
+                                            <td class="text-center">{{profile[2].fname}}</td>
+                                            <td class="text-center">{{profile[2].gname}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].birthday}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].gender}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].blood}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].tazkira}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].tin}}</td>
+                                            <td rowspan="2" class="text-center">{{profile[2].m_status}}</td>
+                                          </tr>
+                                          <tr>
+                                            
+                                            <td class="text-center">{{profile[2].name_english}}</td>
+                                            <td class="text-center">{{profile[2].lname_english}}</td>
+                                            <td class="text-center">{{profile[2].fname_english}}</td>
+                                            <td class="text-center">{{profile[2].gname_english}}</td>
+                                          </tr>
+                                         {% endif %}
+                                        </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+                              <div class="tab-pane" id="profile11" role="tabpanel">
+                                  <div class="p-15">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="box">
+                                                <div class="box-header m-0 p-0" style="border: none;">
+                                                    <div class="box-title">سکونت فعلی</div>
+                                                </div>
+                                                <div class="box-body p-0 m-0">
+                                                    <div class="table-responsive-sm">
+                                                        <table class="table table-bordered mb-0">
+                                                            <thead>
+                                                              <tr>
+                                                                <th scope="col">#</th>
+                                                                <th colspan="2" scope="col">ولایت</th>  
+                                                                <th colspan="2" scope="col">ولسوالی</th>
+                                                              </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                              <tr>
+                                                                <th scope="row">1</th>
+                                                                <td>{{current_address[1].province_name}}</td>
+                                                                <td>{{current_address[1].province_name_english}}</td>
+                                                                <td>{{current_address[2].district_name}}</td>
+                                                                <td>{{current_address[2].district_name_english}}</td>
+                                                              </tr>
+                                                              <tr>
+                                                                <th scope="row">3</th>
+                                                                <td  colspan="5">{{current_address[0].address}}</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <th scope="row">3</th>
+                                                                  <td  colspan="5">{{current_address[0].address_english}}</td>
+                                                              </tr>
+                                                            </tbody>
+                                                          </table>
+                                                      </div>
+                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="box">
+                                                <div class="box-header m-0 p-0" style="border: none;">
+                                                    <div class="box-title">سکونت اصلی</div>
+                                                </div>
+                                                <div class="box-body p-0 m-0">
+                                                    <div class="table-responsive-sm">
+                                                        <table class="table table-responsive table-bordered mb-0">
+                                                          <thead>
+                                                            <tr>
+                                                              <th scope="col">#</th>
+                                                              <th colspan="2" scope="col">ولایت</th>  
+                                                              <th colspan="2" scope="col">ولسوالی</th>
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <tr>
+                                                              <th scope="row">1</th>
+                                                              <td>{{permanent_address[1].province_name}}</td>
+                                                              <td>{{permanent_address[1].province_name_english}}</td>
+                                                              <td>{{permanent_address[2].district_name}}</td>
+                                                              <td>{{permanent_address[2].district_name_english}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                              <th scope="row">3</th>
+                                                              <td  colspan="5">{{permanent_address[0].address}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row">3</th>
+                                                                <td  colspan="5">{{permanent_address[0].address_english}}</td>
+                                                            </tr>
+                                                          </tbody>
+                                                        </table>
+                                                      </div>
+                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="tab-pane" id="messages11" role="tabpanel">
+                                  <div class="p-15">
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">سی وی</th>  
+                                            <th scope="col">تذکره</th>
+                                            <th scope="col">ضامن</th>
+                                            <th scope="col">نمبر تشخصیه</th>
+                                            <th scope="col">اسناد تحصیلی</th>
+                                            <th scope="col">اسناد اضافی</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <th scope="row">1</th>
+                                            <td class="text-center">{% if doc_cv %}
+                                                <a href="{{doc_cv.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_tazkira %}
+                                                <a href="{{doc_tazkira.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_guarantor %}
+                                                <a href="{{doc_guarantor.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_tin %}
+                                                <a href="{{doc_tin.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_education %}
+                                                <a href="{{doc_education.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">{% if doc_extra %}
+                                                <a href="{{doc_extra.url}}"><button type="button" class="waves-effect waves-light btn btn-sm btn-circle btn-info mt-4"><i class="fa fa-download"></i></button></a>
+                                                {% endif %}
+                                            </td>
+                                          </tr>
+                                         
+                                        </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+                              <div class="tab-pane" id="setting11" role="tabpanel">
+                                  <div class="p-15">
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                          <tr>
+                                            <th scope="col">#</th>
+                                            <th colspan="3" scope="col">ایمیل</th>  
+                                            <th colspan="3" scope="col">شماره تماس</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <th scope="row">1</th>
+                                            <td colspan="3">{% if email %} {{email.email}} {% endif %}</td>
+                                            <td colspan="3">{% if phone %} {{phone.phone}} {% endif %}</td>
+                                          </tr>
+                                         
+                                        </tbody>
+                                      </table>
+                                  </div>
+                              </div>
+                              <div class="tab-pane" id="about11" role="tabpanel">
+                                  <div class="p-15">
+                                      <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
+                                      <h3>Donec vitae laoreet neque, id convallis ante.</h3>
+                                      <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
+                                  </div>
+                              </div>
+                              <div class="tab-pane" id="contact11" role="tabpanel">
+                                  <div class="p-15">
+                                      <h3>Donec vitae laoreet neque, id convallis ante.</h3>
+                                      <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
+                                      <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                  </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-12">
+            <div class="box">
+                <div class="box-body text-center">
+                    <div class="mb-20 mt-20">
+                        <form id="upload_profile_pic" enctype="multipart/form-data">
+                            <input type="file" onchange="uploadProfile()" name="profilePic">
+                        </form>
+                        <img src="{{profile[2].profile_pic}}" width="150" class="rounded-circle bg-info-light" alt="user">
+                        <h4 class="mt-20 mb-0"></h4>
+                        <a href="mailto:dummy@gmail.com">{{email.email}}</a>
+                    </div>
+                    <div class="badge badge-pill badge-info-light font-size-16">Dashboard</div>
+                    <div class="badge badge-pill badge-primary-light font-size-16">UI</div>
+                    <div class="badge badge-pill badge-danger-light font-size-16">UX</div>
+                    <div class="badge badge-pill badge-warning-light font-size-16" data-toggle="tooltip" data-placement="top" title="" data-original-title="3 more">+10</div>
+                </div>
+                <div class="p-20 mt-15 bt-1">
+                    <div class="row text-center">
+                        <div class="col-6 br-1">
+                            <a href="#" class="link d-flex align-items-center justify-content-center font-medium">
+                                <span class="icon-Mail font-size-20 mr-5"></span>Message</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="link d-flex align-items-center justify-content-center font-medium">
+                                <span class="icon-Code1 font-size-20 mr-5"><span class="path1"></span><span class="path2"></span></span>Portfolio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>					
+            <!-- <div class="box">		
+                <div class="box-header no-border">
+                    <h4 class="box-title">Revenue Overview</h4>
+                    <ul class="box-controls pull-right">
+                      <li class="dropdown">
+                        <a data-toggle="dropdown" href="#" class="btn btn-success-light px-10 base-font">Export</a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                          <a class="dropdown-item" href="#"><i class="ti-import"></i> Import</a>
+                          <a class="dropdown-item" href="#"><i class="ti-export"></i> Export</a>
+                          <a class="dropdown-item" href="#"><i class="ti-printer"></i> Print</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="#"><i class="ti-settings"></i> Settings</a>
+                        </div>
+                      </li>
+                    </ul>
+                </div>
+                <div class="box-body py-0">	
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="py-10">
+                                <div class="text-fade font-weight-600">Average Profit</div>
+                                <div class="font-size-18 font-weight-600">$150K</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="py-10">
+                                <div class="text-fade font-weight-600">Revenue</div>
+                                <div class="font-size-18 font-weight-600">$15,250k</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="py-10">
+                                <div class="text-fade font-weight-600">Taxes</div>
+                                <div class="font-size-18 font-weight-600">$50k</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="py-10">
+                                <div class="text-fade font-weight-600">Yearly Income</div>
+                                <div class="font-size-18 font-weight-600">$44,850k</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body p-0">	
+                    <div id="revenue4" class="text-dark"></div>
+                </div>
+
+            </div> -->
+       </div>
+    </div>
+    </section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js"></script>
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+
+<script>
+
+function uploadProfile(){
+        $form = $("#upload_profile_pic");
+        var formData = new FormData($form[0]);
+        $.ajax({
+            type: "POST",
+            url: "upload_profile_pic",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              if(response == "success")
+                location.reload()
+                toastSuccess(response);
+            },
+            error: function (response) {
+                var statusCode = response.status;
+                var r = '';
+                if (statusCode == '403') {
+                    r = formValidateErrors(response);
+                }
+                toastError(r);
+            }
+        });
+    };
+  
+</script>
+{% endblock js_code %}

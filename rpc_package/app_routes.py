@@ -1,15 +1,27 @@
-from flask import render_template, url_for, redirect, request, jsonify
+from flask import render_template, url_for, redirect, request, jsonify, flash, session
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
-from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm
+from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
+    AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
+    UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
+    ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm
+
 from rpc_package.form_dynamic_language import *
-from rpc_package.rpc_tables import Users, Employees, User_roles, Permanent_addresses, Current_addresses, Districts, \
-    Emails, Phone, Provinces
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
+
+from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
+    Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
+    Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
+    Loan_form, Overtime_reason, Leave_reason
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, toGregorian, toJalali
+from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
+    add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
+    update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
+    add_loan_request, accept_equipment, accept_reject_resign
 import os
 from datetime import datetime
-from sqlalchemy.orm import aliased
+import jdatetime
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -21,8 +33,7 @@ def blank():
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
-    language = 'en'
-    create_new_user_form = CreateUserForm()
+    create_new_user_form = CreateUserForm(session['language'])
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
             hashed_pass = pass_crypt.generate_password_hash(create_new_user_form.password.data).decode('utf=8')
@@ -36,25 +47,25 @@ def create_new_user():
                 db.session.add(new_user)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_user_not[language])
+                return message_to_client_403(message_obj.create_new_user_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_user_save[language].format(create_new_user_form.employee_id.data))
+                message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
         else:
             return message_to_client_403(create_new_user_form.errors)
-    users = db.session.query(Users, User_roles, Employees).join(Users,
-                                                                (Users.role == User_roles.id)).join(Employees, (
-            Users.emp_id == Employees.id)).all()
-
-    create_new_user_form = update_messages_user(create_new_user_form, language)
+    users = db.session.query(Users,
+                             User_roles,
+                             Employees).join(Users,
+                                             (Users.role == User_roles.id)).join(Employees,
+                                                                                 (Users.emp_id == Employees.id)).all()
     return render_template('create_new_user.html', title='Create New User', users=users,
-                           form=create_new_user_form, language=language, translation=translation_obj,
+                           form=create_new_user_form, language=session['language'], translation=translation_obj,
                            message_obj=message_obj)
 
 
 @app.route("/uds_user", methods=['GET', 'POST'])
 @login_required
 def uds_user():
-    language = 'en'
+    language = session['language']
     if request.method == 'POST':
         if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
                 EmployeeValidator.number_validator(request.form['user_role']):
@@ -62,11 +73,18 @@ def uds_user():
             try:
                 user.status = bool(int(request.form['status']))
                 user.role = request.form['user_role']
+                user_role = User_roles.query.get(user.role)
                 db.session.commit()
             except IOError as exc:
                 return message_to_client_403(message_obj.create_new_user_update_not[language])
-            return message_to_client_200(
-                message_obj.create_new_user_update[language].format(request.form['employee_id']))
+            data = {
+                "user": {
+                    'emp_id': user.emp_id, 'status': user.status,
+                    'role': {'name': user_role.name, 'name_english': user_role.name_english}
+                },
+                'message': message_obj.create_new_user_update[language].format(request.form['employee_id'])
+            }
+            return jsonify(data)
         else:
             return message_to_client_403(message_obj.create_new_user_update_not[language])
     user_id = request.args.get('user_id')
@@ -80,46 +98,73 @@ def uds_user():
                  'translation': translation_obj.__dict__,
                  'message_obj': message_obj.__dict__})
     else:
-        message_to_client_403(message_obj.invalid_message[language])
+        return message_to_client_403(message_obj.invalid_message[language])
+
+
+@app.route("/reset_user_password")
+def reset_user_password():
+    user_id = request.args.get('user_id')
+    if EmployeeValidator.emp_id_validator(user_id):
+        hashed_pass = pass_crypt.generate_password_hash('123456').decode('utf=8')
+        try:
+            sel_user = Users.query.get(user_id)
+            sel_user.password = hashed_pass
+            db.session.commit()
+        except IOError as exc:
+            return message_to_client_403(message_obj.create_new_user_update_not[session['language']])
+        return message_to_client_200("Password has been reset")
+    else:
+        return message_to_client_403(message_obj.invalid_message[session['language']])
 
 
 @app.route("/logout")
-@login_required
 def logout():
     logout_user()
     return redirect(url_for("login"))
 
 
 # Login part
+@app.route("/", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("blank"))
-    default_language = 'en'
-
+        return redirect(url_for("profile"))
     login_form = LoginForm()
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
-            login_user(user, remember=login_form.remember_me.data)
-            request_user_page = request.args.get('next')
-            if request_user_page:
-                return redirect(request_user_page)
+            if user.status:
+                employee = Employees.query.filter_by(id=user.emp_id).first()
+                session['language'] = login_form.prefer_language.data
+                session['emp_id'] = user.emp_id
+                if session['language'] == 'dari':
+                    session['emp_name'] = employee.name
+                    session['emp_lname'] = employee.lname
+                else:
+                    session['emp_name'] = employee.name_english
+                    session['emp_lname'] = employee.lname_english
+                login_user(user, remember=login_form.remember_me.data)
+                request_user_page = request.args.get('next')
+                if request_user_page:
+                    return redirect(request_user_page)
+                else:
+                    return redirect('/profile')
             else:
-                return redirect(url_for("blank"))
+                flash(message_obj.user_inactive[session['language']], 'error')
+                return redirect(request.referrer)
         else:
-            return message_to_client_403(message_obj.password_incorrect[default_language])
+            flash(message_obj.password_incorrect[session['language']], 'error')
+            return redirect(request.referrer)
 
     return render_template('login.html', title='Login',
-                           form=login_form, language=default_language,
+                           form=login_form, language='en',
                            translation=translation_obj, message_obj=message_obj)
 
 
 @app.route("/add_employee", methods=['GET', 'POST'])
 @login_required
 def add_employee():
-    language = 'en'
-    add_employee_form = EmployeeForm()
+    add_employee_form = EmployeeForm(session['language'])
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
             new_employee = Employees(
@@ -132,7 +177,7 @@ def add_employee():
                 lname_english=add_employee_form.last_name_english.data,
                 fname_english=add_employee_form.father_name_english.data,
                 gname_english=add_employee_form.grand_name_english.data,
-                birthday=add_employee_form.birthday.data,
+                birthday=toGregorian(add_employee_form.birthday.data),
                 tazkira=add_employee_form.tazkira.data,
                 gender=True if add_employee_form.gender.data else False,
                 blood=add_employee_form.blood.data,
@@ -177,32 +222,74 @@ def add_employee():
                 db.session.add(phone)
                 db.session.commit()
             except IOError as exc:
-                return message_to_client_403(message_obj.create_new_employee_not[language])
+                return message_to_client_403(message_obj.create_new_employee_not[session['language']])
             return message_to_client_200(
-                message_obj.create_new_employee_save[language].format(add_employee_form.employee_id.data))
+                message_obj.create_new_employee_save[session['language']].format(add_employee_form.employee_id.data))
         else:
             return message_to_client_403(add_employee_form.errors)
 
-    add_employee_form = update_messages_employee(add_employee_form, language)
     return render_template('add_employee.html', title='Add Employee',
-                           form=add_employee_form, language=language,
+                           form=add_employee_form, language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
 
 
 @app.route("/add_documents", methods=['GET', 'POST'])
 @login_required
 def add_documents():
-    language = 'en'
     cv_form = UploadCVForm()
+    guarantor = UploadGuarantorForm()
+    education = UploadEducationalDocsForm()
+    tin = UploadTinForm()
+    tazkira = UploadTazkiraForm()
+    extra_docs = UploadExtraDocsForm()
+    emp_id = request.args.get("emp_id")
+
+    if request.method == "GET":
+        cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc = get_documents(emp_id)
+
     if request.method == 'POST':
-        workingdir = os.path.abspath(os.getcwd())
-        cv = request.files['cv']
-        path = os.path.join(workingdir, cv.filename)
-        cv.save(path)
-        return path
+        if guarantor.flag.data == "guarantor":
+            result = upload_docs(emp_id, request, 'guarantor')
+        if cv_form.flag.data == "cv":
+            result = upload_docs(emp_id, request, 'cv')
+        if education and education.flag.data == "education":
+            result = upload_docs(emp_id, request, 'education')
+        if tin and tin.flag.data == "tin":
+            result = upload_docs(emp_id, request, 'tin')
+        if tazkira and tazkira.flag.data == "tazkira":
+            result = upload_docs(emp_id, request, 'tazkira')
+        if extra_docs and extra_docs.flag.data == "extra_docs":
+            result = upload_docs(emp_id, request, 'extra_docs')
+
+        if result == "success":
+            flash("Document uploaded", result)
+        else:
+            flash("Document not uploaded", result)
+        return redirect(request.referrer)
     return render_template("add_documents.html", title='Add Employee Documents',
-                           language=language,
-                           translation=translation_obj, form=cv_form, message_obj=message_obj)
+                           language=session['language'],
+                           translation=translation_obj, emp_id=emp_id, extra_docs_form=extra_docs,
+                           tazkira_form=tazkira, form=cv_form, tin_form=tin, education_form=education,
+                           guarantor_form=guarantor, message_obj=message_obj,
+                           cv_doc=cv_doc, guarantor_doc=guarantor_doc, tin_doc=tin_doc,
+                           education_doc=education_doc, extra_doc=extra_doc, tazkira_doc=tazkira_doc
+                           )
+
+
+@app.route("/delete_document", methods=['GET'])
+@login_required
+def delete_document():
+    emp_id = request.args.get("emp_id")
+    doc = request.args.get("doc")
+    document = Documents.query.filter_by(emp_id=emp_id, name=doc).first()
+    try:
+        os.remove(os.path.join(f"./rpc_package" + document.url))
+        Documents.query.filter_by(emp_id=emp_id, name=doc).delete()
+        db.session.commit()
+        flash("Document deleted", "success")
+    except:
+        flash("Document not deleted", "error")
+    return redirect(request.referrer)
 
 
 @app.route("/load_districts", methods=['POST'])
@@ -218,113 +305,795 @@ def load_districts():
 @app.route("/employee_settings", methods=['GET', 'POST'])
 @login_required
 def employee_settings():
-    language = 'en'
-
     employees = db.session.query(Employees).all()
     phones = {}
     emails = {}
     for x, emp in enumerate(employees):
         phone = db.session.query(Phone).filter_by(emp_id=emp.id).all()
-        email = db.session.query(Emails).filter_by(emp_id=emp.id)
+        email = db.session.query(Emails).filter_by(emp_id=emp.id).all()
         if phone is not None:
             phones[x] = phone
         if email is not None:
             emails[x] = email
-    print(emails)
 
     return render_template("employee_settings.html", title='Employee Settings',
-                           employees=employees, emails=emails, phones=phones, language=language,
-                           translation=translation_obj, message_obj=message_obj)
+                           employees=employees, emails=emails, phones=phones, language=session['language'],
+                           translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
 
 
 @app.route('/employee_details', methods=['GET', "POST"])
 @login_required
 def employee_details():
-    language = 'en'
-    return render_template('employee_details.html', title='Employee Details', language=language,
-                           translation=translation_obj, message_obj=message_obj)
+    emp_id = request.args.get('emp_id')
+
+    if EmployeeValidator.emp_id_validator(emp_id):
+        try:
+            sel_emp = Employees.query.get(emp_id)
+            phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
+            emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
+
+            current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
+                                                                                               (
+                                                                                                       Current_addresses.province_id == Provinces.id)) \
+                .join(Districts, (Current_addresses.district_id == Districts.id)) \
+                .filter(Current_addresses.emp_id == emp_id).first()
+
+            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
+                                                                                                   (
+                                                                                                           Permanent_addresses.province_id == Provinces.id)) \
+                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
+                .filter(Permanent_addresses.emp_id == emp_id).first()
+            employee = sel_emp, phones, emails, current_addresses, permanent_addresses
+
+        except IOError as exc:
+            return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                                   translation=translation_obj, message_obj=message_obj)
+        return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                               employee=employee, translation=translation_obj, message_obj=message_obj)
+    else:
+        flash(message_obj.invalid_message[session['language']], "error")
+        return render_template('employee_details.html', title='Employee Details', language=session['language'],
+                               translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
 @login_required
 def uds_employee():
     language = 'en'
+    update_employee_form = EmployeeForm(session['language'])
+    if request.method == 'POST':
+        ignored_items = False
+        if not update_employee_form.validate_on_submit():
+            for key, value in update_employee_form.errors.items():
+                if key not in message_obj.val_dic.keys():
+                    ignored_items = True
+                    break
+        if ignored_items:
+            return message_to_client_403(update_employee_form.errors)
+        else:
+            try:
+                # TODO Phone and Email for duplicate validation and conflict
+                update_employee_data(update_employee_form)
 
-    update_employee_form = EmployeeForm()
+            except IOError as exc:
+                return message_to_client_403(message_obj.create_new_employee_update_not[session['language']])
+            data = {
+                'employee': {
+                    'emp_id': update_employee_form.employee_id.data,
+                    'name': update_employee_form.first_name.data + ' ' + update_employee_form.last_name.data
+                    if session['language'] == 'dari'
+                    else update_employee_form.first_name_english.data + ' ' + update_employee_form.last_name_english.data,
+                    'father_name': update_employee_form.father_name.data
+                    if session['language'] == 'dari'
+                    else update_employee_form.father_name_english.data,
+                    'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
+                    'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
+                    'gender': update_employee_form.gender.data,
+                    'tazkira': update_employee_form.tazkira.data,
+                    'm_status': update_employee_form.m_status.data,
+                    'birthday': update_employee_form.birthday.data,
+                    'blood': update_employee_form.blood.data,
+                    'tin': update_employee_form.tin.data
+                },
+                'message': message_obj.create_new_employee_update[session['language']].format(
+                    request.form['employee_id'])
+            }
+            return jsonify(data)
+
+
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
+        emp_update_data = set_emp_update_form_data(emp_id, update_employee_form)
 
-        emp = Employees.query.get(emp_id)
-        phones = Phone.query.filter_by(emp_id=emp_id).all()
-        emails = Emails.query.filter_by(emp_id=emp_id).all()
-        cur_add = Current_addresses.query.filter_by(emp_id=emp_id).first()
-        per_add = Permanent_addresses.query.filter_by(emp_id=emp_id).first()
-        update_employee_form.employee_id.data = emp.id
-        update_employee_form.first_name.data = emp.name
-        update_employee_form.last_name.data = emp.lname
-        update_employee_form.father_name.data = emp.fname
-        update_employee_form.grand_name.data = emp.gname
-        update_employee_form.first_name_english.data = emp.name_english
-        update_employee_form.last_name_english.data = emp.name_english
-        update_employee_form.father_name_english.data = emp.name_english
-        update_employee_form.grand_name_english.data = emp.name_english
-        update_employee_form.tin.data = emp.tin
-        update_employee_form.tazkira.data = emp.tazkira
-        update_employee_form.birthday.data = emp.birthday
-        update_employee_form.blood.data = emp.blood
-
-        update_employee_form.gender.data = emp.gender
-        update_employee_form.m_status.data = emp.m_status
-
-        if per_add is not None:
-            update_employee_form.provinces_permanent.data = per_add.province_id
-            update_employee_form.district_permanent.data = per_add.district_id
-            update_employee_form.permanent_address.data = per_add.address
-            update_employee_form.permanent_address_dari.data = per_add.address_dari
-
-        if cur_add is not None:
-            update_employee_form.provinces_current.data = cur_add.province_id
-            update_employee_form.district_current.data = cur_add.district_id
-            update_employee_form.current_address.data = cur_add.address
-            update_employee_form.current_address_dari.data = cur_add.address_dari
-
-        if phones is not None and len(phones) == 2:
-            update_employee_form.phone.data = phones[0].phone
-            update_employee_form.phone_second.data = phones[1].phone
-        elif phones is not None and len(phones) == 1:
-            update_employee_form.phone.data = phones[0].phone
-            update_employee_form.phone_second.data = None
-        else:
-            update_employee_form.phone.data = None
-            update_employee_form.phone_second.data = None
-
-        if emails is not None and len(emails) == 2:
-            update_employee_form.email.data = emails[0].email
-            update_employee_form.email_second.data = emails[1].email
-        elif emails is not None and len(emails) == 1:
-            update_employee_form.email.data = emails[0].email
-            update_employee_form.email_second.data = None
-        else:
-            update_employee_form.email.data = None
-            update_employee_form.email_second.data = None
-        cur_district = Districts.query.filter_by(id=cur_add.district_id).first()
-        cur_province = Provinces.query.filter_by(id=cur_add.province_id).first()
-        per_district = Districts.query.filter_by(id=per_add.district_id).first()
-        per_province = Provinces.query.filter_by(id=per_add.province_id).first()
-
-        current_addresses = "<div class='py-4'><h5 class='d-inline text-primary'> \
-                            Current address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
-                            + cur_district.district_name + ", " + cur_province.province_name \
-                            + "</p> <span onClick=\"showAddress(\'cur-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
-
-        perpanent_addresses = "<div class='py-4'> <h5 class='d-inline text-primary'> \
-                            Permanent address: </h5><p class='px-3 d-inline'>" + cur_add.address + ", " \
-                              + per_district.district_name + ", " + per_province.province_name \
-                              + "</p> <span onClick=\"showAddress(\'per-address\')\"> <i class='fad fa-edit text-info'></i> </span> </div>"
-
-        data = jsonify(render_template('ajax_template/update_employee_form.html', language=language,
+        data = jsonify(render_template('ajax_template/update_employee_form.html', language=session['language'],
                                        form=update_employee_form, translation=translation_obj, message_obj=message_obj),
-                       {'current_add': current_addresses, 'perpament_add': perpanent_addresses})
+                       {'current_add': emp_update_data[0], 'permanent_add': emp_update_data[1]})
         return data
     else:
-        message_to_client_403(message_obj.invalid_message[language])
+        message_to_client_403(message_obj.invalid_message[session['language']])
+
+
+@app.route('/delete_employee', methods=['DELETE'])
+@login_required
+def delete_employee():
+    emp_id = request.args.get('emp_id')
+    if EmployeeValidator.emp_id_validator(emp_id):
+        try:
+            sel_emp = Employees.query.get(emp_id)
+            db.session.delete(sel_emp)
+            db.session.commit()
+        except IOError as exc:
+            return message_to_client_403(message_obj.create_new_employee_delete_not[session['language']])
+        return message_to_client_200(
+            message_obj.create_new_employee_delete[session['language']].format(emp_id))
+    else:
+        message_to_client_403(message_obj.invalid_message[session['language']])
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
+        current_user.emp_id)
+    return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
+                           current_address=current_address,
+                           permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
+                           doc_tazkira=doc_tazkira,
+                           doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
+                           doc_extra=doc_extra,
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/contract_settings')
+@login_required
+def contract_settings():
+    employees =  db.session.query(Employees, Contracts).join(Contracts, (Contracts.emp_id == Employees.id)).all()
+    contracts = {}
+    for x, emp in enumerate(employees):
+        phone = db.session.query(Phone).filter_by(emp_id=emp[0].id).all()
+        email = db.session.query(Emails).filter_by(emp_id=emp[0].id).all()
+        contract = db.session.query(Contracts, Contract_types, Position_history, Positions, Salary, Departments) \
+            .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
+            .join(Salary, Contracts.id == Salary.contract_id) \
+            .join(Position_history, (Contracts.id == Position_history.contract_id)) \
+            .join(Positions, (Positions.id == Position_history.position_id)) \
+            .join(Departments, Departments.id == Position_history.department_id) \
+            .filter(Contracts.emp_id == emp[0].id).first()
+        if contracts is not None:
+            contracts[x] = contract
+    return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
+                           employees=employees, contract=contracts,
+                           translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+
+
+@app.route('/add_contract', methods=["GET", "POST"])
+@login_required
+def add_contract():
+    contract_form = ContractForm(session['language'])
+    emp_id = request.args.get('emp_id')
+    if request.method == "POST":
+        if contract_form.validate_on_submit():
+            con_startdate = Contracts.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
+            date = datetime.strptime(contract_form.start_date.data, '%Y-%m-%d')
+            if con_startdate and con_startdate.start_date >=  datetime.date(date):
+                flash({'start_date':['تاریخ قراداد با تاریخ قراداد قبلی تداخل دارد.']}, 'error')
+                return redirect(request.referrer)
+
+            contract = add_contract_form(contract_form)
+            if contract == "success":
+                flash(message_obj.contract_added[session['language']].format(emp_id), 'success')
+                # TODO show msg to page
+            else:
+                flash(message_obj.contract_not_added[session['language']].format(emp_id), 'error')
+            return redirect(request.referrer)
+        else:
+            flash(contract_form.errors, 'error')
+            return redirect(request.referrer)
+    if request.method == "GET":
+        # return 'asd'
+        if EmployeeValidator.emp_id_validator(emp_id):
+            contract_form.emp_id.data = emp_id
+
+            return render_template('add_contract.html', title='Add Contract', language=session['language'],
+                                   form=contract_form,
+                                   translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/edit_contract', methods=['GET', "POST"])
+@login_required
+def edit_contract():
+    contract_form = ContractForm(session['language'])
+    if request.method == "POST":
+        if contract_form.validate_on_submit():
+            updated_contract = update_contract(request, contract_form)
+
+            if update_contract != 'error':
+                return jsonify({
+                    "contract": updated_contract,
+                    'message': message_obj.contract_update[session['language']].format(request.form['emp_id'])
+                })
+            else:
+                message_to_client_403(message_obj.contract_update_not[session['language']])
+        else:
+            return message_to_client_403(contract_form.errors)
+
+    contract_id = request.args.get('contract_id')
+
+    contract_update_data = set_contact_update_form_data(contract_id, contract_form)
+    data = jsonify(render_template('ajax_template/update_contract_form.html', language=session['language'],
+                    form=contract_form, translation=translation_obj, message_obj=message_obj)
+                    ,{"contract_type":contract_update_data[0], "position": contract_update_data[1], "department":contract_update_data[2]})
+    if data == 'error':
+        return 'error'
+    else:
+        return data
+
+
+
+@app.route('/delete_contract', methods=['delete'])
+@login_required
+def delete_contract():
+    contract_id = request.args.get('contract_id')
+    try:
+        sel_emp = Contracts.query.filter_by(id = contract_id).first()
+        db.session.delete(sel_emp)
+        db.session.commit()
+    except IOError as exc:
+        return message_to_client_403(message_obj.contract_delete_not[session['language']])
+    return message_to_client_200(
+        message_obj.contract_delete[session['language']].format(sel_emp.emp_id))
+
+
+@app.route('/upload_profile_pic', methods=["POST"])
+@login_required
+def upload_profile():
+    return upload_profile_pic(request)
+
+
+@app.route('/leave_request', methods=["GET", "POST"])
+@login_required
+def leave_request():
+    leave_form = leaveRequestForm(session['language'])
+    if request.method == "GET":
+        my_leave_list = Leave_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Leave_form.requested_at.desc()).all()
+    if request.method == 'POST':
+        if leave_form.validate_on_submit():
+            leave = add_leave_request(leave_form, current_user.emp_id)
+            if leave == "success":
+                flash(message_obj.leave_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.leave_request_not_sent[session['language']], 'error')
+        else:
+            flash(leave_form.errors)
+        return redirect(url_for('leave_request'))
+    return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+
+@app.route('/leave_supervisor', methods=["GET"])
+@login_required
+def leave_supervisor():
+    leave_supervisor = Leave_form.query \
+        .order_by(Leave_form.requested_at.desc()).all()
+    return render_template('leave_supervisor.html', leave_supervisor=leave_supervisor,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+
+@app.route('/leave_supervisor/<int:leave_id>', methods=["GET", "POST"])
+@login_required
+def leave_supervisor_view(leave_id):
+    leave_supervisor_form = LeaveSupervisorForm(session['language'])
+    if request.method == "GET":
+        leave_data = Leave_form.query \
+            .filter_by(id=leave_id).first()
+    if request.method == 'POST':
+        if leave_supervisor_form.validate_on_submit():
+            try:
+                leave_form = Leave_form.query.get(leave_id)
+                leave_form.supervisor = bool(int(request.form['supervisor']))
+                leave_form.supervisor_id = current_user.emp_id
+                leave_form.finalized_at=datetime.datetime.now()
+                if request.form['supervisor'] == '0':
+                    leave_reason = Leave_reason(
+                        leave_id = leave_form.id,
+                        reason = request.form['reason']
+                    )
+                    db.session.add(leave_reason)
+                db.session.commit()
+                if request.form['supervisor'] == '0':
+                    flash(message_obj.leave_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.leave_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(exe, 'error')
+        else:
+            flash(leave_supervisor_form.errors)
+            return redirect(url_for('leave_supervisor_view', leave_id=leave_id))
+        return redirect(url_for('leave_supervisor'))
+    return render_template('leave_supervisor_view.html', form=leave_supervisor_form, leave_data=leave_data,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+
+@app.route('/leave_hr', methods=["GET"])
+@login_required
+def leave_hr():
+    leave_hr = Leave_form.query \
+        .filter_by(supervisor = 1) \
+        .order_by(Leave_form.requested_at.desc()).all()
+    return render_template('leave_hr.html', leave_hr=leave_hr,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+
+@app.route('/leave_hr/<int:leave_id>', methods=["GET", "POST"])
+@login_required
+def leave_hr_view(leave_id):
+    leave_hr_form = LeaveHRForm(session['language'])
+    if request.method == "GET":
+        leave_data = Leave_form.query \
+            .filter_by(id=leave_id).first()
+    if request.method == 'POST':
+        if leave_hr_form.validate_on_submit():
+            try:
+                leave_form = Leave_form.query.get(leave_id)
+                leave_form.hr = bool(int(request.form['hr']))
+                leave_form.hr_id = current_user.emp_id
+                leave_form.finalized_at=datetime.datetime.now()
+                db.session.commit()
+                if request.form['hr'] == '0':
+                    flash(message_obj.leave_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.leave_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(exe, 'error')
+        else:
+            flash(leave_hr_form.errors)
+        return redirect(url_for('leave_hr'))
+    return render_template('leave_hr_view.html', form=leave_hr_form, leave_data=leave_data,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+@app.route('/leave_report', methods=["GET"])
+@login_required
+def leave_report():
+    print(request.args.get('from'))
+    leave_report = Employees.query.join(Employees.leaves, aliased=True)\
+        .filter_by(hr=1) \
+        .filter(Leave_form.start_datetime >= request.args.get('from')) \
+        .filter(Leave_form.start_datetime < request.args.get('to')).all()
+    return render_template('leave_report.html', leave_report=leave_report,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, Leave_form=Leave_form, request=request)
+
+@app.route('/overtime_request', methods=["GET", "POST"])
+@login_required
+def overtime_request():
+    overtime_form = OvertimeRequestForm(session['language'])
+    if request.method == "GET":
+        emp_overtime_list = Overtime_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Overtime_form.requested_at.desc()).all()
+    if request.method == 'POST':
+        if overtime_form.validate_on_submit():
+            overtime = add_overtime_request(overtime_form, current_user.emp_id)
+            if overtime == "success":
+                flash(message_obj.overtime_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.overtime_request_not_sent[session['language']], 'error')
+        else:
+            flash(overtime_form.errors)
+        return redirect(url_for('overtime_request'))
+    return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
+        title=translation_obj.forms[session['language']], language=session['language'],
+        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+
+@app.route('/overtime_supervisor', methods=["GET"])
+@login_required
+def overtime_supervisor():
+    overtime_supervisor = Overtime_form.query \
+        .order_by(Overtime_form.requested_at.desc()).all()
+    return render_template('overtime_supervisor.html', overtime_supervisor=overtime_supervisor,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/overtime_supervisor/<int:overtime_id>', methods=["GET", "POST"])
+@login_required
+def overtime_supervisor_view(overtime_id):
+    overtime_supervisor_form = OvertimeSupervisorForm(session['language'])
+    if request.method == "GET":
+        overtime_data = Overtime_form.query \
+            .filter_by(id=overtime_id).first()
+    if request.method == 'POST':
+        if overtime_supervisor_form.validate_on_submit():
+            try:
+                overtime_form = Overtime_form.query.get(overtime_id)
+                overtime_form.supervisor = bool(int(request.form['supervisor']))
+                overtime_form.supervisor_id = current_user.emp_id
+                overtime_form.finalized_at=datetime.datetime.now()
+                if request.form['supervisor'] == '0':
+                    overtime_reason = Overtime_reason(
+                        overtime_id = overtime_form.id,
+                        reason = request.form['reason']
+                    )
+                    db.session.add(overtime_reason)
+                db.session.commit()
+                if request.form['supervisor'] == '0':
+                    flash(message_obj.overtime_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.overtime_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(exc, 'error')
+        else:
+            flash(overtime_supervisor_form.errors)
+            return redirect(url_for('overtime_supervisor_view', overtime_id=overtime_id))
+        return redirect(url_for('overtime_supervisor'))
+    return render_template('overtime_supervisor_view.html', form=overtime_supervisor_form, overtime_data=overtime_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/overtime_hr', methods=["GET"])
+@login_required
+def overtime_hr():
+    overtime_hr = Overtime_form.query \
+        .filter_by(supervisor = 1) \
+        .order_by(Overtime_form.requested_at.desc()).all()
+    return render_template('overtime_hr.html', overtime_hr=overtime_hr,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/overtime_hr/<int:overtime_id>', methods=["GET", "POST"])
+@login_required
+def overtime_hr_view(overtime_id):
+    overtime_hr_form = OvertimeHRForm(session['language'])
+    if request.method == "GET":
+        overtime_data = Overtime_form.query \
+            .filter_by(id=overtime_id).first()
+    if request.method == 'POST':
+        if overtime_hr_form.validate_on_submit():
+            try:
+                overtime_form = Overtime_form.query.get(overtime_id)
+                overtime_form.hr = bool(int(request.form['hr']))
+                overtime_form.hr_id = current_user.emp_id
+                overtime_form.finalized_at=datetime.datetime.now()
+                db.session.commit()
+                if request.form['hr'] == '0':
+                    flash(message_obj.overtime_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.overtime_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(exc, 'error')
+        else:
+            flash(overtime_hr_form.errors)
+        return redirect(url_for('overtime_hr'))
+    return render_template('overtime_hr_view.html', form=overtime_hr_form, overtime_data=overtime_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_request', methods=["GET", "POST"])
+@login_required
+def loan_request():
+    loan_form = LoanRequestForm(session['language'])
+    if request.method == "GET":
+        emp_loan_list = Loan_form.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Loan_form.requested_at.desc()).all()
+    if request.method == 'POST':
+        if loan_form.validate_on_submit():
+            month = loan_form.start_date.data.month + int(request.form['months'])
+            year = loan_form.start_date.data.year + int(month/12)
+            day = loan_form.start_date.data.day
+            loan_form.end_date.data = jdatetime.date(year, (month % 12), day)
+            # loan_form.end_date = loan_form.start_date
+            loan = add_loan_request(loan_form, current_user.emp_id)
+            if loan == "success":
+                flash(message_obj.loan_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.loan_request_not_sent[session['language']], 'error')
+        else:
+            flash(loan_form.errors)
+        return redirect(url_for('loan_request'))
+    return render_template('loan_request.html', form=loan_form, emp_loan_list=emp_loan_list,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/emp_autocomplete', methods=['GET'])
+def emp_autocomplete():
+    search = request.args.get('q')
+    name = Employees.name
+    lname = Employees.lname
+    if session['language'] == 'en':
+        name = Employees.name_english
+        lname = Employees.lname_english
+    employees = db.session.query(Employees.id, name, lname).filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
+    result = [({'value': mv[0], 'label': mv[0] + ' ' + mv[1] + ' ' + mv[2]}) for mv in employees.limit(10).all()]
+    message = ''
+    if not result :
+        message = translation_obj.not_found[session['language']]
+    return jsonify(result = result, message = message)
+
+@app.route('/loan_guarantor', methods=["GET"])
+@login_required
+def loan_guarantor():
+    emp_loan_guarantor = Loan_form.query \
+        .filter_by(guarantor_id=current_user.emp_id, guarantor=None) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_guarantor.html', emp_loan_guarantor=emp_loan_guarantor,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_guarantor/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_guarantor_view(loan_id):
+    loan_guarantor_form = LoanGuarantorForm(session['language'])
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_guarantor_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.guarantor = bool(int(request.form['guarantor']))
+                loan_form.finalized_at=datetime.datetime.now()
+                db.session.commit()
+                if request.form['guarantor'] == '0':
+                    flash(message_obj.loan_request_guarantor_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_guarantor_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_guarantor_accepted[session['language']], 'error')
+        else:
+            flash(loan_guarantor_form.errors)
+        return redirect(url_for('loan_guarantor'))
+    return render_template('loan_guarantor_view.html', form=loan_guarantor_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_hr', methods=["GET"])
+@login_required
+def loan_hr():
+    emp_loan_hr = Loan_form.query \
+        .filter_by(guarantor=1,hr=None) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_hr.html', emp_loan_hr=emp_loan_hr,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_hr/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_hr_view(loan_id):
+    loan_hr_form = LoanHRForm(session['language'])
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_hr_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.hr = bool(int(request.form['hr']))
+                loan_form.hr_id = current_user.emp_id
+                loan_form.finalized_at=datetime.datetime.now()
+                db.session.commit()
+                if request.form['hr'] == '0':
+                    flash(message_obj.loan_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_accepted[session['language']], 'error')
+        else:
+            flash(loan_hr_form.errors)
+        return redirect(url_for('loan_hr'))
+    return render_template('loan_hr_view.html', form=loan_hr_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_presidency', methods=["GET"])
+@login_required
+def loan_presidency():
+    emp_loan_presidency = Loan_form.query \
+        .filter_by(guarantor=1,hr=1) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_presidency.html', emp_loan_presidency=emp_loan_presidency,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_presidency/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_presidency_view(loan_id):
+    loan_presidency_form = LoanPresidencyForm(session['language'])
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_presidency_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.presidency = bool(int(request.form['presidency']))
+                loan_form.presidency_id = current_user.emp_id
+                loan_form.finalized_at=datetime.datetime.now()
+                db.session.commit()
+                if request.form['presidency'] == '0':
+                    flash(message_obj.loan_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_accepted[session['language']], 'error')
+        else:
+            flash(loan_presidency_form.errors)
+        return redirect(url_for('loan_presidency'))
+    return render_template('loan_presidency_view.html', form=loan_presidency_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_finance', methods=["GET"])
+@login_required
+def loan_finance():
+    emp_loan_finance = Loan_form.query \
+        .filter_by(guarantor=1,hr=1,presidency=1) \
+        .order_by(Loan_form.requested_at.desc()).all()
+    return render_template('loan_finance.html', emp_loan_finance=emp_loan_finance,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route('/loan_finance/<int:loan_id>', methods=["GET", "POST"])
+@login_required
+def loan_finance_view(loan_id):
+    loan_finance_form = LoanFinanceForm(session['language'])
+    if request.method == "GET":
+        loan_data = Loan_form.query \
+            .filter_by(id=loan_id).first()
+    if request.method == 'POST':
+        if loan_finance_form.validate_on_submit():
+            try:
+                loan_form = Loan_form.query.get(loan_id)
+                loan_form.finance = bool(int(request.form['finance']))
+                loan_form.finance_id = current_user.emp_id
+                loan_form.finalized_at=datetime.datetime.now()
+                db.session.commit()
+                if request.form['finance'] == '0':
+                    flash(message_obj.loan_request_rejected[session['language']], 'success')
+                else:
+                    flash(message_obj.loan_request_accepted[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.loan_request_accepted[session['language']], 'error')
+        else:
+            flash(loan_finance_form.errors)
+        return redirect(url_for('loan_finance'))
+    return render_template('loan_finance_view.html', form=loan_finance_form, loan_data=loan_data,
+                           title=translation_obj.forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+
+@app.route('/resign_request', methods=["GET", "POST"])
+@login_required
+def resign_request():
+    resign_form = ResignRequestForm(session['language'])
+    if request.method == "POST":
+        resign = send_resign_request(resign_form, current_user.emp_id)
+        if resign == "success":
+            flash(message_obj.resign_request_sent[session['language']], 'success')
+        else:
+            flash(message_obj.resign_request_not_sent[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('resign_request.html',
+                           title=translation_obj.forms[session['language']], form=resign_form,
+                           language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/add_equipment', methods=["GET", "POST"])
+@login_required
+def add_equipment():
+    emp_id = request.args.get("emp_id")
+    form = AddEquipmentForm()
+    all_equipment = ""
+    if request.method == "GET":
+        all_equipment = Equipment.query.all()
+    if request.method == "POST":
+        result = assign_equipment(request, emp_id)
+        if result == "success":
+            flash(message_obj.equipment_added[session['language']], 'success')
+        else:
+            flash(message_obj.equipment_not_added[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('add_equipment.html', emp_id=emp_id,
+                           title=translation_obj.forms[session['language']], form=form, all_equipment=all_equipment,
+                           language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/emp_leave_request', methods=["GET", "POST"])
+@login_required
+def emp_leave_request():
+    return render_template('emp_leave_request.html',
+                           title=translation_obj.employee_forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+
+@app.route('/emp_resign_request', methods=["GET", "POST"])
+@login_required
+def emp_resign_request():
+    if request.method == "GET":
+         list_of_resigns = db.session.query(Resign_form, Employees).join(Resign_form,
+        (Resign_form.emp_id == Employees.id)).all()
+
+    return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
+                           title=translation_obj.employee_forms[session['language']], language=session['language'],
+                           translation=translation_obj, message_obj=message_obj)
+
+@app.route("/department_setting", methods=['GET', 'POST'])
+@login_required
+def department_setting():
+    department_form = departmentForm(session['language'])
+    departments = Departments.query.all()
+    if request.method == 'POST':
+        department = send_department(department_form)
+        if department == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('department_setting.html', form=department_form, departments=departments, title=translation_obj.forms[session['language']], language=session['language'],
+                    translation=translation_obj, message_obj=message_obj)
+
+
+@app.route("/contract_setting", methods=['GET', 'POST'])
+@login_required
+def contract_setting():
+    return render_template('contract_setting.html', language=session['language'], translation=translation_obj)
+
+
+@app.route("/position_setting", methods=['GET', 'POST'])
+@login_required
+def position_setting():
+    return render_template('position_setting.html', language=session['language'], translation=translation_obj)
+
+@app.route("/my_equipment", methods=['GET', 'POST'])
+@login_required
+def my_equipment():
+    form = AcceptEquipmentForm()
+    if request.method == "GET":
+        my_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+            (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == None).all()
+    received_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == True, Employee_equipment.delivered == None).all()
+
+    if request.method == "POST":
+        result = accept_equipment(request, "employee")
+        if result == "success":
+            flash(message_obj.add_department[session['language']], 'success')
+        else:
+            flash(message_obj.add_department_not[session['language']], 'error')
+        return redirect(request.referrer)
+    return render_template('my_equipment.html', form=form, received_equipment=received_equipment, my_equipment=my_equipment, language=session['language'], translation=translation_obj)
+
+
+@app.route("/view_resign_request", methods=['GET', 'POST'])
+@login_required
+def view_resign_request():
+    form = AcceptEquipmentForm()
+    resign_id = request.args.get('resign')
+    resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
+    equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
+        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==resign[0].emp_id, Employee_equipment.delivered == None).all()
+    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'], translation=translation_obj)
+
+@app.route("/deliver_equipment", methods=['POST'])
+@login_required
+def deliver_equipment():
+    result = accept_equipment(request, "admin")
+    if result == "success":
+        flash(message_obj.delivered[session['language']], 'success')
+    else:
+        flash(message_obj.not_delivered[session['language']], 'error')
+    return redirect(request.referrer)
+
+@app.route("/accept_reject_resign_request", methods=['GET'])
+@login_required
+def accept_reject_resign_request():
+    resin = accept_reject_resign(request)
+    if resin == "success":
+        flash(message_obj.action_performed[session['language']], 'success')
+    else:
+        flash(message_obj.action_not_performed[session['language']], 'error')
+    return redirect(request.referrer)

@@ -14,6 +14,21 @@ formValidateErrors = function(response){
     return ul;
 };
 
+formValidationDisplay = function(messages){
+    var ul = "<ul>";
+    for(var i in messages) {
+        if(messages[i].length > 1 ){
+            for(var j in messages[i]){
+                ul += "<li>" + i +": " + messages[i][j] + "</li>";
+            }
+        }else{
+            ul += "<li>"+i +": " + messages[i] + "</li>";
+        }
+    }
+    ul += "</ul>";
+    return ul;
+};
+
 toastInfo = function (message){
     $.toast({
         heading: 'Error',

@@ -1,0 +1,136 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">{{translation.list_of_loan_request[language]}}</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="overitme_list">
+                        <tr>
+                            <th></th>
+                            <th>{{translation.loan_applicant[language]}}</th>
+                            <th>{{translation.requested_amount[language]}}</th>
+                            <th>{{translation.repayment_start_date[language]}}</th>
+                            <th>{{translation.repayment_end_date[language]}}</th>
+                            <th>{{translation.guarantor[language]}}</th>
+                            <th>{{translation.record_status[language]}}</th>
+                            <th>{{translation.finance[language]}}</th>
+                            <th>{{translation.details[language]}}</th>
+                        </tr>
+                        {% for loan in emp_loan_presidency %}
+                        <tr>
+                            <td>
+                              <div
+                                  class="btn m-0 p-0 mx-1"
+                                  role="button"
+                                  data-toggle="collapse"
+                                  data-target="#more_{{loan.id}}"
+                                  aria-expanded="false"
+                                  aria-controls="more_{{loan.id}}">
+                                  <li class="fad fa-angle-down text-success"></li>
+                              </div>
+                            </td>
+                            <td>
+                                {% if language == 'dari' %}
+                                  {{ loan.employee.name + ' ' + loan.employee.lname }}
+                                {% else %}
+                                  {{ loan.employee.name_english + ' ' + loan.employee.lname_english }}
+                                {% endif %}
+                            </td>
+                            <td>{{loan.requested_amount}}</td>
+                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
+                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td>
+                              {% if language == 'dari' %}
+                                {{ loan.re_guarantor.name + ' ' + loan.re_guarantor.lname }}
+                              {% else %}
+                                {{ loan.re_guarantor.name_english + ' ' + loan.re_guarantor.lname_english }}
+                              {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.presidency == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.presidency == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.presidency == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.finance == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.finance == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.finance == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a  href="/loan_presidency/{{loan.id}}" title="View Details">
+                                    <span><i class="fa fa-eye text-primary"></i> </span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                          <td colspan="10" class="no-padding">
+                              <table class="collapse table" id="more_{{loan.id}}" data-parent="#overitme_list">
+                                  <tr>
+                                      <th>{{translation.request_date[language]}}</th>
+                                      <td>{{loan.requested_at}}</td>
+                                      <th>{{translation.finalized_date[language]}}</th>
+                                      <td>{{loan.finalized_at}}</td>
+                                  </tr>
+                              </table>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+
+{% endblock js_code %}

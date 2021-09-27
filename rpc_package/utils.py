@@ -1,31 +1,9 @@
 import json
+import os
 import re
 from flask import jsonify
-
-
-class Translation:
-    def __init__(self, file_path=""):
-        try:
-            self.translations = json.load(open(file_path, 'rb'))
-        except IOError as exc:
-            raise RuntimeError('Failed to open translation json fle') from exc
-
-        for key, item in self.translations.items():
-            if isinstance(item, dict):
-                setattr(self, key, item)
-
-
-class MessagePull:
-    def __init__(self, file_path=""):
-        try:
-            self.messages = json.load(open(file_path, 'rb'))
-        except IOError as exc:
-            raise RuntimeError('Failed to open translation json fle') from exc
-
-        for key, item in self.messages.items():
-            if isinstance(item, dict):
-                setattr(self, key, item)
-
+import os
+import jdatetime, datetime
 
 class EmployeeValidator:
 
@@ -70,3 +48,51 @@ def check_language(input_sentence):
         else:
             return False
     return True
+
+def datetime_validation(self, value):
+    try:
+        date_format = '%Y-%m-%d %H:%M:%S'
+        if value == None:
+            return True
+        strValue = value
+        if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+            strValue = value.strftime(date_format)
+        jdatetime.datetime.strptime(strValue, date_format)
+        return True
+    except ValueError:
+        return False
+
+def date_validation(self, value):
+    try:
+        date_format = '%Y-%m-%d'
+        if value == None:
+            return True
+        strValue = value
+        if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+            strValue = value.strftime(date_format)
+        jdatetime.datetime.strptime(strValue, date_format)
+        return True
+    except ValueError:
+        return False
+
+def toGregorian(value, date_format='%Y-%m-%d'):
+    strValue = value
+    if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+        strValue = value.strftime(date_format)
+    value = jdatetime.datetime.strptime(strValue, date_format)
+    value = value.togregorian()
+    return value.strftime(date_format)
+
+def toJalali(value, date_format='%Y-%m-%d'):
+    strValue = value
+    if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+        strValue = value.strftime(date_format)
+    value = datetime.datetime.strptime(strValue, date_format)
+    year = value.year
+    month = value.month
+    day = value.day
+    hour = value.hour
+    minute = value.minute
+    second = value.second
+    jvalue = jdatetime.datetime.fromgregorian(day=day, month=month, year=year, hour=hour, minute=minute, second=second)
+    return jvalue.strftime(date_format)

@@ -33,29 +33,69 @@
         </a>
         <ul class="treeview-menu">			
           <li><a href="{{ url_for('add_employee') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.add_new_employee[language] }}</a></li>
-          <li><a href="{{ url_for('add_documents') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.add_documents[language] }}</a></li>
-          <li><a href="{{ url_for('employee_settings') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.employee_setting[language] }}</a></li>
+          <li><a href="{{ url_for('employee_settings') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.employee_settings[language] }}</a></li>
         </ul>
 
       </li>
-      <li>
-        <a href="contact_app.html">
-          <i class="icon-Clipboard-check"><span class="path1"></span><span class="path2"></span></i>
-
-
-          <span>{{translation.performance_evaluation[language] }}</span>
-        </a>
-      </li>
-      <li>
-        <a href="contact_app_chat.html">
+      <li class="treeview">
+        <a href="#">
           <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
-          <span> {{translation.forms[language] }}</span>
+          <span>{{translation.contract_settings[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
         </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url_for('contract_settings') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.contract_settings[language] }}</a></li>
+        </ul>
+      </li>
+
+      <li class="treeview">
+        <a href="#">
+          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.requested_inbox[language]}}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url_for('emp_resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
+          <li><a href="{{ url_for('loan_guarantor') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_guarantor[language]}}</a></li>
+          <li><a href="{{ url_for('loan_hr') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_hr[language]}}</a></li>
+          <li><a href="{{ url_for('loan_presidency') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_presidency[language]}}</a></li>
+          <li><a href="{{ url_for('loan_finance') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_finance[language]}}</a></li>
+          <li><a href="{{ url_for('overtime_supervisor') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.overtime_supervisor[language]}}</a></li>
+          <li><a href="{{ url_for('overtime_hr') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.overtime_hr[language]}}</a></li>
+          <li><a href="{{ url_for('leave_supervisor') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.leave_supervisor[language]}}</a></li>
+          <li><a href="{{ url_for('leave_hr') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.leave_hr[language]}}</a></li>
+        </ul>
+      </li>
+
+    <li class="treeview">
+        <a href="#">
+          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.my_forms[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url_for('leave_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_leave_form[language] }}</a></li>
+          <li><a href="{{ url_for('overtime_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.overtime_form[language] }}</a></li>
+          <li><a href="{{ url_for('resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
+          <li><a href="{{ url_for('loan_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_loan_form[language] }}</a></li>
+        </ul>
       </li>
       <li>
         <a href="{{ url_for('create_new_user') }}">
           <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>
           <span>{{translation.user_setting[language] }}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('my_equipment') }}">
+          <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.my_equipment[language] }}</span>
         </a>
       </li>
     </ul>

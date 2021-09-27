@@ -1,0 +1,289 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    #start_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box col-md-12">
+        <div class="box-header">
+            <div class="box-title">{{translation.loan_form[language]}}</div>
+        </div>
+        <div class="box-body">
+            <form method="POST" , action="" id="loan_request">
+                {{ form.hidden_tag()}}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.requested_amount.label(class="form-control-label")}}
+                        {{ form.requested_amount(type="number", min="1", step='0.1', class="form-control form-control-lg")}}
+                    </div>
+                    <div class="form-group">
+                        {{ form.start_date.label(class="form-control-label")}}
+                        <div class="input-group">
+                            <div id="start_date-icon" class="input-group-prepend">
+                                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
+                                    <i class="fad fa-calendar"></i>
+                                </span>
+                            </div>
+                            <input type="hidden" id="start_date-date" />
+                            {{ form.start_date( type="text", class="form-control form-control-lg")}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">{{ translation.repayment_period_in_months[language] }}</label>
+                        <input id="repayment_period_in_months" name="months" class="form-control form-control-lg" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.guarantor.label(class="form-control-label")}}
+                        <input name="autocomplete" type="text" id="autocomplete" class="form-control form-control-lg"/>
+                        <small class="text-danger" id="guarantor-guide"></small>
+                        <input name="guarantor" type="hidden" id="guarantor" />
+                    </div>
+                    <div class="form-group">
+                        {{ form.end_date.label(class="form-control-label")}}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
+                                    <i class="fad fa-calendar"></i>
+                                    <span id="end_date-icon"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" id="end_date-date" />
+                            {{ form.end_date( readonly="true", type="text", class="form-control form-control-lg")}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">{{ translation.monthly_amount[language] }}</label>
+                        <input id="monthly_amount" class="form-control form-control-lg" readonly />
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    {{form.submit(class="btn btn-primary")}}
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">{{translation.list_of_loan_request[language]}}</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="overitme_list">
+                        <tr>
+                            <th></th>
+                            <th>{{translation.requested_amount[language]}}</th>
+                            <th>{{translation.repayment_start_date[language]}}</th>
+                            <th>{{translation.repayment_end_date[language]}}</th>
+                            <th>{{translation.repayment_period_in_months[language]}}</th>
+                            <th>{{translation.monthly_amount[language]}}</th>
+                            <th>{{translation.guarantor[language]}}</th>
+                            <th>{{translation.hr[language]}}</th>
+                            <th>{{translation.presidency[language]}}</th>
+                            <th>{{translation.finance[language]}}</th>
+                        </tr>
+                        {% for loan in emp_loan_list %}
+                        <tr>
+                            <td>
+                                <div
+                                    class="btn m-0 p-0 mx-1"
+                                    role="button"
+                                    data-toggle="collapse"
+                                    data-target="#more_{{loan.id}}"
+                                    aria-expanded="false"
+                                    aria-controls="more_{{loan.id}}">
+                                    <li class="fad fa-angle-down text-success"></li>
+                                </div>
+                            </td>
+                            <td>{{loan.requested_amount}}</td>
+                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
+                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td>
+                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month) }}
+                            </td>
+                            <td>
+                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month))) }}
+                            </td>
+                            <td>
+                                {% if loan.guarantor == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.guarantor == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.guarantor == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.hr == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.hr == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.hr == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.presidency == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.presidency == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.presidency == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if loan.finance == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif loan.finance == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif loan.finance == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" class="no-padding">
+                                <table class="collapse table" id="more_{{loan.id}}" data-parent="#overitme_list">
+                                    <tr>
+                                        <th>{{translation.guarantor_name[language]}}</th>
+                                        <td>
+                                            {% if language == 'dari' %}
+                                                {{ loan.re_guarantor.name + ' ' + loan.re_guarantor.lname }}
+                                            {% else %}
+                                                {{ loan.re_guarantor.name_english + ' ' + loan.re_guarantor.lname_english }}
+                                            {% endif %}
+                                        </td>
+                                        <th>{{translation.request_date[language]}}</th>
+                                        <td>{{loan.requested_at}}</td>
+                                        <th>{{translation.finalized_date[language]}}</th>
+                                        <td>{{loan.finalized_at}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+<script src="{{url_for('static', filename='js/jquery_ui.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+        // Leaving form, set persian date picker for start date time field.
+        $('#start_date-icon').MdPersianDateTimePicker({
+            targetTextSelector: '#start_date',
+            targetDateSelector: '#start_date-date',
+            textFormat: 'yyyy-MM-dd',
+            isGregorian: false,
+            englishNumber: true,
+            fromDate: true,
+            groupId: 'loan_request_date',
+        });
+        // Leaving form, set persian date picker for end date time field.
+        $('#end_date-icon').MdPersianDateTimePicker({
+            targetTextSelector: '#end_date',
+            targetDateSelector: '#end_date-date',
+            textFormat: 'yyyy-MM-dd',
+            isGregorian: false,
+            englishNumber: true,
+            toDate: true,
+            groupId: 'loan_request_date',
+        });
+
+        function repayment_duration(params) {
+            let start = $('#start_date-icon').MdPersianDateTimePicker('getDate');
+            let requested_amount = $('#requested_amount').val();
+            let months = $('#repayment_period_in_months').val();
+            if(start != undefined && months > 0 ) {
+                $('#end_date-icon').MdPersianDateTimePicker('setDate', start);
+                let end = $('#end_date-icon').MdPersianDateTimePicker('getDate');
+                end.setMonth(start.getMonth() + Number(months));
+                $('#end_date-icon').MdPersianDateTimePicker('setDate', end);
+                if(requested_amount != '') {
+                    $('#monthly_amount').val((requested_amount / months).toFixed(2));
+                }
+            }
+            if(months <= 0) {
+                $('#end_date').val('');
+                $('#repayment_period_in_months').val('');
+            }
+        }
+
+        $('#start_date').on('change', function(e) {
+            repayment_duration(e);
+        });
+        $('#repayment_period_in_months').on('input', function(e) {
+            repayment_duration(e);
+        });
+        $('#requested_amount').on('input', function(e) {
+            repayment_duration(e);
+        });
+    });
+
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('emp_autocomplete')}}",{q: request.term}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#guarantor-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#guarantor').val(ui.item.value);
+        }
+    });
+
+</script>
+{% endblock js_code %}

@@ -1,0 +1,263 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    #start_datetime_icon,#end_datetime_icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box col-md-12">
+        <div class="box-header">
+            <div class="box-title">{{translation.overtime_form[language]}}</div>
+        </div>
+        <div class="box-body">
+            <form method="POST" , action="" id="overtime_request">
+                {{ form.hidden_tag()}}
+            <div class="row">
+                <div class="form-group col-md-4">
+                    {{ form.overtime_type.label(class="form-control-label")}}
+                    <div class="form-check1">
+                        {% for item in form.overtime_type %}
+                        {{ item(class="form-check-input")}}
+                        {{ item.label(class="form-check-label")}}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            {{ form.start_datetime.label(class="form-control-label")}}
+                            <div class="input-group" id="start_datetime_icon">
+                                <div class="input-group-prepend">
+                                    <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
+                                        <i class="fad fa-calendar"></i>
+                                    </span>
+                                </div>
+                                {{ form.start_datetime( type="text", readonly="true", class="form-control form-control-lg")}}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ form.end_datetime.label(class="form-control-label")}}
+                            <div class="input-group" id="end_datetime_icon">
+                                <div class="input-group-prepend">
+                                    <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
+                                        <i class="fad fa-calendar"></i>
+                                    </span>
+                                </div>
+                                {{ form.end_datetime(type="text", readonly="true", class="form-control form-control-lg")}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {{ form.description.label(class="form-control-label")}}
+                        {{ form.description(class="form-control form-control-lg")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{form.submit(class="btn btn-primary")}}
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <div class="box-title">{{translation.list_of_overtime_request[language]}}</div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="overtime_list">
+                        <tr>
+                            <th></th>
+                            <th>{{translation.overtime_type[language]}}</th>
+                            <th>{{translation.start_date[language]}}</th>
+                            <th>{{translation.end_date[language]}}</th>
+                            <th>{{translation.total_days_hours[language]}}</th>
+                            <th>{{translation.supervisor[language]}}</th>
+                            <th>{{translation.hr[language]}}</th>
+                            <th>{{translation.request_date[language]}}</th>
+                            <th>{{translation.finalized_date[language]}}</th>
+                        </tr>
+                        {% for overtime in emp_overtime_list %}
+                        <tr>
+                            <td>
+                                <div
+                                    class="btn m-0 p-0 mx-1"
+                                    role="button"
+                                    data-toggle="collapse"
+                                    data-target="#more_{{overtime.id}}"
+                                    aria-expanded="false"
+                                    aria-controls="more_{{overtime.id}}">
+                                    <li class="fad fa-angle-down text-success"></li>
+                                </div>
+                            </td>
+                            <td>
+                                {% if overtime.overtime_type %}
+                                    {{translation.hourly[language]}}
+                                {% else %}
+                                    {{translation.daily[language]}}
+                                {% endif %}
+                            </td>
+                            <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.start_datetime}}</span> </td>
+                            <td><span class="text-muted"><i class="fa fa-clock-o"></i>{{overtime.end_datetime}}</span> </td>
+                            <td>
+                                {{ ((overtime.end_datetime - overtime.start_datetime)|string)
+                                    .replace('days', translation.days[language]).replace('day', translation.day[language])}}
+                            </td>
+                            <td>
+                                {% if overtime.supervisor == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif overtime.supervisor == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif overtime.supervisor == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+
+                            </td>
+                            <td>
+                                {% if overtime.hr == None %}
+                                <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                                {% elif overtime.hr == True %}
+                                <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                                {% elif overtime.hr == False %}
+                                <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                                {% endif %}
+
+                            </td>
+                            <td>{{overtime.requested_at}}</td>
+                            <td>
+                                {% if overtime.finalized_at %}
+                                    {{overtime.finalized_at}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="9" class="no-padding">
+                                <table class="collapse table" id="more_{{overtime.id}}" data-parent="#overtime_list">
+                                    <tr>
+                                        <th>{{ form.description.label() }}</th>
+                                        <td>{{ overtime.description }}</td>
+                                    {% if overtime.reason %}
+                                        <th>{{ translation.reason_for_disagreement[language] }}</th>
+                                        <td>{{ overtime.reason.reason }}</td>
+                                    {% endif %}
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js">
+</script>
+
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+</script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+        // Leaving form, set persian date picker for start date time field.
+        $('#start_datetime_icon').MdPersianDateTimePicker({
+            targetTextSelector: '#start_datetime',
+            textFormat: 'yyyy-MM-dd HH:mm:00',
+            isGregorian: false,
+            englishNumber: true,
+            enableTimePicker: true,
+            fromDate: true,
+            groupId: 'overtime_request_date',
+        });
+        // Leaving form, set persian date picker for end date time field.
+        $('#end_datetime_icon').MdPersianDateTimePicker({
+            targetTextSelector: '#end_datetime',
+            textFormat: 'yyyy-MM-dd HH:mm:00',
+            isGregorian: false,
+            englishNumber: true,
+            enableTimePicker: true,
+            toDate: true,
+            groupId: 'overtime_request_date',
+        });
+        $('#start_datetime').on('change', function (e) {
+            if($('input[name=overtime_type]:checked').val() == 1 && $(this).val() != undefined){
+                $('#end_datetime_icon').MdPersianDateTimePicker('clearDate');
+                $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', $('#start_datetime_icon').MdPersianDateTimePicker('getDate'));
+            }
+            else{
+                $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', false);
+            }
+        });
+
+        // On change of overtime type, if the type is daily
+        // we set format only date else type format is date and time.
+        $('input[type=radio][name=overtime_type]').change(function() {
+            if (this.value == '0') {
+                $('#start_datetime_icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', false)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd 00:00:00');
+                $('#end_datetime_icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', false)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd 00:00:00');
+            }
+            else {
+                $('#start_datetime_icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')
+                $('#end_datetime_icon')
+                .MdPersianDateTimePicker('clearDate')
+                .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
+                .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')
+            }
+        });
+    });
+</script>
+{% endblock js_code %}

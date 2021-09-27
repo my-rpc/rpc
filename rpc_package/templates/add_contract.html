@@ -1,0 +1,139 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{title}} {% endblock %}
+{% block css_or_js_code %}
+    <!-- add js, css code or library as need. js code is recommended in at footer 
+        This code will be add to the head of the page
+    -->
+    <style>
+        #start_date_icon, #end_date_icon {
+          cursor: pointer;
+        }
+        .border-radius-dari{
+          border-left: none;
+          border-radius: 0 0.25rem 0.25rem 0 !important;
+        }
+    </style>
+
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<!-- main content code will be add here -->
+
+<div class="box">
+    <div class="box-header with-border">
+      <h4 class="box-title text-primary">Add Contract</h4>
+    </div>
+    <div class="box-body">
+      <form action="" method="POST" id="">
+        <div class="row">
+          {{ form.hidden_tag()}}
+          <div class="col-md-6 form-group">
+            {{form.contract_type.label(class='form-control-label')}}
+            {{form.contract_type(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.department.label(class='form-control-label')}}
+            {{ form.department(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.position.label(class='form-control-label')}}
+            {{ form.position(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.start_date.label(class='form-control-label')}}
+            <div class="input-group" id="start_date_icon">
+              <div class="input-group-prepend">
+                  <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                      <i class="fad fa-calendar"></i>
+                  </span>
+              </div>
+              {{ form.start_date(class='form-control', type='text')}}
+            </div>
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.end_date.label(class='form-control-label')}}
+            <div class="input-group" id="end_date_icon">
+              <div class="input-group-prepend">
+                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                  <i class="fad fa-calendar"></i>
+                </span>
+              </div>
+              {{ form.end_date(class='form-control')}}
+            </div>
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.base.label(class='form-control-label')}}
+            {{ form.base(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.transportation.label(class='form-control-label')}}
+            {{ form.transportation(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.house_hold.label(class='form-control-label')}}
+            {{ form.house_hold(class='form-control')}}
+          </div>
+          <div class="col-md-6 form-group">
+            {{ form.currency.label(class='form-check-label')}} <br>
+            {% for radio in form.currency %}
+            {{ radio(class="form-check-input")}}
+            {{ radio.label(class="form-check-label")}}
+            {% endfor %}
+          </div>
+          <div class="col-md-12 form-group">
+            {{ form.submit(class='btn btn-primary')}}
+          </div>
+        </div>
+      </form>
+    </div>
+
+</div>
+
+{% endblock main_content%}
+{% block js_code %}
+    <!-- 
+        add js code or library here as need 
+        This code will be add to the footer of the page
+    -->
+    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
+    </script>
+    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+
+                toastSuccess("{{message}}")
+            else
+              msg = formValidationDisplay(message);
+              toastError(msg)
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+
+<script>
+  $(document).ready(function(){
+    $('#start_date_icon').MdPersianDateTimePicker({
+      targetTextSelector: '#start_date',
+      textFormat: 'yyyy-MM-dd',
+      isGregorian: false,
+      englishNumber: true,
+      enableTimePicker: false,
+    });
+    $('#end_date_icon').MdPersianDateTimePicker({
+      targetTextSelector: '#end_date',
+      textFormat: 'yyyy-MM-dd',
+      isGregorian: false,
+      englishNumber: true,
+      enableTimePicker: false,
+    });
+  });
+</script>
+
+{% endblock js_code %}

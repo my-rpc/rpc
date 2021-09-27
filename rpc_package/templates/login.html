@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../images/favicon.ico">
 
-    <title>RPC - Login </title>
+    <title>{{translation.login[language]}} </title>
   
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
@@ -83,7 +83,15 @@
                                     <div class="col-12 text-center form-group">
                                         {{form.submit(class="btn btn-primary")}}
                                     </div>
-                                    <!-- /.col -->
+                                    <div class="col-12 text-center form-group">
+                                      {% with messages = get_flashed_messages(with_categories=true) %}
+                                      {%if messages %}
+                                          {%for category, message in messages %}
+                                          <div class="alert alert-{{category}}"> {{message}} </div>
+
+                                          {% endfor %}
+                                      {% endif %} {% endwith %}
+                                    </div>
 								</form>	
 									
 							</div>						

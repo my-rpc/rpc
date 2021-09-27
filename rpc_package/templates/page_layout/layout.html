@@ -10,8 +10,11 @@
 
     <!-- Vendors Style-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/vendors_css.css')}}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.md.bootstrap.datetimepicker.style.css')}}">
 
     <!-- Style-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery_ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/skin_color.css')}}">
 
@@ -55,6 +58,9 @@
 
 <!-- Adnix Admin App -->
 <script src="{{ url_for('static', filename='js/template.js')}}"></script>
+<!-- Persian datetime picker JS added -->
+<script src="{{ url_for('static', filename='js/jquery.md.bootstrap.datetimepicker.js')}}"></script>
+
 <!-- this block is for js code if needed at the begining of page  -->
 {% block js_code %}{% endblock %}
 

@@ -11,15 +11,15 @@
                     <legend class="border-bottom mb-4">
                         {{  translation.name_language['en'] }}
                     </legend>
-                    {{ form.first_name_english.label(class="form-control-label")}}
+                    {{ form.first_name_english.label(class="form-control-label")}}<span class="text-danger"> * </span>
                     {{ form.first_name_english(class="form-control form-control-lg")}}
                 </div>
                 <div class="form-group">
-                    {{ form.last_name_english.label(class="form-control-label")}}
+                    {{ form.last_name_english.label(class="form-control-label")}}<span class="text-danger"> * </span>
                     {{ form.last_name_english(class="form-control form-control-lg")}}
                 </div>
                 <div class="form-group">
-                    {{ form.father_name_english.label(class="form-control-label")}}
+                    {{ form.father_name_english.label(class="form-control-label")}}<span class="text-danger"> * </span>
                     {{ form.father_name_english(class="form-control form-control-lg")}}
                 </div>
                 <div class="form-group">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        {{ form.phone.label(class="form-control-label")}}
+                        {{ form.phone.label(class="form-control-label")}}<span class="text-danger"> * </span>
                         {{ form.phone(class="form-control form-control-lg")}}
                     </div>
                     <div class="form-group col-md-6">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group  col-md-6">
-                        {{ form.tazkira.label(class="form-control-label")}}
+                        {{ form.tazkira.label(class="form-control-label")}}<span class="text-danger"> * </span>
                         {{ form.tazkira(class="form-control form-control-lg")}}
                     </div>
                     <div class="form-group  col-md-6">
@@ -53,15 +53,15 @@
                     <legend class="border-bottom mb-4">
                         {{  translation.name_language['dari'] }}
                     </legend>
-                    {{ form.first_name.label(class="form-control-label")}}
+                    {{ form.first_name.label(class="form-control-label")}}<span class="text-danger"> * </span>
                     {{ form.first_name(class="form-control form-control-lg")}}
                 </div>
                 <div class="form-group">
-                    {{ form.last_name.label(class="form-control-label")}}
+                    {{ form.last_name.label(class="form-control-label")}}<span class="text-danger"> * </span>
                     {{ form.last_name(class="form-control form-control-lg")}}
                 </div>
                 <div class="form-group">
-                    {{ form.father_name.label(class="form-control-label")}}
+                    {{ form.father_name.label(class="form-control-label")}}<span class="text-danger"> * </span>
                     {{ form.father_name(class="form-control form-control-lg")}}
                 </div>
                 <div class="form-group">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        {{ form.email.label(class="form-control-label")}}
+                        {{ form.email.label(class="form-control-label")}}<span class="text-danger"> * </span>
                         {{ form.email(class="form-control form-control-lg")}}
                     </div>
                     <div class="form-group col-md-6">
@@ -81,7 +81,14 @@
                 <div class="row">
                     <div class="form-group col-md-6">
                         {{ form.birthday.label(class="form-control-label")}}
-                        {{ form.birthday(class="form-control form-control-lg")}}
+                        <div class="input-group mb-3">
+                            <div id="birthday-icon" class="input-group-prepend">
+                                <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                    <i class="fad fa-calendar"></i>
+                                </span>
+                            </div>
+                            {{ form.birthday(class="form-control form-control-lg")}}
+                        </div>
                     </div>
                     <div class="form-group  col-md-6">
                         {{ form.blood.label(class="form-control-label")}}
@@ -106,19 +113,20 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             {{ form.provinces_permanent.label(class="form-control-label")}}
-                            {{ form.provinces_permanent(onChange="load_districts(this.value, 'permanent_district')", class="form-control form-control-lg")}}
+                            {{ form.provinces_permanent(onChange="load_districts(this.value, 'permanent_district')", 
+                                    class="form-control", required = false, disabled = true)}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ form.district_permanent.label(class="form-control-label")}}
-                            {{ form.district_permanent(id="permanent_district", class="form-control form-control-lg")}}
+                            {{ form.district_permanent(id="permanent_district", class="form-control", required = false, disabled = true)}}
                         </div>
                         <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">Address</strong>
-                            {{ form.permanent_address(class="form-control mt-2 form-control-lg")}}
+                            {{ form.permanent_address(class="form-control mt-2 ", required = false, disabled = true)}}
                         </div>
                         <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">آدرس</strong>
-                            {{ form.permanent_address_dari(class="form-control mt-2 form-control-lg")}}
+                            {{ form.permanent_address_dari(class="form-control mt-2", required = false, disabled = true)}}
                         </div>
                     </div>
 
@@ -133,19 +141,20 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             {{ form.provinces_current.label(class="form-control-label")}}
-                            {{ form.provinces_current(onChange="load_districts(this.value, 'current_district')",class="form-control form-control-lg")}}
+                            {{ form.provinces_current(onChange="load_districts(this.value, 'current_district')", 
+                                        class="form-control", required = false, disabled = true)}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ form.district_current.label(class="form-control-label")}}
-                            {{ form.district_current(id="current_district", class="form-control form-control-lg")}}
+                            {{ form.district_current(id="current_district", class="form-control", required = false, disabled = true)}}
                         </div>
                         <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">Address</strong>
-                            {{ form.current_address(class="form-control mt-2 form-control-lg")}}
+                            {{ form.current_address(class="form-control mt-2", required = false, disabled = true)}}
                         </div>
                         <div class="form-group col-md-6">
                             <strong class="form-control-label m-5">آدرس</strong>
-                            {{ form.current_address_dari(class="form-control mt-2 form-control-lg")}}
+                            {{ form.current_address_dari(class="form-control mt-2", required=false, disabled = true)}}
                         </div>
                     </div>
 
@@ -155,8 +164,13 @@
 
         <div class="form-group">
             <div class="form-check1">
+                {% set d = form.gender.data | int %}
                 {% for radio in form.gender %}
-                {{ radio(class="form-check-input")}}
+                {% if radio.data == d %}
+                    {{ radio(class="form-check-input", checked = true )}}
+                {% else %}
+                    {{ radio(class="form-check-input", checked = false )}}
+                {% endif %}
                 {{ radio.label(class="form-check-label")}}
                 {% endfor %}
             </div>
@@ -165,7 +179,12 @@
         <div class="form-group">
             <div class="form-check1">
                 {% for radio in form.m_status %}
-                {{ radio(class="form-check-input")}}
+                {% set d = form.m_status.data | int %}
+                {% if radio.data == d %}
+                    {{ radio(class="form-check-input", checked = true )}}
+                {% else %}
+                    {{ radio(class="form-check-input", checked = false )}}
+                {% endif %}
                 {{ radio.label(class="form-check-label")}}
                 {% endfor %}
             </div>
@@ -175,6 +194,6 @@
 
     </fieldset>
     <div class="form-group">
-        {{form.submit(class="btn btn-primary")}}
+        {{form.submit(class="btn btn-primary", value=translation.update_employee[language])}}
     </div>
 </form>
