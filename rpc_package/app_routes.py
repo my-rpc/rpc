@@ -14,7 +14,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
     Loan_form, Overtime_reason, Leave_reason
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, toGregorian, toJalali
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, to_gregorian, to_jalali
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
@@ -22,13 +22,6 @@ from rpc_package.route_utils import upload_docs, get_profile_info, get_documents
 import os
 from datetime import datetime
 import jdatetime
-
-
-@app.route("/", methods=['GET', 'POST'])
-@login_required
-def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
-
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
@@ -177,7 +170,7 @@ def add_employee():
                 lname_english=add_employee_form.last_name_english.data,
                 fname_english=add_employee_form.father_name_english.data,
                 gname_english=add_employee_form.grand_name_english.data,
-                birthday=toGregorian(add_employee_form.birthday.data),
+                birthday=to_gregorian(add_employee_form.birthday.data),
                 tazkira=add_employee_form.tazkira.data,
                 gender=True if add_employee_form.gender.data else False,
                 blood=add_employee_form.blood.data,
@@ -318,7 +311,7 @@ def employee_settings():
 
     return render_template("employee_settings.html", title='Employee Settings',
                            employees=employees, emails=emails, phones=phones, language=session['language'],
-                           translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+                           translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 
 @app.route('/employee_details', methods=['GET', "POST"])
@@ -463,7 +456,7 @@ def contract_settings():
             contracts[x] = contract
     return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
                            employees=employees, contract=contracts,
-                           translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+                           translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
@@ -570,7 +563,7 @@ def leave_request():
         return redirect(url_for('leave_request'))
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 @app.route('/leave_supervisor', methods=["GET"])
 @login_required
@@ -579,7 +572,7 @@ def leave_supervisor():
         .order_by(Leave_form.requested_at.desc()).all()
     return render_template('leave_supervisor.html', leave_supervisor=leave_supervisor,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 @app.route('/leave_supervisor/<int:leave_id>', methods=["GET", "POST"])
 @login_required
@@ -614,7 +607,7 @@ def leave_supervisor_view(leave_id):
         return redirect(url_for('leave_supervisor'))
     return render_template('leave_supervisor_view.html', form=leave_supervisor_form, leave_data=leave_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 @app.route('/leave_hr', methods=["GET"])
 @login_required
@@ -624,7 +617,7 @@ def leave_hr():
         .order_by(Leave_form.requested_at.desc()).all()
     return render_template('leave_hr.html', leave_hr=leave_hr,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 @app.route('/leave_hr/<int:leave_id>', methods=["GET", "POST"])
 @login_required
@@ -652,7 +645,7 @@ def leave_hr_view(leave_id):
         return redirect(url_for('leave_hr'))
     return render_template('leave_hr_view.html', form=leave_hr_form, leave_data=leave_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 @app.route('/leave_report', methods=["GET"])
 @login_required
 def leave_report():
@@ -685,7 +678,7 @@ def overtime_request():
         return redirect(url_for('overtime_request'))
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, toJalali=toJalali)
+        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
 
 @app.route('/overtime_supervisor', methods=["GET"])
 @login_required

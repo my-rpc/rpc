@@ -79,8 +79,8 @@
                         <!-- {{contract[loop.index0][4].currency}} -->
                         
                     </td> {# salary #}
-                    <td>{{ toJalali(emp[1].start_date)}}</td>
-                    <td>{{ toJalali(contract[loop.index0][0].end_date) }}</td> {# Contract #}
+                    <td>{{ to_jalali(emp[1].start_date)}}</td>
+                    <td>{{ to_jalali(contract[loop.index0][0].end_date) }}</td> {# Contract #}
                     <td>
                         {% if emp[1].status %}
                         {{translation.active[language]}}
