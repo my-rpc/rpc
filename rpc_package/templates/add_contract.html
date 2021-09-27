@@ -6,7 +6,7 @@
         This code will be add to the head of the page
     -->
     <style>
-        #start_date-icon, #end_date-icon {
+        #start_date_icon, #end_date_icon {
           cursor: pointer;
         }
         .border-radius-dari{
@@ -117,28 +117,16 @@
     {% endfor %}
 {% endif %} {% endwith %}
 
-  <script>
-    $(document).ready(function() {
-        // Leaving form, set persian date picker for start date time field.
-        $('#start_date-icon').MdPersianDateTimePicker({
-            targetTextSelector: '#start_date',
-            textFormat: 'yyyy-MM-dd',
-            isGregorian: false,
-            englishNumber: true,
-        });
-      });
-  </script>
-
 <script>
   $(document).ready(function(){
-    $('#start_date, #start_date_icon').MdPersianDateTimePicker({
+    $('#start_date_icon').MdPersianDateTimePicker({
       targetTextSelector: '#start_date',
       textFormat: 'yyyy-MM-dd',
       isGregorian: false,
       englishNumber: true,
       enableTimePicker: false,
     });
-    $('#end_date, #end_date_icon').MdPersianDateTimePicker({
+    $('#end_date_icon').MdPersianDateTimePicker({
       targetTextSelector: '#end_date',
       textFormat: 'yyyy-MM-dd',
       isGregorian: false,

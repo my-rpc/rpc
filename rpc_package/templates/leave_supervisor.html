@@ -54,8 +54,8 @@
                                 {{translation.daily[language]}}
                               {% endif %}
                             </td>
-                            <td><span class="text-muted">{{leave.start_datetime}}</span> </td>
-                            <td><span class="text-muted">{{leave.end_datetime}}</span> </td>
+                            <td><span class="text-muted">{{toJalali(leave.start_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
+                            <td><span class="text-muted">{{toJalali(leave.end_datetime, '%Y-%m-%d %H:%M:%S')}}</span> </td>
                             <td>
                               {{ ((leave.end_datetime - leave.start_datetime)|string)
                                   .replace('days', translation.days[language]).replace('day', translation.day[language])}}
@@ -68,9 +68,8 @@
                                 {% elif leave.supervisor == False %}
                                 <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                                 {% endif %}
-
                             </td>
-                            <td>{{leave.requested_at}}</td>
+                            <td>{{toJalali(leave.requested_at,'%Y-%m-%d %H:%M:%S')}}</td>
                             <td>
                               <a  href="/leave_supervisor/{{leave.id}}" title="{{translation.view_detials[language]}}">
                                 <span><i class="fa fa-eye text-primary"></i> </span>
