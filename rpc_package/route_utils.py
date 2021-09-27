@@ -309,23 +309,23 @@ def set_emp_update_form_data(emp_id, update_employee_form):
     return current_addresses, permanent_addresses
 
 
-def send_leave_request(leave_form, emp_id):
+def add_leave_request(leave_form, emp_id):
     try:
         if leave_form.leave_type.data == '1':
             leave = Leave_form(
                 emp_id=emp_id,
                 leave_type=True,
-                start_datetime=leave_form.start_datetime.data,
-                end_datetime=leave_form.end_datetime.data,
-                requested_at=jdatetime.datetime.now())
+                start_datetime=toGregorian(leave_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                end_datetime=toGregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                requested_at=datetime.datetime.now())
             db.session.add(leave)
         elif leave_form.leave_type.data == '0':
             leave = Leave_form(
                 emp_id=emp_id,
                 leave_type=False,
-                start_datetime=leave_form.start_datetime.data,
-                end_datetime=leave_form.end_datetime.data,
-                requested_at=jdatetime.datetime.now())
+                start_datetime=toGregorian(leave_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                end_datetime=toGregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                requested_at=datetime.datetime.now())
             db.session.add(leave)
         db.session.commit()
         return "success"
@@ -343,10 +343,10 @@ def add_overtime_request(overtime_form, emp_id):
         overtime = Overtime_form(
             emp_id=emp_id,
             overtime_type=overtime_type,
-            start_datetime=overtime_form.start_datetime.data,
-            end_datetime=overtime_form.end_datetime.data,
+            start_datetime=toGregorian(overtime_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
+            end_datetime=toGregorian(overtime_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
             description=overtime_form.description.data,
-            requested_at=jdatetime.datetime.now())
+            requested_at=datetime.datetime.now())
         db.session.add(overtime)
         db.session.commit()
         return "success"
@@ -358,10 +358,10 @@ def add_loan_request(loan_form, emp_id):
         loan = Loan_form(
             emp_id=emp_id,
             requested_amount=loan_form.requested_amount.data,
-            start_date=loan_form.start_date.data,
-            end_date=loan_form.end_date.data,
+            start_date=toGregorian(loan_form.start_date.data),
+            end_date=toGregorian(loan_form.end_date.data),
             guarantor_id=loan_form.guarantor.data,
-            requested_at=jdatetime.datetime.now())
+            requested_at=datetime.datetime.now())
         db.session.add(loan)
         db.session.commit()
         return "success"
@@ -457,7 +457,7 @@ def set_contact_update_form_data(contract_id, contract_form):
         salary = Salary.query.filter_by(contract_id = contract_id, status = True).first()
 
         contract_form.emp_id.data = contract.emp_id
-        contract_form.end_date.data = contract.end_date
+        contract_form.end_date.data = toJalali(contract.end_date)
         contract_form.contract_type.data = contract.contract_type
         contract_form.start_date.data = contract.start_date
 

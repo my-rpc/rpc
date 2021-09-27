@@ -6,7 +6,7 @@
         This code will be add to the head of the page
     -->
     <style>
-        #birthday-icon {
+        #birthday_icon {
             cursor: pointer;
         }
         .border-radius-dari{
@@ -130,8 +130,8 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 {{ form.birthday.label(class="form-control-label")}}
-                                <div class="input-group mb-3">
-                                    <div id="birthday-icon" class="input-group-prepend">
+                                <div class="input-group mb-3" id="birthday_icon">
+                                    <div class="input-group-prepend">
                                         <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
                                             <i class="fad fa-calendar"></i>
                                         </span>
@@ -259,7 +259,7 @@
     });
     $(document).ready(function() {
         // Add employee, set persian date picker for birthday field.
-        $('#birthday-icon, #birthday').MdPersianDateTimePicker({
+        $('#birthday_icon').MdPersianDateTimePicker({
             targetTextSelector: '#birthday',
             textFormat: 'yyyy-MM-dd',
             isGregorian: false,

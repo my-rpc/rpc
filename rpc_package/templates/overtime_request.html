@@ -9,7 +9,7 @@
         left: auto;
         opacity: 1 !important;
     }
-    #start_datetime-icon,#end_datetime-icon {
+    #start_datetime_icon,#end_datetime_icon {
         cursor: pointer;
     }
     .border-radius-dari{
@@ -41,8 +41,8 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             {{ form.start_datetime.label(class="form-control-label")}}
-                            <div class="input-group">
-                                <div id="start_datetime-icon" class="input-group-prepend">
+                            <div class="input-group" id="start_datetime_icon">
+                                <div class="input-group-prepend">
                                     <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
                                         <i class="fad fa-calendar"></i>
                                     </span>
@@ -52,8 +52,8 @@
                         </div>
                         <div class="form-group col-md-6">
                             {{ form.end_datetime.label(class="form-control-label")}}
-                            <div class="input-group">
-                                <div id="end_datetime-icon" class="input-group-prepend">
+                            <div class="input-group" id="end_datetime_icon">
+                                <div class="input-group-prepend">
                                     <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text  bg-transparent">
                                         <i class="fad fa-calendar"></i>
                                     </span>
@@ -205,7 +205,7 @@
 <script>
     $(document).ready(function() {
         // Leaving form, set persian date picker for start date time field.
-        $('#start_datetime-icon').MdPersianDateTimePicker({
+        $('#start_datetime_icon').MdPersianDateTimePicker({
             targetTextSelector: '#start_datetime',
             textFormat: 'yyyy-MM-dd HH:mm:00',
             isGregorian: false,
@@ -215,7 +215,7 @@
             groupId: 'overtime_request_date',
         });
         // Leaving form, set persian date picker for end date time field.
-        $('#end_datetime-icon').MdPersianDateTimePicker({
+        $('#end_datetime_icon').MdPersianDateTimePicker({
             targetTextSelector: '#end_datetime',
             textFormat: 'yyyy-MM-dd HH:mm:00',
             isGregorian: false,
@@ -224,26 +224,35 @@
             toDate: true,
             groupId: 'overtime_request_date',
         });
+        $('#start_datetime').on('change', function (e) {
+            if($('input[name=overtime_type]:checked').val() == 1 && $(this).val() != undefined){
+                $('#end_datetime_icon').MdPersianDateTimePicker('clearDate');
+                $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', $('#start_datetime_icon').MdPersianDateTimePicker('getDate'));
+            }
+            else{
+                $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', false);
+            }
+        });
 
         // On change of overtime type, if the type is daily
         // we set format only date else type format is date and time.
         $('input[type=radio][name=overtime_type]').change(function() {
             if (this.value == '0') {
-                $('#start_datetime-icon')
+                $('#start_datetime_icon')
                 .MdPersianDateTimePicker('clearDate')
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', false)
                 .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd 00:00:00');
-                $('#end_datetime-icon')
+                $('#end_datetime_icon')
                 .MdPersianDateTimePicker('clearDate')
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', false)
                 .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd 00:00:00');
             }
             else {
-                $('#start_datetime-icon')
+                $('#start_datetime_icon')
                 .MdPersianDateTimePicker('clearDate')
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
                 .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')
-                $('#end_datetime-icon')
+                $('#end_datetime_icon')
                 .MdPersianDateTimePicker('clearDate')
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
                 .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')

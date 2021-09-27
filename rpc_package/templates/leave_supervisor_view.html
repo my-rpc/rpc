@@ -9,6 +9,10 @@
         left: auto;
         opacity: 1 !important;
     }
+    .b-1{
+      border-color: #be69076b !important;
+      /* border-color: #fd2a3f70 !important; */
+    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -74,7 +78,7 @@
                   <p>
                     <span>{{ translation.start_date[language] }}</span>
                     <strong class="float-right">
-                      {{ leave_data.start_datetime }}
+                      {{ toJalali(leave_data.start_datetime, '%Y-%m-%d %H:%M:%S') }}
                     </strong>
                   </p>
                 </div>
@@ -86,7 +90,7 @@
                   <p>
                     <span>{{ translation.end_date[language] }}</span>
                     <strong class="float-right">
-                      {{ leave_data.end_datetime }}
+                      {{ toJalali(leave_data.end_datetime, '%Y-%m-%d %H:%M:%S') }}
                     </strong>
                   </p>
                 </div>
@@ -111,7 +115,7 @@
                   <p>
                     <span>{{ translation.request_date[language] }}</span>
                     <strong class="float-right">
-                      {{ leave_data.requested_at }}
+                      {{ toJalali(leave_data.requested_at, '%Y-%m-%d %H:%M:%S') }}
                     </strong>
                   </p>
                 </div>
@@ -124,7 +128,7 @@
                   <p>
                     <span>{{ translation.finalized_date[language] }}</span>
                     <strong class="float-right">
-                      {{ leave_data.finalized_at }}
+                      {{ toJalali(leave_data.finalized_at, '%Y-%m-%d %H:%M:%S')}}
                     </strong>
                   </p>
                 </div>
