@@ -65,7 +65,7 @@ def get_documents(emp_id):
     tazkira_doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
     education_doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
     tin_doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
-    extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+    extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra_docs").first()
     return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
 
 
