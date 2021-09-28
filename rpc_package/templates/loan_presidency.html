@@ -56,8 +56,8 @@
                                 {% endif %}
                             </td>
                             <td>{{loan.requested_amount}}</td>
-                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
-                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.start_date) }}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.end_date) }}</span> </td>
                             <td>
                               {% if language == 'dari' %}
                                 {{ loan.re_guarantor.name + ' ' + loan.re_guarantor.lname }}
@@ -94,9 +94,9 @@
                               <table class="collapse table" id="more_{{loan.id}}" data-parent="#overitme_list">
                                   <tr>
                                       <th>{{translation.request_date[language]}}</th>
-                                      <td>{{loan.requested_at}}</td>
+                                      <td>{{ to_jalali(loan.requested_at, '%Y-%m-%d %H:%M:%S') }}</td>
                                       <th>{{translation.finalized_date[language]}}</th>
-                                      <td>{{loan.finalized_at}}</td>
+                                      <td>{{ to_jalali(loan.finalized_at, '%Y-%m-%d %H:%M:%S') }}</td>
                                   </tr>
                               </table>
                           </td>

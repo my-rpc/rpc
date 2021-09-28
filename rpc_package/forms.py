@@ -318,12 +318,13 @@ class LeaveSupervisorForm(FlaskForm):
         self.reason.label.text = translation_obj.reason_for_disagreement[language]
         self.submit.label.text = translation_obj.send[language]
     def validate_reason (self, reason):
-        if reason.data == '':
-            raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.reason_for_disagreement[self.language] + ' '))
-        elif not re.match("^[A-Za-z0-9- آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", reason.data):
-            raise ValidationError(message_obj.invalid_character[self.language])
-        elif len(reason.data) < 20:
-            raise ValidationError(message_obj.less_character[self.language].replace('{}', '20'))
+        if self.supervisor.data == '0':
+            if reason.data == '':
+                raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.reason_for_disagreement[self.language] + ' '))
+            elif not re.match("^[A-Za-z0-9- .آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", reason.data):
+                raise ValidationError(message_obj.invalid_character[self.language])
+            elif len(reason.data) < 20:
+                raise ValidationError(message_obj.less_character[self.language].replace('{}', '20'))
 
 
 class LeaveHRForm(FlaskForm):
@@ -404,12 +405,13 @@ class OvertimeSupervisorForm(FlaskForm):
         self.reason.label.text = translation_obj.reason_for_disagreement[language]
         self.submit.label.text = translation_obj.send[language]
     def validate_reason (self, reason):
-        if reason.data == '':
-            raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.reason_for_disagreement[self.language] + ' '))
-        elif not re.match("^[A-Za-z0-9- آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", reason.data):
-            raise ValidationError(message_obj.invalid_character[self.language])
-        elif len(reason.data) < 20:
-            raise ValidationError(message_obj.less_character[self.language].replace('{}', '20'))
+        if self.supervisor.data == '0':
+            if reason.data == '':
+                raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.reason_for_disagreement[self.language] + ' '))
+            elif not re.match("^[A-Za-z0-9- .آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", reason.data):
+                raise ValidationError(message_obj.invalid_character[self.language])
+            elif len(reason.data) < 20:
+                raise ValidationError(message_obj.less_character[self.language].replace('{}', '20'))
 
 class OvertimeHRForm(FlaskForm):
     hr = RadioField('HR',
@@ -428,7 +430,7 @@ class LoanRequestForm(FlaskForm):
     requested_amount = StringField('Requested Amount', validators=[Regexp('^[1-9]\d*$'), DataRequired()])
     start_date = StringField('Start Date')
     end_date = StringField('End Date')
-    guarantor = SelectField('Guarantor', choices=[], validators=[DataRequired()])
+    guarantor = StringField('Guarantor')
     submit = SubmitField('Send Request')
     def __init__(self, language):
         super(LoanRequestForm, self).__init__()
@@ -438,19 +440,19 @@ class LoanRequestForm(FlaskForm):
         self.submit.label.text = translation_obj.send_request[language]
         self.start_date.label.text = translation_obj.repayment_start_date[language]
         self.end_date.label.text = translation_obj.repayment_end_date[language]
-    def __init__(self, language):
-        super(LoanRequestForm, self).__init__()
-        self.language = language
     def validate_start_date (self, start_date):
         if start_date.data == '':
-            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.end_date[self.language]))
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.start_date[self.language]))
         elif not date_validation(self, start_date.data):
             raise ValidationError(message_obj.incorrect_date_format[self.language])
     def validate_end_date (self, end_date):
         if end_date.data == '':
             raise ValidationError(message_obj.required_field[self.language].format(translation_obj.end_date[self.language]))
-        elif not datetime_validation(self, end_date.data):
+        elif not date_validation(self, end_date.data):
             raise ValidationError(message_obj.incorrect_date_format[self.language])
+    def validate_guarantor (self, guarantor):
+        if guarantor.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.guarantor[self.language]))
 
 class LoanGuarantorForm(FlaskForm):
     guarantor = RadioField('Guarantor',
@@ -497,7 +499,7 @@ class LoanFinanceForm(FlaskForm):
         validators=[DataRequired()])
     submit = SubmitField('Send Request')
     def __init__(self, language):
-        super(LoanRequestForm, self).__init__()
+        super(LoanFinanceForm, self).__init__()
         self.language = language
         self.finance.choices[0][1] = translation_obj.accept[language]
         self.finance.choices[1][1] = translation_obj.reject[language]
