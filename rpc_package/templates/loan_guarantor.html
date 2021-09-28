@@ -44,15 +44,15 @@
                                 {% endif %}
                             </td>
                             <td>{{loan.requested_amount}}</td>
-                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
-                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.start_date) }}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.end_date) }}</span> </td>
                             <td>
-                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1) }}
+                                {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month) }}
                             </td>
                             <td>
-                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month + 1))) }}
+                                {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month))) }}
                             </td>
-                            <td>{{loan.requested_at}}</td>
+                            <td>{{ to_jalali(loan.requested_at, '%Y-%m-%d %H:%M:%S') }}</td>
                             <td>
                                 <a  href="/loan_guarantor/{{loan.id}}" title="View Details">
                                     <span><i class="fa fa-eye text-primary"></i> </span>

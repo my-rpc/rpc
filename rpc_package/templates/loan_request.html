@@ -118,10 +118,12 @@
                                 </div>
                             </td>
                             <td>{{loan.requested_amount}}</td>
-                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
-                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.start_date) }}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.end_date) }}</span> </td>
                             <td>
+                                {% if (loan.start_date and loan.end_date) %}
                                 {{ (loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month) }}
+                                {% endif %}
                             </td>
                             <td>
                                 {{ '{:.2f}'.format(loan.requested_amount/((loan.end_date.year - loan.start_date.year) * 12 + (loan.end_date.month - loan.start_date.month))) }}
@@ -176,9 +178,11 @@
                                             {% endif %}
                                         </td>
                                         <th>{{translation.request_date[language]}}</th>
-                                        <td>{{loan.requested_at}}</td>
+                                        <td>{{ to_jalali(loan.requested_at, '%Y-%m-%d %H:%M:%S') }}</td>
+                                        {% if loan.finalized_at %}
                                         <th>{{translation.finalized_date[language]}}</th>
-                                        <td>{{loan.finalized_at}}</td>
+                                        <td>{{ to_jalali(loan.finalized_at, '%Y-%m-%d %H:%M:%S') }}</td>
+                                        {% endif %}
                                     </tr>
                                 </table>
                             </td>

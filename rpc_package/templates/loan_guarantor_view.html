@@ -9,6 +9,9 @@
         left: auto;
         opacity: 1 !important;
     }
+    .b-1{
+      border-color: #be69076b !important;
+    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -55,7 +58,7 @@
                   <p>
                     <span>{{ translation.repayment_start_date[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.start_date }}
+                      {{ to_jalali(loan_data.start_date) }}
                     </strong>
                   </p>
                 </div>
@@ -67,7 +70,7 @@
                   <p>
                     <span>{{ translation.repayment_end_date[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.end_date }}
+                      {{ to_jalali(loan_data.end_date) }}
                     </strong>
                   </p>
                 </div>
@@ -79,7 +82,7 @@
                   <p>
                     <span>{{ translation.repayment_period_in_months[language] }}</span>
                     <strong class="float-right">
-                      {{ (loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month + 1) }}
+                      {{ (loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month) }}
                     </strong>
                   </p>
                 </div>
@@ -91,7 +94,7 @@
                   <p>
                     <span>{{ translation.monthly_amount[language] }}</span>
                     <strong class="float-right">
-                      {{ '{:.2f}'.format(loan_data.requested_amount/((loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month + 1))) }}
+                      {{ '{:.2f}'.format(loan_data.requested_amount/((loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month))) }}
                     </strong>
                   </p>
                 </div>
@@ -103,7 +106,7 @@
                   <p>
                     <span>{{ translation.request_date[language] }}</span>
                     <strong class="float-right">
-                      {{ loan_data.requested_at }}
+                      {{ to_jalali(loan_data.requested_at, '%Y-%m-%d %H:%M:%S') }}
                     </strong>
                   </p>
                 </div>
