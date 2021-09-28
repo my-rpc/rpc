@@ -37,12 +37,11 @@ def upload_docs(emp_id, request, file_type):
 
 def get_profile_info(emp_id):
     profile = db.session.query(Users, User_roles, Employees).join(Users,
-                                                                  (Users.role == User_roles.id)).join(Employees, (
+                    (Users.role == User_roles.id)).join(Employees, (
             Users.emp_id == Employees.id)).filter(Employees.id == emp_id).first()
     current_address = db.session.query(Current_addresses, Provinces, Districts).join(
         Current_addresses, (Provinces.id == Current_addresses.province_id)).join(Districts, (
-            Current_addresses.district_id == Districts.id)
-                                                                                 ).filter(
+            Current_addresses.district_id == Districts.id)).filter(
         Current_addresses.emp_id == emp_id).first()
     permanent_address = db.session.query(Permanent_addresses, Provinces, Districts).join(
         Permanent_addresses, (Provinces.id == Permanent_addresses.province_id)).join(Districts, (
@@ -65,7 +64,7 @@ def get_documents(emp_id):
     tazkira_doc = Documents.query.filter_by(emp_id=emp_id, name="tazkira").first()
     education_doc = Documents.query.filter_by(emp_id=emp_id, name="education").first()
     tin_doc = Documents.query.filter_by(emp_id=emp_id, name="tin").first()
-    extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra").first()
+    extra_doc = Documents.query.filter_by(emp_id=emp_id, name="extra_docs").first()
     return cv_doc, guarantor_doc, tin_doc, education_doc, extra_doc, tazkira_doc
 
 
