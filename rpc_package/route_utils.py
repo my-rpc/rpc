@@ -11,13 +11,16 @@ import datetime
 from wtforms import StringField, HiddenField
 from flask_login import current_user
 from rpc_package.forms import ContractForm
-from rpc_package.utils import toGregorian, toJalali
+from rpc_package.utils import to_gregorian, to_jalali
 
 def upload_docs(emp_id, request, file_type):
     try:
         request_file = request.files[file_type]
         request_file.filename = f"{file_type}-" + emp_id + ".pdf"
-        path = os.path.join(f"./rpc_package/static/files/{file_type}", request_file.filename)
+        path = os.path.join("./rpc_package/static/files/", file_type)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = os.path.join(path, request_file.filename)
         document = Documents(
             emp_id=emp_id,
             name=file_type,
@@ -99,7 +102,7 @@ def update_employee_data(update_employee_form):
     sel_emp.gname_english = update_employee_form.grand_name_english.data
     sel_emp.tin = update_employee_form.tin.data
     sel_emp.tazkira = update_employee_form.tazkira.data
-    sel_emp.birthday = toGregorian(update_employee_form.birthday.data)
+    sel_emp.birthday = to_gregorian(update_employee_form.birthday.data)
     sel_emp.blood = update_employee_form.blood.data
     sel_emp.m_status = bool(int(update_employee_form.m_status.data))
     sel_emp.gender = bool(int(update_employee_form.gender.data))
@@ -215,7 +218,7 @@ def set_emp_update_form_data(emp_id, update_employee_form):
     update_employee_form.grand_name_english.data = emp.gname_english
     update_employee_form.tin.data = emp.tin
     update_employee_form.tazkira.data = emp.tazkira
-    update_employee_form.birthday.data = toJalali(emp.birthday)
+    update_employee_form.birthday.data = to_jalali(emp.birthday)
     update_employee_form.blood.data = emp.blood
 
     update_employee_form.gender.data = emp.gender
@@ -315,16 +318,16 @@ def add_leave_request(leave_form, emp_id):
             leave = Leave_form(
                 emp_id=emp_id,
                 leave_type=True,
-                start_datetime=toGregorian(leave_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
-                end_datetime=toGregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                start_datetime=to_gregorian(leave_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                end_datetime=to_gregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
                 requested_at=datetime.datetime.now())
             db.session.add(leave)
         elif leave_form.leave_type.data == '0':
             leave = Leave_form(
                 emp_id=emp_id,
                 leave_type=False,
-                start_datetime=toGregorian(leave_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
-                end_datetime=toGregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                start_datetime=to_gregorian(leave_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
+                end_datetime=to_gregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
                 requested_at=datetime.datetime.now())
             db.session.add(leave)
         db.session.commit()
@@ -343,8 +346,8 @@ def add_overtime_request(overtime_form, emp_id):
         overtime = Overtime_form(
             emp_id=emp_id,
             overtime_type=overtime_type,
-            start_datetime=toGregorian(overtime_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
-            end_datetime=toGregorian(overtime_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
+            start_datetime=to_gregorian(overtime_form.start_datetime.data, '%Y-%m-%d %H:%M:%S'),
+            end_datetime=to_gregorian(overtime_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
             description=overtime_form.description.data,
             requested_at=datetime.datetime.now())
         db.session.add(overtime)
@@ -358,8 +361,8 @@ def add_loan_request(loan_form, emp_id):
         loan = Loan_form(
             emp_id=emp_id,
             requested_amount=loan_form.requested_amount.data,
-            start_date=toGregorian(loan_form.start_date.data),
-            end_date=toGregorian(loan_form.end_date.data),
+            start_date=to_gregorian(loan_form.start_date.data),
+            end_date=to_gregorian(loan_form.end_date.data),
             guarantor_id=loan_form.guarantor.data,
             requested_at=datetime.datetime.now())
         db.session.add(loan)
@@ -373,9 +376,9 @@ def add_contract_form(contract_form):
     try:
         add_contract = Contracts(
             emp_id=contract_form.emp_id.data,
-            end_date=toGregorian(contract_form.end_date.data),
+            end_date=to_gregorian(contract_form.end_date.data),
             contract_type=contract_form.contract_type.data,
-            start_date=toGregorian(contract_form.start_date.data),
+            start_date=to_gregorian(contract_form.start_date.data),
             inserted_by=current_user.emp_id,
             inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
             status = 1
@@ -457,7 +460,7 @@ def set_contact_update_form_data(contract_id, contract_form):
         salary = Salary.query.filter_by(contract_id = contract_id, status = True).first()
 
         contract_form.emp_id.data = contract.emp_id
-        contract_form.end_date.data = toJalali(contract.end_date)
+        contract_form.end_date.data = to_jalali(contract.end_date)
         contract_form.contract_type.data = contract.contract_type
         contract_form.start_date.data = contract.start_date
 
@@ -519,8 +522,8 @@ def update_contract(req, contract_form):
         contract_type = Contract_types.query.filter_by(id = contract.contract_type).first()
 
         contract.contract_type = contract_form.contract_type.data
-        contract.end_date = toGregorian(contract_form.end_date.data)
-        contract.start_date= toGregorian(contract_form.start_date.data)
+        contract.end_date = to_gregorian(contract_form.end_date.data)
+        contract.start_date= to_gregorian(contract_form.start_date.data)
         contract.updated_by= current_user.emp_id
         contract.updated_date = datetime.datetime.now()
 

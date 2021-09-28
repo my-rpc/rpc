@@ -44,8 +44,8 @@
                                 {% endif %}
                             </td>
                             <td>{{loan.requested_amount}}</td>
-                            <td><span class="text-muted">{{loan.start_date}}</span> </td>
-                            <td><span class="text-muted">{{loan.end_date}}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.start_date) }}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(loan.end_date) }}</span> </td>
                             <td>
                               {% if language == 'dari' %}
                                 {{ loan.re_guarantor.name + ' ' + loan.re_guarantor.lname }}
@@ -62,7 +62,7 @@
                                 <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
                                 {% endif %}
                             </td>
-                            <td>{{loan.requested_at}}</td>
+                            <td>{{ to_jalali(loan.requested_at, '%Y-%m-%d %H:%M:%S')}}</td>
                             <td>
                                 <a  href="/loan_finance/{{loan.id}}" title="View Details">
                                   <span><i class="fa fa-eye text-primary"></i> </span>

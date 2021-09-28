@@ -54,10 +54,10 @@ def datetime_validation(self, value):
         date_format = '%Y-%m-%d %H:%M:%S'
         if value == None:
             return True
-        strValue = value
+        str_value = value
         if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
-            strValue = value.strftime(date_format)
-        jdatetime.datetime.strptime(strValue, date_format)
+            str_value = value.strftime(date_format)
+        jdatetime.datetime.strptime(str_value, date_format)
         return True
     except ValueError:
         return False
@@ -67,27 +67,28 @@ def date_validation(self, value):
         date_format = '%Y-%m-%d'
         if value == None:
             return True
-        strValue = value
+        str_value = value
         if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
-            strValue = value.strftime(date_format)
-        jdatetime.datetime.strptime(strValue, date_format)
+            str_value = value.strftime(date_format)
+        jdatetime.datetime.strptime(str_value, date_format)
         return True
     except ValueError:
         return False
 
-def toGregorian(value, date_format='%Y-%m-%d'):
-    strValue = value
+def to_gregorian(value, date_format='%Y-%m-%d'):
+    str_value = value
     if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
-        strValue = value.strftime(date_format)
-    value = jdatetime.datetime.strptime(strValue, date_format)
-    value = value.togregorian()
-    return value.strftime(date_format)
+        str_value = value.strftime(date_format)
+    value = jdatetime.datetime.strptime(str_value, date_format)
+    date_value = value.togregorian()
+    print(date_value.strftime(date_format))
+    return date_value.strftime(date_format)
 
-def toJalali(value, date_format='%Y-%m-%d'):
-    strValue = value
+def to_jalali(value, date_format='%Y-%m-%d'):
+    str_value = value
     if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
-        strValue = value.strftime(date_format)
-    value = datetime.datetime.strptime(strValue, date_format)
+        str_value = value.strftime(date_format)
+    value = datetime.datetime.strptime(str_value, date_format)
     year = value.year
     month = value.month
     day = value.day

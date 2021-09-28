@@ -211,13 +211,21 @@
     "dari": "خطا در فارمت دیتا، تاریخ درست وارید کنید.",
     "en": "Incorrect data format, should be YYYY-MM-DD"
   },
-  "incorrect_leave_duration": {
+  "more_leave_duration": {
     "dari": "مدت رخصتی نباید بیش از 8 ساعت باشد",
     "en": "Leave duration has not been more then 8 hours."
   },
-  "incorrect_overtime_duration": {
+  "less_leave_duration": {
+    "dari": "مدت رخصتی نباید کمتر از 1 ساعت باشد",
+    "en": "Leave duration has not been less then 1 hours."
+  },
+  "more_overtime_duration": {
     "dari": "مدت اضافه کاری نباید بیش از 8 ساعت باشد",
     "en": "Overtime duration has not been more then 8 hours."
+  },
+  "less_overtime_duration": {
+    "dari": "مدت اضافه کاری نباید کمتر از 1 ساعت باشد",
+    "en": "Overtime duration has not been less then 1 hours."
   },
   "less_character": {
     "dari": "تعداد حروف باید بیشتر از {} باشد",

@@ -54,8 +54,8 @@
                                 {{translation.daily[language]}}
                               {% endif %}
                             </td>
-                            <td><span class="text-muted">{{overtime.start_datetime}}</span> </td>
-                            <td><span class="text-muted">{{overtime.end_datetime}}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(overtime.start_datetime, '%Y-%m-%d %H:%M:%S') }}</span> </td>
+                            <td><span class="text-muted">{{ to_jalali(overtime.end_datetime, '%Y-%m-%d %H:%M:%S') }}</span> </td>
                             <td>
                               {{ ((overtime.end_datetime - overtime.start_datetime)|string)
                                   .replace('days', translation.days[language]).replace('day', translation.day[language])}}
@@ -70,7 +70,7 @@
                                 {% endif %}
 
                             </td>
-                            <td>{{overtime.requested_at}}</td>
+                            <td>{{ to_jalali(overtime.requested_at, '%Y-%m-%d %H:%M:%S') }}</td>
                             <td>
                               <a  href="/overtime_hr/{{overtime.id}}" title="{{translation.view_detials[language]}}">
                                 <span><i class="fa fa-eye text-primary"></i> </span>
