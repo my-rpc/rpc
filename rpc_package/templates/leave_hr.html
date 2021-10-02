@@ -70,7 +70,7 @@
                                 {% endif %}
 
                             </td>
-                            <td>{{leave.requested_at}}</td>
+                            <td>{{ to_jalali(leave.requested_at, '%Y-%m-%d %H:%M:%S') }}</td>
                             <td>
                               <a  href="/leave_hr/{{leave.id}}" title="{{translation.view_detials[language]}}">
                                 <span><i class="fa fa-eye text-primary"></i> </span>

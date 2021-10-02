@@ -34,7 +34,8 @@ class Employees(db.Model, UserMixin):
     status = db.Column(db.Boolean, nullable=False)
     # Relationship
     contracts = db.relationship("Contracts", foreign_keys='Contracts.emp_id')
-    leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='joined')
+    leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='dynamic')
+    overtimes = db.relationship("Overtime_form", foreign_keys='Overtime_form.emp_id', lazy='dynamic')
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
@@ -297,7 +298,7 @@ class Overtime_form(db.Model, UserMixin):
     finalized_at = db.Column(db.DateTime, nullable=False)
     requested_at = db.Column(db.DateTime, nullable=False)
     # Relationship
-    employee = db.relationship('Employees', foreign_keys=[emp_id])
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="overtimes")
     re_supervisor = db.relationship('Employees', foreign_keys=[supervisor_id])
     re_hr = db.relationship('Employees', foreign_keys=[hr_id])
     reason = db.relationship("Overtime_reason", uselist=False)

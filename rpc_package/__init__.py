@@ -5,6 +5,8 @@ import pymysql
 from flask_login import LoginManager
 import os
 import json
+import datetime
+from rpc_package.utils import to_gregorian, to_jalali
 
 pymysql.install_as_MySQLdb()
 
@@ -26,5 +28,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 login_manager.login_message = translation_obj.login_message['en']
+
+app.jinja_env.globals.update(to_jalali=to_jalali, to_gregorian=to_gregorian, timedelta=datetime.timedelta(0), sum=sum, translation=translation_obj, message_obj=message_obj)
 
 from rpc_package import app_routes
