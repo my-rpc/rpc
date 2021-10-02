@@ -34,7 +34,7 @@ class Employees(db.Model, UserMixin):
     status = db.Column(db.Boolean, nullable=False)
     # Relationship
     contracts = db.relationship("Contracts", foreign_keys='Contracts.emp_id')
-    leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='joined')
+    leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='dynamic')
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
