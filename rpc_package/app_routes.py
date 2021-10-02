@@ -311,7 +311,7 @@ def employee_settings():
 
     return render_template("employee_settings.html", title='Employee Settings',
                            employees=employees, emails=emails, phones=phones, language=session['language'],
-                           translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+                           translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/employee_details', methods=['GET', "POST"])
@@ -456,7 +456,7 @@ def contract_settings():
             contracts[x] = contract
     return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
                            employees=employees, contract=contracts,
-                           translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+                           translation=translation_obj, message_obj=message_obj)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
@@ -563,7 +563,7 @@ def leave_request():
         return redirect(url_for('leave_request'))
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/leave_supervisor', methods=["GET"])
 @login_required
@@ -572,7 +572,7 @@ def leave_supervisor():
         .order_by(Leave_form.requested_at.desc()).all()
     return render_template('leave_supervisor.html', leave_supervisor=leave_supervisor,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/leave_supervisor/<int:leave_id>', methods=["GET", "POST"])
 @login_required
@@ -607,7 +607,7 @@ def leave_supervisor_view(leave_id):
         return redirect(url_for('leave_supervisor'))
     return render_template('leave_supervisor_view.html', form=leave_supervisor_form, leave_data=leave_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/leave_hr', methods=["GET"])
 @login_required
@@ -617,7 +617,7 @@ def leave_hr():
         .order_by(Leave_form.requested_at.desc()).all()
     return render_template('leave_hr.html', leave_hr=leave_hr,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/leave_hr/<int:leave_id>', methods=["GET", "POST"])
 @login_required
@@ -645,18 +645,21 @@ def leave_hr_view(leave_id):
         return redirect(url_for('leave_hr'))
     return render_template('leave_hr_view.html', form=leave_hr_form, leave_data=leave_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 @app.route('/leave_report', methods=["GET"])
 @login_required
 def leave_report():
-    print(request.args.get('from'))
-    leave_report = Employees.query.join(Employees.leaves, aliased=True)\
-        .filter_by(hr=1) \
-        .filter(Leave_form.start_datetime >= request.args.get('from')) \
-        .filter(Leave_form.start_datetime < request.args.get('to')).all()
+    leave_report = []
+    if (request.args.get('from') and request.args.get('to')):
+        leave_report = Employees.query.join(Employees.leaves, aliased=True) \
+            .filter_by(hr=1) \
+            .filter(Leave_form.start_datetime >= to_gregorian(request.args.get('from'))) \
+            .filter(Leave_form.start_datetime < to_gregorian(request.args.get('to'))).all()
+
     return render_template('leave_report.html', leave_report=leave_report,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, Leave_form=Leave_form, request=request)
+        translation=translation_obj, message_obj=message_obj, Leave_form=Leave_form,
+        request=request)
 
 @app.route('/overtime_request', methods=["GET", "POST"])
 @login_required
@@ -678,7 +681,7 @@ def overtime_request():
         return redirect(url_for('overtime_request'))
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/overtime_supervisor', methods=["GET"])
 @login_required
@@ -687,7 +690,7 @@ def overtime_supervisor():
         .order_by(Overtime_form.requested_at.desc()).all()
     return render_template('overtime_supervisor.html', overtime_supervisor=overtime_supervisor,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/overtime_supervisor/<int:overtime_id>', methods=["GET", "POST"])
 @login_required
@@ -722,7 +725,7 @@ def overtime_supervisor_view(overtime_id):
         return redirect(url_for('overtime_supervisor'))
     return render_template('overtime_supervisor_view.html', form=overtime_supervisor_form, overtime_data=overtime_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/overtime_hr', methods=["GET"])
 @login_required
@@ -732,7 +735,7 @@ def overtime_hr():
         .order_by(Overtime_form.requested_at.desc()).all()
     return render_template('overtime_hr.html', overtime_hr=overtime_hr,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/overtime_hr/<int:overtime_id>', methods=["GET", "POST"])
 @login_required
@@ -760,7 +763,7 @@ def overtime_hr_view(overtime_id):
         return redirect(url_for('overtime_hr'))
     return render_template('overtime_hr_view.html', form=overtime_hr_form, overtime_data=overtime_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_request', methods=["GET", "POST"])
 @login_required
@@ -790,7 +793,7 @@ def loan_request():
         return redirect(url_for('loan_request'))
     return render_template('loan_request.html', form=loan_form, emp_loan_list=emp_loan_list,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/emp_autocomplete', methods=['GET'])
 def emp_autocomplete():
@@ -817,7 +820,7 @@ def loan_guarantor():
         .order_by(Loan_form.requested_at.desc()).all()
     return render_template('loan_guarantor.html', emp_loan_guarantor=emp_loan_guarantor,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_guarantor/<int:loan_id>', methods=["GET", "POST"])
 @login_required
@@ -844,7 +847,7 @@ def loan_guarantor_view(loan_id):
         return redirect(url_for('loan_guarantor'))
     return render_template('loan_guarantor_view.html', form=loan_guarantor_form, loan_data=loan_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_hr', methods=["GET"])
 @login_required
@@ -854,7 +857,7 @@ def loan_hr():
         .order_by(Loan_form.requested_at.desc()).all()
     return render_template('loan_hr.html', emp_loan_hr=emp_loan_hr,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_hr/<int:loan_id>', methods=["GET", "POST"])
 @login_required
@@ -882,7 +885,7 @@ def loan_hr_view(loan_id):
         return redirect(url_for('loan_hr'))
     return render_template('loan_hr_view.html', form=loan_hr_form, loan_data=loan_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_presidency', methods=["GET"])
 @login_required
@@ -892,7 +895,7 @@ def loan_presidency():
         .order_by(Loan_form.requested_at.desc()).all()
     return render_template('loan_presidency.html', emp_loan_presidency=emp_loan_presidency,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_presidency/<int:loan_id>', methods=["GET", "POST"])
 @login_required
@@ -920,7 +923,7 @@ def loan_presidency_view(loan_id):
         return redirect(url_for('loan_presidency'))
     return render_template('loan_presidency_view.html', form=loan_presidency_form, loan_data=loan_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_finance', methods=["GET"])
 @login_required
@@ -930,7 +933,7 @@ def loan_finance():
         .order_by(Loan_form.requested_at.desc()).all()
     return render_template('loan_finance.html', emp_loan_finance=emp_loan_finance,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/loan_finance/<int:loan_id>', methods=["GET", "POST"])
 @login_required
@@ -958,9 +961,7 @@ def loan_finance_view(loan_id):
         return redirect(url_for('loan_finance'))
     return render_template('loan_finance_view.html', form=loan_finance_form, loan_data=loan_data,
         title=translation_obj.forms[session['language']], language=session['language'],
-        translation=translation_obj, message_obj=message_obj, to_jalali=to_jalali)
-
-
+        translation=translation_obj, message_obj=message_obj)
 
 @app.route('/resign_request', methods=["GET", "POST"])
 @login_required
@@ -977,7 +978,6 @@ def resign_request():
         title=translation_obj.forms[session['language']], form=resign_form,
         language=session['language'],
         translation=translation_obj, message_obj=message_obj)
-
 
 @app.route('/add_equipment', methods=["GET", "POST"])
 @login_required
@@ -998,15 +998,6 @@ def add_equipment():
                            title=translation_obj.forms[session['language']], form=form, all_equipment=all_equipment,
                            language=session['language'],
                            translation=translation_obj, message_obj=message_obj)
-
-
-@app.route('/emp_leave_request', methods=["GET", "POST"])
-@login_required
-def emp_leave_request():
-    return render_template('emp_leave_request.html',
-                           title=translation_obj.employee_forms[session['language']], language=session['language'],
-                           translation=translation_obj, message_obj=message_obj)
-
 
 @app.route('/emp_resign_request', methods=["GET", "POST"])
 @login_required

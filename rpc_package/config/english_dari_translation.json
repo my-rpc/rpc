@@ -127,6 +127,22 @@
     "dari": "کل روزها/ساعتها",
     "en": "Total Days/Hours"
   },
+  "total": {
+    "dari": "مجموعه",
+    "en": "Total"
+  },
+  "from": {
+    "dari": "از تاریخ",
+    "en": "From Date"
+  },
+  "to": {
+    "dari": "تا تاریخ",
+    "en": "To Date"
+  },
+  "filter": {
+    "dari": "فیلتر",
+    "en": "Filter"
+  },
   "employee_request_form": {
     "dari": "فورم درخواست کارمند",
     "en": "Employee Request Form"
@@ -166,6 +182,10 @@
   "day": {
     "dari": "روز",
     "en": "day"
+  },
+  "hour": {
+    "dari": "ساعت",
+    "en": "hour"
   },
   "employee_overtime": {
     "dari": "اضافه کاری کارمند",
