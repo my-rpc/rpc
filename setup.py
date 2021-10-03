@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.3.0'
+VERSION = '0.6.4'
 DESCRIPTION = 'This version has the capability to login to system using created user by Admin/HR.' \
               'User can add new user and employee to system.'
 AUTHOR = 'IMOR and RPC Team'
