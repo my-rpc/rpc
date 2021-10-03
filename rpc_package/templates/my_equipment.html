@@ -21,11 +21,11 @@
 <section class="content">
     {% if my_equipment %}
    <div class="box">
-       <div class="box-header">
-           <div class="box-title">
-            {{translation.my_equipment[language]}}
-           </div>
-       </div>
+    <div class="box-header">
+      <h4 class="box-title text-primary font-weight-bold">
+        {{translation.my_equipment[language]}}
+      </h4>
+    </div>
        <form method="POST">
         {{ form.hidden_tag()}}
        <div class="box-body">
@@ -57,9 +57,9 @@
    {% endif %}
    <div class="box">
     <div class="box-header">
-        <div class="box-title">
-         {{translation.received_equipment[language]}}
-        </div>
+      <h4 class="box-title text-primary font-weight-bold">
+        {{translation.received_equipment[language]}}
+      </h4>
     </div>
     <div class="box-body">
      {% if received_equipment %}

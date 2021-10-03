@@ -19,7 +19,7 @@
                     <th>{{translation.employee_id[language]}}</th>
                     <th>{{translation.first_name[language]}}</th>
                     <th>{{translation.user_role[language]}}</th>
-                    <th>{{translation.status[language]}}</th>
+                    <th>{{translation.user_status[language]}}</th>
                     <th>{{translation.operations[language]}}</th> 
                     <!-- operations should be added to translation -->
                     
@@ -150,7 +150,7 @@
                         </div>
                     </fieldset>
                     <div class="form-group">
-                        {{form.submit(class="btn btn-primary")}}
+                        {{form.submit(class="btn btn-primary", value=translation.update_user[language])}}
                     </div>
                     
                 </form>
