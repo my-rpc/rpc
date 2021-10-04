@@ -565,8 +565,10 @@ def leave_request():
 @app.route('/leave_supervisor', methods=["GET"])
 @login_required
 def leave_supervisor():
+    page = request.args.get('page') if request.args.get('page') else 1
     leave_supervisor = Leave_form.query \
-        .order_by(Leave_form.requested_at.desc()).all()
+        .order_by(Leave_form.requested_at.desc()) \
+        .paginate(per_page=10,page=int(page),error_out=True)
     return render_template('leave_supervisor.html', leave_supervisor=leave_supervisor,
         title=translation_obj.forms[session['language']], language=session['language'])
 
@@ -607,9 +609,11 @@ def leave_supervisor_view(leave_id):
 @app.route('/leave_hr', methods=["GET"])
 @login_required
 def leave_hr():
+    page = request.args.get('page') if request.args.get('page') else 1
     leave_hr = Leave_form.query \
         .filter_by(supervisor = 1) \
-        .order_by(Leave_form.requested_at.desc()).all()
+        .order_by(Leave_form.requested_at.desc()) \
+        .paginate(per_page=10,page=int(page),error_out=True)
     return render_template('leave_hr.html', leave_hr=leave_hr,
         title=translation_obj.forms[session['language']], language=session['language'])
 
@@ -677,8 +681,10 @@ def overtime_request():
 @app.route('/overtime_supervisor', methods=["GET"])
 @login_required
 def overtime_supervisor():
+    page = request.args.get('page') if request.args.get('page') else 1
     overtime_supervisor = Overtime_form.query \
-        .order_by(Overtime_form.requested_at.desc()).all()
+        .order_by(Overtime_form.requested_at.desc()) \
+        .paginate(per_page=10,page=int(page),error_out=True)
     return render_template('overtime_supervisor.html', overtime_supervisor=overtime_supervisor,
         title=translation_obj.forms[session['language']], language=session['language'])
 
@@ -719,9 +725,11 @@ def overtime_supervisor_view(overtime_id):
 @app.route('/overtime_hr', methods=["GET"])
 @login_required
 def overtime_hr():
+    page = request.args.get('page') if request.args.get('page') else 1
     overtime_hr = Overtime_form.query \
         .filter_by(supervisor = 1) \
-        .order_by(Overtime_form.requested_at.desc()).all()
+        .order_by(Overtime_form.requested_at.desc()) \
+        .paginate(per_page=10,page=int(page),error_out=True)
     return render_template('overtime_hr.html', overtime_hr=overtime_hr,
         title=translation_obj.forms[session['language']], language=session['language'])
 

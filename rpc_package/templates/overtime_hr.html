@@ -10,6 +10,14 @@
         border-left: none;
         border-radius: 0 0.25rem 0.25rem 0 !important;
     }
+    .border-radius-en{
+        border-left: none;
+        border-radius: 0.25rem 0 0 0.25rem !important;
+    }
+    .pagination{
+      align-items: center;
+      justify-content: center;
+    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -35,7 +43,7 @@
                           <th>{{translation.request_date[language]}}</th>
                           <th>{{translation.details[language]}}</th>
                         </tr>
-                        {% for overtime in overtime_hr %}
+                        {% for overtime in overtime_hr.items %}
                         <tr>
                             <td>{{overtime.emp_id}}</td>
                             <td>
@@ -81,6 +89,45 @@
                     </table>
                   </div>
               </div>
+              {% if overtime_hr.pages > 1 %}
+              <nav aria-label="Page navigation example">
+                {% set arg_page = request.args.get('page')|int if request.args.get('page')|int != 0 else 1 %}
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a
+                      class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} waves-effect waves-light btn btn-outline btn-rounded btn-info-light mb-5"
+                      href="{{'#' if arg_page == 1 else url_for('overtime_hr', page=arg_page-1)}}"
+                      aria-label="Previous"
+                    >
+                      <span aria-hidden="true">&laquo;</span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+                  {% for page in overtime_hr.iter_pages(left_edge=2, right_edge=2) %}
+                    {% if page %}
+                    <li class="page-item">
+                      <a
+                        class="waves-effect waves-light btn btn-rounded {{'btn-info' if arg_page == page else 'btn-outline btn-info-light'}} mb-5"
+                        href="{{url_for('overtime_hr', page=page )}}"
+                      >{{ page }}</a>
+                    </li>
+                    {% else %}
+                      ...
+                    {% endif %}
+                  {% endfor %}
+                  <li class="page-item">
+                    <a
+                      class="{{ 'border-radius-en' if language == 'dari' else 'border-radius-dari' }} waves-effect waves-light btn btn-outline btn-rounded btn-info-light mb-5"
+                      href="{{'#' if arg_page == overtime_hr.pages else url_for('overtime_hr', page=arg_page+1)}}"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">&raquo;</span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              {% endif %}
               <!-- /.box-body -->
             </div>
             <!-- /.box -->
