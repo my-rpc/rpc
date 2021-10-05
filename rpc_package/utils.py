@@ -76,6 +76,8 @@ def date_validation(self, value):
         return False
 
 def to_gregorian(value, date_format='%Y-%m-%d'):
+    if value == None:
+        return ''
     str_value = value
     if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
         str_value = value.strftime(date_format)
@@ -85,6 +87,8 @@ def to_gregorian(value, date_format='%Y-%m-%d'):
     return date_value.strftime(date_format)
 
 def to_jalali(value, date_format='%Y-%m-%d'):
+    if value == None:
+        return ''
     str_value = value
     if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
         str_value = value.strftime(date_format)

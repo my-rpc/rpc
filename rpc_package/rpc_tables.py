@@ -36,6 +36,7 @@ class Employees(db.Model, UserMixin):
     contracts = db.relationship("Contracts", foreign_keys='Contracts.emp_id')
     leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='dynamic')
     overtimes = db.relationship("Overtime_form", foreign_keys='Overtime_form.emp_id', lazy='dynamic')
+    loans = db.relationship("Loan_form", foreign_keys='Loan_form.emp_id', lazy='dynamic')
     users = db.relationship("Users", foreign_keys='Users.emp_id')
 
     def __repr__(self):
@@ -51,6 +52,8 @@ class Users(db.Model, UserMixin):
     role = db.Column(db.Integer, db.ForeignKey('user_roles.id'), nullable=False)
     status = db.Column(db.Boolean, nullable=False)
     token = db.Column(db.String(255), nullable=True)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="users")
 
     def get_id(self):
         return (self.emp_id)
