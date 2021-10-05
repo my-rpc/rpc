@@ -820,6 +820,23 @@ def emp_autocomplete():
         message = translation_obj.not_found[session['language']]
     return jsonify(result = result, message = message)
 
+@app.route('/user_autocomplete', methods=['GET'])
+def user_autocomplete():
+    search = request.args.get('q')
+    name = Employees.name
+    lname = Employees.lname
+    if session['language'] == 'en':
+        name = Employees.name_english
+        lname = Employees.lname_english
+    employees = db.session.query(Employees.id, name, lname) \
+        .filter(~Employees.users.any()) \
+        .filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
+    result = [({'value': mv[0], 'label': mv[0] + ' ' + mv[1] + ' ' + mv[2]}) for mv in employees.limit(10).all()]
+    message = ''
+    if not result :
+        message = translation_obj.not_found[session['language']]
+    return jsonify(result = result, message = message)
+
 @app.route('/loan_guarantor', methods=["GET"])
 @login_required
 def loan_guarantor():

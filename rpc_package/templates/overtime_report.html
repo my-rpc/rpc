@@ -51,8 +51,8 @@
                         </div>
                     </div>
                     <div class="form-group mt-4">
-                        <button type="submit" class="btn btn-danger mt-2">
-                          <i class="fad fa-filter"></i>
+                        <button type="submit" class="btn btn-primary mt-2">
+                          <i class="fa fa-filter"></i>
                           {{translation.filter[language]}}
                         </button>
                     </div>
@@ -86,30 +86,30 @@
                                   {% endif %}
                                 {% endif %}
                             </td>
-                            {% set hourly=[timedelta] %}
-                            {% set daily=[timedelta] %}
+                            {% set hourly=[] %}
+                            {% set daily=[] %}
                             {% if request.args.get('from') and request.args.get('to') %}
                               {% set overtimes = employee.overtimes.filter(Overtime_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Overtime_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
                             {% endif %}
                             {% for overtime in overtimes  %}
                               {% if not overtime.overtime_type %}
-                                {% if daily.append((overtime.end_datetime - overtime.start_datetime)) %}{% endif %}
+                                {% if daily.append((overtime.end_datetime - overtime.start_datetime).days) %}{% endif %}
                               {% else %}
-                                {% if hourly.append((overtime.end_datetime - overtime.start_datetime)) %}{% endif %}
+                                {% if hourly.append((overtime.end_datetime - overtime.start_datetime).seconds) %}{% endif %}
                               {% endif %}
                             {% endfor %}
-                            {% set day_sum=sum(daily, timedelta) %}
-                            {% set hour_sum=sum(hourly, timedelta) %}
+                            {% set day_sum=sum(daily) %}
+                            {% set hour_sum=sum(hourly) %}
                             <td>
-                              {{ day_sum.days }} {{translation.day[language]}}
+                              {{ day_sum }} {{translation.day[language]}}
                             </td>
                             <td>
-                              {% if ((hour_sum.seconds/3600) / 8)|int %}
-                              {{ ((hour_sum.seconds/3600) / 8)|int }} {{translation.day[language]}},
-                              {% endif %} {{ "{0:0.2f}".format((hour_sum.seconds/3600) % 8 ) }} {{translation.hour[language]}}
+                              {% if ((hour_sum/3600) / 8)|int %}
+                              {{ ((hour_sum/3600) / 8)|int }} {{translation.day[language]}},
+                              {% endif %} {{ ((hour_sum/3600) % 8 )|int }}:{{ ((hour_sum/60) % 60 )|int }}
                             </td>
                             <td>
-                              {{ (hour_sum + day_sum).days + ((hour_sum.seconds/3600)/8)|int }} {{translation.day[language]}}, {{ "{0:0.2f}".format((hour_sum.seconds/3600)%8) }} {{translation.hour[language]}}
+                              {{ (day_sum + ((hour_sum/3600)/8)|int) }} {{translation.day[language]}}, {{ ((hour_sum/3600) % 8 )|int }}:{{ ((hour_sum/60) % 60 )|int }}
                             </td>
                         </tr>
                         {% endfor %}

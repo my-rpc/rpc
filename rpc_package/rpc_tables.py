@@ -36,6 +36,7 @@ class Employees(db.Model, UserMixin):
     contracts = db.relationship("Contracts", foreign_keys='Contracts.emp_id')
     leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='dynamic')
     overtimes = db.relationship("Overtime_form", foreign_keys='Overtime_form.emp_id', lazy='dynamic')
+    users = db.relationship("Users", foreign_keys='Users.emp_id')
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \

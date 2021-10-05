@@ -39,7 +39,7 @@
       </li>
       <li class="treeview">
         <a href="#">
-          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <i class="fa fa-file-contract"><span class="path1"></span><span class="path2"></span></i>
           <span>{{translation.contract_settings[language] }}</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-right pull-right"></i>
@@ -51,7 +51,7 @@
       </li>
       <li class="treeview">
         <a href="#">
-          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <i class="fab fa-wpforms"><span class="path1"></span><span class="path2"></span></i>
           <span>{{translation.my_forms[language] }}</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-right pull-right"></i>
@@ -67,7 +67,7 @@
 
       <li class="treeview">
         <a href="#">
-          <i class="icon-File"><span class="path1"></span><span class="path2"></span></i>
+          <i class="fa fa-inbox-in"><span class="path1"></span><span class="path2"></span></i>
           <span>{{translation.requested_inbox[language]}}</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-right pull-right"></i>
@@ -94,7 +94,7 @@
       </li>
       <li>
         <a href="{{ url_for('my_equipment') }}">
-          <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>
+          <i span class="fa fa-toolbox"><span class="path1"></span><span class="path2"></span></i>
           <span>{{translation.my_equipment[language] }}</span>
         </a>
       </li>
@@ -102,13 +102,7 @@
   </section>
   <div class="sidebar-footer">
     <!-- item-->
-    <a href="javascript:void(0)" class="link" data-toggle="tooltip" title="" data-original-title="Settings"
-      aria-describedby="tooltip92529"><span class="icon-Settings-2"></span></a>
-    <!-- item-->
-    <a href="mailbox.html" class="link" data-toggle="tooltip" title="" data-original-title="Email"><span
-        class="icon-Mail"></span></a>
-    <!-- item-->
-    <a href="javascript:void(0)" class="link" data-toggle="tooltip" title="" data-original-title="Logout"><span
+    <a href="{{ url_for('logout') }}" class="link pull-left" data-toggle="tooltip" title="" data-original-title="{{translation.logout[language] }}"><span
         class="icon-Lock-overturning"><span class="path1"></span><span class="path2"></span></span></a>
   </div>
 </aside>
