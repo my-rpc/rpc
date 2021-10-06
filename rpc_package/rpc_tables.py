@@ -213,8 +213,9 @@ class Position_history(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
     contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
-    position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
+    position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
+    position_change_date = db.Column(db.String, nullable=True)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     inserted_date = db.Column(db.DateTime, nullable=True)
@@ -228,11 +229,14 @@ class Position_history(db.Model, UserMixin):
 class Salary(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
-    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), nullable=False)
+    position_history_id = db.Column(db.Integer, db.ForeignKey('position_history.id'), nullable=False)
+    position_id = db.Column(db.Integer, nullable=False)
     base = db.Column(db.String, nullable=False)
     transportation = db.Column(db.String, nullable=False)
     house_hold = db.Column(db.String, nullable=False)
     currency = db.Column(db.String(10), nullable=False)
+    salary_change_date = db.Column(db.String, nullable=True)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     inserted_date = db.Column(db.DateTime, nullable=True)

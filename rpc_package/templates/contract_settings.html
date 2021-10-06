@@ -100,7 +100,8 @@
             <span><i class="fad fa-list-ul"></i> </span>
         </button>
         <button class="btn btn-info-light my-3 mx-2 btn-function" data-toggle="tooltip" data-placement="top" title="Edit Contract" id="edit-contract" type="button"><span><i class="fad fa-edit"></i> </span></button>
-        <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" data-toggle="tooltip" data-placement="top" title="Delete Contract" id="delete-contract" type="button"><span><i class="fad fa-times"></i></span></button>
+        <button class="btn btn-secondary my-3 mx-2 btn-function btn-sm" data-toggle="tooltip" data-placement="top" title="Position & Salary Settings " id="position-salary" type="button"><span>$  <i class="fad fa-cog"></i></span></button>
+        <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" data-toggle="tooltip" data-placement="top" title="Delete Contract" id="delete-contract" type="button"><span><i class="fad fa-trash-alt"></i></span></button>
     </div>
     </div>
 </div>
@@ -163,7 +164,7 @@
             switch(true){
                 case (btnID === 'view-contract'):
                     if(contract_id != '' && contract_id != undefined){
-                        window.open('/employee_details?emp_id='+contract_id, '_blank');
+                        window.open('/contract_details?contract_id='+contract_id, '_blank');
                     }else{
                         toastWarning('Please select an employee');
                     }
@@ -180,6 +181,13 @@
                         deleteContract(contract_id);
                     }else{
                         toastWarning('Please select an employee')
+                    }
+                    break;
+                case(btnID === 'position-salary'):
+                    if(contract_id != '' && contract_id != undefined){
+                        window.open('/position_salary_settings?contract_id='+contract_id, '_blank');
+                    }else{
+                        toastWarning('Please select an employee');
                     }
                     break;
             }
@@ -298,5 +306,24 @@
             });
         }
     };
+
+    var positionSalarySetting = function(contract_id){
+        spinner = "<i class='fad fa-spinner fa-spin text-info'></i>";
+        $('#loader_posotion_salary').html(spinner);
+        $('.postion_salary_modal').modal('show');
+        $.ajax({
+            type: "GET",
+            url: "position_salary_settings?contract_id="+contract_id,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log(response)
+                $('#postion_salary_modal_content').html(response)
+                
+            },
+        });
+    };
+
+    
 </script>
 {% endblock js_code %}

@@ -6,7 +6,7 @@ from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phon
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, Positions
 from flask import session
 import datetime
-from wtforms import StringField, HiddenField
+from wtforms import StringField, HiddenField, RadioField, SelectField
 from flask_login import current_user
 from rpc_package.forms import ContractForm
 
@@ -382,6 +382,7 @@ def add_contract_form(contract_form):
                 transportation=contract_form.transportation.data,
                 house_hold=contract_form.house_hold.data,
                 currency=contract_form.currency.data,
+                position_id=contract_form.position.data,
                 inserted_by=current_user.emp_id,
                 inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
                 status=1
@@ -564,6 +565,114 @@ def update_contract(req, contract_form):
     except IOError as io:
         return 'error'
     return data
+
+def add_contract_new_salary(salary_form):
+    try:
+        salary = Salary.query.filter_by(contract_id = salary_form.contract_id.data).filter_by(status = True).first()
+        if salary:
+            position = Position_history.query.filter_by(contract_id = salary_form.contract_id.data).filter_by(status = True).first()
+            salary.status = False
+            db.session.commit()
+            add_contract_new_salary = Salary(
+                contract_id=salary_form.contract_id.data,
+                base=salary_form.base.data,
+                transportation=salary_form.transportation.data,
+                house_hold=salary_form.house_hold.data,
+                currency=salary_form.currency.data,
+                position_history_id= position.id,
+                position_id= position.position_id,
+                salary_change_date= salary_form.salary_date_change.data,
+                inserted_by=current_user.emp_id,
+                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                status=1
+            )
+
+        db.session.add(add_contract_new_salary)
+        db.session.commit()
+        inserted_data = db.session.flush(add_contract_new_salary)
+    except IOError as io:
+        return 'error'
+    return 'success'
+
+def add_contract_new_position(position_form):
+    try:
+        position = Position_history.query.filter_by(contract_id = position_form.contract_id.data).filter_by(status = True).first()
+        if position:
+            position.status = False
+            db.session.commit()
+
+            add_contract_new_position = Position_history(
+                contract_id=position_form.contract_id.data,
+                position_id=position_form.position.data,
+                department_id=position_form.department.data,
+                position_change_date=position_form.position_date_change.data,
+                inserted_by=current_user.emp_id,
+                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                status=1
+            )
+            db.session.add(add_contract_new_position)
+            db.session.commit()
+            inserted_data = db.session.flush(add_contract_new_position)
+    except IOError as io:
+        return 'error'
+    return 'success'
+
+
+def set_salary_form_data(request, salary_form):
+
+    salary_id = request.args.get('salary_id')
+    try: 
+        salary = db.session.query(Salary).get(salary_id)
+        contract = Contracts.query.filter_by(id = salary.contract_id ).first()
+
+        # position_list = [(position.id, position.name_english + ' / ' + position.name) for position in Positions.query.all()]
+
+        # salary_form.position.data = salary.position_id
+        salary_form.base.data = salary.base
+        salary_form.transportation.data = salary.transportation
+        salary_form.house_hold.data = salary.house_hold
+        salary_form.currency.data = salary.currency
+        salary_form.emp_id.data = contract.emp_id
+        salary_form.contract_id.data = salary.contract_id
+
+        setattr(salary_form, 'status', RadioField('Status', choices=[[1, 'Active'], [0, 'Inactive']]))
+        status = salary_form.status.bind(salary_form, 'status')
+        salary_form._fields['status'] = status
+        salary_form._fields['status'].data = salary.status
+
+        setattr(salary_form, 'salary_id', HiddenField('Salary ID'))
+        sal_id = salary_form.salary_id.bind(salary_form, 'salary_id')
+        salary_form._fields['salary_id'] = sal_id
+        salary_form._fields['salary_id'].data = salary_id
+
+        # position_list.insert(0, ('', '------'))
+        # setattr(salary_form, 'position', SelectField('Position', choices=position_list))
+        # position = salary_form.position.bind(salary_form, 'position')
+        # salary_form._fields['position'] = position
+        # salary_form._fields['position'].data = salary.position_id
+    except IOError as io:
+        return 'error'
+    return 'success'
+
+def edit_salary(request, salary_form):
+    try:
+        salary = Salary.query.get(request.form['salary_id'])
+        salary.base = salary_form.base.data,
+        salary.transportation = salary_form.transportation.data,
+        salary.house_hold = salary_form.house_hold.data,
+        salary.currency = salary_form.currency.data,
+        salary.updated_by = current_user.emp_id,
+        salary.updated_date = datetime.datetime.now().strftime("%Y-%m-%d"),
+        # salary.status = bool(int(request.form['status']))
+        db.session.commit()
+        
+    except IOError as io:
+        return 'error'
+    return salary
+
+def set_position_form_data(request, position_form):
+    
+    pass
 
 
 def accept_equipment(request, owner):

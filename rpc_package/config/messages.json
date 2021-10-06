@@ -185,6 +185,38 @@
     "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی نشد",
     "en": "Contract not updated for user with {} ID"
   },
+  "contract_new_salary":{
+    "dari": "معاش جدید برای کارمند با آیدی {} اضافه شد",
+    "en": "New salary for employee with {} ID added"
+  },
+  "contract_new_salary_not":{
+    "dari": "معاش جدید برای کارمند با آیدی {} اضافه نشد",
+    "en": "New salary not added for employee with {} ID"
+  },
+  "contract_new_salary_delete":{
+    "dari": "معاش برای کارمند با آیدی {} حذف شد",
+    "en": "Salary deleted for employee with {} ID added"
+  },
+  "contract_new_salary_delete_not":{
+    "dari": "معاش برای کارمند با آیدی {} حذف نشد",
+    "en": "salary not deleted for employee with {} ID"
+  },
+  "contract_new_position":{
+    "dari": "وظیفه جدید برای کارمند با آیدی {} اضافه شد",
+    "en": "New position added for employee with {} ID added"
+  },
+  "contract_new_position_not":{
+    "dari": "وظیفه جدید برای کارمند با آیدی {} اضافه نشد",
+    "en": "New position not added for employee with {} ID"
+  },
+  "contract_new_position_delete":{
+    "dari": "وظیفه برای کارمند با آیدی {} حذف شد",
+    "en": "Position deleted for employee with {} ID added"
+  },
+  "contract_new_position_delete_not":{
+    "dari": "وظیفه برای کارمند با آیدی {} حذف نشد",
+    "en": "Position not deleted for employee with {} ID"
+  },
   "resign_request_sent": {
     "dari": "درخواست استعفا ارسال شد",
     "en": "Resign request has been sent"

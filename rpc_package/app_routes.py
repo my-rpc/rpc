@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, AddEquipmentForm, \
-    UploadEducationalDocsForm, ResignRequestForm, ContractForm,  \
+    UploadEducationalDocsForm, ResignRequestForm, ContractForm, PositionHistoryForm, SalaryForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, AcceptEquipmentForm
 from rpc_package.form_dynamic_language import *
 
@@ -15,16 +15,11 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, update_employee_data, assign_equipment, \
-    set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment, accept_reject_resign
+    set_emp_update_form_data, send_leave_request, send_resign_request, send_department, accept_equipment, accept_reject_resign, \
+    add_contract_new_salary, add_contract_new_position, set_salary_form_data, edit_salary, set_position_form_data
 import os
 from datetime import datetime
 import jdatetime
-
-
-@app.route("/", methods=['GET', 'POST'])
-@login_required
-def blank():
-    return render_template('blank.html', language='en', translation=translation_obj)
 
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
@@ -542,6 +537,152 @@ def delete_contract():
         return message_to_client_403(message_obj.contract_delete_not[session['language']])
     return message_to_client_200(
         message_obj.contract_delete[session['language']].format(sel_emp.emp_id))
+
+@app.route('/position_salary_settings', methods=["GET"])
+@login_required 
+def position_salary_settings():
+    contract_id = request.args.get('contract_id')
+    position_form = PositionHistoryForm()
+    salary_form = SalaryForm()
+    contract = db.session.query(Contracts, Employees, Phone, Emails) \
+                .join(Employees, (Employees.id == Contracts.emp_id)) \
+                .join(Phone, (Phone.emp_id == Employees.id)) \
+                .join(Emails, (Emails.emp_id == Employees.id)).filter(Contracts.id == contract_id).first()
+    current_position = db.session.query(Position_history, Positions, Departments) \
+                .join(Positions, (Positions.id == Position_history.position_id)) \
+                .join(Departments, (Departments.id == Position_history.department_id)) \
+                .filter(Position_history.contract_id == contract_id, Position_history.status == True).first()
+    position = db.session.query(Position_history, Positions, Departments) \
+                .join(Positions, (Positions.id == Position_history.position_id)) \
+                .join(Departments, (Departments.id == Position_history.department_id)) \
+                .filter(Position_history.contract_id == contract_id).order_by(Position_history.id.desc()).all()
+
+    salary = db.session.query(Salary, Position_history, Positions) \
+            .outerjoin(Position_history, (Position_history.id == Salary.position_history_id)) \
+            .join(Positions, (Positions.id == Salary.position_id)) \
+            .filter(Salary.contract_id == contract_id).order_by(Salary.id.desc()).all()
+    position_form.contract_id.data = contract_id
+    position_form.emp_id.data = contract[0].emp_id
+    salary_form.contract_id.data = contract_id
+    salary_form.emp_id.data = contract[0].emp_id
+    print(current_position)
+    return render_template('/position_and_salary.html', language=session['language'], Title="Position and Salary Settings",
+                    position_form=position_form, salary_form=salary_form, translation=translation_obj, message_obj=message_obj,
+                    salary=salary, position=position, current_position=current_position, contract=contract )
+
+
+@app.route('/contract_new_salary', methods=["POST"])
+@login_required
+def contract_new_salary():
+    salary_form = SalaryForm();
+    if salary_form.validate_on_submit():
+        contract_new_salary = add_contract_new_salary(salary_form)
+        if contract_new_salary == "success":
+            flash(message_obj.contract_new_salary[session['language']].format(salary_form.emp_id.data), 'success')
+        else:
+            flash(message_obj.contract_new_salary_not[session['language']].format(salary_form.emp_id.data), 'error')
+    else:
+        flash(salary_form.errors)
+    return redirect(request.referrer)
+
+
+@app.route('/contract_new_position', methods=['POST'])
+@login_required
+def contract_new_position():
+    position_form = PositionHistoryForm()
+    if position_form.validate_on_submit():
+        contract_new_position = add_contract_new_position(position_form)
+        if contract_new_position == "success":
+            flash(message_obj.contract_new_position[session['language']].format(position_form.emp_id.data), 'success')
+        else:
+            flash(message_obj.contract_new_position_not[session['language']].format(position_form.emp_id.data), 'error')
+    else:
+        flash(position_form.errors)
+    return redirect(request.referrer)
+
+
+@app.route('/delete_position', methods=['GET'])
+@login_required
+def delete_position():
+    position_id = request.args.get('position_id')
+    try:
+        position_data = db.session.query(Position_history, Contracts).join(
+            Contracts, (Contracts.id == Position_history.contract_id)).filter(
+                Position_history.id == position_id ).first()
+        emp_id = position_data[1].emp_id
+        position = Position_history.query.filter_by(id = position_id).delete()
+        db.session.commit()
+        flash(message_obj.contract_new_position_delete[session['language']].format(emp_id), 'success')
+    except IOError as io:
+        flash(message_obj.contract_new_position_delete_not[session['language']], 'error')
+    return redirect(request.referrer)
+
+
+@app.route('/delete_salary', methods=['GET'])
+@login_required
+def delete_salary():
+    salary_id = request.args.get('salary_id')
+    try:
+        salary_data = db.session.query(Salary, Contracts).join(
+            Contracts, (Contracts.id == Salary.contract_id)).filter(Salary.id == salary_id ).first()
+        emp_id = salary_data[1].emp_id
+        salary = Salary.query.filter_by(id = salary_id).delete()
+        db.session.commit()
+        flash(message_obj.contract_new_salary_delete[session['language']].format(emp_id), 'success')
+    except IOError as io:
+        flash(message_obj.contract_new_salary_delete_not[session['language']], 'error')
+    return redirect(request.referrer)
+
+
+@app.route('/edit_contract_salary', methods=['GET', 'POST'])
+@login_required
+def edit_contract_salary():
+    salary_form = SalaryForm()
+    salary_id = request.args.get('salary_id')
+    if request.method == 'POST':
+        if not salary_form.validate_on_submit(): 
+            salary_form.errors['salary_date_change'].clear()
+        salary_form.salary_date_change.data = jdatetime.datetime.now()
+
+        if salary_form.validate_on_submit():
+            edit_contract_salary = edit_salary(request, salary_form)
+            if edit_contract_salary != 'error':
+                return redirect(request.referrer)
+        return redirect(request.referrer)
+    salary_form_data = set_salary_form_data(request, salary_form)
+    
+    if salary_form_data == "success":
+        data = jsonify(render_template('ajax_template/update_contract_salary_position.html', language=session['language'],
+                                       salary_form=salary_form, translation=translation_obj, message_obj=message_obj))
+        return data
+    else:
+        return 'error'
+
+
+@app.route('/edit_contract_position', methods=["POST"])
+@login_required
+def edit_contract_position():
+    position_form = PositionHistoryForm()
+    position_id = request.args.get('position_salary')
+
+    if request.method == 'POST':
+        if not position_form.validate_on_submit(): 
+            position_form.errors['position_date_change'].clear()
+        position_form.position_date_change.data = jdatetime.datetime.now()
+
+        if position_form.validate_on_submit():
+            edit_contract_salary = edit_salary(request, position_form)
+            if edit_contract_salary != 'error':
+                return redirect(request.referrer)
+        return redirect(request.referrer)
+    position_form_data = set_position_form_data(request, position_form)
+    
+    if position_form_data == "success":
+        data = jsonify(render_template('ajax_template/update_contract_salary_position.html', language=session['language'],
+                                       position_form=position_form, translation=translation_obj, message_obj=message_obj))
+        return data
+    else:
+        return 'error'
 
 
 @app.route('/upload_profile_pic', methods=["POST"])

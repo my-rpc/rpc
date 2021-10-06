@@ -263,3 +263,46 @@ class departmentForm(FlaskForm):
 class AcceptEquipmentForm(FlaskForm):
     equipment = BooleanField('equipment', default=[])
     submit = SubmitField('Accept')
+
+
+class PositionHistoryForm(FlaskForm):
+
+    position_list = [(position.id, position.name_english + ' / ' + position.name) for position in Positions.query.all()]
+    department_list = [(department.id, department.name_english + ' / ' + department.name) for department in
+                       Departments.query.all()]
+    
+    position_list.insert(0, ('', '------'))
+    department_list.insert(0, ('', '------'))
+    position = SelectField('Position', choices=position_list, validators=[DataRequired()])
+    department = SelectField('Department', choices=department_list, validators=[DataRequired()])
+    position_date_change = StringField('Date', validators=[DataRequired()])
+    contract_id = HiddenField('Contract ID', validators=[DataRequired()])
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+    submit = SubmitField('Add New Position')
+
+    # def validate_position_date_change(self, position_date_change):
+    #     if position_date_change.data:
+    #         if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', position_date_change.data)):
+    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+
+
+class SalaryForm(FlaskForm):
+    position_list = [(position.id, position.name_english + ' / ' + position.name) for position in Positions.query.all()]
+    position_list.insert(0, ('', '------'))
+
+    # position = SelectField('Position', choices=position_list, validators=[DataRequired()])
+    base = StringField('Base Salary', validators=[DataRequired(), Regexp('(\d+\.\d+|\d+)', message='Invalid Value')])
+    transportation = StringField('Transportation', validators=[DataRequired(), Regexp('(\d+\.\d+|\d+)')])
+    house_hold = StringField('House Hold', validators=[DataRequired(), Regexp('(\d+\.\d+|\d+)')])
+    currency = RadioField('Currency', choices=[[1, 'Afghani'], [0, 'Dollar']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
+    salary_date_change = StringField('Date', validators=[DataRequired()])
+    contract_id = HiddenField('Contract ID', validators=[DataRequired()])
+    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
+
+    submit = SubmitField('Add New Salary')
+
+    # def validate_salary_date_change(self, salary_date_change):
+    #     if salary_date_change.data:
+    #         if not bool(re.match(r'1\d{3}[-\\](0[1-9]|1[0-2])[-\\](0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[1-9]|[1][0-2])', salary_date_change.data)):
+    #             raise ValidationError('Date format is incorrect yyyy-mm-dd')
+

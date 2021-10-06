@@ -447,6 +447,26 @@
     "dari": "تغییرات قراداد",
     "en": "َUpdate Contract"
   },
+  "current_position":{
+    "dari":"موقف فعلی",
+    "en":"Current Position"
+  },
+  "contract_position_update":{
+    "dari":"تغییرات موقف",
+    "en":"Update Contract Position"
+  },
+  "contract_salary_update":{
+    "dari":"تغییرات معاش ",
+    "en":"Update Contact Salary"
+  },
+  "contract_salary_add":{
+    "dari":"اضافه کردن معاش ",
+    "en":"Add New Salary"
+  },
+  "contract_position_add":{
+    "dari":"اضافه کردن موقف ",
+    "en":"Add New Position"
+  },
   "afghani":{
     "dari":"افغانی",
     "en":"AFG"

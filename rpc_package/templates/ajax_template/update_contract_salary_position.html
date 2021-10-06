@@ -1,0 +1,64 @@
+{% if salary_form %}
+<form action="/edit_contract_salary" method="POST" id="new-salary-form">
+    {{ salary_form.hidden_tag()}}
+    {# <div class="form-group">
+        {{salary_form._fields['position'].label(class="form-control-label")}} 
+        {{salary_form._fields['position'](class='form-control')}}
+        <span class="text-muted small text-info"> Position must be the current and active position </span>
+    </div> #}
+    <div class="form-group">
+        {{salary_form.base.label(class='form-control-label')}}
+        {{salary_form.base(class='form-control')}}
+    </div>
+    <div class="form-group">
+        {{salary_form.transportation.label(class='form-control-label')}}
+        {{salary_form.transportation(class='form-control')}}
+    </div>
+    <div class="form-group">
+        {{salary_form.house_hold.label(class='form-control-label')}}
+        {{salary_form.house_hold(class='form-control')}}
+    </div>
+    <div class="form-group">
+        {{ salary_form.currency.label(class='form-check-label')}} <br>
+        {% for radio in salary_form.currency %}
+        {{ radio(class="form-check-input")}}
+        {{ radio.label(class="form-check-label")}}
+        {% endfor %}
+    </div>
+    <!-- <div class="col-md-6 form-group">
+        {{ salary_form._fields['status'].label(class='form-check-label')}} <br>
+        {% for radio in salary_form._fields['status'] %}
+        {{ radio(class="form-check-input")}}
+        {{ radio.label(class="form-check-label")}}
+        {% endfor %}
+    </div> -->
+    <div class="form-group">
+        {{ salary_form.submit(class='btn btn-primary', value="Update Salary")}}
+
+    </div>
+</form>
+<script>
+//$(document).ready(function(){
+ //   var radioValue = "{{1 if salary_form._fields['status'].data else 0 }}";
+ //   $('input:radio[name="status"][value="'+radioValue+'"]').prop('checked', true);
+//});
+</script>
+{% endif %}
+
+{% if position_form %}
+<form action="/edit_contract_salary" method="post">
+    {{ position_form.hidden_tag()}}
+    <div class="form-group">
+        {{position_form.position.label(class='form-control-label')}}
+        {{position_form.position(class='form-control')}}
+    </div>
+    <div class="form-group">
+        {{position_form.department.label(class='form-control-label')}}
+        {{position_form.department(class='form-control')}}
+    </div>
+    <div class="form-group">
+        {{ position_form.submit(class='btn btn-primary')}}
+
+    </div>
+</form>
+{% endif %}
