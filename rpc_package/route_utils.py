@@ -671,7 +671,19 @@ def edit_salary(request, salary_form):
     return salary
 
 def set_position_form_data(request, position_form):
-    
+    position_id = request.args.get('position_salary')
+    try:
+        position_history = db.session.query(Position_history).get(position_id)
+        contract = Contracts.query.filter_by(id = position_history.contract_id ).first()
+        
+        position_form.department.data = position_history.department_id
+        position_form.position.data = position_history.position_id
+        position_form.emp_id.data = contract.emp_id
+        position_form.contract_id.data = position_history.contract_id
+
+    except IOError as io:
+        return 'error'
+    return 'success'
     pass
 
 
