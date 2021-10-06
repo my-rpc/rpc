@@ -465,8 +465,8 @@ def add_contract():
     if request.method == "POST":
         if contract_form.validate_on_submit():
             con_startdate = Contracts.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
-            date = datetime.strptime(contract_form.start_date.data, '%Y-%m-%d')
-            if con_startdate and con_startdate.start_date >=  datetime.date(date):
+            date = datetime.datetime.strptime(to_gregorian(contract_form.start_date.data), '%Y-%m-%d')
+            if con_startdate and con_startdate.start_date >= datetime.date(year=date.year, month=date.month, day=date.day):
                 flash({'start_date':['تاریخ قراداد با تاریخ قراداد قبلی تداخل دارد.']}, 'error')
                 return redirect(request.referrer)
 

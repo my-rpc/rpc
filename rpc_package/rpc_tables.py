@@ -7,6 +7,7 @@ from datetime import datetime
 @login_manager.user_loader
 def load_user(user_id):
     if EmployeeValidator.emp_id_validator(user_id):
+        # return Users.query.get(user_id), user_role , department
         return Users.query.get(user_id)
     else:
         return None
@@ -230,7 +231,7 @@ class Position_history(db.Model, UserMixin):
     updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     inserted_date = db.Column(db.DateTime, nullable=True)
     updated_date = db.Column(db.DateTime, nullable=True)
-    status = db.Column(db.Boolean(1), nullable=False,)
+    status = db.Column(db.Boolean(1), nullable=False)
 
     def __repr__(self):
         return f"Position History ID: {self.id}"
