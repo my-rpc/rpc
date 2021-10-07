@@ -316,6 +316,7 @@ def employee_settings():
 @login_required
 def employee_details():
     emp_id = request.args.get('emp_id')
+    print(EmployeeValidator.emp_id_validator(emp_id), emp_id)
 
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
@@ -323,28 +324,27 @@ def employee_details():
             phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
             emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
 
-            current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
-                                                                                               (
-                                                                                                       Current_addresses.province_id == Provinces.id)) \
+            current_addresses = db.session.query(Current_addresses, Provinces, Districts) \
+                .join(Provinces, (Current_addresses.province_id == Provinces.id)) \
                 .join(Districts, (Current_addresses.district_id == Districts.id)) \
                 .filter(Current_addresses.emp_id == emp_id).first()
 
-            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
-                                                                                                   (
-                                                                                                           Permanent_addresses.province_id == Provinces.id)) \
+            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts) \
+                .join(Provinces, (Permanent_addresses.province_id == Provinces.id)) \
                 .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
                 .filter(Permanent_addresses.emp_id == emp_id).first()
             employee = sel_emp, phones, emails, current_addresses, permanent_addresses
 
         except IOError as exc:
-            return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                                )
-        return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                               employee=employee, )
+            # return render_template('employee_details.html', title='Employee Details', language=session['language'])
+            print(exc)
+
+        print(employee)
+        return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee)
     else:
+        print('kdsjflksdjflsdkjfsldkfjsdlkfjsldkfjs')
         flash(message_obj.invalid_message[session['language']], "error")
-        return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                            )
+        return render_template('employee_details.html', title='Employee Details', language=session['language'])
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
@@ -426,6 +426,7 @@ def delete_employee():
 def profile():
     profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
         current_user.emp_id)
+    print(current_user.user_role, current_user.department)
     return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
                            current_address=current_address,
                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
@@ -438,23 +439,21 @@ def profile():
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
-    employees =  db.session.query(Employees, Contracts).join(Contracts, (Contracts.emp_id == Employees.id)).all()
+    employees =  db.session.query(Employees, Position_history).join(Position_history, (Position_history.emp_id == Employees.id)).all()
     contracts = {}
     for x, emp in enumerate(employees):
         phone = db.session.query(Phone).filter_by(emp_id=emp[0].id).all()
         email = db.session.query(Emails).filter_by(emp_id=emp[0].id).all()
-        contract = db.session.query(Contracts, Contract_types, Position_history, Positions, Salary, Departments) \
-            .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
-            .join(Salary, Contracts.id == Salary.contract_id) \
-            .join(Position_history, (Contracts.id == Position_history.contract_id)) \
+        contract = db.session.query(Position_history, Contract_types, Positions, Salary, Departments) \
+            .join(Contract_types, (Contract_types.id == Position_history.contract_type_id)) \
+            .join(Salary, Position_history.id == Salary.position_history_id) \
             .join(Positions, (Positions.id == Position_history.position_id)) \
             .join(Departments, Departments.id == Position_history.department_id) \
-            .filter(Contracts.emp_id == emp[0].id).first()
+            .filter(Position_history.emp_id == emp[0].id).first()
         if contracts is not None:
             contracts[x] = contract
-    return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
-                           employees=employees, contract=contracts,
-                        )
+    return render_template('contract_settings.html', title='Contact Setting',
+        language=session['language'], employees=employees, contract=contracts)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
@@ -464,7 +463,7 @@ def add_contract():
     emp_id = request.args.get('emp_id')
     if request.method == "POST":
         if contract_form.validate_on_submit():
-            con_startdate = Contracts.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
+            con_startdate = Position_history.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
             date = datetime.datetime.strptime(to_gregorian(contract_form.start_date.data), '%Y-%m-%d')
             if con_startdate and con_startdate.start_date >= datetime.date(year=date.year, month=date.month, day=date.day):
                 flash({'start_date':['تاریخ قراداد با تاریخ قراداد قبلی تداخل دارد.']}, 'error')

@@ -7,8 +7,12 @@ from datetime import datetime
 @login_manager.user_loader
 def load_user(user_id):
     if EmployeeValidator.emp_id_validator(user_id):
-        # return Users.query.get(user_id), user_role , department
-        return Users.query.get(user_id)
+        current_user = Users.query.get(user_id)
+        position_history = current_user.employee.position_history.filter_by(status=1).first()
+        if position_history :
+            current_user.department = position_history.department
+        current_user.user_role = User_roles.query.get(current_user.role)
+        return current_user
     else:
         return None
 
@@ -34,7 +38,7 @@ class Employees(db.Model, UserMixin):
     tin = db.Column(db.Integer, unique=True, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
     # Relationship
-    contracts = db.relationship("Contracts", foreign_keys='Contracts.emp_id')
+    position_history = db.relationship("Position_history", foreign_keys='Position_history.emp_id', lazy='dynamic')
     leaves = db.relationship("Leave_form", foreign_keys='Leave_form.emp_id', lazy='dynamic')
     overtimes = db.relationship("Overtime_form", foreign_keys='Overtime_form.emp_id', lazy='dynamic')
     loans = db.relationship("Loan_form", foreign_keys='Loan_form.emp_id', lazy='dynamic')
@@ -48,7 +52,7 @@ class Employees(db.Model, UserMixin):
 class Users(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'),
-                       db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+        db.ForeignKey('employees.id'), primary_key=True, nullable=False)
     password = db.Column(db.String(60), nullable=True)
     role = db.Column(db.Integer, db.ForeignKey('user_roles.id'), nullable=False)
     status = db.Column(db.Boolean, nullable=False)
@@ -76,8 +80,7 @@ class User_roles(db.Model, UserMixin):
 class Emails(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20), db.ForeignKey('employees.id'), unique=True,
-                       nullable=False)
+    emp_id = db.Column(db.String(20), db.ForeignKey('employees.id'), unique=True, nullable=False)
     email = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
@@ -87,8 +90,8 @@ class Emails(db.Model, UserMixin):
 class Phone(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
-                       nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'),
+        db.ForeignKey('employees.id'), primary_key=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
@@ -98,8 +101,8 @@ class Phone(db.Model, UserMixin):
 class Current_addresses(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), primary_key=True,
-                       nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'),
+        db.ForeignKey('employees.id'), primary_key=True, nullable=False)
     address = db.Column(db.String(255), nullable=True)
     address_dari = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
@@ -171,9 +174,6 @@ class Contracts(db.Model, UserMixin):
     inserted_date = db.Column(db.DateTime, nullable=True)
     updated_date = db.Column(db.DateTime, nullable=True)
     status = db.Column(db.Boolean(1), nullable=False)
-    # Relationship
-    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="contracts")
-
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"
@@ -224,15 +224,21 @@ class Positions(db.Model, UserMixin):
 class Position_history(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
-    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'),
+                       primary_key=True, nullable=False)
     position_id = db.Column(db.Integer, db.ForeignKey('positions.id'), primary_key=True, nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), primary_key=True, nullable=False)
+    contract_type_id = db.Column(db.Integer, db.ForeignKey('contract_types.id'), nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    start_date = db.Column(db.String(255), nullable=False)
     inserted_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     inserted_date = db.Column(db.DateTime, nullable=True)
     updated_date = db.Column(db.DateTime, nullable=True)
     status = db.Column(db.Boolean(1), nullable=False)
-
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="position_history")
+    department = db.relationship('Departments', foreign_keys=[department_id], overlaps="position_history")
     def __repr__(self):
         return f"Position History ID: {self.id}"
 
@@ -240,7 +246,7 @@ class Position_history(db.Model, UserMixin):
 class Salary(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=True)
-    contract_id = db.Column(db.Integer, db.ForeignKey('contracts.id'), primary_key=True, nullable=False)
+    position_history_id = db.Column(db.Integer, db.ForeignKey('position_history.id'), primary_key=True, nullable=False)
     base = db.Column(db.String, nullable=False)
     transportation = db.Column(db.String, nullable=False)
     house_hold = db.Column(db.String, nullable=False)
@@ -249,10 +255,10 @@ class Salary(db.Model, UserMixin):
     updated_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     inserted_date = db.Column(db.DateTime, nullable=True)
     updated_date = db.Column(db.DateTime, nullable=True)
-    status = db.Column(db.Boolean(1), nullable=False,)
+    status = db.Column(db.Boolean(1), nullable=False)
 
     def __repr__(self):
-        return f"Salary ID: {self.id}, Contract ID: {self.contract_id}"
+        return f"Salary ID: {self.id}, Position History ID: {self.position_history_id}"
 
 
 class Leave_form(db.Model, UserMixin):
@@ -339,9 +345,8 @@ class Loan_form(db.Model, UserMixin):
     finance_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
     finalized_at = db.Column(db.DateTime, nullable=False)
     requested_at = db.Column(db.DateTime, nullable=False)
-
     # Relationship
-    employee = db.relationship('Employees', foreign_keys=[emp_id])
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="loans")
     re_guarantor = db.relationship('Employees', foreign_keys=[guarantor_id])
     re_hr = db.relationship('Employees', foreign_keys=[hr_id])
     re_presidency = db.relationship('Employees', foreign_keys=[presidency_id])

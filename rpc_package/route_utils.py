@@ -76,7 +76,6 @@ def upload_profile_pic(request):
         request_file.filename = f"profile-" + session['emp_id'] + "." + ext
         workingdir = os.path.abspath(os.getcwd())
         path = os.path.join(workingdir + "/rpc_package/static/images/profiles", request_file.filename)
-        print(workingdir)
         emp = Employees.query.filter_by(id=session['emp_id']).first()
         emp.profile_pic = f"/static/images/profiles/" + request_file.filename
         assert isinstance(db, object)
@@ -373,31 +372,24 @@ def add_loan_request(loan_form, emp_id):
 
 def add_contract_form(contract_form):
     try:
-        add_contract = Contracts(
+        add_position_history = Position_history(
             emp_id=contract_form.emp_id.data,
+            position_id=contract_form.position.data,
+            department_id=contract_form.department.data,
+            contract_type_id=contract_form.contract_type.data,
             end_date=to_gregorian(contract_form.end_date.data),
-            contract_type=contract_form.contract_type.data,
             start_date=to_gregorian(contract_form.start_date.data),
             inserted_by=current_user.emp_id,
             inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
-            status = 1
+            status=1
         )
-        db.session.add(add_contract)
+        db.session.add(add_position_history)
         db_commit = db.session.commit()
-        db.session.flush(add_contract)
+        db.session.flush(add_position_history)
 
-        if add_contract.id is not None:
-            add_contract_position = Position_history(
-                position_id=contract_form.position.data,
-                contract_id=add_contract.id,
-                department_id=contract_form.department.data,
-                inserted_by=current_user.emp_id,
-                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
-                status=1
-            )
-
+        if add_position_history.id is not None:
             add_contract_salary = Salary(
-                contract_id=add_contract.id,
+                position_history_id=add_position_history.id,
                 base=contract_form.base.data,
                 transportation=contract_form.transportation.data,
                 house_hold=contract_form.house_hold.data,
@@ -406,8 +398,7 @@ def add_contract_form(contract_form):
                 inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
                 status=1
             )
-        db.session.add(add_contract_position)
-        db.session.add(add_contract_salary)
+            db.session.add(add_contract_salary)
         db.session.commit()
         return "success"
     except IOError as io:

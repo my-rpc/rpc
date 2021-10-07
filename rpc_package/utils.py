@@ -83,7 +83,6 @@ def to_gregorian(value, date_format='%Y-%m-%d'):
         str_value = value.strftime(date_format)
     value = jdatetime.datetime.strptime(str_value, date_format)
     date_value = value.togregorian()
-    print(date_value.strftime(date_format))
     return date_value.strftime(date_format)
 
 def to_jalali(value, date_format='%Y-%m-%d'):

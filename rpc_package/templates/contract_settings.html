@@ -53,7 +53,8 @@
             </thead>
             <tbody>
                 {% for emp in employees %}
-                {% if contract[loop.index0]%}
+                {{ contract[loop.index0][5] }}
+                {% if contract[loop.index0] %}
                 <tr id="{{emp[1].id}}">
                     <td>
                         <div class="form-group">
@@ -63,20 +64,18 @@
                     <td>{{emp[0].id}}</td>
                     
                     <td> {{emp[0].name + ' '  +emp[0].lname if language == 'dari' else emp[0].name_english + ' '  +emp[0].lname_english}}</td>
-                    <td>{{contract[loop.index0][5].name  if language == 'dari' else contract[loop.index0][5].name_english}}</td> {# Department #}
-                    <td>{{contract[loop.index0][3].name  if language == 'dari' else contract[loop.index0][3].name_english}}</td> {# Position #}
+                    <td>{{contract[loop.index0][4].name  if language == 'dari' else contract[loop.index0][4].name_english}}</td> {# Department #}
+                    <td>{{contract[loop.index0][2].name  if language == 'dari' else contract[loop.index0][2].name_english}}</td> {# Position #}
                     <td>{{contract[loop.index0][1].name  if language == 'dari' else contract[loop.index0][1].name_english}}</td>  {# Contract Type #}
-                    <td>{{contract[loop.index0][4].base}}</td> {# salary #}
-                    <td>{{contract[loop.index0][4].transportation}}</td> {# salary #}
-                    <td>{{contract[loop.index0][4].house_hold}}</td> {# salary #}
+                    <td>{{contract[loop.index0][3].base}}</td> {# salary #}
+                    <td>{{contract[loop.index0][3].transportation}}</td> {# salary #}
+                    <td>{{contract[loop.index0][3].house_hold}}</td> {# salary #}
                     <td>
-                        {% if contract[loop.index0][4].currency == "1"%}
+                        {% if contract[loop.index0][3].currency == "1"%}
                         {{translation.afghani[language]}}
                         {% else %}
                         {{translation.dollar[language]}}
                         {% endif %}
-                        
-                        <!-- {{contract[loop.index0][4].currency}} -->
                         
                     </td> {# salary #}
                     <td>{{ to_jalali(emp[1].start_date)}}</td>
