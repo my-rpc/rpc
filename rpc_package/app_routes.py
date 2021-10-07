@@ -148,9 +148,7 @@ def login():
             flash(message_obj.password_incorrect[session['language']], 'error')
             return redirect(request.referrer)
 
-    return render_template('login.html', title='Login',
-                           form=login_form, language='en',
-                        )
+    return render_template('login.html', title='Login', form=login_form, language='en')
 
 
 @app.route("/add_employee", methods=['GET', 'POST'])
@@ -316,7 +314,6 @@ def employee_settings():
 @login_required
 def employee_details():
     emp_id = request.args.get('emp_id')
-    print(EmployeeValidator.emp_id_validator(emp_id), emp_id)
 
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
@@ -336,10 +333,8 @@ def employee_details():
             employee = sel_emp, phones, emails, current_addresses, permanent_addresses
 
         except IOError as exc:
-            # return render_template('employee_details.html', title='Employee Details', language=session['language'])
-            print(exc)
+            return render_template('employee_details.html', title='Employee Details', language=session['language'])
 
-        print(employee)
         return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee)
     else:
         print('kdsjflksdjflsdkjfsldkfjsdlkfjsldkfjs')

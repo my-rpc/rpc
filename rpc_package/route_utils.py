@@ -444,20 +444,18 @@ def send_department(department_form):
 
 def set_contact_update_form_data(contract_id, contract_form):
     try:
+        position = Position_history.query.filter_by(id = contract_id, status = True).first()
+        salary = Salary.query.filter_by(position_history_id = contract_id, status = True).first()
 
-        contract = Contracts.query.filter_by(id = contract_id).first()
-        position = Position_history.query.filter_by(contract_id = contract_id, status = True).first()
-        salary = Salary.query.filter_by(contract_id = contract_id, status = True).first()
-
-        contract_form.emp_id.data = contract.emp_id
-        contract_form.end_date.data = to_jalali(contract.end_date)
-        contract_form.contract_type.data = contract.contract_type
-        contract_form.start_date.data = contract.start_date
+        contract_form.emp_id.data = position.emp_id
+        contract_form.end_date.data = to_jalali(position.end_date)
+        contract_form.contract_type.data = position.contract_type_id
+        contract_form.start_date.data = to_jalali(position.start_date)
 
         setattr(contract_form, 'contract_id', HiddenField('Contract ID'))
         contract_id = contract_form.contract_id.bind(contract_form, 'contract_id')
         contract_form._fields['contract_id'] = contract_id
-        contract_form._fields['contract_id'].data = contract.id
+        contract_form._fields['contract_id'].data = position.id
 
         if position:
             contract_form.position.data = position.position_id
@@ -504,18 +502,17 @@ def set_contact_update_form_data(contract_id, contract_form):
 
 def update_contract(req, contract_form):
     try:
-        contract = Contracts.query.filter_by(id = req.form['contract_id']).first()
-        position = Position_history.query.filter_by(id = req.form['position_id']).first()
+        position_history = Position_history.query.filter_by(id = req.form['contract_id']).first()
         salary = Salary.query.filter_by(id = req.form['salary_id']).first()
-        pos = Positions.query.filter_by(id = position.position_id).first()
-        dep = Departments.query.filter_by(id = position.department_id).first()
-        contract_type = Contract_types.query.filter_by(id = contract.contract_type).first()
+        pos = Positions.query.filter_by(id = position_history.position_id).first()
+        dep = Departments.query.filter_by(id = position_history.department_id).first()
+        contract_type = Contract_types.query.filter_by(id = position_history.contract_type_id).first()
 
-        contract.contract_type = contract_form.contract_type.data
-        contract.end_date = to_gregorian(contract_form.end_date.data)
-        contract.start_date= to_gregorian(contract_form.start_date.data)
-        contract.updated_by= current_user.emp_id
-        contract.updated_date = datetime.datetime.now()
+        position_history.contract_type_id = contract_form.contract_type.data
+        position_history.end_date = to_gregorian(contract_form.end_date.data)
+        position_history.start_date= to_gregorian(contract_form.start_date.data)
+        position_history.updated_by= current_user.emp_id
+        position_history.updated_date = datetime.datetime.now()
 
         salary.base = contract_form.base.data
         salary.transportation = contract_form.transportation.data
@@ -524,10 +521,10 @@ def update_contract(req, contract_form):
         salary.updated_by= current_user.emp_id
         salary.updated_date = datetime.datetime.now()
 
-        position.position_id = contract_form.position.data
-        position.department_id = contract_form.department.data
-        position.updated_by= current_user.emp_id
-        position.updated_date = datetime.datetime.now()
+        position_history.position_id = contract_form.position.data
+        position_history.department_id = contract_form.department.data
+        position_history.updated_by= current_user.emp_id
+        position_history.updated_date = datetime.datetime.now()
         if session['language'] == 'en':
             position_name = pos.name_english
             department_name = dep.name_english
@@ -544,7 +541,7 @@ def update_contract(req, contract_form):
                 currency = 'افغانی'
             else:
                 currency = 'دالر'
-        delta_time  = datetime.datetime.strptime(contract.end_date, '%Y-%m-%d') - datetime.datetime.strptime(contract.start_date, '%Y-%m-%d')
+        delta_time  = datetime.datetime.strptime(position_history.end_date, '%Y-%m-%d') - datetime.datetime.strptime(position_history.start_date, '%Y-%m-%d')
         year = delta_time.days / 30 / 12
         month = delta_time.days / 30 % 12
         duration = str(int(year)) + 'years and ' if year > 1 else 'year and' \
