@@ -126,6 +126,16 @@
         </button>
         <button class="btn btn-info-light my-3 mx-2 btn-function" data-toggle="tooltip" data-placement="top" title="Edit Contract" id="edit-contract" type="button"><span><i class="fad fa-edit"></i> </span></button>
         <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" data-toggle="tooltip" data-placement="top" title="Delete Contract" id="delete-contract" type="button"><span><i class="fad fa-times"></i></span></button>
+        <button
+            class="btn btn-secondary my-3 mx-2 btn-function btn-sm"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Change Status"
+            id="change-status"
+            type="button"
+        >
+            <span><i class="fa fa-exchange-alt"></i></span>
+        </button>
     </div>
     </div>
 </div>
@@ -164,6 +174,21 @@
 
 <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
 <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+              msg = formValidationDisplay(message);
+              toastError(msg)
+        });
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
 
 <script>
     $(document).ready(function() {
@@ -203,6 +228,13 @@
                 case(btnID === 'delete-contract'):
                     if(contract_id != '' && contract_id != undefined){
                         deleteContract(contract_id);
+                    }else{
+                        toastWarning('Please select an employee')
+                    }
+                    break;
+                case(btnID === 'change-status'):
+                    if(contract_id != '' && contract_id != undefined){
+                        changeStatus(contract_id);
                     }else{
                         toastWarning('Please select an employee')
                     }
@@ -306,8 +338,29 @@
                 contentType:false,
                 processData:false,
                 success: function(response){
-                    console.log(response)
                     $('#'+contract_id).addClass('bg-danger').fadeOut(3000);
+                    toastSuccess(response.message);
+                },error: function(response){
+                    var statusCode = response.status;
+                    var r = '';
+                    if(statusCode == '403'){
+                        r = formValidateErrors(response);
+                    }
+                    toastError(r);
+                }
+            });
+        }
+    };
+    changeStatus = function(contract_id){
+        if(confirm('Are you sure you want to change status of this Contract?')){
+            $.ajax({
+                method: 'GET',
+                url: 'change_contract_status?contract_id='+contract_id,
+                contentType:false,
+                processData:false,
+                success: function(response){
+                    $('#'+contract_id).addClass('bg-success');
+                    $('#'+contract_id).find("td:last").html(response.status);
                     toastSuccess(response.message);
                 },error: function(response){
                     var statusCode = response.status;
