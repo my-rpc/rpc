@@ -239,6 +239,9 @@ class Position_history(db.Model, UserMixin):
     # Relationship
     employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="position_history")
     department = db.relationship('Departments', foreign_keys=[department_id], overlaps="position_history")
+    position = db.relationship('Positions', foreign_keys=[position_id], overlaps="position_history")
+    contract_type = db.relationship('Contract_types', foreign_keys=[contract_type_id], overlaps="position_history")
+    salary = db.relationship("Salary", foreign_keys='Salary.position_history_id', uselist=False)
     def __repr__(self):
         return f"Position History ID: {self.id}"
 

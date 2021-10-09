@@ -52,43 +52,69 @@
                 </tr>
             </thead>
             <tbody>
-                {% for emp in employees %}
-                {{ contract[loop.index0][5] }}
-                {% if contract[loop.index0] %}
-                <tr id="{{emp[1].id}}">
+                {% for contract in position_history %}
+                <tr id="{{contract.id}}">
                     <td>
                         <div class="form-group">
-                            <input type="radio" class="table-radio radio-col-success" name="selected_emp" id="" value="{{emp[1].id}}">
+                            <input type="radio" class="table-radio radio-col-success" name="selected_emp" id="" value="{{contract.id}}">
                         </div>
                     </td>
-                    <td>{{emp[0].id}}</td>
-                    
-                    <td> {{emp[0].name + ' '  +emp[0].lname if language == 'dari' else emp[0].name_english + ' '  +emp[0].lname_english}}</td>
-                    <td>{{contract[loop.index0][4].name  if language == 'dari' else contract[loop.index0][4].name_english}}</td> {# Department #}
-                    <td>{{contract[loop.index0][2].name  if language == 'dari' else contract[loop.index0][2].name_english}}</td> {# Position #}
-                    <td>{{contract[loop.index0][1].name  if language == 'dari' else contract[loop.index0][1].name_english}}</td>  {# Contract Type #}
-                    <td>{{contract[loop.index0][3].base}}</td> {# salary #}
-                    <td>{{contract[loop.index0][3].transportation}}</td> {# salary #}
-                    <td>{{contract[loop.index0][3].house_hold}}</td> {# salary #}
+                    <td>{{contract.employee.id}}</td>
+
                     <td>
-                        {% if contract[loop.index0][3].currency == "1"%}
-                        {{translation.afghani[language]}}
-                        {% else %}
-                        {{translation.dollar[language]}}
+                        {% if contract.employee %}
+                            {{contract.employee.name + ' '  +contract.employee.lname if language == 'dari' else contract.employee.name_english + ' '  + contract.employee.lname_english}}
                         {% endif %}
-                        
-                    </td> {# salary #}
-                    <td>{{ to_jalali(emp[1].start_date)}}</td>
-                    <td>{{ to_jalali(contract[loop.index0][0].end_date) }}</td> {# Contract #}
+                    </td>
                     <td>
-                        {% if emp[1].status %}
+                        {% if contract.department %}
+                            {{contract.department.name  if language == 'dari' else contract.department.name_english}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contract.position %}
+                            {{contract.position.name  if language == 'dari' else contract.position.name_english}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contract.contract_type %}
+                            {{contract.contract_type.name  if language == 'dari' else contract.contract_type.name_english}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contract.salary %}
+                            {{contract.salary.base }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contract.salary %}
+                            {{contract.salary.transportation }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contract.salary %}
+                            {{contract.salary.house_hold }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if contract.salary %}
+                            {% if contract.salary.currency == "1"%}
+                            {{translation.afghani[language]}}
+                            {% else %}
+                            {{translation.dollar[language]}}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ to_jalali(contract.start_date)}}</td>
+                    <td>{{ to_jalali(contract.end_date) }}</td>
+                    <td>
+                        {% if contract.status %}
                         {{translation.active[language]}}
                         {% else %}
                         {{translation.inactive[language]}}
                         {% endif %}
                     </td> {# status #}
                 </tr>
-                    {% endif %}
                     
                 {% endfor %}
             </tbody>
@@ -237,11 +263,8 @@
             processData: false,
             contentType: false,
             success: function(response){
-                // $('.update_contract_modal').modal('hide');
-                console.log(response)
-                
+                $('.update_contract_modal').modal('hide');
                 toastSuccess(response.message);
-                console.log(response.contract)
                 con = response.contract.contract
                 pos = response.contract.position
                 sal = response.contract.salary

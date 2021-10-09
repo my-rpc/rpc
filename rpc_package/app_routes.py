@@ -434,21 +434,23 @@ def profile():
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
-    employees =  db.session.query(Employees, Position_history).join(Position_history, (Position_history.emp_id == Employees.id)).all()
-    contracts = {}
-    for x, emp in enumerate(employees):
-        phone = db.session.query(Phone).filter_by(emp_id=emp[0].id).all()
-        email = db.session.query(Emails).filter_by(emp_id=emp[0].id).all()
-        contract = db.session.query(Position_history, Contract_types, Positions, Salary, Departments) \
-            .join(Contract_types, (Contract_types.id == Position_history.contract_type_id)) \
-            .join(Salary, Position_history.id == Salary.position_history_id) \
-            .join(Positions, (Positions.id == Position_history.position_id)) \
-            .join(Departments, Departments.id == Position_history.department_id) \
-            .filter(Position_history.emp_id == emp[0].id).first()
-        if contracts is not None:
-            contracts[x] = contract
+    # employees =  db.session.query(Employees, Position_history).join(Position_history, (Position_history.emp_id == Employees.id)).all()
+    # contracts = {}
+    # for x, emp in enumerate(employees):
+    #     phone = db.session.query(Phone).filter_by(emp_id=emp[0].id).all()
+    #     email = db.session.query(Emails).filter_by(emp_id=emp[0].id).all()
+    #     contract = db.session.query(Position_history, Contract_types, Positions, Salary, Departments) \
+    #         .join(Contract_types, (Contract_types.id == Position_history.contract_type_id)) \
+    #         .join(Salary, Position_history.id == Salary.position_history_id) \
+    #         .join(Positions, (Positions.id == Position_history.position_id)) \
+    #         .join(Departments, Departments.id == Position_history.department_id) \
+    #         .filter(Position_history.emp_id == emp[0].id).first()
+    #     if contracts is not None:
+    #         contracts[x] = contract
+    position_history = Position_history.query.all()
+    employees = []
     return render_template('contract_settings.html', title='Contact Setting',
-        language=session['language'], employees=employees, contract=contracts)
+        language=session['language'], employees=employees, position_history=position_history)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
