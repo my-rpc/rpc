@@ -148,9 +148,7 @@ def login():
             flash(message_obj.password_incorrect[session['language']], 'error')
             return redirect(request.referrer)
 
-    return render_template('login.html', title='Login',
-                           form=login_form, language='en',
-                        )
+    return render_template('login.html', title='Login', form=login_form, language='en')
 
 
 @app.route("/add_employee", methods=['GET', 'POST'])
@@ -323,28 +321,25 @@ def employee_details():
             phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
             emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
 
-            current_addresses = db.session.query(Current_addresses, Provinces, Districts).join(Provinces,
-                                                                                               (
-                                                                                                       Current_addresses.province_id == Provinces.id)) \
+            current_addresses = db.session.query(Current_addresses, Provinces, Districts) \
+                .join(Provinces, (Current_addresses.province_id == Provinces.id)) \
                 .join(Districts, (Current_addresses.district_id == Districts.id)) \
                 .filter(Current_addresses.emp_id == emp_id).first()
 
-            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts).join(Provinces,
-                                                                                                   (
-                                                                                                           Permanent_addresses.province_id == Provinces.id)) \
+            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts) \
+                .join(Provinces, (Permanent_addresses.province_id == Provinces.id)) \
                 .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
                 .filter(Permanent_addresses.emp_id == emp_id).first()
             employee = sel_emp, phones, emails, current_addresses, permanent_addresses
 
         except IOError as exc:
-            return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                                )
-        return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                               employee=employee, )
+            return render_template('employee_details.html', title='Employee Details', language=session['language'])
+
+        return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee)
     else:
+        print('kdsjflksdjflsdkjfsldkfjsdlkfjsldkfjs')
         flash(message_obj.invalid_message[session['language']], "error")
-        return render_template('employee_details.html', title='Employee Details', language=session['language'],
-                            )
+        return render_template('employee_details.html', title='Employee Details', language=session['language'])
 
 
 @app.route('/uds_employee', methods=['GET', "POST"])
@@ -426,6 +421,7 @@ def delete_employee():
 def profile():
     profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
         current_user.emp_id)
+    print(current_user.user_role, current_user.department)
     return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
                            current_address=current_address,
                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
@@ -438,23 +434,9 @@ def profile():
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
-    employees =  db.session.query(Employees, Contracts).join(Contracts, (Contracts.emp_id == Employees.id)).all()
-    contracts = {}
-    for x, emp in enumerate(employees):
-        phone = db.session.query(Phone).filter_by(emp_id=emp[0].id).all()
-        email = db.session.query(Emails).filter_by(emp_id=emp[0].id).all()
-        contract = db.session.query(Contracts, Contract_types, Position_history, Positions, Salary, Departments) \
-            .join(Contracts, (Contracts.contract_type == Contract_types.id)) \
-            .join(Salary, Contracts.id == Salary.contract_id) \
-            .join(Position_history, (Contracts.id == Position_history.contract_id)) \
-            .join(Positions, (Positions.id == Position_history.position_id)) \
-            .join(Departments, Departments.id == Position_history.department_id) \
-            .filter(Contracts.emp_id == emp[0].id).first()
-        if contracts is not None:
-            contracts[x] = contract
-    return render_template('contract_settings.html', title='Contact Setting', language=session['language'],
-                           employees=employees, contract=contracts,
-                        )
+    position_history = Position_history.query.all()
+    return render_template('contract_settings.html', title='Contact Setting',
+        language=session['language'], position_history=position_history)
 
 
 @app.route('/add_contract', methods=["GET", "POST"])
@@ -464,16 +446,17 @@ def add_contract():
     emp_id = request.args.get('emp_id')
     if request.method == "POST":
         if contract_form.validate_on_submit():
-            con_startdate = Contracts.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
-            date = datetime.strptime(contract_form.start_date.data, '%Y-%m-%d')
-            if con_startdate and con_startdate.start_date >=  datetime.date(date):
-                flash({'start_date':['تاریخ قراداد با تاریخ قراداد قبلی تداخل دارد.']}, 'error')
+            con_startdate = Position_history.query.filter_by(emp_id=contract_form.emp_id.data, status = True).first()
+            # date = datetime.datetime.strptime(to_gregorian(contract_form.start_date.data), '%Y-%m-%d')
+            if con_startdate:
+                flash({'contract_status':[message_obj.active_contract_message[session['language']] ]}, 'error')
                 return redirect(request.referrer)
 
             contract = add_contract_form(contract_form)
             if contract == "success":
                 flash(message_obj.contract_added[session['language']].format(emp_id), 'success')
                 # TODO show msg to page
+                return redirect(url_for('contract_settings'))
             else:
                 flash(message_obj.contract_not_added[session['language']].format(emp_id), 'error')
             return redirect(request.referrer)
@@ -484,10 +467,8 @@ def add_contract():
         # return 'asd'
         if EmployeeValidator.emp_id_validator(emp_id):
             contract_form.emp_id.data = emp_id
-
-            return render_template('add_contract.html', title='Add Contract', language=session['language'],
-                                   form=contract_form,
-                                )
+            return render_template('add_contract.html', title='Add Contract',
+                language=session['language'], form=contract_form)
 
 
 @app.route('/edit_contract', methods=['GET', "POST"])
@@ -512,8 +493,8 @@ def edit_contract():
 
     contract_update_data = set_contact_update_form_data(contract_id, contract_form)
     data = jsonify(render_template('ajax_template/update_contract_form.html', language=session['language'],
-                    form=contract_form)
-                    ,{"contract_type":contract_update_data[0], "position": contract_update_data[1], "department":contract_update_data[2]})
+                form=contract_form)
+                ,{"contract_type":contract_update_data[0], "position": contract_update_data[1], "department":contract_update_data[2]})
     if data == 'error':
         return 'error'
     else:
@@ -524,15 +505,28 @@ def edit_contract():
 @app.route('/delete_contract', methods=['delete'])
 @login_required
 def delete_contract():
-    contract_id = request.args.get('contract_id')
     try:
-        sel_emp = Contracts.query.filter_by(id = contract_id).first()
+        sel_emp = Position_history.query.filter_by(id=request.args.get('contract_id')).first()
+        db.session.delete(sel_emp.salary)
         db.session.delete(sel_emp)
         db.session.commit()
     except IOError as exc:
         return message_to_client_403(message_obj.contract_delete_not[session['language']])
     return message_to_client_200(
         message_obj.contract_delete[session['language']].format(sel_emp.emp_id))
+
+@app.route('/change_contract_status', methods=['GET'])
+@login_required
+def change_contract_status():
+    try:
+        position_history = Position_history.query.filter_by(id=request.args.get('contract_id')).first()
+        position_history.status = not position_history.status
+        db.session.commit()
+    except IOError as exc:
+        return message_to_client_403(message_obj.contract_delete_not[session['language']])
+    status = translation_obj.active[session['language']] if position_history.status else translation_obj.inactive[session['language']]
+    message = message_obj.contract_status_changed[session['language']].format(position_history.emp_id, status)
+    return jsonify({'success': True, 'message': message, 'status': status}), 200, {'ContentType': 'application/json'}
 
 
 @app.route('/upload_profile_pic', methods=["POST"])
@@ -813,6 +807,24 @@ def emp_autocomplete():
         lname = Employees.lname_english
     employees = db.session.query(Employees.id, name, lname) \
         .filter(Employees.id != current_user.emp_id) \
+        .filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
+    result = [({'value': mv[0], 'label': mv[0] + ' ' + mv[1] + ' ' + mv[2]}) for mv in employees.limit(10).all()]
+    message = ''
+    if not result :
+        message = translation_obj.not_found[session['language']]
+    return jsonify(result = result, message = message)
+
+@app.route('/user_autocomplete', methods=['GET'])
+def user_autocomplete():
+    search = request.args.get('q')
+    name = Employees.name
+    lname = Employees.lname
+    if session['language'] == 'en':
+        name = Employees.name_english
+        lname = Employees.lname_english
+    employees = db.session.query(Employees.id, name, lname) \
+        .filter(~Employees.users.any()) \
+        .filter(Employees.position_history.any(status=1)) \
         .filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
     result = [({'value': mv[0], 'label': mv[0] + ' ' + mv[1] + ' ' + mv[2]}) for mv in employees.limit(10).all()]
     message = ''
