@@ -6,6 +6,12 @@
         This code will be add to the head of the page
     -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
+<style>
+    .ui-menu.ui-autocomplete {
+        z-index: 3000;
+    }
+</style>
+
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <!-- main content code will be add here -->
@@ -19,7 +25,7 @@
                     <th>{{translation.employee_id[language]}}</th>
                     <th>{{translation.first_name[language]}}</th>
                     <th>{{translation.user_role[language]}}</th>
-                    <th>{{translation.status[language]}}</th>
+                    <th>{{translation.user_status[language]}}</th>
                     <th>{{translation.operations[language]}}</th> 
                     <!-- operations should be added to translation -->
                     
@@ -82,7 +88,9 @@
                     <fieldset class="form-group">
                         <div class="form-group">
                             {{ form.employee_id.label(class="form-control-label")}}
-                            {{ form.employee_id(class="form-control form-control-lg")}}
+                            <input name="autocomplete" type="text" id="autocomplete" class="form-control form-control-lg"/>
+                            <small class="text-danger" id="guarantor-guide"></small>
+                            {{ form.employee_id(hidden="true")}}
                         </div>
                         <div class="form-group">
                             {{ form.password.label(class="form-control-label")}}
@@ -150,7 +158,7 @@
                         </div>
                     </fieldset>
                     <div class="form-group">
-                        {{form.submit(class="btn btn-primary")}}
+                        {{form.submit(class="btn btn-primary", value=translation.update_user[language])}}
                     </div>
                     
                 </form>
@@ -172,6 +180,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js"></script>
 
     <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery_ui.js')}}"></script>
     <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
     <script>
 
@@ -190,8 +199,23 @@ $(document).ready(function() {
             }
         }
         ],
-    }
-    );
+    });
+
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('user_autocomplete')}}",{q: request.term}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#guarantor-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#employee_id').val(ui.item.value);
+        }
+    });
 });
 
 updateUserOpenModel = function(userID){

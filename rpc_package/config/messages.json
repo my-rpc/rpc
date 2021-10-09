@@ -257,6 +257,10 @@
     "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی نشد",
     "en": "Contract not updated for user with {} ID"
   },
+  "contract_status_changed":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه {} شد",
+    "en": "Contract status changed for user ID {} to {}"
+  },
   "resign_request_sent": {
     "dari": "درخواست استعفا ارسال شد",
     "en": "Resign request has been sent"
@@ -312,5 +316,9 @@
   "profile": {
     "dari": "پروفایل",
     "en": "Profile"
+  },
+  "active_contract_message": {
+    "dari": "این کارمند یک قرارداد فعال دارد",
+    "en": "this employee has an active contract"
   }
 }

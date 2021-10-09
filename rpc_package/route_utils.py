@@ -76,7 +76,6 @@ def upload_profile_pic(request):
         request_file.filename = f"profile-" + session['emp_id'] + "." + ext
         workingdir = os.path.abspath(os.getcwd())
         path = os.path.join(workingdir + "/rpc_package/static/images/profiles", request_file.filename)
-        print(workingdir)
         emp = Employees.query.filter_by(id=session['emp_id']).first()
         emp.profile_pic = f"/static/images/profiles/" + request_file.filename
         assert isinstance(db, object)
@@ -373,31 +372,24 @@ def add_loan_request(loan_form, emp_id):
 
 def add_contract_form(contract_form):
     try:
-        add_contract = Contracts(
+        add_position_history = Position_history(
             emp_id=contract_form.emp_id.data,
+            position_id=contract_form.position.data,
+            department_id=contract_form.department.data,
+            contract_type_id=contract_form.contract_type.data,
             end_date=to_gregorian(contract_form.end_date.data),
-            contract_type=contract_form.contract_type.data,
             start_date=to_gregorian(contract_form.start_date.data),
             inserted_by=current_user.emp_id,
             inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
-            status = 1
+            status=1
         )
-        db.session.add(add_contract)
+        db.session.add(add_position_history)
         db_commit = db.session.commit()
-        db.session.flush(add_contract)
+        db.session.flush(add_position_history)
 
-        if add_contract.id is not None:
-            add_contract_position = Position_history(
-                position_id=contract_form.position.data,
-                contract_id=add_contract.id,
-                department_id=contract_form.department.data,
-                inserted_by=current_user.emp_id,
-                inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
-                status=1
-            )
-
+        if add_position_history.id is not None:
             add_contract_salary = Salary(
-                contract_id=add_contract.id,
+                position_history_id=add_position_history.id,
                 base=contract_form.base.data,
                 transportation=contract_form.transportation.data,
                 house_hold=contract_form.house_hold.data,
@@ -406,8 +398,7 @@ def add_contract_form(contract_form):
                 inserted_date=datetime.datetime.now().strftime("%Y-%m-%d"),
                 status=1
             )
-        db.session.add(add_contract_position)
-        db.session.add(add_contract_salary)
+            db.session.add(add_contract_salary)
         db.session.commit()
         return "success"
     except IOError as io:
@@ -453,20 +444,18 @@ def send_department(department_form):
 
 def set_contact_update_form_data(contract_id, contract_form):
     try:
+        position = Position_history.query.filter_by(id = contract_id, status = True).first()
+        salary = Salary.query.filter_by(position_history_id = contract_id, status = True).first()
 
-        contract = Contracts.query.filter_by(id = contract_id).first()
-        position = Position_history.query.filter_by(contract_id = contract_id, status = True).first()
-        salary = Salary.query.filter_by(contract_id = contract_id, status = True).first()
-
-        contract_form.emp_id.data = contract.emp_id
-        contract_form.end_date.data = to_jalali(contract.end_date)
-        contract_form.contract_type.data = contract.contract_type
-        contract_form.start_date.data = contract.start_date
+        contract_form.emp_id.data = position.emp_id
+        contract_form.end_date.data = to_jalali(position.end_date)
+        contract_form.contract_type.data = position.contract_type_id
+        contract_form.start_date.data = to_jalali(position.start_date)
 
         setattr(contract_form, 'contract_id', HiddenField('Contract ID'))
         contract_id = contract_form.contract_id.bind(contract_form, 'contract_id')
         contract_form._fields['contract_id'] = contract_id
-        contract_form._fields['contract_id'].data = contract.id
+        contract_form._fields['contract_id'].data = position.id
 
         if position:
             contract_form.position.data = position.position_id
@@ -513,18 +502,17 @@ def set_contact_update_form_data(contract_id, contract_form):
 
 def update_contract(req, contract_form):
     try:
-        contract = Contracts.query.filter_by(id = req.form['contract_id']).first()
-        position = Position_history.query.filter_by(id = req.form['position_id']).first()
+        position_history = Position_history.query.filter_by(id = req.form['contract_id']).first()
         salary = Salary.query.filter_by(id = req.form['salary_id']).first()
-        pos = Positions.query.filter_by(id = position.position_id).first()
-        dep = Departments.query.filter_by(id = position.department_id).first()
-        contract_type = Contract_types.query.filter_by(id = contract.contract_type).first()
+        pos = Positions.query.filter_by(id = position_history.position_id).first()
+        dep = Departments.query.filter_by(id = position_history.department_id).first()
+        contract_type = Contract_types.query.filter_by(id = position_history.contract_type_id).first()
 
-        contract.contract_type = contract_form.contract_type.data
-        contract.end_date = to_gregorian(contract_form.end_date.data)
-        contract.start_date= to_gregorian(contract_form.start_date.data)
-        contract.updated_by= current_user.emp_id
-        contract.updated_date = datetime.datetime.now()
+        position_history.contract_type_id = contract_form.contract_type.data
+        position_history.end_date = to_gregorian(contract_form.end_date.data)
+        position_history.start_date= to_gregorian(contract_form.start_date.data)
+        position_history.updated_by= current_user.emp_id
+        position_history.updated_date = datetime.datetime.now()
 
         salary.base = contract_form.base.data
         salary.transportation = contract_form.transportation.data
@@ -533,10 +521,10 @@ def update_contract(req, contract_form):
         salary.updated_by= current_user.emp_id
         salary.updated_date = datetime.datetime.now()
 
-        position.position_id = contract_form.position.data
-        position.department_id = contract_form.department.data
-        position.updated_by= current_user.emp_id
-        position.updated_date = datetime.datetime.now()
+        position_history.position_id = contract_form.position.data
+        position_history.department_id = contract_form.department.data
+        position_history.updated_by= current_user.emp_id
+        position_history.updated_date = datetime.datetime.now()
         if session['language'] == 'en':
             position_name = pos.name_english
             department_name = dep.name_english
@@ -553,7 +541,7 @@ def update_contract(req, contract_form):
                 currency = 'افغانی'
             else:
                 currency = 'دالر'
-        delta_time  = datetime.datetime.strptime(contract.end_date, '%Y-%m-%d') - datetime.datetime.strptime(contract.start_date, '%Y-%m-%d')
+        delta_time  = datetime.datetime.strptime(position_history.end_date, '%Y-%m-%d') - datetime.datetime.strptime(position_history.start_date, '%Y-%m-%d')
         year = delta_time.days / 30 / 12
         month = delta_time.days / 30 % 12
         duration = str(int(year)) + 'years and ' if year > 1 else 'year and' \

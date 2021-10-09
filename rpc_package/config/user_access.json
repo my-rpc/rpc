@@ -1,0 +1,10 @@
+{
+  "Admin" : [
+    "user_create",
+    "user_create"
+  ],
+  "Manager" : [
+    "user_create",
+    "user_create"
+  ]
+}
