@@ -187,9 +187,9 @@
     "dari": "ساعت",
     "en": "hour"
   },
-  "employee_overtime": {
-    "dari": "اضافه کاری کارمند",
-    "en": "Employee Overtime"
+  "overtime": {
+    "dari": "اضافه کاری",
+    "en": "Overtime"
   },
   "list_of_overtime_request": {
     "dari": "لیست درخواست اضافه کاری",
@@ -358,6 +358,10 @@
   "loan_form": {
     "dari": "فورم قرضه",
     "en": "Loan Form"
+  },
+  "loan": {
+    "dari": "قرضه",
+    "en": "Loan"
   },
   "employee_signature": {
     "dari": "امضا کارمند",
@@ -1024,7 +1028,7 @@
     "en": "oops! Result not found"
   },
   "employee_settings": {
-    "dari": "تنظیمات کامند",
+    "dari": "تنظیمات کارمند",
     "en": "Employee Settings"
   },
   "active":{

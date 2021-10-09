@@ -17,32 +17,65 @@
             <div class="row">
                 <div class="col-xl-4">
                     <div class="info-box pull-up">
-                        <span class="info-box-icon bg-primary-light rounded-circle"><span class="icon-Fan"></span></span>
-
+                        <span class="info-box-icon bg-primary-light rounded-circle">
+                          <i class="far fa-plus-hexagon mt-4"></i>
+                        </span>
                         <div class="info-box-content text-right">
-                          <span class="info-box-number">90%</span>
-                          <span class="info-box-text">Store Traffic</span>
+                          {% set hourly=[] %}
+                          {% set daily=[] %}
+                          {% if current_user.employee %}
+                            {% for overtime in current_user.employee.overtimes  %}
+                              {% if not overtime.overtime_type %}
+                                {% if daily.append((overtime.end_datetime - overtime.start_datetime).days) %}{% endif %}
+                              {% else %}
+                                {% if hourly.append((overtime.end_datetime - overtime.start_datetime).seconds) %}{% endif %}
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
+                          <span class="info-box-number">
+                            {{ (sum(daily) + ((sum(hourly)/3600)/8)|int) }} {{translation.day[language]}}, {{ ((sum(hourly)/3600) % 8 )|int }}:{{ ((sum(hourly)/60) % 60 )|int }}
+                          </span>
+                          <span class="info-box-text">{{translation.overtime[language]}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4">
                     <div class="info-box pull-up">
-                        <span class="info-box-icon bg-primary-light rounded-circle"><span class="icon-Dollar"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span></span>
-
+                        <span class="info-box-icon bg-primary-light rounded-circle">
+                          <i class="far fa-minus-hexagon mt-4"></i>
+                        </span>
+                        {% set hourly=[] %}
+                        {% set daily=[] %}
+                        {% if current_user.employee %}
+                          {% for leave in current_user.employee.leaves  %}
+                            {% if not leave.leave_type %}
+                              {% if daily.append((leave.end_datetime - leave.start_datetime).days) %}{% endif %}
+                            {% else %}
+                              {% if hourly.append((leave.end_datetime - leave.start_datetime).seconds) %}{% endif %}
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
                         <div class="info-box-content text-right">
-                          <span class="info-box-number">$41,410k</span>
-                          <span class="info-box-text">Income</span>
+                          <span class="info-box-number">{{ (sum(daily) + ((sum(hourly)/3600)/8)|int) }} {{translation.day[language]}}, {{ ((sum(hourly)/3600) % 8 )|int }}:{{ ((sum(hourly)/60) % 60 )|int }}</span>
+                          <span class="info-box-text">{{translation.leave[language]}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4">
                     <div class="info-box pull-up">
-                        <span class="info-box-icon bg-primary-light rounded-circle"><span class="icon-User"><span class="path1"></span><span class="path2"></span></span></span>
-
-                        <div class="info-box-content text-right">
-                          <span class="info-box-number">40k</span>
-                          <span class="info-box-text">Average Visitor</span>
-                        </div>
+                      <span class="info-box-icon bg-primary-light rounded-circle">
+                        <i class="fas fa-hand-holding-usd mt-4"></i>
+                      </span>
+                      {% set amounts=[] %}
+                      {% if current_user.employee %}
+                        {% for loan in current_user.employee.loans %}
+                          {% if amounts.append((loan.requested_amount)) %}{% endif %}
+                        {% endfor %}
+                      {% endif %}
+                      <div class="info-box-content text-right">
+                        <span class="info-box-number">{{ sum(amounts) }}</span>
+                        <span class="info-box-text">{{translation.loan[language]}}</span>
+                      </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} {{translation.employee_overtime[language]}} {% endblock %}
+{% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
 {% block css_or_js_code %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
 <style>
@@ -51,9 +51,9 @@
                         </div>
                     </div>
                     <div class="form-group mt-4">
-                        <button type="submit" class="btn btn-danger mt-2">
+                        <button type="submit" class="btn btn-primary mt-2">
+                          <i class="fa fa-filter"></i>
                           {{translation.filter[language]}}
-                          <i class="fad fa-filter"></i>
                         </button>
                     </div>
                 </div>
@@ -86,30 +86,30 @@
                                   {% endif %}
                                 {% endif %}
                             </td>
-                            {% set hourly=[timedelta] %}
-                            {% set daily=[timedelta] %}
+                            {% set hourly=[] %}
+                            {% set daily=[] %}
                             {% if request.args.get('from') and request.args.get('to') %}
                               {% set leaves = employee.leaves.filter(Leave_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Leave_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
                             {% endif %}
                             {% for leave in leaves  %}
                               {% if not leave.leave_type %}
-                                {% if daily.append((leave.end_datetime - leave.start_datetime)) %}{% endif %}
+                                {% if daily.append((leave.end_datetime - leave.start_datetime).days) %}{% endif %}
                               {% else %}
-                                {% if hourly.append((leave.end_datetime - leave.start_datetime)) %}{% endif %}
+                                {% if hourly.append((leave.end_datetime - leave.start_datetime).seconds) %}{% endif %}
                               {% endif %}
                             {% endfor %}
-                            {% set day_sum=sum(daily, timedelta) %}
-                            {% set hour_sum=sum(hourly, timedelta) %}
+                            {% set day_sum=sum(daily) %}
+                            {% set hour_sum=sum(hourly) %}
                             <td>
-                              {{ day_sum.days }} {{translation.day[language]}}
+                              {{ day_sum }} {{translation.day[language]}}
                             </td>
                             <td>
-                              {% if ((hour_sum.seconds/3600) / 8)|int %}
-                              {{ ((hour_sum.seconds/3600) / 8)|int }} {{translation.day[language]}},
-                              {% endif %} {{ "{0:0.2f}".format((hour_sum.seconds/3600) % 8 ) }} {{translation.hour[language]}}
+                              {% if ((hour_sum/3600) / 8)|int %}
+                              {{ ((hour_sum/3600) / 8)|int }} {{translation.day[language]}},
+                              {% endif %} {{ ((hour_sum/3600) % 8 )|int }}:{{ ((hour_sum/60) % 60 )|int }}
                             </td>
                             <td>
-                              {{ (hour_sum + day_sum).days + ((hour_sum.seconds/3600)/8)|int }} {{translation.day[language]}}, {{ "{0:0.2f}".format((hour_sum.seconds/3600)%8) }} {{translation.hour[language]}}
+                              {{ (day_sum + ((hour_sum/3600)/8)|int) }} {{translation.day[language]}}, {{ ((hour_sum/3600) % 8 )|int }}:{{ ((hour_sum/60) % 60 )|int }}
                             </td>
                         </tr>
                         {% endfor %}
