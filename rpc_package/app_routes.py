@@ -14,7 +14,8 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
     Loan_form, Overtime_reason, Leave_reason
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, to_gregorian, to_jalali
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
+    to_gregorian, to_jalali, check_access
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
@@ -421,7 +422,7 @@ def delete_employee():
 def profile():
     profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
         current_user.emp_id)
-    print(current_user.user_role, current_user.department)
+
     return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
                            current_address=current_address,
                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
@@ -434,10 +435,11 @@ def profile():
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
+    if not check_access('contract_settings'):
+        return redirect(url_for('access_denied'))
     position_history = Position_history.query.all()
     return render_template('contract_settings.html', title='Contact Setting',
         language=session['language'], position_history=position_history)
-
 
 @app.route('/add_contract', methods=["GET", "POST"])
 @login_required
@@ -1096,3 +1098,8 @@ def accept_reject_resign_request():
     else:
         flash(message_obj.action_not_performed[session['language']], 'error')
     return redirect(request.referrer)
+
+@app.route("/access_denied", methods=['GET', 'POST'])
+@login_required
+def access_denied():
+    return render_template('page_layout/access_denied.html', language=session['language'])

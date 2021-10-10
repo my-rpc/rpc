@@ -4,6 +4,9 @@ import re
 from flask import jsonify
 import os
 import jdatetime, datetime
+from rpc_package import user_access
+from flask_login import current_user
+from flask import url_for, redirect, request
 
 class EmployeeValidator:
 
@@ -100,3 +103,10 @@ def to_jalali(value, date_format='%Y-%m-%d'):
     second = value.second
     jvalue = jdatetime.datetime.fromgregorian(day=day, month=month, year=year, hour=hour, minute=minute, second=second)
     return jvalue.strftime(date_format)
+
+def check_access(route_name=''):
+    if current_user and current_user.user_role :
+        roles = getattr(user_access, current_user.user_role.name_english)
+        if isinstance(roles, list) :
+            return route_name in roles
+    return False

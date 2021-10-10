@@ -23,3 +23,14 @@ class MessagePull:
         for key, item in self.messages.items():
             if isinstance(item, dict):
                 setattr(self, key, item)
+
+class UserAccess:
+    def __init__(self, file_path=""):
+        try:
+            self.user_access = json.load(open(file_path, 'rb'))
+        except IOError as exc:
+            raise RuntimeError('Failed to open translation json fle') from exc
+
+        for key, item in self.user_access.items():
+            if isinstance(item, list):
+                setattr(self, key, item)
