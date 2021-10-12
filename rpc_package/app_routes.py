@@ -14,7 +14,8 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
     Loan_form, Overtime_reason, Leave_reason
-from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, to_gregorian, to_jalali
+from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
+    to_gregorian, to_jalali, check_access
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
@@ -26,6 +27,8 @@ import jdatetime
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
+    if not check_access('create_new_user'):
+        return redirect(url_for('access_denied'))
     create_new_user_form = CreateUserForm(session['language'])
     if request.method == 'POST':
         if create_new_user_form.validate_on_submit():
@@ -57,6 +60,8 @@ def create_new_user():
 @app.route("/uds_user", methods=['GET', 'POST'])
 @login_required
 def uds_user():
+    if not check_access('uds_user'):
+        return redirect(url_for('access_denied'))
     language = session['language']
     if request.method == 'POST':
         if EmployeeValidator.emp_id_validator(request.form['employee_id']) and \
@@ -95,6 +100,8 @@ def uds_user():
 
 @app.route("/reset_user_password")
 def reset_user_password():
+    if not check_access('reset_user_password'):
+        return redirect(url_for('access_denied'))
     user_id = request.args.get('user_id')
     if EmployeeValidator.emp_id_validator(user_id):
         hashed_pass = pass_crypt.generate_password_hash('123456').decode('utf=8')
@@ -154,6 +161,8 @@ def login():
 @app.route("/add_employee", methods=['GET', 'POST'])
 @login_required
 def add_employee():
+    if not check_access('add_employee'):
+        return redirect(url_for('access_denied'))
     add_employee_form = EmployeeForm(session['language'])
     if request.method == 'POST':
         if add_employee_form.validate_on_submit():
@@ -219,13 +228,14 @@ def add_employee():
             return message_to_client_403(add_employee_form.errors)
 
     return render_template('add_employee.html', title='Add Employee',
-                           form=add_employee_form, language=session['language'],
-                        )
+                form=add_employee_form, language=session['language'])
 
 
 @app.route("/add_documents", methods=['GET', 'POST'])
 @login_required
 def add_documents():
+    if not check_access('add_documents'):
+        return redirect(url_for('access_denied'))
     cv_form = UploadCVForm()
     guarantor = UploadGuarantorForm()
     education = UploadEducationalDocsForm()
@@ -268,6 +278,8 @@ def add_documents():
 @app.route("/delete_document", methods=['GET'])
 @login_required
 def delete_document():
+    if not check_access('delete_document'):
+        return redirect(url_for('access_denied'))
     emp_id = request.args.get("emp_id")
     doc = request.args.get("doc")
     document = Documents.query.filter_by(emp_id=emp_id, name=doc).first()
@@ -284,6 +296,8 @@ def delete_document():
 @app.route("/load_districts", methods=['POST'])
 @login_required
 def load_districts():
+    if not check_access('load_districts'):
+        return redirect(url_for('access_denied'))
     if request.method == "POST":
         province = request.args.get("province")
         districts = {district.id: district.district_name + "/" + district.district_name_english for district in
@@ -294,6 +308,8 @@ def load_districts():
 @app.route("/employee_settings", methods=['GET', 'POST'])
 @login_required
 def employee_settings():
+    if not check_access('employee_settings'):
+        return redirect(url_for('access_denied'))
     employees = db.session.query(Employees).all()
     phones = {}
     emails = {}
@@ -306,13 +322,14 @@ def employee_settings():
             emails[x] = email
 
     return render_template("employee_settings.html", title='Employee Settings',
-                           employees=employees, emails=emails, phones=phones, language=session['language'],
-                        )
+            employees=employees, emails=emails, phones=phones, language=session['language'])
 
 
 @app.route('/employee_details', methods=['GET', "POST"])
 @login_required
 def employee_details():
+    if not check_access('employee_details'):
+        return redirect(url_for('access_denied'))
     emp_id = request.args.get('emp_id')
 
     if EmployeeValidator.emp_id_validator(emp_id):
@@ -337,7 +354,6 @@ def employee_details():
 
         return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee)
     else:
-        print('kdsjflksdjflsdkjfsldkfjsdlkfjsldkfjs')
         flash(message_obj.invalid_message[session['language']], "error")
         return render_template('employee_details.html', title='Employee Details', language=session['language'])
 
@@ -345,7 +361,8 @@ def employee_details():
 @app.route('/uds_employee', methods=['GET', "POST"])
 @login_required
 def uds_employee():
-    language = 'en'
+    if not check_access('uds_employee'):
+        return redirect(url_for('access_denied'))
     update_employee_form = EmployeeForm(session['language'])
     if request.method == 'POST':
         ignored_items = False
@@ -402,6 +419,8 @@ def uds_employee():
 @app.route('/delete_employee', methods=['DELETE'])
 @login_required
 def delete_employee():
+    if not check_access('delete_employee'):
+        return redirect(url_for('access_denied'))
     emp_id = request.args.get('emp_id')
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
@@ -419,9 +438,11 @@ def delete_employee():
 @app.route('/profile')
 @login_required
 def profile():
+    if not check_access('profile'):
+        return redirect(url_for('access_denied'))
     profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
         current_user.emp_id)
-    print(current_user.user_role, current_user.department)
+
     return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
                            current_address=current_address,
                            permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
@@ -434,14 +455,17 @@ def profile():
 @app.route('/contract_settings')
 @login_required
 def contract_settings():
+    if not check_access('contract_settings'):
+        return redirect(url_for('access_denied'))
     position_history = Position_history.query.all()
     return render_template('contract_settings.html', title='Contact Setting',
         language=session['language'], position_history=position_history)
 
-
 @app.route('/add_contract', methods=["GET", "POST"])
 @login_required
 def add_contract():
+    if not check_access('add_contract'):
+        return redirect(url_for('access_denied'))
     contract_form = ContractForm(session['language'])
     emp_id = request.args.get('emp_id')
     if request.method == "POST":
@@ -474,6 +498,8 @@ def add_contract():
 @app.route('/edit_contract', methods=['GET', "POST"])
 @login_required
 def edit_contract():
+    if not check_access('edit_contract'):
+        return redirect(url_for('access_denied'))
     contract_form = ContractForm(session['language'])
     if request.method == "POST":
         if contract_form.validate_on_submit():
@@ -505,6 +531,8 @@ def edit_contract():
 @app.route('/delete_contract', methods=['delete'])
 @login_required
 def delete_contract():
+    if not check_access('delete_contract'):
+        return redirect(url_for('access_denied'))
     try:
         sel_emp = Position_history.query.filter_by(id=request.args.get('contract_id')).first()
         db.session.delete(sel_emp.salary)
@@ -518,6 +546,8 @@ def delete_contract():
 @app.route('/change_contract_status', methods=['GET'])
 @login_required
 def change_contract_status():
+    if not check_access('change_contract_status'):
+        return redirect(url_for('access_denied'))
     try:
         position_history = Position_history.query.filter_by(id=request.args.get('contract_id')).first()
         position_history.status = not position_history.status
@@ -532,12 +562,16 @@ def change_contract_status():
 @app.route('/upload_profile_pic', methods=["POST"])
 @login_required
 def upload_profile():
+    if not check_access('upload_profile_pic'):
+        return redirect(url_for('access_denied'))
     return upload_profile_pic(request)
 
 
 @app.route('/leave_request', methods=["GET", "POST"])
 @login_required
 def leave_request():
+    if not check_access('leave_request'):
+        return redirect(url_for('access_denied'))
     leave_form = leaveRequestForm(session['language'])
     if request.method == "GET":
         my_leave_list = Leave_form.query \
@@ -559,6 +593,8 @@ def leave_request():
 @app.route('/leave_supervisor', methods=["GET"])
 @login_required
 def leave_supervisor():
+    if not check_access('leave_supervisor'):
+        return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
     leave_supervisor = Leave_form.query \
         .order_by(Leave_form.requested_at.desc()) \
@@ -569,6 +605,8 @@ def leave_supervisor():
 @app.route('/leave_supervisor/<int:leave_id>', methods=["GET", "POST"])
 @login_required
 def leave_supervisor_view(leave_id):
+    if not check_access('leave_supervisor'):
+        return redirect(url_for('access_denied'))
     leave_supervisor_form = LeaveSupervisorForm(session['language'])
     if request.method == "GET":
         leave_data = Leave_form.query \
@@ -603,6 +641,8 @@ def leave_supervisor_view(leave_id):
 @app.route('/leave_hr', methods=["GET"])
 @login_required
 def leave_hr():
+    if not check_access('leave_hr'):
+        return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
     leave_hr = Leave_form.query \
         .filter_by(supervisor = 1) \
@@ -614,6 +654,8 @@ def leave_hr():
 @app.route('/leave_hr/<int:leave_id>', methods=["GET", "POST"])
 @login_required
 def leave_hr_view(leave_id):
+    if not check_access('leave_hr'):
+        return redirect(url_for('access_denied'))
     leave_hr_form = LeaveHRForm(session['language'])
     if request.method == "GET":
         leave_data = Leave_form.query \
@@ -640,6 +682,8 @@ def leave_hr_view(leave_id):
 @app.route('/leave_report', methods=["GET"])
 @login_required
 def leave_report():
+    if not check_access('leave_report'):
+        return redirect(url_for('access_denied'))
     leave_report = []
     if (request.args.get('from') and request.args.get('to')):
         leave_report = Employees.query.join(Employees.leaves, aliased=True) \
@@ -654,6 +698,8 @@ def leave_report():
 @app.route('/overtime_request', methods=["GET", "POST"])
 @login_required
 def overtime_request():
+    if not check_access('overtime_request'):
+        return redirect(url_for('access_denied'))
     overtime_form = OvertimeRequestForm(session['language'])
     if request.method == "GET":
         emp_overtime_list = Overtime_form.query \
@@ -675,6 +721,8 @@ def overtime_request():
 @app.route('/overtime_supervisor', methods=["GET"])
 @login_required
 def overtime_supervisor():
+    if not check_access('overtime_supervisor'):
+        return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
     overtime_supervisor = Overtime_form.query \
         .order_by(Overtime_form.requested_at.desc()) \
@@ -685,6 +733,8 @@ def overtime_supervisor():
 @app.route('/overtime_supervisor/<int:overtime_id>', methods=["GET", "POST"])
 @login_required
 def overtime_supervisor_view(overtime_id):
+    if not check_access('overtime_supervisor'):
+        return redirect(url_for('access_denied'))
     overtime_supervisor_form = OvertimeSupervisorForm(session['language'])
     if request.method == "GET":
         overtime_data = Overtime_form.query \
@@ -719,6 +769,8 @@ def overtime_supervisor_view(overtime_id):
 @app.route('/overtime_hr', methods=["GET"])
 @login_required
 def overtime_hr():
+    if not check_access('overtime_hr'):
+        return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
     overtime_hr = Overtime_form.query \
         .filter_by(supervisor = 1) \
@@ -730,6 +782,8 @@ def overtime_hr():
 @app.route('/overtime_hr/<int:overtime_id>', methods=["GET", "POST"])
 @login_required
 def overtime_hr_view(overtime_id):
+    if not check_access('overtime_hr'):
+        return redirect(url_for('access_denied'))
     overtime_hr_form = OvertimeHRForm(session['language'])
     if request.method == "GET":
         overtime_data = Overtime_form.query \
@@ -757,6 +811,8 @@ def overtime_hr_view(overtime_id):
 @app.route('/overtime_report', methods=["GET"])
 @login_required
 def overtime_report():
+    if not check_access('overtime_report'):
+        return redirect(url_for('access_denied'))
     overtime_report = []
     if (request.args.get('from') and request.args.get('to')):
         overtime_report = Employees.query.join(Employees.overtimes, aliased=True) \
@@ -771,6 +827,8 @@ def overtime_report():
 @app.route('/loan_request', methods=["GET", "POST"])
 @login_required
 def loan_request():
+    if not check_access('loan_request'):
+        return redirect(url_for('access_denied'))
     loan_form = LoanRequestForm(session['language'])
     if request.method == "GET":
         emp_loan_list = Loan_form.query \
@@ -798,6 +856,7 @@ def loan_request():
         title=translation_obj.forms[session['language']], language=session['language'])
 
 @app.route('/emp_autocomplete', methods=['GET'])
+@login_required
 def emp_autocomplete():
     search = request.args.get('q')
     name = Employees.name
@@ -815,6 +874,7 @@ def emp_autocomplete():
     return jsonify(result = result, message = message)
 
 @app.route('/user_autocomplete', methods=['GET'])
+@login_required
 def user_autocomplete():
     search = request.args.get('q')
     name = Employees.name
@@ -835,6 +895,8 @@ def user_autocomplete():
 @app.route('/loan_guarantor', methods=["GET"])
 @login_required
 def loan_guarantor():
+    if not check_access('loan_guarantor'):
+        return redirect(url_for('access_denied'))
     emp_loan_guarantor = Loan_form.query \
         .filter_by(guarantor_id=current_user.emp_id, guarantor=None) \
         .order_by(Loan_form.requested_at.desc()).all()
@@ -844,6 +906,8 @@ def loan_guarantor():
 @app.route('/loan_guarantor/<int:loan_id>', methods=["GET", "POST"])
 @login_required
 def loan_guarantor_view(loan_id):
+    if not check_access('loan_guarantor'):
+        return redirect(url_for('access_denied'))
     loan_guarantor_form = LoanGuarantorForm(session['language'])
     if request.method == "GET":
         loan_data = Loan_form.query \
@@ -870,6 +934,8 @@ def loan_guarantor_view(loan_id):
 @app.route('/loan_hr', methods=["GET"])
 @login_required
 def loan_hr():
+    if not check_access('loan_hr'):
+        return redirect(url_for('access_denied'))
     emp_loan_hr = Loan_form.query \
         .filter_by(guarantor=1,hr=None) \
         .order_by(Loan_form.requested_at.desc()).all()
@@ -879,6 +945,8 @@ def loan_hr():
 @app.route('/loan_hr/<int:loan_id>', methods=["GET", "POST"])
 @login_required
 def loan_hr_view(loan_id):
+    if not check_access('loan_hr'):
+        return redirect(url_for('access_denied'))
     loan_hr_form = LoanHRForm(session['language'])
     if request.method == "GET":
         loan_data = Loan_form.query \
@@ -906,6 +974,8 @@ def loan_hr_view(loan_id):
 @app.route('/loan_presidency', methods=["GET"])
 @login_required
 def loan_presidency():
+    if not check_access('loan_presidency'):
+        return redirect(url_for('access_denied'))
     emp_loan_presidency = Loan_form.query \
         .filter_by(guarantor=1,hr=1) \
         .order_by(Loan_form.requested_at.desc()).all()
@@ -915,6 +985,8 @@ def loan_presidency():
 @app.route('/loan_presidency/<int:loan_id>', methods=["GET", "POST"])
 @login_required
 def loan_presidency_view(loan_id):
+    if not check_access('loan_presidency'):
+        return redirect(url_for('access_denied'))
     loan_presidency_form = LoanPresidencyForm(session['language'])
     if request.method == "GET":
         loan_data = Loan_form.query \
@@ -942,6 +1014,8 @@ def loan_presidency_view(loan_id):
 @app.route('/loan_finance', methods=["GET"])
 @login_required
 def loan_finance():
+    if not check_access('loan_finance'):
+        return redirect(url_for('access_denied'))
     emp_loan_finance = Loan_form.query \
         .filter_by(guarantor=1,hr=1,presidency=1) \
         .order_by(Loan_form.requested_at.desc()).all()
@@ -951,6 +1025,8 @@ def loan_finance():
 @app.route('/loan_finance/<int:loan_id>', methods=["GET", "POST"])
 @login_required
 def loan_finance_view(loan_id):
+    if not check_access('loan_finance'):
+        return redirect(url_for('access_denied'))
     loan_finance_form = LoanFinanceForm(session['language'])
     if request.method == "GET":
         loan_data = Loan_form.query \
@@ -978,6 +1054,8 @@ def loan_finance_view(loan_id):
 @app.route('/resign_request', methods=["GET", "POST"])
 @login_required
 def resign_request():
+    if not check_access('resign_request'):
+        return redirect(url_for('access_denied'))
     resign_form = ResignRequestForm(session['language'])
     if request.method == "POST":
         resign = send_resign_request(resign_form, current_user.emp_id)
@@ -993,6 +1071,8 @@ def resign_request():
 @app.route('/add_equipment', methods=["GET", "POST"])
 @login_required
 def add_equipment():
+    if not check_access('add_equipment'):
+        return redirect(url_for('access_denied'))
     emp_id = request.args.get("emp_id")
     form = AddEquipmentForm()
     all_equipment = ""
@@ -1012,6 +1092,8 @@ def add_equipment():
 @app.route('/emp_resign_request', methods=["GET", "POST"])
 @login_required
 def emp_resign_request():
+    if not check_access('emp_resign_request'):
+        return redirect(url_for('access_denied'))
     if request.method == "GET":
          list_of_resigns = db.session.query(Resign_form, Employees).join(Resign_form,
         (Resign_form.emp_id == Employees.id)).all()
@@ -1023,6 +1105,8 @@ def emp_resign_request():
 @app.route("/department_setting", methods=['GET', 'POST'])
 @login_required
 def department_setting():
+    if not check_access('department_setting'):
+        return redirect(url_for('access_denied'))
     department_form = departmentForm(session['language'])
     departments = Departments.query.all()
     if request.method == 'POST':
@@ -1050,6 +1134,8 @@ def position_setting():
 @app.route("/my_equipment", methods=['GET', 'POST'])
 @login_required
 def my_equipment():
+    if not check_access('my_equipment'):
+        return redirect(url_for('access_denied'))
     form = AcceptEquipmentForm()
     if request.method == "GET":
         my_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
@@ -1070,6 +1156,8 @@ def my_equipment():
 @app.route("/view_resign_request", methods=['GET', 'POST'])
 @login_required
 def view_resign_request():
+    if not check_access('view_resign_request'):
+        return redirect(url_for('access_denied'))
     form = AcceptEquipmentForm()
     resign_id = request.args.get('resign')
     resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
@@ -1080,6 +1168,8 @@ def view_resign_request():
 @app.route("/deliver_equipment", methods=['POST'])
 @login_required
 def deliver_equipment():
+    if not check_access('deliver_equipment'):
+        return redirect(url_for('access_denied'))
     result = accept_equipment(request, "admin")
     if result == "success":
         flash(message_obj.delivered[session['language']], 'success')
@@ -1090,9 +1180,16 @@ def deliver_equipment():
 @app.route("/accept_reject_resign_request", methods=['GET'])
 @login_required
 def accept_reject_resign_request():
+    if not check_access('accept_reject_resign_request'):
+        return redirect(url_for('access_denied'))
     resin = accept_reject_resign(request)
     if resin == "success":
         flash(message_obj.action_performed[session['language']], 'success')
     else:
         flash(message_obj.action_not_performed[session['language']], 'error')
     return redirect(request.referrer)
+
+@app.route("/access_denied", methods=['GET', 'POST'])
+@login_required
+def access_denied():
+    return render_template('page_layout/access_denied.html', language=session['language'])

@@ -1094,5 +1094,17 @@
   "received_equipment": {
     "dari": "تجهیزات دریافت شده",
     "en": "Received Equipment"
+  },
+  "reports": {
+    "dari": "گزارشات",
+    "en": "Reports"
+  },
+  "leave_report": {
+    "dari": "گزارش رخصتی",
+    "en": "Leave Report"
+  },
+  "overtime_report": {
+    "dari": "گزارش اضافه کاری",
+    "en": "Overtime Report"
   }
 }
