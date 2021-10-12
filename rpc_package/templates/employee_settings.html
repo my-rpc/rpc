@@ -164,7 +164,7 @@ $('.btn-function').on('click', function(fun){
             switch(true){
                 case (btnID === 'view-employee'):
                     if(empID != '' && empID != undefined){
-                        window.open('/employee_details?emp_id='+empID, '_blank');
+                        window.open('/employee_details?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee');
                     }
@@ -178,21 +178,21 @@ $('.btn-function').on('click', function(fun){
                     break
                 case(btnID === 'add-documents'):
                     if(empID != '' && empID != undefined){
-                        window.open('/add_documents?emp_id='+empID, '_blank');
+                        window.open('/add_documents?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
                 case(btnID === 'add-equipment'):
                     if(empID != '' && empID != undefined){
-                        window.open('/add_equipment?emp_id='+empID, '_blank');
+                        window.open('/add_equipment?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
                 case(btnID === 'add-contract'):
                     if(empID != '' && empID != undefined){
-                        window.open('/add_contract?emp_id='+empID, '_blank');
+                        window.open('/add_contract?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee')
                     }

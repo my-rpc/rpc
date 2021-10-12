@@ -1,8 +1,6 @@
 from rpc_package import db, login_manager
 from flask_login import UserMixin
 from rpc_package.utils import EmployeeValidator
-from datetime import datetime
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -43,6 +41,11 @@ class Employees(db.Model, UserMixin):
     overtimes = db.relationship("Overtime_form", foreign_keys='Overtime_form.emp_id', lazy='dynamic')
     loans = db.relationship("Loan_form", foreign_keys='Loan_form.emp_id', lazy='dynamic')
     users = db.relationship("Users", foreign_keys='Users.emp_id')
+    emails = db.relationship("Emails", foreign_keys='Emails.emp_id')
+    phones = db.relationship("Phone", foreign_keys='Phone.emp_id')
+    documents = db.relationship("Documents", foreign_keys='Documents.emp_id')
+    current_address = db.relationship("Current_addresses", foreign_keys='Current_addresses.emp_id', uselist=False)
+    permanent_address = db.relationship("Permanent_addresses", foreign_keys='Permanent_addresses.emp_id', uselist=False)
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
@@ -82,6 +85,8 @@ class Emails(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20), db.ForeignKey('employees.id'), unique=True, nullable=False)
     email = db.Column(db.String(255), nullable=True)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="emails")
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Email: {self.email}"
@@ -93,6 +98,8 @@ class Phone(db.Model, UserMixin):
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'),
         db.ForeignKey('employees.id'), primary_key=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="phones")
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Phone: {self.phone}"
@@ -107,6 +114,10 @@ class Current_addresses(db.Model, UserMixin):
     address_dari = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
     province_id = db.Column(db.Integer, db.ForeignKey('provinces.id'), primary_key=True, nullable=False)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="current_address")
+    district = db.relationship('Districts', foreign_keys=[district_id], overlaps="current_address")
+    province = db.relationship('Provinces', foreign_keys=[province_id], overlaps="current_address")
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Address: {self.address}, District: {self.district_id}, Province: {self.province_id}"
@@ -121,6 +132,10 @@ class Permanent_addresses(db.Model, UserMixin):
     address_dari = db.Column(db.String(255), nullable=True)
     district_id = db.Column(db.Integer, db.ForeignKey('districts.id'), primary_key=True, nullable=False)
     province_id = db.Column(db.Integer, db.ForeignKey('provinces.id'), primary_key=True, nullable=False)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="permanent_address")
+    district = db.relationship('Districts', foreign_keys=[district_id], overlaps="permanent_address")
+    province = db.relationship('Provinces', foreign_keys=[province_id], overlaps="permanent_address")
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Address: {self.address}, District: {self.district_id}, Province: {self.province_id}"
@@ -154,6 +169,8 @@ class Documents(db.Model, UserMixin):
                        nullable=False)
     name = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="documents")
 
     def __repr__(self):
         return f"Document ID: {self.id}, Employee: {self.emp_id}, Name: {self.name}, Path: {self.url}"
@@ -174,6 +191,8 @@ class Contracts(db.Model, UserMixin):
     inserted_date = db.Column(db.DateTime, nullable=True)
     updated_date = db.Column(db.DateTime, nullable=True)
     status = db.Column(db.Boolean(1), nullable=False)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="contracts")
 
     def __repr__(self):
         return f"Contract ID: {self.id}, Employee: {self.emp_id}"
@@ -259,6 +278,8 @@ class Salary(db.Model, UserMixin):
     inserted_date = db.Column(db.DateTime, nullable=True)
     updated_date = db.Column(db.DateTime, nullable=True)
     status = db.Column(db.Boolean(1), nullable=False)
+    # Relationship
+    position_history = db.relationship('Position_history', foreign_keys=[position_history_id], overlaps="salary")
 
     def __repr__(self):
         return f"Salary ID: {self.id}, Position History ID: {self.position_history_id}"
