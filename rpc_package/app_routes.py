@@ -334,25 +334,11 @@ def employee_details():
 
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
-            sel_emp = Employees.query.get(emp_id)
-            phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
-            emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
-
-            current_addresses = db.session.query(Current_addresses, Provinces, Districts) \
-                .join(Provinces, (Current_addresses.province_id == Provinces.id)) \
-                .join(Districts, (Current_addresses.district_id == Districts.id)) \
-                .filter(Current_addresses.emp_id == emp_id).first()
-
-            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts) \
-                .join(Provinces, (Permanent_addresses.province_id == Provinces.id)) \
-                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
-                .filter(Permanent_addresses.emp_id == emp_id).first()
-            employee = sel_emp, phones, emails, current_addresses, permanent_addresses
-
+            employee = Employees.query.filter_by(id=emp_id).first()
         except IOError as exc:
             return render_template('employee_details.html', title='Employee Details', language=session['language'])
 
-        return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee)
+        return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee, Position_history=Position_history)
     else:
         flash(message_obj.invalid_message[session['language']], "error")
         return render_template('employee_details.html', title='Employee Details', language=session['language'])
@@ -440,16 +426,8 @@ def delete_employee():
 def profile():
     if not check_access('profile'):
         return redirect(url_for('access_denied'))
-    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
-        current_user.emp_id)
-
-    return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
-                           current_address=current_address,
-                           permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
-                           doc_tazkira=doc_tazkira,
-                           doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
-                           doc_extra=doc_extra,
-                        )
+    employee = Employees.query.filter_by(id=current_user.emp_id).first()
+    return render_template('profile.html', title='My Profile', language=session['language'], employee=employee)
 
 
 @app.route('/contract_settings')

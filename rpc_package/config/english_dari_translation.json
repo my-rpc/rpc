@@ -435,6 +435,14 @@
     "dari": "مدت بازپرداخت به ماه",
     "en": "Repayment period in months"
   },
+  "months": {
+    "dari": "ماه",
+    "en": "Months"
+  },
+  "less_then_a_month": {
+    "dari": "کمتر از یک ماه",
+    "en": "Less then a month"
+  },
   "monthly_amount": {
     "dari": "مبلغ ماهانه",
     "en": "Monthly Amount"
@@ -1072,7 +1080,7 @@
     "en": "Male"
   },
   "female": {
-    "dari": "مرد",
+    "dari": "زن",
     "en": "Female"
   },
   "producer": {
