@@ -320,5 +320,33 @@
   "active_contract_message": {
     "dari": "این کارمند یک قرارداد فعال دارد",
     "en": "this employee has an active contract"
+  },
+  "duplicate_entry": {
+    "dari": "{} از قبل موجود است",
+    "en": "{} is already exist"
+  },
+  "holiday_added": {
+    "dari": "رخصتی جدید موفقانه اضافه شد",
+    "en": "New holiday successfully added"
+  },
+  "holiday_not_added": {
+    "dari": "رخصتی جدید اضافه نشد",
+    "en": "New holiday has not been added"
+  },
+  "holiday_deleted": {
+    "dari": "رخصتی موفقانه حذف شد",
+    "en": "Holiday successfully deleted"
+  },
+  "holiday_not_deleted": {
+    "dari": "رخصتی حذف نشد",
+    "en": "Holiday has not been deleted"
+  },
+  "holiday_updated": {
+    "dari": "رخصتی موفقانه بروزرسانی شد",
+    "en": "Holiday successfully updated"
+  },
+  "holiday_not_updated": {
+    "dari": "رخصتی متاسفانه بروزرسانی نشد",
+    "en": "Holiday has not been updated"
   }
 }
