@@ -379,6 +379,16 @@ class Loan_form(db.Model, UserMixin):
     def __repr__(self):
         return f"Loan ID: {self.id}, Employee ID: {self.emp_id}, Requested Amount : {self.requested_amount}"
 
+class Holiday(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "holidays"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    title = db.Column(db.String(255))
+    title_english = db.Column(db.String(255))
+    def __repr__(self):
+        return f"Holiday ID: {self.id}, Date: {self.date}"
+
 class Resign_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)

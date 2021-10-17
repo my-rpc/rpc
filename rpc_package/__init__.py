@@ -29,10 +29,10 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 login_manager.login_message = translation_obj.login_message['en']
 
-from rpc_package.utils import to_gregorian, to_jalali, check_access
+from rpc_package.utils import to_gregorian, to_jalali, check_access, get_month_name
 
 app.jinja_env.globals.update(to_jalali=to_jalali, to_gregorian=to_gregorian, \
     sum=sum, translation=translation_obj, message_obj=message_obj, check_access=check_access, \
-    date=datetime.date)
+    date=datetime.date, get_month_name=get_month_name)
 
 from rpc_package import app_routes

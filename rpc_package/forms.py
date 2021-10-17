@@ -5,8 +5,8 @@ from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Validation
 import re
 from wtforms.widgets import TextArea
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
-    Positions, Departments, Salary
-from rpc_package.utils import check_language, datetime_validation, date_validation
+    Positions, Departments, Salary, Holiday
+from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian
 from rpc_package import translation_obj, message_obj
 import jdatetime, datetime
 
@@ -506,6 +506,36 @@ class LoanFinanceForm(FlaskForm):
         self.finance.choices[1][1] = translation_obj.reject[language]
         self.finance.label.text = translation_obj.finance_confirm_loan_message[language]
         self.submit.label.text = translation_obj.send[language]
+
+class HolidayForm(FlaskForm):
+    date = StringField('Date')
+    title = StringField('عنوان')
+    title_english = StringField('Title')
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(HolidayForm, self).__init__()
+        self.language = language
+        self.date.label.text = translation_obj.date[language]
+        self.submit.label.text = translation_obj.save[language]
+    def validate_date (self, date):
+        if date.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.date[self.language]))
+        elif not date_validation(self, date.data):
+            raise ValidationError(message_obj.incorrect_date_format[self.language])
+        else:
+            holiday = Holiday.query.filter_by(date=to_gregorian(date.data)).first()
+            if holiday:
+                raise ValidationError(message_obj.duplicate_entry[self.language].format(translation_obj.date[self.language]))
+    def validate_title (self, title):
+        if title.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.title[self.language]))
+        elif not check_language(title.data):
+            raise ValidationError("عنوان باید به دری نوشته شود.")
+    def validate_title_english (self, title_english):
+        if title_english.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.english_title[self.language]))
+
+
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
     name_english_department = StringField('Name of Department', validators=[DataRequired()])

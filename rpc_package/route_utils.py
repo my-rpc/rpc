@@ -4,7 +4,7 @@ from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
-    Positions, Loan_form
+    Positions, Loan_form, Holiday
 
 from flask import session
 import datetime
@@ -364,6 +364,18 @@ def add_loan_request(loan_form, emp_id):
             guarantor_id=loan_form.guarantor.data,
             requested_at=datetime.datetime.now())
         db.session.add(loan)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+def add_holiday(holiday_form):
+    try:
+        holiday = Holiday(
+            date=to_gregorian(holiday_form.date.data),
+            title=holiday_form.title.data,
+            title_english=holiday_form.title_english.data)
+        db.session.add(holiday)
         db.session.commit()
         return "success"
     except IOError as io:

@@ -235,6 +235,10 @@
     "dari": "عنوان",
     "en": "Title"
   },
+  "english_title": {
+    "dari": "عنوان انگلیسی",
+    "en": "English Title"
+  },
   "attendance": {
     "dari": "حاضری",
     "en": "Attendance"
@@ -511,6 +515,10 @@
     "dari": "مالی",
     "en": "Finance"
   },
+  "save": {
+    "dari": "ذخیره",
+    "en": "Save"
+  },
   "presidency": {
     "dari": "ریاست",
     "en": "Presidency"
@@ -546,6 +554,22 @@
   "contract_duration": {
     "dari": "مدت قرارداد",
     "en": "Contract Duration"
+  },
+  "add_holiday": {
+    "dari": "اضافه کردن رخصتی",
+    "en": "Add Holiday"
+  },
+  "update_holiday": {
+    "dari": "بروز رسانی رخصتی",
+    "en": "Update Holiday"
+  },
+  "year": {
+    "dari": "سال",
+    "en": "Year"
+  },
+  "list_of_holiday": {
+    "dari": "لیست روز های رخصتی",
+    "en": "List of Holidays"
   },
   "contract_update": {
     "dari": "تغییرات قراداد",
@@ -634,6 +658,10 @@
   "add_document": {
     "dari": "اضافه کردن اسناد",
     "en": "Add Document"
+  },
+  "add": {
+    "dari": "اضافه کردن",
+    "en": "Add"
   },
   "print": {
     "dari": "پرینت",
