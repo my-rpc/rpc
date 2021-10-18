@@ -6,23 +6,24 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
-    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm
 
 from rpc_package.form_dynamic_language import *
 
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
-    Loan_form, Overtime_reason, Leave_reason
+    Loan_form, Overtime_reason, Leave_reason, Holiday
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
     to_gregorian, to_jalali, check_access
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
-    add_loan_request, accept_equipment, accept_reject_resign
+    add_loan_request, accept_equipment, accept_reject_resign, add_holiday
 import os
 import datetime
 import jdatetime
+from sqlalchemy import func
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
@@ -334,25 +335,11 @@ def employee_details():
 
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
-            sel_emp = Employees.query.get(emp_id)
-            phones = db.session.query(Phone).filter_by(emp_id=emp_id).all()
-            emails = db.session.query(Emails).filter_by(emp_id=emp_id).all()
-
-            current_addresses = db.session.query(Current_addresses, Provinces, Districts) \
-                .join(Provinces, (Current_addresses.province_id == Provinces.id)) \
-                .join(Districts, (Current_addresses.district_id == Districts.id)) \
-                .filter(Current_addresses.emp_id == emp_id).first()
-
-            permanent_addresses = db.session.query(Permanent_addresses, Provinces, Districts) \
-                .join(Provinces, (Permanent_addresses.province_id == Provinces.id)) \
-                .join(Districts, (Permanent_addresses.district_id == Districts.id)) \
-                .filter(Permanent_addresses.emp_id == emp_id).first()
-            employee = sel_emp, phones, emails, current_addresses, permanent_addresses
-
+            employee = Employees.query.filter_by(id=emp_id).first()
         except IOError as exc:
             return render_template('employee_details.html', title='Employee Details', language=session['language'])
 
-        return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee)
+        return render_template('employee_details.html', title='Employee Details', language=session['language'], employee=employee, Position_history=Position_history)
     else:
         flash(message_obj.invalid_message[session['language']], "error")
         return render_template('employee_details.html', title='Employee Details', language=session['language'])
@@ -440,16 +427,8 @@ def delete_employee():
 def profile():
     if not check_access('profile'):
         return redirect(url_for('access_denied'))
-    profile, current_address, permanent_address, doc_cv, email, phone, doc_tazkira, doc_guarantor, doc_tin, doc_education, doc_extra = get_profile_info(
-        current_user.emp_id)
-
-    return render_template('profile.html', title='My Profile', language=session['language'], profile=profile,
-                           current_address=current_address,
-                           permanent_address=permanent_address, doc_cv=doc_cv, email=email, phone=phone,
-                           doc_tazkira=doc_tazkira,
-                           doc_guarantor=doc_guarantor, doc_tin=doc_tin, doc_education=doc_education,
-                           doc_extra=doc_extra,
-                        )
+    employee = Employees.query.filter_by(id=current_user.emp_id).first()
+    return render_template('profile.html', title='My Profile', language=session['language'], employee=employee)
 
 
 @app.route('/contract_settings')
@@ -1120,11 +1099,84 @@ def department_setting():
         title=translation_obj.forms[session['language']], language=session['language'])
 
 
-@app.route("/contract_setting", methods=['GET', 'POST'])
+@app.route("/holiday", methods=['GET', 'POST'])
 @login_required
-def contract_setting():
-    return render_template('contract_setting.html', language=session['language'])
+def holiday():
+    if not check_access('holiday'):
+        return redirect(url_for('access_denied'))
+    holiday_form = HolidayForm(session['language'])
+    if request.method == "GET":
+        # Get the year from url or set current year as default
+        year = jdatetime.date.today().year
+        if request.args.get('year'):
+            year = request.args.get('year')
+        # 
+        start_end_year = Holiday.query.with_entities(func.max(Holiday.date).label('maxdate'), func.min(Holiday.date).label('mindate')).first()
+        
+        start = jdatetime.date(year=int(year),month=1,day=1)
+        last_day = 30 if start.isleap() else 29
+        end = jdatetime.date(year=int(year),month=12,day=last_day)
+        holidays = Holiday.query \
+            .filter(Holiday.date >= to_gregorian(start.strftime('%Y-%m-%d'))) \
+            .filter(Holiday.date < to_gregorian(end.strftime('%Y-%m-%d'))) \
+            .order_by(Holiday.date.asc()).all()
+        holiday_prepar = {}
+        for holiday in holidays:
+            if not to_jalali(holiday.date, type='date').month in holiday_prepar:
+                holiday_prepar[to_jalali(holiday.date, type='date').month] = []
+            holiday_prepar[to_jalali(holiday.date, type='date').month].append(holiday)
+            
+    if request.method == 'POST':
+        if holiday_form.validate_on_submit():
+            holiday = add_holiday(holiday_form)
+            if holiday == "success":
+                flash(message_obj.holiday_added[session['language']], 'success')
+            else:
+                flash(message_obj.holiday_not_added[session['language']], 'error')
+        else:
+            flash(holiday_form.errors)
+        return redirect(url_for('holiday'))
+    return render_template('holiday.html', form=holiday_form, start_end_year=start_end_year, holidays=holiday_prepar,
+        title=translation_obj.forms[session['language']], language=session['language'], year_url=year)
 
+@app.route("/delete_holiday/<int:holiday_id>", methods=['GET'])
+@login_required
+def delete_holiday(holiday_id):
+    if not check_access('delete_holiday'):
+        return redirect(url_for('access_denied'))
+    try:
+        holiday = Holiday.query.get(holiday_id)
+        db.session.delete(holiday)
+        db.session.commit()
+        flash(message_obj.holiday_deleted[session['language']], 'success')
+    except IOError as exc:
+        flash(message_obj.holiday_not_deleted[session['language']], 'error')
+    return redirect(url_for('holiday'))
+
+@app.route("/update_holiday", methods=['GET', 'POST'])
+@login_required
+def update_holiday():
+    if not check_access('update_holiday'):
+        return redirect(url_for('access_denied'))
+    holiday_form = HolidayForm(session['language'])
+    if request.method == "GET":
+        holiday = Holiday.query.get(request.args.get('id'))
+        data = {'id': holiday.id, 'date': to_jalali(holiday.date), 'title': holiday.title, 'title_english': holiday.title_english}
+        return jsonify(data)
+    elif request.method == "POST":
+        if holiday_form.validate_on_submit():
+            try:
+                holiday = Holiday.query.get(request.form['id'])
+                holiday.date = to_gregorian(request.form['date'])
+                holiday.title = request.form['title']
+                holiday.title_english = request.form['title_english']
+                db.session.commit()
+                flash(message_obj.holiday_updated[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.holiday_not_updated[session['language']], 'error')
+        else:
+            flash(holiday_form.errors)
+    return redirect(url_for('holiday'))
 
 @app.route("/position_setting", methods=['GET', 'POST'])
 @login_required

@@ -88,7 +88,7 @@ def to_gregorian(value, date_format='%Y-%m-%d'):
     date_value = value.togregorian()
     return date_value.strftime(date_format)
 
-def to_jalali(value, date_format='%Y-%m-%d'):
+def to_jalali(value, date_format='%Y-%m-%d', type='str'):
     if value == None:
         return ''
     str_value = value
@@ -102,6 +102,8 @@ def to_jalali(value, date_format='%Y-%m-%d'):
     minute = value.minute
     second = value.second
     jvalue = jdatetime.datetime.fromgregorian(day=day, month=month, year=year, hour=hour, minute=minute, second=second)
+    if type == 'date':
+        return jvalue
     return jvalue.strftime(date_format)
 
 def check_access(route_name=''):
@@ -111,3 +113,20 @@ def check_access(route_name=''):
         if isinstance(roles, list) :
             return (route_name in roles or route_name in employees)
     return False
+
+def get_month_name(month):
+    months = {
+        1: "حمل",
+        2: "ثور",
+        3: "جوزا",
+        4: "سرطان",
+        5: "اسد",
+        6: "سنبله",
+        7: "میزان",
+        8: "عقرب",
+        9: "قوس",
+        10: "جدی",
+        11: "دلو",
+        12: "حوت"
+    }
+    return months[month]
