@@ -60,7 +60,10 @@
     "change_contract_status",
     "leave_hr",
     "overtime_hr",
-    "loan_hr"
+    "loan_hr",
+    "holiday",
+    "delete_holiday",
+    "update_holiday"
   ],
   "Finance" : [
     "loan_finance"
@@ -108,6 +111,9 @@
     "my_equipment",
     "view_resign_request",
     "deliver_equipment",
-    "accept_reject_resign_request"
+    "accept_reject_resign_request",
+    "holiday",
+    "delete_holiday",
+    "update_holiday"
   ]
 }
