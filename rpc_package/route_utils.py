@@ -4,7 +4,7 @@ from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
-    Positions, Loan_form, Holiday
+    Positions, Loan_form, Holiday, AttendanceFile
 
 from flask import session
 import datetime
@@ -452,6 +452,47 @@ def send_department(department_form):
         return "success"
     else:
         return "error"
+
+def add_attendance(attendance_form):
+    try:
+        request_file = attendance_form.raw_file_url.data
+        year = attendance_form.year.data
+        month = attendance_form.month.data
+        request_file.filename = f"{year}-" + month + "." + request_file.filename.rsplit('.', 1)[1]
+
+        path = "./rpc_package/static/files/attendances/"
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = os.path.join(path, request_file.filename)
+        attendance_file = AttendanceFile(
+            year=year,
+            month=month,
+            raw_file_url=f"/static/files/attendances/" + request_file.filename)
+        assert isinstance(db, object)
+        request_file.save(path)
+        # create the attendance
+        db.session.add(attendance_file)
+        db.session.commit()
+        return 'success'
+    except IOError as io:
+        return 'error'
+
+    request_file = attendance_form.raw_file_url.data
+    ALLOWED_EXTENSIONS = {'xlsx', 'xlsm', 'xlsb', 'xls'}
+    ext = request_file.filename.split('.')[1]
+    print(ext)
+    if ext in ALLOWED_EXTENSIONS:
+        request_file.filename = f"profile-" + session['emp_id'] + "." + ext
+        workingdir = os.path.abspath(os.getcwd())
+        path = os.path.join(workingdir + "/rpc_package/static/images/profiles", request_file.filename)
+        emp = Employees.query.filter_by(id=session['emp_id']).first()
+        emp.profile_pic = f"/static/images/profiles/" + request_file.filename
+        assert isinstance(db, object)
+        request_file.save(path)
+        db.session.commit()
+        return 'success'
+    else:
+        return "invalid extention"
 
 
 def set_contact_update_form_data(contract_id, contract_form):

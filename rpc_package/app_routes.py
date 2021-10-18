@@ -6,20 +6,20 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
-    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm
 
 from rpc_package.form_dynamic_language import *
 
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
-    Loan_form, Overtime_reason, Leave_reason, Holiday
+    Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
     to_gregorian, to_jalali, check_access
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
-    add_loan_request, accept_equipment, accept_reject_resign, add_holiday
+    add_loan_request, accept_equipment, accept_reject_resign, add_holiday, add_attendance
 import os
 import datetime
 import jdatetime
@@ -1177,6 +1177,27 @@ def update_holiday():
         else:
             flash(holiday_form.errors)
     return redirect(url_for('holiday'))
+
+@app.route("/attendance", methods=['GET', 'POST'])
+@login_required
+def attendance():
+    # if not check_access('attendance'):
+    #     return redirect(url_for('access_denied'))
+    attendance_form = AttendanceForm(session['language'])
+    if request.method == "GET":
+        emp_overtime_list = AttendanceFile
+    if request.method == 'POST':
+        if attendance_form.validate_on_submit():
+            overtime = add_attendance(attendance_form)
+            if overtime == "success":
+                flash(message_obj.overtime_request_sent[session['language']], 'success')
+            else:
+                flash(message_obj.overtime_request_not_sent[session['language']], 'error')
+        else:
+            flash(attendance_form.errors)
+        return redirect(url_for('attendance'))
+    return render_template('attendance.html', form=attendance_form, emp_overtime_list=emp_overtime_list,
+        title=translation_obj.forms[session['language']], language=session['language'])
 
 @app.route("/position_setting", methods=['GET', 'POST'])
 @login_required

@@ -6,7 +6,7 @@ import re
 from wtforms.widgets import TextArea
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
     Positions, Departments, Salary, Holiday
-from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian
+from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian, get_months
 from rpc_package import translation_obj, message_obj
 import jdatetime, datetime
 
@@ -535,6 +535,29 @@ class HolidayForm(FlaskForm):
         if title_english.data == '':
             raise ValidationError(message_obj.required_field[self.language].format(translation_obj.english_title[self.language]))
 
+class AttendanceForm(FlaskForm):
+    year = jdatetime.date.today().year
+    year = SelectField('Year', choices=[year-1, year, year+1])
+    month = SelectField('Month', choices=get_months())
+    raw_file_url = FileField('Select Attendance File')
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(AttendanceForm, self).__init__()
+        self.language = language
+        self.year.label.text = translation_obj.year[language]
+        self.month.label.text = translation_obj.month[language]
+        self.submit.label.text = translation_obj.save[language]
+    def validate_year (self, year):
+        if year.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.year[self.language]))
+    def validate_month (self, month):
+        if month.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.month[self.language]))
+    def validate_raw_file_url (self, raw_file_url):
+        if raw_file_url.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.attendance_file[self.language]))
+        # elif not re.match(r"^.*\.(xlsx|xlsm|xlsb|xls)$", raw_file_url.data):
+        #     raise ValidationError(message_obj.file_format_excel[self.language])
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])

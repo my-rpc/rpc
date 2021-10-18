@@ -348,5 +348,9 @@
   "holiday_not_updated": {
     "dari": "رخصتی متاسفانه بروزرسانی نشد",
     "en": "Holiday has not been updated"
+  },
+  "file_format_excel": {
+    "dari": "فارمت فایل باید اکسل باشد",
+    "en": "File format must be an excel"
   }
 }

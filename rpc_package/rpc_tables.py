@@ -389,6 +389,17 @@ class Holiday(db.Model, UserMixin):
     def __repr__(self):
         return f"Holiday ID: {self.id}, Date: {self.date}"
 
+class AttendanceFile(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "attendance_file"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    month = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    raw_file_url = db.Column(db.String(255))
+    file_url = db.Column(db.String(255))
+    def __repr__(self):
+        return f"AttendanceFile ID: {self.id}, Year: {self.year}, Month: {self.month}"
+
 class Resign_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
