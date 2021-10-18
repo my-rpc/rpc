@@ -1102,8 +1102,8 @@ def department_setting():
 @app.route("/holiday", methods=['GET', 'POST'])
 @login_required
 def holiday():
-    # if not check_access('holiday'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('holiday'):
+        return redirect(url_for('access_denied'))
     holiday_form = HolidayForm(session['language'])
     if request.method == "GET":
         # Get the year from url or set current year as default
@@ -1142,6 +1142,8 @@ def holiday():
 @app.route("/delete_holiday/<int:holiday_id>", methods=['GET'])
 @login_required
 def delete_holiday(holiday_id):
+    if not check_access('delete_holiday'):
+        return redirect(url_for('access_denied'))
     try:
         holiday = Holiday.query.get(holiday_id)
         db.session.delete(holiday)
@@ -1154,6 +1156,8 @@ def delete_holiday(holiday_id):
 @app.route("/update_holiday", methods=['GET', 'POST'])
 @login_required
 def update_holiday():
+    if not check_access('update_holiday'):
+        return redirect(url_for('access_denied'))
     holiday_form = HolidayForm(session['language'])
     if request.method == "GET":
         holiday = Holiday.query.get(request.args.get('id'))
