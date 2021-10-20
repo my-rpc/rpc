@@ -451,6 +451,14 @@
     "dari": "فایل حاضری",
     "en": "Attendance File"
   },
+  "attendance_file_list": {
+    "dari": "لیست فایل حاضری",
+    "en": "List of Attendance File"
+  },
+  "attendance_file_form": {
+    "dari": "فورم فایل حاضری",
+    "en": "Form of Attendance File"
+  },
   "select_attendance_file": {
     "dari": "فایل حاضری را انتخاب کنید",
     "en": "Select Attendance File"

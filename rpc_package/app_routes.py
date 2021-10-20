@@ -1178,10 +1178,10 @@ def update_holiday():
             flash(holiday_form.errors)
     return redirect(url_for('holiday'))
 
-@app.route("/attendance", methods=['GET', 'POST'])
+@app.route("/attendance_file", methods=['GET', 'POST'])
 @login_required
-def attendance():
-    # if not check_access('attendance'):
+def attendance_file():
+    # if not check_access('attendance_file'):
     #     return redirect(url_for('access_denied'))
     attendance_form = AttendanceForm(session['language'])
     if request.method == "GET":
@@ -1195,8 +1195,8 @@ def attendance():
                 flash(message_obj.attendance_file_not_saved[session['language']], 'error')
         else:
             flash(attendance_form.errors)
-        return redirect(url_for('attendance'))
-    return render_template('attendance.html', form=attendance_form, attendance_file_list=attendance_file_list,
+        return redirect(url_for('attendance_file'))
+    return render_template('attendance_file.html', form=attendance_form, attendance_file_list=attendance_file_list,
         title=translation_obj.forms[session['language']], language=session['language'])
 
 @app.route("/delete_attendance_file/<int:attendance_id>", methods=['GET'])
@@ -1215,7 +1215,7 @@ def delete_attendance_file(attendance_id):
         flash(message_obj.attendance_deleted[session['language']], 'success')
     except IOError as exc:
         flash(message_obj.attendance_not_deleted[session['language']], 'error')
-    return redirect(url_for('attendance'))
+    return redirect(url_for('attendance_file'))
 
 @app.route("/process_attendance_file/<int:attendance_id>", methods=['GET'])
 @login_required
@@ -1226,7 +1226,7 @@ def process_attendance_file(attendance_id):
         flash(message_obj.attendance_deleted[session['language']], 'success')
     except IOError as exc:
         flash(message_obj.attendance_not_deleted[session['language']], 'error')
-    return redirect(url_for('attendance'))
+    return redirect(url_for('attendance_file'))
 
 @app.route("/position_setting", methods=['GET', 'POST'])
 @login_required
