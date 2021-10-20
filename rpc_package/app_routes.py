@@ -1199,6 +1199,35 @@ def attendance():
     return render_template('attendance.html', form=attendance_form, attendance_file_list=attendance_file_list,
         title=translation_obj.forms[session['language']], language=session['language'])
 
+@app.route("/delete_attendance_file/<int:attendance_id>", methods=['GET'])
+@login_required
+def delete_attendance_file(attendance_id):
+    # if not check_access('delete_attendance_file'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        attendance = AttendanceFile.query.get(attendance_id)
+        if attendance.raw_file_url and os.path.exists(os.path.join(f"./rpc_package" + attendance.raw_file_url)):
+            os.remove(os.path.join(f"./rpc_package" + attendance.raw_file_url))
+        if attendance.file_url and os.path.exists(os.path.join(f"./rpc_package" + attendance.file_url)):
+            os.remove(os.path.join(f"./rpc_package" + attendance.file_url))
+        db.session.delete(attendance)
+        db.session.commit()
+        flash(message_obj.attendance_deleted[session['language']], 'success')
+    except IOError as exc:
+        flash(message_obj.attendance_not_deleted[session['language']], 'error')
+    return redirect(url_for('attendance'))
+
+@app.route("/process_attendance_file/<int:attendance_id>", methods=['GET'])
+@login_required
+def process_attendance_file(attendance_id):
+    # if not check_access('process_attendance_file'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        flash(message_obj.attendance_deleted[session['language']], 'success')
+    except IOError as exc:
+        flash(message_obj.attendance_not_deleted[session['language']], 'error')
+    return redirect(url_for('attendance'))
+
 @app.route("/position_setting", methods=['GET', 'POST'])
 @login_required
 def position_setting():

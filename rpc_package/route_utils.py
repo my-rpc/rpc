@@ -458,8 +458,7 @@ def add_attendance(attendance_form):
         request_file = attendance_form.raw_file_url.data
         year = attendance_form.year.data
         month = attendance_form.month.data
-        request_file.filename = f"{year}-" + month + "." + request_file.filename.rsplit('.', 1)[1]
-
+        request_file.filename = f"{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}-{year}-{month}." + request_file.filename.rsplit('.', 1)[1]
         path = "./rpc_package/static/files/attendances/"
         if not os.path.exists(path):
             os.makedirs(path)

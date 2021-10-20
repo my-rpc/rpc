@@ -364,5 +364,13 @@
   "attendance_file_not_saved": {
     "dari": "رخصتی متاسفانه بروزرسانی نشد",
     "en": "Attendance file has not been saved"
+  },
+  "attendance_deleted": {
+    "dari": "فایل حاضری موفقانه حذف شد",
+    "en": "Attendance successfully deleted"
+  },
+  "attendance_not_deleted": {
+    "dari": "فایل حاضری حذف نشد",
+    "en": "Attendance has not been deleted"
   }
 }
