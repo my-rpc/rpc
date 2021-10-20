@@ -356,5 +356,13 @@
   "existen_attendance": {
     "dari": "فایل حاضری مربوط این ماه از قبل موجود است",
     "en": "Attendance file has been existed for this month"
+  },
+  "attendance_file_saved": {
+    "dari": "فایل رخصتی موفقانه ذخیره شد",
+    "en": "Attendance file successfully saved"
+  },
+  "attendance_file_not_saved": {
+    "dari": "رخصتی متاسفانه بروزرسانی نشد",
+    "en": "Attendance file has not been saved"
   }
 }

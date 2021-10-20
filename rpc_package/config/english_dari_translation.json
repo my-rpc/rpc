@@ -667,6 +667,22 @@
     "dari": "حذف کارمند",
     "en": "Delete Employee"
   },
+  "delete": {
+    "dari": "حذف",
+    "en": "Delete"
+  },
+  "raw_file": {
+    "dari": "فایل خاکه",
+    "en": "Raw file"
+  },
+  "gen_file": {
+    "dari": "فایل پروسس شده",
+    "en": "Processed File"
+  },
+  "process": {
+    "dari": "پروسس",
+    "en": "Process"
+  },
   "add_document": {
     "dari": "اضافه کردن اسناد",
     "en": "Add Document"

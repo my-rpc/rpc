@@ -477,24 +477,6 @@ def add_attendance(attendance_form):
     except IOError as io:
         return 'error'
 
-    request_file = attendance_form.raw_file_url.data
-    ALLOWED_EXTENSIONS = {'xlsx', 'xlsm', 'xlsb', 'xls'}
-    ext = request_file.filename.split('.')[1]
-    print(ext)
-    if ext in ALLOWED_EXTENSIONS:
-        request_file.filename = f"profile-" + session['emp_id'] + "." + ext
-        workingdir = os.path.abspath(os.getcwd())
-        path = os.path.join(workingdir + "/rpc_package/static/images/profiles", request_file.filename)
-        emp = Employees.query.filter_by(id=session['emp_id']).first()
-        emp.profile_pic = f"/static/images/profiles/" + request_file.filename
-        assert isinstance(db, object)
-        request_file.save(path)
-        db.session.commit()
-        return 'success'
-    else:
-        return "invalid extention"
-
-
 def set_contact_update_form_data(contract_id, contract_form):
     try:
         position = Position_history.query.filter_by(id = contract_id, status = True).first()

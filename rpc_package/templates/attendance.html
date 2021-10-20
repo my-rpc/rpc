@@ -51,6 +51,43 @@
       </form>
     </div>
   </div>
+  <div class="box">
+    <div class="box-header with-border">
+      <div class="box-title">{{translation.list_of_leave_request[language]}}</div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body no-padding">
+        <div class="table-responsive">
+          <table class="table table-hover" id="leave_list">
+            <tr>
+              <th>{{translation.year[language]}}</th>
+              <th>{{translation.month[language]}}</th>
+              <th>{{translation.raw_file[language]}}</th>
+              <th>{{translation.process[language]}}</th>
+              <th>{{translation.gen_file[language]}}</th>
+              <th>{{translation.delete[language]}}</th>
+            </tr>
+            {% for attendance in attendance_file_list %}
+            <tr>
+              <td>{{ attendance.year }}</td>
+              <td>{{ get_month_name(attendance.month) }}</td>
+              <td>
+                <a href="{{attendance.raw_file_url}}" class="btn btn-xs">
+                  <button type="button" class="waves-effect waves-light btn btn-xs btn-circle btn-info">
+                    <i class="fa fa-download"></i>
+                  </button>
+                </a>
+              </td>
+              <td>{{ attendance.raw_file_url }}</td>
+              <td>{{ attendance.file_url }}</td>
+              <td>{{ attendance.id }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+    </div>
+    <!-- /.box-body -->
+  </div>
 </section>
 {% endblock main_content%}
 {% block js_code %}

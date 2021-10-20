@@ -1185,18 +1185,18 @@ def attendance():
     #     return redirect(url_for('access_denied'))
     attendance_form = AttendanceForm(session['language'])
     if request.method == "GET":
-        emp_overtime_list = AttendanceFile
+        attendance_file_list = AttendanceFile.query.all()
     if request.method == 'POST':
         if attendance_form.validate_on_submit():
             overtime = add_attendance(attendance_form)
             if overtime == "success":
-                flash(message_obj.overtime_request_sent[session['language']], 'success')
+                flash(message_obj.attendance_file_saved[session['language']], 'success')
             else:
-                flash(message_obj.overtime_request_not_sent[session['language']], 'error')
+                flash(message_obj.attendance_file_not_saved[session['language']], 'error')
         else:
             flash(attendance_form.errors)
         return redirect(url_for('attendance'))
-    return render_template('attendance.html', form=attendance_form, emp_overtime_list=emp_overtime_list,
+    return render_template('attendance.html', form=attendance_form, attendance_file_list=attendance_file_list,
         title=translation_obj.forms[session['language']], language=session['language'])
 
 @app.route("/position_setting", methods=['GET', 'POST'])
