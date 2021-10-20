@@ -451,6 +451,10 @@
     "dari": "فایل حاضری",
     "en": "Attendance File"
   },
+  "select_attendance_file": {
+    "dari": "فایل حاضری را انتخاب کنید",
+    "en": "Select Attendance File"
+  },
   "less_then_a_month": {
     "dari": "کمتر از یک ماه",
     "en": "Less then a month"

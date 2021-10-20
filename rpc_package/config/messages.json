@@ -352,5 +352,9 @@
   "file_format_excel": {
     "dari": "فارمت فایل باید اکسل باشد",
     "en": "File format must be an excel"
+  },
+  "existen_attendance": {
+    "dari": "فایل حاضری مربوط این ماه از قبل موجود است",
+    "en": "Attendance file has been existed for this month"
   }
 }

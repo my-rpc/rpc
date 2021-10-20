@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Validation
 import re
 from wtforms.widgets import TextArea
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
-    Positions, Departments, Salary, Holiday
+    Positions, Departments, Salary, Holiday, AttendanceFile
 from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian, get_months
 from rpc_package import translation_obj, message_obj
 import jdatetime, datetime
@@ -546,18 +546,23 @@ class AttendanceForm(FlaskForm):
         self.language = language
         self.year.label.text = translation_obj.year[language]
         self.month.label.text = translation_obj.month[language]
+        self.raw_file_url.label.text = translation_obj.select_attendance_file[language]
         self.submit.label.text = translation_obj.save[language]
-    def validate_year (self, year):
+    
+    def validate_year (self, year):        
         if year.data == '':
             raise ValidationError(message_obj.required_field[self.language].format(translation_obj.year[self.language]))
     def validate_month (self, month):
         if month.data == '':
-            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.month[self.language]))
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.month[self.language]))  
+        attendance = AttendanceFile.query.filter_by(year=self.year.data, month=month.data).first()
+        if attendance:
+            raise ValidationError(message_obj.existen_attendance[self.language])
     def validate_raw_file_url (self, raw_file_url):
         if raw_file_url.data == '':
             raise ValidationError(message_obj.required_field[self.language].format(translation_obj.attendance_file[self.language]))
-        # elif not re.match(r"^.*\.(xlsx|xlsm|xlsb|xls)$", raw_file_url.data):
-        #     raise ValidationError(message_obj.file_format_excel[self.language])
+        elif not re.match(r"^.*\.(xlsx|xlsm|xlsb|xls)$", raw_file_url.data.filename):
+            raise ValidationError(message_obj.file_format_excel[self.language])
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
