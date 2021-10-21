@@ -135,3 +135,9 @@ def get_months():
 def get_month_name(month):
     months = get_months()
     return months[month-1][1]
+
+def list_to_shamsi(dates):
+    result_dates = []
+    for date in dates:
+        result_dates.append(to_jalali(date))
+    return result_dates

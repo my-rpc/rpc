@@ -1,15 +1,16 @@
 import pandas as pd
 import numpy as np
-
+import os
 
 class Attendance:
 
-    def __init__(self, month, year, day=8.5, file_format='xlsx'):
+    def __init__(self, month, year, day=8.5, file_format='xlsx', path_att=''):
         self.month = str(month)
         self.year = str(year)
+        self.path_att = os.path.join(f"./rpc_package" + path_att)
         self.file_format = file_format
         self.filename = '{}_{}.{}'.format(self.month, self.year, self.file_format)
-        self.path_att = 'static/files/attendance/input/att_{}'.format(self.filename)
+        # self.path_att = 'static/files/attendance/input/att_{}'.format(self.filename)
         self.path_report = 'static/files/attendance/output/report_{}'.format(self.filename)
         self.names = []
         self.date_m = []
@@ -49,9 +50,9 @@ class Attendance:
         self.names = self.data.Name.unique()
 
 
-if __name__ == '__main__':
-    att_obj = Attendance('sonbola', 1400)
-    att_obj.read_excel()
-    att_obj.drop_cols()
+# if __name__ == '__main__':
+#     att_obj = Attendance('sonbola', 1400, path_att='')
+#     att_obj.read_excel()
+#     att_obj.drop_cols()
 
-    print("end")
+#     print("end")
