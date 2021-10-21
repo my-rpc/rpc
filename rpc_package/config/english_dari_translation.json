@@ -443,6 +443,18 @@
     "dari": "ماه",
     "en": "Months"
   },
+  "month": {
+    "dari": "ماه",
+    "en": "Month"
+  },
+  "attendance_file": {
+    "dari": "فایل حاضری",
+    "en": "Attendance File"
+  },
+  "select_attendance_file": {
+    "dari": "فایل حاضری را انتخاب کنید",
+    "en": "Select Attendance File"
+  },
   "less_then_a_month": {
     "dari": "کمتر از یک ماه",
     "en": "Less then a month"
@@ -654,6 +666,22 @@
   "delete_employee": {
     "dari": "حذف کارمند",
     "en": "Delete Employee"
+  },
+  "delete": {
+    "dari": "حذف",
+    "en": "Delete"
+  },
+  "raw_file": {
+    "dari": "فایل خاکه",
+    "en": "Raw file"
+  },
+  "gen_file": {
+    "dari": "فایل پروسس شده",
+    "en": "Processed File"
+  },
+  "process": {
+    "dari": "پروسس",
+    "en": "Process"
   },
   "add_document": {
     "dari": "اضافه کردن اسناد",

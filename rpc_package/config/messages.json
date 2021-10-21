@@ -348,5 +348,29 @@
   "holiday_not_updated": {
     "dari": "رخصتی متاسفانه بروزرسانی نشد",
     "en": "Holiday has not been updated"
+  },
+  "file_format_excel": {
+    "dari": "فارمت فایل باید اکسل باشد",
+    "en": "File format must be an excel"
+  },
+  "existen_attendance": {
+    "dari": "فایل حاضری مربوط این ماه از قبل موجود است",
+    "en": "Attendance file has been existed for this month"
+  },
+  "attendance_file_saved": {
+    "dari": "فایل رخصتی موفقانه ذخیره شد",
+    "en": "Attendance file successfully saved"
+  },
+  "attendance_file_not_saved": {
+    "dari": "رخصتی متاسفانه بروزرسانی نشد",
+    "en": "Attendance file has not been saved"
+  },
+  "attendance_deleted": {
+    "dari": "فایل حاضری موفقانه حذف شد",
+    "en": "Attendance successfully deleted"
+  },
+  "attendance_not_deleted": {
+    "dari": "فایل حاضری حذف نشد",
+    "en": "Attendance has not been deleted"
   }
 }
