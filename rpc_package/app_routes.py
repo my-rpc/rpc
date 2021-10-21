@@ -24,6 +24,7 @@ import os
 import datetime
 import jdatetime
 from sqlalchemy import func
+from rpc_package.attendance import Attendance
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
@@ -1223,6 +1224,11 @@ def process_attendance_file(attendance_id):
     # if not check_access('process_attendance_file'):
     #     return redirect(url_for('access_denied'))
     try:
+        attendance = AttendanceFile.query.get(attendance_id)
+        att_obj = Attendance('sonbola', 1400, path_att=attendance.raw_file_url)
+        att_obj.read_excel()
+        att_obj.drop_cols()
+        
         flash(message_obj.attendance_deleted[session['language']], 'success')
     except IOError as exc:
         flash(message_obj.attendance_not_deleted[session['language']], 'error')
