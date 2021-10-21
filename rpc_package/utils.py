@@ -6,6 +6,8 @@ import os
 import jdatetime, datetime
 from rpc_package import user_access
 from flask_login import current_user
+import pandas as pd
+import numpy as np
 from flask import url_for, redirect, request
 
 class EmployeeValidator:
@@ -115,20 +117,6 @@ def check_access(route_name=''):
     return False
 
 def get_months():
-    # return {
-    #     1: "حمل",
-    #     2: "ثور",
-    #     3: "جوزا",
-    #     4: "سرطان",
-    #     5: "اسد",
-    #     6: "سنبله",
-    #     7: "میزان",
-    #     8: "عقرب",
-    #     9: "قوس",
-    #     10: "جدی",
-    #     11: "دلو",
-    #     12: "حوت"
-    # }
     return [
         (1, "حمل"),
         (2, "ثور"),
