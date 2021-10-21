@@ -1,0 +1,20 @@
+{
+  "report": [
+    "Emp No.",
+    "Name",
+    "Date Sh",
+    "Date M"
+    "On duty",
+    "Off duty",
+    "Clock In",
+    "Clock out",
+    "Late",
+    "Early",
+    "Over time",
+    "Absent",
+    "Total deduction",
+    "Total work/hr",
+    "Total work/Day",
+    "Overtime/Day"
+  ]
+}
