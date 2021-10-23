@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.0'
-DESCRIPTION = 'Attendance file process added in app_routes file'
+VERSION = '0.8.2'
+DESCRIPTION = 'the datatable js and css file removed from unusable page and replaced with offline version in usable page for best load speed'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
