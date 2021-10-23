@@ -413,6 +413,8 @@ def delete_employee():
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
             sel_emp = Employees.query.get(emp_id)
+            for email in sel_emp.emails:
+                db.session.delete(email)
             db.session.delete(sel_emp)
             db.session.commit()
         except IOError as exc:

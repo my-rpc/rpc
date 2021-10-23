@@ -17,6 +17,7 @@ class Attendance:
         self.names = []
         self.date_m = []
         self.col2_change = {"Date": 'Date M'}
+        
 
     def read_excel(self):
         self.data = pd.read_excel(self.path_att, engine='xlrd')
