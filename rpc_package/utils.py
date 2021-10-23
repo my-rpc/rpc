@@ -84,7 +84,7 @@ def to_gregorian(value, date_format='%Y-%m-%d'):
     if value == None:
         return ''
     str_value = value
-    if (isinstance(value, datetime.datetime) or isinstance(value, datetime.date)):
+    if (isinstance(value, jdatetime.datetime) or isinstance(value, jdatetime.date)):
         str_value = value.strftime(date_format)
     value = jdatetime.datetime.strptime(str_value, date_format)
     date_value = value.togregorian()
@@ -136,8 +136,20 @@ def get_month_name(month):
     months = get_months()
     return months[month-1][1]
 
-def list_to_shamsi(dates):
+def convert_to_shamsi(dates):
     result_dates = []
     for date in dates:
-        result_dates.append(to_jalali(date))
+        sdate = date.split('/')
+        date = jdatetime.datetime.fromgregorian(day=int(sdate[1]), month=int(sdate[0]), year=int(sdate[2]))
+        result_dates.append(date.strftime('%Y-%m-%d'))
     return result_dates
+
+def get_last_day_of_month(month=1):
+    day = 31
+    if month <= 6:
+        day = 31
+    elif month < 12:
+        day = 30
+    elif month == 12:
+        day = 30 if jdatetime.date.today().isleap() else 29
+    return day

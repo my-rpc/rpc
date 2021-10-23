@@ -42,10 +42,10 @@ class Employees(db.Model, UserMixin):
     loans = db.relationship("Loan_form", foreign_keys='Loan_form.emp_id', lazy='dynamic')
     users = db.relationship("Users", foreign_keys='Users.emp_id')
     emails = db.relationship("Emails", foreign_keys='Emails.emp_id')
-    phones = db.relationship("Phone", foreign_keys='Phone.emp_id')
-    documents = db.relationship("Documents", foreign_keys='Documents.emp_id')
-    current_address = db.relationship("Current_addresses", foreign_keys='Current_addresses.emp_id', uselist=False)
-    permanent_address = db.relationship("Permanent_addresses", foreign_keys='Permanent_addresses.emp_id', uselist=False)
+    phones = db.relationship("Phone", foreign_keys='Phone.emp_id', cascade="all, delete")
+    documents = db.relationship("Documents", foreign_keys='Documents.emp_id', cascade="all, delete")
+    current_address = db.relationship("Current_addresses", foreign_keys='Current_addresses.emp_id', uselist=False, cascade="all, delete")
+    permanent_address = db.relationship("Permanent_addresses", foreign_keys='Permanent_addresses.emp_id', uselist=False, cascade="all, delete")
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \

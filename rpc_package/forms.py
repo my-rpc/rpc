@@ -69,7 +69,7 @@ class EmployeeForm(FlaskForm):
                               default=last_emp_id)
 
     first_name = StringField('نام', validators=[DataRequired()])
-    last_name = StringField('تخلص', validators=[DataRequired()])
+    last_name = StringField('تخلص')
     father_name = StringField('نام پدر', validators=[DataRequired()])
     grand_name = StringField('نام پدر کلان', validators=[DataRequired()])
 
@@ -128,13 +128,12 @@ class EmployeeForm(FlaskForm):
         self.submit.label.text = translation_obj.add_new_employee[language]
 
     def validate_email(self, email):
-        if email.data == '':
-            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.email[self.language]))
-        elif not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
-            raise ValidationError('فرمت ایمیل را چک کنید')
-        user_email = Emails.query.filter_by(email=email.data).first()
-        if user_email:
-            raise ValidationError('ایمیل شما موجود است')
+        if email.data:
+            if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
+                raise ValidationError('فرمت ایمیل را چک کنید')
+            user_email = Emails.query.filter_by(email=email.data).first()
+            if user_email:
+                raise ValidationError('ایمیل شما موجود است')
 
     def validate_email_second(self, email_second):
         if email_second.data:
@@ -190,8 +189,6 @@ class EmployeeForm(FlaskForm):
             raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.birthday[self.language] + ' '))
         elif not date_validation(self, birthday.data):
             raise ValidationError(message_obj.incorrect_date_format[self.language])
-        # value = jdatetime.datetime.strptime(birthday.data, '%Y-%m-%d')
-        # birthday.data = value.togregorian()
 
 
 class UploadCVForm(FlaskForm):

@@ -365,12 +365,20 @@
     "dari": "رخصتی متاسفانه بروزرسانی نشد",
     "en": "Attendance file has not been saved"
   },
-  "attendance_deleted": {
+  "attendance_file_deleted": {
     "dari": "فایل حاضری موفقانه حذف شد",
-    "en": "Attendance successfully deleted"
+    "en": "Attendance file successfully deleted"
   },
-  "attendance_not_deleted": {
+  "attendance_file_not_deleted": {
     "dari": "فایل حاضری حذف نشد",
-    "en": "Attendance has not been deleted"
+    "en": "Attendance file has not been deleted"
+  },
+  "attendance_file_processed": {
+    "dari": "پردازش فایل حاضری موفقانه انجام شد",
+    "en": "Attendance file successfully processed"
+  },
+  "attendance_file_not_processed": {
+    "dari": "فایل حاضری حذف نشد",
+    "en": "Attendance file has not been processed"
   }
 }

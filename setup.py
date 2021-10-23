@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.0'
-DESCRIPTION = 'Attendance file process added in app_routes file'
+VERSION = '0.8.3'
+DESCRIPTION = 'Employee field of last name and email required removed and message display fixed on create of employee'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
