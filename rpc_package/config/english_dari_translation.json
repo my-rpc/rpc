@@ -679,16 +679,16 @@
     "dari": "حذف",
     "en": "Delete"
   },
-  "raw_file": {
-    "dari": "فایل خاکه",
-    "en": "Raw file"
+  "primary_file": {
+    "dari": "فایل اولیه",
+    "en": "Primary file"
   },
-  "gen_file": {
-    "dari": "فایل پروسس شده",
-    "en": "Processed File"
+  "result_file": {
+    "dari": "فایل نتیجه",
+    "en": "Result File"
   },
   "process": {
-    "dari": "پروسس",
+    "dari": "پردازش",
     "en": "Process"
   },
   "add_document": {

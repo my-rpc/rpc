@@ -15,7 +15,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
     Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
-    to_gregorian, to_jalali, check_access
+    to_gregorian, to_jalali, check_access, get_last_day_of_month
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
@@ -1213,9 +1213,9 @@ def delete_attendance_file(attendance_id):
             os.remove(os.path.join(f"./rpc_package" + attendance.file_url))
         db.session.delete(attendance)
         db.session.commit()
-        flash(message_obj.attendance_deleted[session['language']], 'success')
+        flash(message_obj.attendance_file_deleted[session['language']], 'success')
     except IOError as exc:
-        flash(message_obj.attendance_not_deleted[session['language']], 'error')
+        flash(message_obj.attendance_file_not_deleted[session['language']], 'error')
     return redirect(url_for('attendance_file'))
 
 @app.route("/process_attendance_file/<int:attendance_id>", methods=['GET'])
@@ -1225,13 +1225,19 @@ def process_attendance_file(attendance_id):
     #     return redirect(url_for('access_denied'))
     try:
         attendance = AttendanceFile.query.get(attendance_id)
-        att_obj = Attendance('sonbola', 1400, path_att=attendance.raw_file_url)
+        last_day = get_last_day_of_month(attendance.month)
+        start = jdatetime.date(year=attendance.year, month=attendance.month, day=1)
+        end = jdatetime.date(year=attendance.year, month=attendance.month, day=last_day)
+        holidays = Holiday.query.filter(Holiday.date >= to_gregorian(start)) \
+            .filter(Holiday.date <= to_gregorian(end)) \
+            .all()
+        att_obj = Attendance('sonbola', 1400, path_att=attendance.raw_file_url, holidays=holidays)
         att_obj.read_excel()
         att_obj.drop_cols()
         
-        flash(message_obj.attendance_deleted[session['language']], 'success')
+        flash(message_obj.attendance_file_processed[session['language']], 'success')
     except IOError as exc:
-        flash(message_obj.attendance_not_deleted[session['language']], 'error')
+        flash(message_obj.attendance_file_not_processed[session['language']], 'error')
     return redirect(url_for('attendance_file'))
 
 @app.route("/position_setting", methods=['GET', 'POST'])

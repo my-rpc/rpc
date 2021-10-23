@@ -1,12 +1,14 @@
 import pandas as pd
 import numpy as np
 import os
+from rpc_package.utils import convert_to_shamsi
 
 class Attendance:
 
-    def __init__(self, month, year, day=8.5, file_format='xlsx', path_att=''):
+    def __init__(self, month, year, day=8.5, file_format='xlsx', path_att='', holidays=[]):
         self.month = str(month)
         self.year = str(year)
+        self.holidays = holidays
         self.path_att = os.path.join(f"./rpc_package" + path_att)
         self.file_format = file_format
         self.filename = '{}_{}.{}'.format(self.month, self.year, self.file_format)
@@ -43,7 +45,7 @@ class Attendance:
         pass
 
     def get_date_shamsi(self):
-        self.date_m = self.data.Date.unique()
+        self.date_m = convert_to_shamsi(self.data.Date.unique())
 
 
     def get_emp_id(self):
@@ -51,7 +53,7 @@ class Attendance:
 
 
 # if __name__ == '__main__':
-#     att_obj = Attendance('sonbola', 1400, path_att='')
+#     att_obj = Attendance('sonbola', 1400, file_format='xls', path_att='')
 #     att_obj.read_excel()
 #     att_obj.drop_cols()
 

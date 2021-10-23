@@ -96,10 +96,11 @@
                   <td>{{ item.title }}</td>
                   <td>{{ item.title_english }}</td>
                   <td>
-                    <a href="javascript:void(0)" class="mx-2" onclick="updateHolidayOpenModel('{{item.id}}')">
+                    <a href="javascript:void(0)" onclick="updateHolidayOpenModel('{{item.id}}')">
                       <i class="fad fa-edit text-info"></i>
                     </a>
-                    <a href="delete_holiday/{{ item.id }}" class="mx-2" onclick="return confirm('Do you want to delete this record?');">
+                    <span class="px-2 text-secondary font-weight-bolder">|</span>
+                    <a href="delete_holiday/{{ item.id }}" onclick="return confirm('Do you want to delete this record?');">
                       <i class="fa fa-trash-alt text-danger"></i>
                     </a>
                   </td>
