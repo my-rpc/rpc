@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.2'
-DESCRIPTION = 'the datatable js and css file removed from unusable page and replaced with offline version in usable page for best load speed'
+VERSION = '0.8.3'
+DESCRIPTION = 'Employee field of last name and email required removed and message display fixed on create of employee'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
