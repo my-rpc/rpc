@@ -17,12 +17,6 @@
 
       </li>
       <li class="header">{{translation.hr_department[language] }} </li>
-      <li>
-        <a href="mailbox.html">
-          <i class="icon-Chart-pie"><span class="path1"></span><span class="path2"></span></i>
-          <span>{{translation.chart[language] }}</span>
-        </a>
-      </li>
       {% if (check_access('add_employee') or check_access('employee_settings')) %}
       <li class="treeview">
         <a href="#">

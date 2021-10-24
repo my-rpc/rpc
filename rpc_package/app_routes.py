@@ -6,24 +6,25 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
-    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm, ChangePassForm
 
 from rpc_package.form_dynamic_language import *
 
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
-    Loan_form, Overtime_reason, Leave_reason, Holiday
+    Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
-    to_gregorian, to_jalali, check_access
+    to_gregorian, to_jalali, check_access, get_last_date_of_month
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
-    add_loan_request, accept_equipment, accept_reject_resign, add_holiday
+    add_loan_request, accept_equipment, accept_reject_resign, add_holiday, add_attendance
 import os
 import datetime
 import jdatetime
 from sqlalchemy import func
+from rpc_package.attendance import Attendance
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
@@ -412,6 +413,8 @@ def delete_employee():
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
             sel_emp = Employees.query.get(emp_id)
+            for email in sel_emp.emails:
+                db.session.delete(email)
             db.session.delete(sel_emp)
             db.session.commit()
         except IOError as exc:
@@ -428,7 +431,9 @@ def profile():
     if not check_access('profile'):
         return redirect(url_for('access_denied'))
     employee = Employees.query.filter_by(id=current_user.emp_id).first()
-    return render_template('profile.html', title='My Profile', language=session['language'], employee=employee)
+    change_pass_form = ChangePassForm(session['language'])
+    return render_template('profile.html', title='My Profile', language=session['language'],
+        employee=employee, Position_history=Position_history, change_pass_form=change_pass_form)
 
 
 @app.route('/contract_settings')
@@ -1177,6 +1182,71 @@ def update_holiday():
         else:
             flash(holiday_form.errors)
     return redirect(url_for('holiday'))
+
+@app.route("/attendance_file", methods=['GET', 'POST'])
+@login_required
+def attendance_file():
+    # if not check_access('attendance_file'):
+    #     return redirect(url_for('access_denied'))
+    attendance_form = AttendanceForm(session['language'])
+    if request.method == "GET":
+        attendance_file_list = AttendanceFile.query.all()
+    if request.method == 'POST':
+        if attendance_form.validate_on_submit():
+            overtime = add_attendance(attendance_form)
+            if overtime == "success":
+                flash(message_obj.attendance_file_saved[session['language']], 'success')
+            else:
+                flash(message_obj.attendance_file_not_saved[session['language']], 'error')
+        else:
+            flash(attendance_form.errors)
+        return redirect(url_for('attendance_file'))
+    return render_template('attendance_file.html', form=attendance_form, attendance_file_list=attendance_file_list,
+        title=translation_obj.forms[session['language']], language=session['language'])
+
+@app.route("/delete_attendance_file/<int:attendance_id>", methods=['GET'])
+@login_required
+def delete_attendance_file(attendance_id):
+    # if not check_access('delete_attendance_file'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        attendance = AttendanceFile.query.get(attendance_id)
+        if attendance.raw_file_url and os.path.exists(os.path.join(f"./rpc_package" + attendance.raw_file_url)):
+            os.remove(os.path.join(f"./rpc_package" + attendance.raw_file_url))
+        if attendance.file_url and os.path.exists(os.path.join(f"./rpc_package" + attendance.file_url)):
+            os.remove(os.path.join(f"./rpc_package" + attendance.file_url))
+        db.session.delete(attendance)
+        db.session.commit()
+        flash(message_obj.attendance_file_deleted[session['language']], 'success')
+    except IOError as exc:
+        flash(message_obj.attendance_file_not_deleted[session['language']], 'error')
+    return redirect(url_for('attendance_file'))
+
+@app.route("/process_attendance_file/<int:attendance_id>", methods=['GET'])
+@login_required
+def process_attendance_file(attendance_id):
+    # if not check_access('process_attendance_file'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        attendance = AttendanceFile.query.get(attendance_id)
+        start = jdatetime.date(year=attendance.year, month=attendance.month, day=1)
+        end = get_last_date_of_month(start)
+        holidays = Holiday.query.filter(Holiday.date >= to_gregorian(start)) \
+            .filter(Holiday.date <= to_gregorian(end)).all()
+        hourly_leaves = Leave_form.query.filter_by(hr=1, supervisor=1, leave_type=1) \
+            .filter(Leave_form.start_datetime >= to_gregorian(start)) \
+            .filter(Leave_form.end_datetime <= to_gregorian(end)).all()
+        daily_leaves = Leave_form.query.filter_by(hr=1, supervisor=1, leave_type=0) \
+            .filter(Leave_form.start_datetime >= to_gregorian(start)) \
+            .filter(Leave_form.end_datetime <= to_gregorian(end)).all()
+        att_obj = Attendance('sonbola', 1400, path_att=attendance.raw_file_url, holidays=holidays, hourly_leaves=hourly_leaves, daily_leaves=daily_leaves)
+        att_obj.read_excel()
+        att_obj.drop_cols()
+        
+        flash(message_obj.attendance_file_processed[session['language']], 'success')
+    except IOError as exc:
+        flash(message_obj.attendance_file_not_processed[session['language']], 'error')
+    return redirect(url_for('attendance_file'))
 
 @app.route("/position_setting", methods=['GET', 'POST'])
 @login_required

@@ -4,7 +4,7 @@ from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
-    Positions, Loan_form, Holiday
+    Positions, Loan_form, Holiday, AttendanceFile
 
 from flask import session
 import datetime
@@ -108,12 +108,20 @@ def update_employee_data(update_employee_form):
     # check if employee has 2 or has 1 or none phone number
     # and check if second phone number is provided
     if phones is not None and len(phones) == 2:
-        phones[0].phone = update_employee_form.phone.data
+        if update_employee_form.phone.data:
+            phones[0].phone = update_employee_form.phone.data
+        else:
+            db.session.delete(phones[0])
         if update_employee_form.phone_second.data:
             phones[1].phone = update_employee_form.phone_second.data
+        else:
+            db.session.delete(phones[1])
 
     elif phones is not None and len(phones) == 1:
-        phones[0].phone = update_employee_form.phone.data
+        if update_employee_form.phone.data:
+            phones[0].phone = update_employee_form.phone.data
+        else:
+            db.session.delete(phones[0])
         if update_employee_form.phone_second.data:
             phone_second = Phone(
                 emp_id=update_employee_form.employee_id.data,
@@ -140,19 +148,25 @@ def update_employee_data(update_employee_form):
         emails[0].email = update_employee_form.email.data
         if update_employee_form.email_second.data:
             emails[1].email = update_employee_form.email_second.data
+        else:
+            db.session.delete(emails[1])
 
     elif emails is not None and len(emails) == 1:
-        update_employee_form.email.data = emails[0].email
+        if update_employee_form.email.data:
+            emails[0].email = update_employee_form.email.data
+        else:
+            db.session.delete(emails[0])
         if update_employee_form.email_second.data:
             email_second = Emails(
                 emp_id=update_employee_form.employee_id.data,
                 email=update_employee_form.email_second.data)
             db.session.add(email_second)
     elif not emails:
-        email = Emails(
-            emp_id=update_employee_form.employee_id.data,
-            email=update_employee_form.email.data)
-        db.session.add(email)
+        if update_employee_form.email.data:
+            email = Emails(
+                emp_id=update_employee_form.employee_id.data,
+                email=update_employee_form.email.data)
+            db.session.add(email)
         if update_employee_form.email_second.data:
             email_second = Emails(
                 emp_id=update_employee_form.employee_id.data,
@@ -453,6 +467,28 @@ def send_department(department_form):
     else:
         return "error"
 
+def add_attendance(attendance_form):
+    try:
+        request_file = attendance_form.raw_file_url.data
+        year = attendance_form.year.data
+        month = attendance_form.month.data
+        request_file.filename = f"{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}-{year}-{month}." + request_file.filename.rsplit('.', 1)[1]
+        path = "./rpc_package/static/files/attendances/"
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = os.path.join(path, request_file.filename)
+        attendance_file = AttendanceFile(
+            year=year,
+            month=month,
+            raw_file_url=f"/static/files/attendances/" + request_file.filename)
+        assert isinstance(db, object)
+        request_file.save(path)
+        # create the attendance
+        db.session.add(attendance_file)
+        db.session.commit()
+        return 'success'
+    except IOError as io:
+        return 'error'
 
 def set_contact_update_form_data(contract_id, contract_form):
     try:

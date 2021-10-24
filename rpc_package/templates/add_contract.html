@@ -95,9 +95,7 @@
         add js code or library here as need 
         This code will be add to the footer of the page
     -->
-    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
-    </script>
-    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+
 {% with messages = get_flashed_messages(with_categories=true) %}
 {%if messages %}
     {%for category, message in messages %} 

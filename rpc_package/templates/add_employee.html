@@ -130,7 +130,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 {{ form.birthday.label(class="form-control-label")}}
-                                <div class="input-group mb-3" id="birthday_icon">
+                                <div class="input-group" id="birthday_icon">
                                     <div class="input-group-prepend">
                                         <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
                                             <i class="fad fa-calendar"></i>
@@ -199,22 +199,15 @@
         </form>
 
     </div>
-    {#    <!-- /.box-body -->#}
-    {#    <div class="box-footer">#}
-    {#      Footer#}
-    {#    </div>#}
-    {#    <!-- /.box-footer-->#}
 </div>
 
 {% endblock main_content%}
 {% block js_code %}
 <!-- 
-        add js code or library here as needed 
-        This code will be add to the footer of the page
-    -->
-<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
-</script>
-<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+    add js code or library here as needed 
+    This code will be add to the footer of the page
+-->
+
 <script>
      function load_districts(province, target){
         $.ajax({
@@ -245,7 +238,7 @@
             processData: false,
             contentType: false,
             success: function (response) {
-                toastSuccess(response);
+                toastSuccess(response.message);
             },
             error: function (response) {
                 var statusCode = response.status;

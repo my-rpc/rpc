@@ -5,8 +5,8 @@ from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Validation
 import re
 from wtforms.widgets import TextArea
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
-    Positions, Departments, Salary, Holiday
-from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian
+    Positions, Departments, Salary, Holiday, AttendanceFile
+from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian, get_months
 from rpc_package import translation_obj, message_obj
 import jdatetime, datetime
 
@@ -69,7 +69,7 @@ class EmployeeForm(FlaskForm):
                               default=last_emp_id)
 
     first_name = StringField('نام', validators=[DataRequired()])
-    last_name = StringField('تخلص', validators=[DataRequired()])
+    last_name = StringField('تخلص')
     father_name = StringField('نام پدر', validators=[DataRequired()])
     grand_name = StringField('نام پدر کلان', validators=[DataRequired()])
 
@@ -128,13 +128,12 @@ class EmployeeForm(FlaskForm):
         self.submit.label.text = translation_obj.add_new_employee[language]
 
     def validate_email(self, email):
-        if email.data == '':
-            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.email[self.language]))
-        elif not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
-            raise ValidationError('فرمت ایمیل را چک کنید')
-        user_email = Emails.query.filter_by(email=email.data).first()
-        if user_email:
-            raise ValidationError('ایمیل شما موجود است')
+        if email.data:
+            if not bool(re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email.data)):
+                raise ValidationError('فرمت ایمیل را چک کنید')
+            user_email = Emails.query.filter_by(email=email.data).first()
+            if user_email:
+                raise ValidationError('ایمیل شما موجود است')
 
     def validate_email_second(self, email_second):
         if email_second.data:
@@ -190,8 +189,6 @@ class EmployeeForm(FlaskForm):
             raise ValidationError(message_obj.required_field[self.language].replace('{}', translation_obj.birthday[self.language] + ' '))
         elif not date_validation(self, birthday.data):
             raise ValidationError(message_obj.incorrect_date_format[self.language])
-        # value = jdatetime.datetime.strptime(birthday.data, '%Y-%m-%d')
-        # birthday.data = value.togregorian()
 
 
 class UploadCVForm(FlaskForm):
@@ -535,6 +532,47 @@ class HolidayForm(FlaskForm):
         if title_english.data == '':
             raise ValidationError(message_obj.required_field[self.language].format(translation_obj.english_title[self.language]))
 
+class AttendanceForm(FlaskForm):
+    year = jdatetime.date.today().year
+    year = SelectField('Year', choices=[year-1, year, year+1])
+    month = SelectField('Month', choices=get_months())
+    raw_file_url = FileField('Select Attendance File')
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(AttendanceForm, self).__init__()
+        self.language = language
+        self.year.label.text = translation_obj.year[language]
+        self.month.label.text = translation_obj.month[language]
+        self.raw_file_url.label.text = translation_obj.select_attendance_file[language]
+        self.submit.label.text = translation_obj.save[language]
+    
+    def validate_year (self, year):        
+        if year.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.year[self.language]))
+    def validate_month (self, month):
+        if month.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.month[self.language]))  
+        attendance = AttendanceFile.query.filter_by(year=self.year.data, month=month.data).first()
+        if attendance:
+            raise ValidationError(message_obj.existen_attendance[self.language])
+    def validate_raw_file_url (self, raw_file_url):
+        if raw_file_url.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.attendance_file[self.language]))
+        elif not re.match(r"^.*\.(xlsx|xlsm|xlsb|xls)$", raw_file_url.data.filename):
+            raise ValidationError(message_obj.file_format_excel[self.language])
+
+class ChangePassForm(FlaskForm):
+    old_pass = StringField('Old Password', validators=[DataRequired()])
+    new_pass = StringField('New Password', validators=[DataRequired()])
+    confirm_pass = StringField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(ChangePassForm, self).__init__()
+        self.language = language
+        self.old_pass.label.text = translation_obj.old_pass[language]
+        self.new_pass.label.text = translation_obj.new_pass[language]
+        self.confirm_pass.label.text = translation_obj.confirm_pass[language]
+        self.submit.label.text = translation_obj.save[language]
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])

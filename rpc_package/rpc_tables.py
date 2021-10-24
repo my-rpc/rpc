@@ -42,10 +42,10 @@ class Employees(db.Model, UserMixin):
     loans = db.relationship("Loan_form", foreign_keys='Loan_form.emp_id', lazy='dynamic')
     users = db.relationship("Users", foreign_keys='Users.emp_id')
     emails = db.relationship("Emails", foreign_keys='Emails.emp_id')
-    phones = db.relationship("Phone", foreign_keys='Phone.emp_id')
-    documents = db.relationship("Documents", foreign_keys='Documents.emp_id')
-    current_address = db.relationship("Current_addresses", foreign_keys='Current_addresses.emp_id', uselist=False)
-    permanent_address = db.relationship("Permanent_addresses", foreign_keys='Permanent_addresses.emp_id', uselist=False)
+    phones = db.relationship("Phone", foreign_keys='Phone.emp_id', cascade="all, delete")
+    documents = db.relationship("Documents", foreign_keys='Documents.emp_id', cascade="all, delete")
+    current_address = db.relationship("Current_addresses", foreign_keys='Current_addresses.emp_id', uselist=False, cascade="all, delete")
+    permanent_address = db.relationship("Permanent_addresses", foreign_keys='Permanent_addresses.emp_id', uselist=False, cascade="all, delete")
 
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
@@ -305,7 +305,7 @@ class Leave_form(db.Model, UserMixin):
     reason = db.relationship("Leave_reason", uselist=False)
 
     def __repr__(self):
-        return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"
+        return f"Leave ID: {self.id}, Employee ID: {self.emp_id}"
 
 class Leave_reason(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
@@ -388,6 +388,17 @@ class Holiday(db.Model, UserMixin):
     title_english = db.Column(db.String(255))
     def __repr__(self):
         return f"Holiday ID: {self.id}, Date: {self.date}"
+
+class AttendanceFile(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "attendance_file"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    month = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    raw_file_url = db.Column(db.String(255))
+    file_url = db.Column(db.String(255))
+    def __repr__(self):
+        return f"AttendanceFile ID: {self.id}, Year: {self.year}, Month: {self.month}"
 
 class Resign_form(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
