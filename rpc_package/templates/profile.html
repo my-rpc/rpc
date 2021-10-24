@@ -8,8 +8,16 @@
           left: auto;
           opacity: 1 !important;
       }
-      li.nav-item{
-        margin-right: -1px !important;
+      .icon-pointer {
+        cursor: pointer;
+      }
+      .border-radius-dari{
+        border-right: none;
+        border-radius: 0.25rem 0 0 0.25rem !important;
+      }
+      .border-radius-en{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
       }
       .profile li a.nav-link{
         border: none !important;
@@ -17,17 +25,11 @@
       .profile li a.nav-link.border-bottom{
         border-bottom: 1px solid #d9d9d9 !important;
       }
-      .profile li a.nav-link.border-radius-top{
-        border-top-left-radius: 10px;
+      .profile li a.nav-link.border-radius-right{
         border-top-right-radius: 10px;
       }
-      .profile li a.nav-link.border-radius-bottom{
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-      }
-      .profile ul.nav{
-        border: 1px solid #d9d9d9;
-        border-radius: 10px;
+      .profile li a.nav-link.border-radius-left{
+        border-top-left-radius: 10px;
       }
       .profile .border-radius{
         border: 1px solid #d9d9d9;
@@ -112,7 +114,7 @@
               </div>
               <!-- /.box-header -->
                 <div class="box-body">
-                <ul class="nav nav-tabs nav-fill" role="tablist">
+                <ul id="tabs" class="nav nav-tabs nav-fill" role="tablist">
                     <li class="nav-item">
                       <a class="nav-link border-bottom border-radius-top active" data-toggle="tab" href="#personal_info" role="tab">
                         <span>{{translation.personal_information[language]}}</span>
@@ -128,20 +130,21 @@
                         <span>{{translation.documents[language]}}</span>
                       </a>
                     </li>
+                    
                     <li class="nav-item">
-                      <a class="nav-link border-bottom" data-toggle="tab" href="#contact" role="tab">
-                        <span>{{translation.call[language]}}</span>
+                      <a class="nav-link border-bottom" data-toggle="tab" href="#contract" role="tab">
+                        <span>{{translation.contract[language]}}</span>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link border-radius-bottom" data-toggle="tab" href="#contract" role="tab">
-                        <span>{{translation.contract[language]}}</span>
+                      <a class="nav-link border-bottom" data-toggle="tab" href="#change-pass" role="tab">
+                        <span>{{translation.change_pass[language]}}</span>
                       </a>
                     </li>
                 </ul>
                 <!-- Tab panes -->
-                <div class="tab-content tabcontent-border">
-                    <div class="tab-pane active" id="home11" role="tabpanel">
+                <div class="tab-content mt-4">
+                    <div class="tab-pane active" id="personal_info" role="tabpanel">
                       <div class="row">
                         <div class="col-md-6">
                           <div class="box border-radius">
@@ -321,14 +324,351 @@
                         </div>
                       </div>
                     </div>
-                    <div class="tab-pane" id="profile11" role="tabpanel">
-                      
+                    <div class="tab-pane" id="addresses" role="tabpanel">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="box border-radius">
+                            <div class="box-body">
+                              <h4>{{ translation.current_address[language] }}</h4>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>{{ translation.provinces[language] }}</span>
+                                    <strong class="float-right">
+                                      {% if employee.current_address %}
+                                        {{ employee.current_address.province.province_name }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>{{ translation.district[language] }}</span>
+                                    <strong class="float-right">
+                                      {% if employee.current_address %}
+                                        {{ employee.current_address.district.district_name }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>Address</span>
+                                    <strong class="float-right">
+                                      {% if employee.current_address %}
+                                        {{ employee.current_address.address }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>آدرس</span>
+                                    <strong class="float-right">
+                                      {% if employee.current_address %}
+                                        {{ employee.current_address.address_dari }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="box border-radius">
+                            <div class="box-body">
+                              <h4>{{ translation.permanent_address[language] }}</h4>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>{{ translation.provinces[language] }}</span>
+                                    <strong class="float-right">
+                                      {% if employee.permanent_address %}
+                                        {{ employee.permanent_address.province.province_name }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>{{ translation.district[language] }}</span>
+                                    <strong class="float-right">
+                                      {% if employee.permanent_address %}
+                                        {{ employee.permanent_address.district.district_name }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>Address</span>
+                                    <strong class="float-right">
+                                      {% if employee.permanent_address %}
+                                        {{ employee.permanent_address.address }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                              <div class="bg-white pt-2">
+                                <div class="media-body m-1 p-1 bb-1">
+                                    <span>آدرس</span>
+                                    <strong class="float-right">
+                                      {% if employee.permanent_address %}
+                                        {{ employee.permanent_address.address_dari }}
+                                      {% endif %}
+                                    </strong>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="tab-pane" id="messages11" role="tabpanel">
-                        
+                    <div class="tab-pane" id="documents" role="tabpanel">
+                      <div class="row">
+                        {% if employee.documents %}
+                          {% for document in employee.documents %}
+                          <div class="col-md-3">
+                            <div class="box p-1">
+                                <span>
+                                  <h4 class="pull-left px-2 mt-1">
+                                    {% if document.name == 'cv' %}
+                                      {{translation.cv[language]}}
+                                    {% elif document.name == 'guarantor' %}
+                                      {{translation.guarantors[language]}}
+                                    {% elif document.name == 'education' %}
+                                      {{translation.educational_documents[language]}}
+                                    {% elif document.name == 'tin' %}
+                                      {{translation.tin[language]}}
+                                    {% elif document.name == 'tazkira' %}
+                                      {{translation.copy_of_national_id[language]}}
+                                    {% elif document.name == 'extra_docs' %}
+                                      {{translation.other_document[language]}}
+                                    {% endif %}
+                                  </h4>
+                                  <a href="{{document.url}}" class="btn btn-xs"><button type="button" class="waves-effect waves-light btn btn-xs btn-circle btn-info"><i class="fa fa-download"></i></button></a>
+                                </span>
+                              </div>
+                          </div>
+                          {% endfor %}
+                        {% else %}
+                          <div class="col-md-12 text-center">
+                            {{translation.no_document_uploaded[language]}}
+                          </div>
+                        {% endif %}
+                      </div>
                     </div>
-                    <div class="tab-pane" id="setting11" role="tabpanel">
-
+                    <div class="tab-pane" id="contract" role="tabpanel">
+                      <div class="row">
+                        {% for contract in employee.position_history.order_by(Position_history.status.desc()).all() %}
+                          <div class="box border-radius">
+                            <div class="box-header pt-4 pb-2">
+                              <h4 class="box-title">
+                                {% if language == 'dari' %}
+                                  {{contract.position.name}}
+                                {% else %}
+                                  {{contract.position.name_english}}
+                                {% endif %}
+                                {% if contract.status %}
+                                  ({{ (contract.end_date - date.today()).days }} {{translation.day[language]}})
+                                {% endif %}
+                              </h4>
+                              <div class="box-controls pull-right">
+                                {% if contract.status %}
+                                  <small class="badge bg-success">
+                                    {{translation.active[language]}}
+                                  </small>
+                                {% else %}
+                                  <small class="badge bg-secondary">
+                                    {{translation.inactive[language]}}
+                                  </small>
+                                {% endif %}
+                              </div>
+                            </div>
+                    
+                            <div class="box-body">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.contract_type[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.contract_type %}
+                                            {% if language == 'dari' %}
+                                              {{ contract.contract_type.name }}
+                                            {% else %}
+                                              {{ contract.contract_type.name_english }}
+                                            {% endif %}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.position[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.position %}
+                                            {% if language == 'dari' %}
+                                              {{ contract.position.name }}
+                                            {% else %}
+                                              {{ contract.position.name_english }}
+                                            {% endif %}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.department[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.department %}
+                                            {% if language == 'dari' %}
+                                              {{ contract.department.name }}
+                                            {% else %}
+                                              {{ contract.department.name_english }}
+                                            {% endif %}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.start_date[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {{ to_jalali(contract.start_date) }}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.end_date[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {{ to_jalali(contract.end_date) }}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.base_salary[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.salary %}
+                                            {{contract.salary.base }}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.transportation[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.salary %}
+                                            {{contract.salary.transportation }}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.house_hold[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.salary %}
+                                            {{contract.salary.house_hold }}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.currency[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% if contract.salary %}
+                                            {% if contract.salary.currency == "1"%}
+                                              {{translation.afghani[language]}}
+                                            {% else %}
+                                              {{translation.dollar[language]}}
+                                            {% endif %}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="bg-white pt-2">
+                                    <div class="media-body overflow-auto m-1 p-1 bb-1">
+                                        <span>{{ translation.contract_duration[language] }}</span>
+                                        <strong class="float-right text-left">
+                                          {% set num_months = (contract.end_date.year - contract.start_date.year) * 12 + (contract.end_date.month - contract.start_date.month) %}
+                                          {% if num_months == 0 %}
+                                            {{translation.less_then_a_month[language]}}
+                                          {% else %}
+                                            {{ num_months }} {{translation.months[language]}}
+                                          {% endif %}
+                                        </strong>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="change-pass" role="tabpanel">
+                      <div class="row">
+                        <div class="col-md-8 offset-md-2 box">
+                          <div class="box-body">
+                            <div class="m2-1">
+                              <h4>{{translation.change_pass_form[language]}}</h4>
+                            </div>
+                            <form method="POST" , action="" id="add_employee">
+                              {{ change_pass_form.hidden_tag()}}
+                              <div class="form-group">
+                                {{ change_pass_form.old_pass.label(class="form-control-label")}}
+                                <div class="input-group icon-pointer">
+                                  {{ change_pass_form.old_pass(class="form-control form-control-lg")}}
+                                  <div class="input-group-prepend">
+                                      <span class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} input-group-text bg-transparent">
+                                          <i class="fad fa-eye-slash"></i>
+                                      </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                {{ change_pass_form.new_pass.label(class="form-control-label")}}
+                                <div class="input-group icon-pointer">
+                                  {{ change_pass_form.new_pass(class="form-control form-control-lg")}}
+                                  <div class="input-group-prepend">
+                                      <span class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} input-group-text bg-transparent">
+                                          <i class="fad fa-eye-slash"></i>
+                                      </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                {{ change_pass_form.confirm_pass.label(class="form-control-label")}}
+                                {{ change_pass_form.confirm_pass(class="form-control form-control-lg")}}
+                              </div>
+                              <div class="form-group">
+                                {{ change_pass_form.submit(class="btn btn-primary")}}
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                 </div>
               </div>
@@ -363,30 +703,34 @@
 {% endblock main_content%}
 {% block js_code %}
 <script>
-function uploadProfile(){
-        $form = $("#upload_profile_pic");
-        var formData = new FormData($form[0]);
-        $.ajax({
-            type: "POST",
-            url: "upload_profile_pic",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              if(response == "success")
-                location.reload()
-                toastSuccess(response);
-            },
-            error: function (response) {
-                var statusCode = response.status;
-                var r = '';
-                if (statusCode == '403') {
-                    r = formValidateErrors(response);
-                }
-                toastError(r);
+$(document).ready(function() {
+  function uploadProfile(){
+    $form = $("#upload_profile_pic");
+    var formData = new FormData($form[0]);
+    $.ajax({
+        type: "POST",
+        url: "upload_profile_pic",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if(response == "success")
+            location.reload()
+            toastSuccess(response);
+        },
+        error: function (response) {
+            var statusCode = response.status;
+            var r = '';
+            if (statusCode == '403') {
+                r = formValidateErrors(response);
             }
-        });
-    };
+            toastError(r);
+        }
+    });
+  };
+
   
+    
+});
 </script>
 {% endblock js_code %}

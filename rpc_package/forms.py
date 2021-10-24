@@ -561,6 +561,19 @@ class AttendanceForm(FlaskForm):
         elif not re.match(r"^.*\.(xlsx|xlsm|xlsb|xls)$", raw_file_url.data.filename):
             raise ValidationError(message_obj.file_format_excel[self.language])
 
+class ChangePassForm(FlaskForm):
+    old_pass = StringField('Old Password', validators=[DataRequired()])
+    new_pass = StringField('New Password', validators=[DataRequired()])
+    confirm_pass = StringField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(ChangePassForm, self).__init__()
+        self.language = language
+        self.old_pass.label.text = translation_obj.old_pass[language]
+        self.new_pass.label.text = translation_obj.new_pass[language]
+        self.confirm_pass.label.text = translation_obj.confirm_pass[language]
+        self.submit.label.text = translation_obj.save[language]
+
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
     name_english_department = StringField('Name of Department', validators=[DataRequired()])

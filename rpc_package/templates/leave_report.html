@@ -89,7 +89,7 @@
                             {% set hourly=[] %}
                             {% set daily=[] %}
                             {% if request.args.get('from') and request.args.get('to') %}
-                              {% set leaves = employee.leaves.filter(Leave_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Leave_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
+                              {% set leaves = employee.leaves.filter_by(hr=1, supervisor=1).filter(Leave_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Leave_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
                             {% endif %}
                             {% for leave in leaves  %}
                               {% if not leave.leave_type %}
