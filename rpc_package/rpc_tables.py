@@ -305,7 +305,7 @@ class Leave_form(db.Model, UserMixin):
     reason = db.relationship("Leave_reason", uselist=False)
 
     def __repr__(self):
-        return f"Leave ID: {self.id}, Employee ID: {self.emp_id}, Leave Type: {self.leave_type}"
+        return f"Leave ID: {self.id}, Employee ID: {self.emp_id}"
 
 class Leave_reason(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}

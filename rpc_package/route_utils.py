@@ -108,12 +108,20 @@ def update_employee_data(update_employee_form):
     # check if employee has 2 or has 1 or none phone number
     # and check if second phone number is provided
     if phones is not None and len(phones) == 2:
-        phones[0].phone = update_employee_form.phone.data
+        if update_employee_form.phone.data:
+            phones[0].phone = update_employee_form.phone.data
+        else:
+            db.session.delete(phones[0])
         if update_employee_form.phone_second.data:
             phones[1].phone = update_employee_form.phone_second.data
+        else:
+            db.session.delete(phones[1])
 
     elif phones is not None and len(phones) == 1:
-        phones[0].phone = update_employee_form.phone.data
+        if update_employee_form.phone.data:
+            phones[0].phone = update_employee_form.phone.data
+        else:
+            db.session.delete(phones[0])
         if update_employee_form.phone_second.data:
             phone_second = Phone(
                 emp_id=update_employee_form.employee_id.data,
@@ -140,19 +148,25 @@ def update_employee_data(update_employee_form):
         emails[0].email = update_employee_form.email.data
         if update_employee_form.email_second.data:
             emails[1].email = update_employee_form.email_second.data
+        else:
+            db.session.delete(emails[1])
 
     elif emails is not None and len(emails) == 1:
-        update_employee_form.email.data = emails[0].email
+        if update_employee_form.email.data:
+            emails[0].email = update_employee_form.email.data
+        else:
+            db.session.delete(emails[0])
         if update_employee_form.email_second.data:
             email_second = Emails(
                 emp_id=update_employee_form.employee_id.data,
                 email=update_employee_form.email_second.data)
             db.session.add(email_second)
     elif not emails:
-        email = Emails(
-            emp_id=update_employee_form.employee_id.data,
-            email=update_employee_form.email.data)
-        db.session.add(email)
+        if update_employee_form.email.data:
+            email = Emails(
+                emp_id=update_employee_form.employee_id.data,
+                email=update_employee_form.email.data)
+            db.session.add(email)
         if update_employee_form.email_second.data:
             email_second = Emails(
                 emp_id=update_employee_form.employee_id.data,

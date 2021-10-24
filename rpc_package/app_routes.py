@@ -15,7 +15,7 @@ from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Perm
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
     Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
-    to_gregorian, to_jalali, check_access, get_last_day_of_month
+    to_gregorian, to_jalali, check_access, get_last_date_of_month
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
@@ -413,6 +413,8 @@ def delete_employee():
     if EmployeeValidator.emp_id_validator(emp_id):
         try:
             sel_emp = Employees.query.get(emp_id)
+            for email in sel_emp.emails:
+                db.session.delete(email)
             db.session.delete(sel_emp)
             db.session.commit()
         except IOError as exc:
@@ -1225,13 +1227,17 @@ def process_attendance_file(attendance_id):
     #     return redirect(url_for('access_denied'))
     try:
         attendance = AttendanceFile.query.get(attendance_id)
-        last_day = get_last_day_of_month(attendance.month)
         start = jdatetime.date(year=attendance.year, month=attendance.month, day=1)
-        end = jdatetime.date(year=attendance.year, month=attendance.month, day=last_day)
+        end = get_last_date_of_month(start)
         holidays = Holiday.query.filter(Holiday.date >= to_gregorian(start)) \
-            .filter(Holiday.date <= to_gregorian(end)) \
-            .all()
-        att_obj = Attendance('sonbola', 1400, path_att=attendance.raw_file_url, holidays=holidays)
+            .filter(Holiday.date <= to_gregorian(end)).all()
+        hourly_leaves = Leave_form.query.filter_by(hr=1, supervisor=1, leave_type=1) \
+            .filter(Leave_form.start_datetime >= to_gregorian(start)) \
+            .filter(Leave_form.end_datetime <= to_gregorian(end)).all()
+        daily_leaves = Leave_form.query.filter_by(hr=1, supervisor=1, leave_type=0) \
+            .filter(Leave_form.start_datetime >= to_gregorian(start)) \
+            .filter(Leave_form.end_datetime <= to_gregorian(end)).all()
+        att_obj = Attendance('sonbola', 1400, path_att=attendance.raw_file_url, holidays=holidays, hourly_leaves=hourly_leaves, daily_leaves=daily_leaves)
         att_obj.read_excel()
         att_obj.drop_cols()
         
