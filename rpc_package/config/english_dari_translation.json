@@ -243,6 +243,18 @@
     "dari": "عنوان انگلیسی",
     "en": "English Title"
   },
+  "old_pass": {
+    "dari": "رمز عبور قبلی",
+    "en": "Old Password"
+  },
+  "new_pass": {
+    "dari": "رمز عبور جدید",
+    "en": "New Password"
+  },
+  "confirm_pass": {
+    "dari": "تائید رمز عبور",
+    "en": "Confirm Password"
+  },
   "attendance": {
     "dari": "حاضری",
     "en": "Attendance"
@@ -250,6 +262,10 @@
   "change_pass": {
     "dari": "تغییر رمز عبور",
     "en": "Change Password"
+  },
+  "change_pass_form": {
+    "dari": "فورم تغییر رمز عبور",
+    "en": "Change Password Form"
   },
   "absent": {
     "dari": "غیر حاضر",

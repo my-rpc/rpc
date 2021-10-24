@@ -89,7 +89,7 @@
                             {% set hourly=[] %}
                             {% set daily=[] %}
                             {% if request.args.get('from') and request.args.get('to') %}
-                              {% set overtimes = employee.overtimes.filter(Overtime_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Overtime_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
+                              {% set overtimes = employee.overtimes.filter_by(hr=1, supervisor=1).filter(Overtime_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Overtime_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
                             {% endif %}
                             {% for overtime in overtimes  %}
                               {% if not overtime.overtime_type %}

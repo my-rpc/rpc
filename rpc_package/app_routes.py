@@ -6,7 +6,7 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
-    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm, ChangePassForm
 
 from rpc_package.form_dynamic_language import *
 
@@ -431,8 +431,9 @@ def profile():
     if not check_access('profile'):
         return redirect(url_for('access_denied'))
     employee = Employees.query.filter_by(id=current_user.emp_id).first()
+    change_pass_form = ChangePassForm(session['language'])
     return render_template('profile.html', title='My Profile', language=session['language'],
-        employee=employee, Position_history=Position_history)
+        employee=employee, Position_history=Position_history, change_pass_form=change_pass_form)
 
 
 @app.route('/contract_settings')

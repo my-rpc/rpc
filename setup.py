@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.6'
-DESCRIPTION = 'profile page, the profile page style fixed and change password tab added in profile'
+VERSION = '0.8.7'
+DESCRIPTION = 'change_password, created the form of change password in profile page'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

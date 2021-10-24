@@ -8,6 +8,17 @@
           left: auto;
           opacity: 1 !important;
       }
+      .icon-pointer {
+        cursor: pointer;
+      }
+      .border-radius-dari{
+        border-right: none;
+        border-radius: 0.25rem 0 0 0.25rem !important;
+      }
+      .border-radius-en{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+      }
       .profile li a.nav-link{
         border: none !important;
       }
@@ -617,12 +628,45 @@
                       </div>
                     </div>
                     <div class="tab-pane" id="change-pass" role="tabpanel">
-                      <div class="bg-white pt-2">
-                        <div class="media-body m-1 p-1 bb-1">
-                            <span>نام</span>
-                            <strong class="float-right">
-                            {{ employee.name }}
-                            </strong>
+                      <div class="row">
+                        <div class="col-md-8 offset-md-2 box">
+                          <div class="box-body">
+                            <div class="m2-1">
+                              <h4>{{translation.change_pass_form[language]}}</h4>
+                            </div>
+                            <form method="POST" , action="" id="add_employee">
+                              {{ change_pass_form.hidden_tag()}}
+                              <div class="form-group">
+                                {{ change_pass_form.old_pass.label(class="form-control-label")}}
+                                <div class="input-group icon-pointer">
+                                  {{ change_pass_form.old_pass(class="form-control form-control-lg")}}
+                                  <div class="input-group-prepend">
+                                      <span class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} input-group-text bg-transparent">
+                                          <i class="fad fa-eye-slash"></i>
+                                      </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                {{ change_pass_form.new_pass.label(class="form-control-label")}}
+                                <div class="input-group icon-pointer">
+                                  {{ change_pass_form.new_pass(class="form-control form-control-lg")}}
+                                  <div class="input-group-prepend">
+                                      <span class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} input-group-text bg-transparent">
+                                          <i class="fad fa-eye-slash"></i>
+                                      </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                {{ change_pass_form.confirm_pass.label(class="form-control-label")}}
+                                {{ change_pass_form.confirm_pass(class="form-control form-control-lg")}}
+                              </div>
+                              <div class="form-group">
+                                {{ change_pass_form.submit(class="btn btn-primary")}}
+                              </div>
+                            </form>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -659,30 +703,34 @@
 {% endblock main_content%}
 {% block js_code %}
 <script>
-function uploadProfile(){
-        $form = $("#upload_profile_pic");
-        var formData = new FormData($form[0]);
-        $.ajax({
-            type: "POST",
-            url: "upload_profile_pic",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-              if(response == "success")
-                location.reload()
-                toastSuccess(response);
-            },
-            error: function (response) {
-                var statusCode = response.status;
-                var r = '';
-                if (statusCode == '403') {
-                    r = formValidateErrors(response);
-                }
-                toastError(r);
+$(document).ready(function() {
+  function uploadProfile(){
+    $form = $("#upload_profile_pic");
+    var formData = new FormData($form[0]);
+    $.ajax({
+        type: "POST",
+        url: "upload_profile_pic",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if(response == "success")
+            location.reload()
+            toastSuccess(response);
+        },
+        error: function (response) {
+            var statusCode = response.status;
+            var r = '';
+            if (statusCode == '403') {
+                r = formValidateErrors(response);
             }
-        });
-    };
+            toastError(r);
+        }
+    });
+  };
+
   
+    
+});
 </script>
 {% endblock js_code %}
