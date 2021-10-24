@@ -5,10 +5,12 @@ from rpc_package.utils import convert_to_shamsi
 
 class Attendance:
 
-    def __init__(self, month, year, day=8.5, file_format='xlsx', path_att='', holidays=[]):
+    def __init__(self, month, year, day=8.5, file_format='xlsx', path_att='', holidays=[], hourly_leaves=[], daily_leaves=[]):
         self.month = str(month)
         self.year = str(year)
         self.holidays = holidays
+        self.hourly_leaves = hourly_leaves
+        self.daily_leaves = daily_leaves
         self.path_att = os.path.join(f"./rpc_package" + path_att)
         self.file_format = file_format
         self.filename = '{}_{}.{}'.format(self.month, self.year, self.file_format)

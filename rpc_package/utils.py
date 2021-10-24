@@ -144,12 +144,12 @@ def convert_to_shamsi(dates):
         result_dates.append(date.strftime('%Y-%m-%d'))
     return result_dates
 
-def get_last_day_of_month(month=1):
+def get_last_date_of_month(date):
     day = 31
-    if month <= 6:
+    if date.month <= 6:
         day = 31
-    elif month < 12:
+    elif date.month < 12:
         day = 30
-    elif month == 12:
-        day = 30 if jdatetime.date.today().isleap() else 29
-    return day
+    elif date.month == 12:
+        day = 30 if date.isleap() else 29
+    return jdatetime.date(year=date.year, month=date.month, day=day)
