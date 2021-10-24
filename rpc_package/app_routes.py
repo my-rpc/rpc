@@ -431,7 +431,8 @@ def profile():
     if not check_access('profile'):
         return redirect(url_for('access_denied'))
     employee = Employees.query.filter_by(id=current_user.emp_id).first()
-    return render_template('profile.html', title='My Profile', language=session['language'], employee=employee)
+    return render_template('profile.html', title='My Profile', language=session['language'],
+        employee=employee, Position_history=Position_history)
 
 
 @app.route('/contract_settings')

@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.5'
-DESCRIPTION = 'leave_form, daily and hourly leaves generated in specific interval of date and passed to Attendance'
+VERSION = '0.8.6'
+DESCRIPTION = 'profile page, the profile page style fixed and change password tab added in profile'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

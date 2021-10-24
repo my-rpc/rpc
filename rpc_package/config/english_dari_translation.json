@@ -223,6 +223,10 @@
     "dari": "کاربر",
     "en": "User"
   },
+  "no_document_uploaded": {
+    "dari": "هیچ سندی آپلود نشده است",
+    "en": "No documents uploaded"
+  },
   "full_screen": {
     "dari": "تمام صفحه",
     "en": "Full Screen"
@@ -242,6 +246,10 @@
   "attendance": {
     "dari": "حاضری",
     "en": "Attendance"
+  },
+  "change_pass": {
+    "dari": "تغییر رمز عبور",
+    "en": "Change Password"
   },
   "absent": {
     "dari": "غیر حاضر",
