@@ -237,9 +237,6 @@
 {% endblock main_content%}
 {% block js_code %}
 
-<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}">
-</script>
-<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
 {% with messages = get_flashed_messages(with_categories=true) %}
 {%if messages %}
     {%for category, message in messages %} 

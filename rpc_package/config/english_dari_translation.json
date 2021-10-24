@@ -223,6 +223,10 @@
     "dari": "کاربر",
     "en": "User"
   },
+  "no_document_uploaded": {
+    "dari": "هیچ سندی آپلود نشده است",
+    "en": "No documents uploaded"
+  },
   "full_screen": {
     "dari": "تمام صفحه",
     "en": "Full Screen"
@@ -239,9 +243,29 @@
     "dari": "عنوان انگلیسی",
     "en": "English Title"
   },
+  "old_pass": {
+    "dari": "رمز عبور قبلی",
+    "en": "Old Password"
+  },
+  "new_pass": {
+    "dari": "رمز عبور جدید",
+    "en": "New Password"
+  },
+  "confirm_pass": {
+    "dari": "تائید رمز عبور",
+    "en": "Confirm Password"
+  },
   "attendance": {
     "dari": "حاضری",
     "en": "Attendance"
+  },
+  "change_pass": {
+    "dari": "تغییر رمز عبور",
+    "en": "Change Password"
+  },
+  "change_pass_form": {
+    "dari": "فورم تغییر رمز عبور",
+    "en": "Change Password Form"
   },
   "absent": {
     "dari": "غیر حاضر",
@@ -442,6 +466,26 @@
   "months": {
     "dari": "ماه",
     "en": "Months"
+  },
+  "month": {
+    "dari": "ماه",
+    "en": "Month"
+  },
+  "attendance_file": {
+    "dari": "فایل حاضری",
+    "en": "Attendance File"
+  },
+  "attendance_file_list": {
+    "dari": "لیست فایل حاضری",
+    "en": "List of Attendance File"
+  },
+  "attendance_file_form": {
+    "dari": "فورم فایل حاضری",
+    "en": "Form of Attendance File"
+  },
+  "select_attendance_file": {
+    "dari": "فایل حاضری را انتخاب کنید",
+    "en": "Select Attendance File"
   },
   "less_then_a_month": {
     "dari": "کمتر از یک ماه",
@@ -654,6 +698,22 @@
   "delete_employee": {
     "dari": "حذف کارمند",
     "en": "Delete Employee"
+  },
+  "delete": {
+    "dari": "حذف",
+    "en": "Delete"
+  },
+  "primary_file": {
+    "dari": "فایل اولیه",
+    "en": "Primary file"
+  },
+  "result_file": {
+    "dari": "فایل نتیجه",
+    "en": "Result File"
+  },
+  "process": {
+    "dari": "پردازش",
+    "en": "Process"
   },
   "add_document": {
     "dari": "اضافه کردن اسناد",

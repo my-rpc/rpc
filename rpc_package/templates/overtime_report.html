@@ -2,7 +2,7 @@
 
 {% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
 {% block css_or_js_code %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css')}}">
 <style>
     #start_date-icon,#end_date-icon {
         cursor: pointer;
@@ -89,7 +89,7 @@
                             {% set hourly=[] %}
                             {% set daily=[] %}
                             {% if request.args.get('from') and request.args.get('to') %}
-                              {% set overtimes = employee.overtimes.filter(Overtime_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Overtime_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
+                              {% set overtimes = employee.overtimes.filter_by(hr=1, supervisor=1).filter(Overtime_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Overtime_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
                             {% endif %}
                             {% for overtime in overtimes  %}
                               {% if not overtime.overtime_type %}
@@ -125,12 +125,9 @@
 </section>
 {% endblock main_content%}
 {% block js_code %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js"></script>
-
-<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
-<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+<script src="{{url_for('static', filename='js/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/vfs_fonts.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
 
 {% with messages = get_flashed_messages(with_categories=true) %}
 {%if messages %}
