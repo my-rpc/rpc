@@ -21,8 +21,8 @@
 {% block main_content %}
 <section class="content">
     <div class="box col-md-12">
-        <div class="box-header">
-            <div class="box-title">{{translation.overtime_form[language]}}</div>
+        <div class="box-header with-border">
+            <h4 class="box-title text-primary font-weight-bold ">{{translation.overtime_form[language]}}</h4>
         </div>
         <div class="box-body">
             <form method="POST" , action="" id="overtime_request">
@@ -79,9 +79,9 @@
     <div class="box">
         <div class="col-12">
             <div class="box">
-              <div class="box-header with-border">
-                <div class="box-title">{{translation.list_of_overtime_request[language]}}</div>
-              </div>
+                <div class="box-header with-border">
+                    <h4 class="box-title text-primary font-weight-bold ">{{translation.list_of_overtime_request[language]}}</h4>
+                </div>
               <!-- /.box-header -->
               <div class="box-body no-padding">
                   <div class="table-responsive">
@@ -179,7 +179,7 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
 {%if messages %}
-    {%for category, message in messages %} 
+    {%for category, message in messages %}
     <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
     <script>
         $(document).ready(function() {
