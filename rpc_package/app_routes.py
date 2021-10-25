@@ -435,6 +435,24 @@ def profile():
     return render_template('profile.html', title='My Profile', language=session['language'],
         employee=employee, Position_history=Position_history, change_pass_form=change_pass_form)
 
+@app.route("/change_password", methods=['POST'])
+@login_required
+def change_password():
+    # if not check_access('change_password'):
+    #     return redirect(url_for('access_denied'))
+    change_pass_form = ChangePassForm(session['language'], current_user)
+    if request.method == "POST":
+        if change_pass_form.validate_on_submit():
+            try:
+                hashed_pass = pass_crypt.generate_password_hash(change_pass_form.new_pass.data).decode('utf=8')
+                current_user.password = hashed_pass
+                db.session.commit()
+                flash(message_obj.password_changed[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.password_not_changed[session['language']], 'error')
+        else:
+            flash(change_pass_form.errors)
+    return redirect(url_for('profile'))
 
 @app.route('/contract_settings')
 @login_required

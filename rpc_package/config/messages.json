@@ -380,5 +380,25 @@
   "attendance_file_not_processed": {
     "dari": "فایل حاضری حذف نشد",
     "en": "Attendance file has not been processed"
+  },
+  "password_changed": {
+    "dari": "رمز عبور موفقانه تعییر کرد",
+    "en": "Password successfully Changed"
+  },
+  "password_not_changed": {
+    "dari": "رمز عبور متاسفانه تعییر نکرد",
+    "en": "Password has not been Changed"
+  },
+  "old_pass_incorrect": {
+    "dari": "رمز عبور قبلی نادرست است",
+    "en": "Old password is incorrect"
+  },
+  "new_pass_not_equal_to_confirm_pass": {
+    "dari": "رمز عبور جدید و تائید آن یکسان نیست",
+    "en": "New password and Confirmation is not the same"
+  },
+  "must_be_more_then_eight_character": {
+    "dari": "رمز عبور حداقل باید 8 حرف باشد",
+    "en": "Password must be more then 8 characters"
   }
 }
