@@ -211,7 +211,7 @@
             switch(true){
                 case (btnID === 'view-contract'):
                     if(contract_id != '' && contract_id != undefined){
-                        window.open('/employee_details?emp_id='+contract_id, '_blank');
+                        window.open('/contract_details/'+contract_id, '_self');
                     }else{
                         toastWarning('Please select an employee');
                     }

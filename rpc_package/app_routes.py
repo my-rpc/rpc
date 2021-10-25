@@ -322,7 +322,6 @@ def employee_settings():
             phones[x] = phone
         if email is not None:
             emails[x] = email
-
     return render_template("employee_settings.html", title='Employee Settings',
             employees=employees, emails=emails, phones=phones, language=session['language'])
 
@@ -435,6 +434,24 @@ def profile():
     return render_template('profile.html', title='My Profile', language=session['language'],
         employee=employee, Position_history=Position_history, change_pass_form=change_pass_form)
 
+@app.route("/change_password", methods=['POST'])
+@login_required
+def change_password():
+    # if not check_access('change_password'):
+    #     return redirect(url_for('access_denied'))
+    change_pass_form = ChangePassForm(session['language'], current_user)
+    if request.method == "POST":
+        if change_pass_form.validate_on_submit():
+            try:
+                hashed_pass = pass_crypt.generate_password_hash(change_pass_form.new_pass.data).decode('utf=8')
+                current_user.password = hashed_pass
+                db.session.commit()
+                flash(message_obj.password_changed[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.password_not_changed[session['language']], 'error')
+        else:
+            flash(change_pass_form.errors)
+    return redirect(url_for('profile'))
 
 @app.route('/contract_settings')
 @login_required
@@ -511,6 +528,17 @@ def edit_contract():
         return data
 
 
+
+@app.route('/contract_details/<int:contract_id>', methods=['GET'])
+@login_required
+def contract_details(contract_id):
+    # if not check_access('contract_details'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        contract = Position_history.query.filter_by(id=contract_id).first()
+    except IOError as exc:
+        flash(exe, 'error')
+    return render_template('contract_details.html', contract=contract, language=session['language'])
 
 @app.route('/delete_contract', methods=['delete'])
 @login_required
