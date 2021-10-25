@@ -322,7 +322,6 @@ def employee_settings():
             phones[x] = phone
         if email is not None:
             emails[x] = email
-
     return render_template("employee_settings.html", title='Employee Settings',
             employees=employees, emails=emails, phones=phones, language=session['language'])
 
@@ -529,6 +528,17 @@ def edit_contract():
         return data
 
 
+
+@app.route('/contract_details/<int:contract_id>', methods=['GET'])
+@login_required
+def contract_details(contract_id):
+    # if not check_access('contract_details'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        contract = Position_history.query.filter_by(id=contract_id).first()
+    except IOError as exc:
+        flash(exe, 'error')
+    return render_template('contract_details.html', contract=contract, language=session['language'])
 
 @app.route('/delete_contract', methods=['delete'])
 @login_required

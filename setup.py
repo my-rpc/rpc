@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.8'
-DESCRIPTION = 'change_password, created route for change password and set validation for old and new password, added js for text and password show of text field'
+VERSION = '0.8.9'
+DESCRIPTION = 'contract_details, added the page of contract details page and render the info contract in it'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

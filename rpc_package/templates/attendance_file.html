@@ -23,8 +23,8 @@
 {% block main_content %}
 <section class="content">
   <div class="box col-md-12">
-    <div class="box-header">
-      <div class="box-title">{{translation.attendance_file_form[language]}}</div>
+    <div class="box-header with-border">
+      <h4 class="box-title text-primary font-weight-bold ">{{translation.attendance_file_form[language]}}</h4>
     </div>
     <div class="box-body">
       <form method="POST" , action="" id="attendance_form" enctype="multipart/form-data">
@@ -111,30 +111,21 @@
 {% block js_code %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
-{%if messages %}
-    {%for category, message in messages %} 
-    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
-    <script>
-        $(document).ready(function() {
-            var message = JSON.parse('{{ message | tojson | safe}}');
-            if("{{category}}" == "success")
-                toastSuccess(message)
-            else
-                toastError(formValidationDisplay(message))
-        }); 
-        
-    </script>
-    {% endfor %}
-{% endif %} {% endwith %}
-<script>
-  // $(document).ready(function() {
-  //   $('#raw_file_url').on('change', function (e) {
-  //     $form = $("#attendance_form");
-  //     var formData = new FormData($form[0]);
-  //     console.log("this is the test", formData);
-  //   })
-
-  // });
-</script>
+  {%if messages %}
+      {%for category, message in messages %} 
+      <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+      <script>
+          $(document).ready(function() {
+              var message = JSON.parse('{{ message | tojson | safe}}');
+              if("{{category}}" == "success")
+                  toastSuccess(message)
+              else
+                  toastError(formValidationDisplay(message))
+          }); 
+          
+      </script>
+      {% endfor %}
+  {% endif %}
+{% endwith %}
 
 {% endblock js_code %}

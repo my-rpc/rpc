@@ -599,6 +599,10 @@
     "dari": "مدت قرارداد",
     "en": "Contract Duration"
   },
+  "contract_details": {
+    "dari": "جزئیات قرارداد",
+    "en": "Contract Details"
+  },
   "add_holiday": {
     "dari": "اضافه کردن رخصتی",
     "en": "Add Holiday"

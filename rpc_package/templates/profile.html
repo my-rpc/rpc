@@ -471,7 +471,7 @@
                                   ({{ (contract.end_date - date.today()).days }} {{translation.day[language]}})
                                 {% endif %}
                               </h4>
-                              <div class="box-controls pull-right">
+                              <div class="pull-right">
                                 {% if contract.status %}
                                   <small class="badge bg-success">
                                     {{translation.active[language]}}
@@ -631,8 +631,8 @@
                       <div class="row">
                         <div class="col-md-8 offset-md-2 box">
                           <div class="box-body">
-                            <div class="m2-1">
-                              <h4>{{translation.change_pass_form[language]}}</h4>
+                            <div class="my-1 text-center">
+                              <div class="font-weight-bold">{{translation.change_pass_form[language]}}</div>
                             </div>
                             <form method="POST" , action="change_password">
                               {{ change_pass_form.hidden_tag()}}
