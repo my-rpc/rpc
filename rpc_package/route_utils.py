@@ -492,8 +492,8 @@ def add_attendance(attendance_form):
 
 def set_contact_update_form_data(contract_id, contract_form):
     try:
-        position = Position_history.query.filter_by(id = contract_id, status = True).first()
-        salary = Salary.query.filter_by(position_history_id = contract_id, status = True).first()
+        position = Position_history.query.filter_by(id = contract_id).first()
+        salary = Salary.query.filter_by(position_history_id = contract_id).first()
 
         contract_form.emp_id.data = position.emp_id
         contract_form.end_date.data = to_jalali(position.end_date)
@@ -552,9 +552,6 @@ def update_contract(req, contract_form):
     try:
         position_history = Position_history.query.filter_by(id = req.form['contract_id']).first()
         salary = Salary.query.filter_by(id = req.form['salary_id']).first()
-        pos = Positions.query.filter_by(id = position_history.position_id).first()
-        dep = Departments.query.filter_by(id = position_history.department_id).first()
-        contract_type = Contract_types.query.filter_by(id = position_history.contract_type_id).first()
 
         position_history.contract_type_id = contract_form.contract_type.data
         position_history.end_date = to_gregorian(contract_form.end_date.data)
@@ -573,6 +570,11 @@ def update_contract(req, contract_form):
         position_history.department_id = contract_form.department.data
         position_history.updated_by= current_user.emp_id
         position_history.updated_date = datetime.datetime.now()
+
+        pos = Positions.query.filter_by(id = position_history.position_id).first()
+        dep = Departments.query.filter_by(id = position_history.department_id).first()
+        contract_type = Contract_types.query.filter_by(id = position_history.contract_type_id).first()
+        
         if session['language'] == 'en':
             position_name = pos.name_english
             department_name = dep.name_english

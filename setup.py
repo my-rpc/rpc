@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.10'
-DESCRIPTION = 'remove_breadcrump, breadcrump removed and the title of all page fixed'
+VERSION = '0.8.12'
+DESCRIPTION = 'update_contract, update contract issue with position and contract type, added image and opecity in login page'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

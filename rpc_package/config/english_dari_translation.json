@@ -949,7 +949,7 @@
   },
   "phone": {
     "dari": "شماره تماس",
-    "en": "Phone Address"
+    "en": "Phone Number"
   },
   "phone_second": {
     "dari": "شماره تماس دوم",
@@ -968,7 +968,7 @@
     "en": "Current Address"
   },
   "status": {
-    "dari": "وضعیت تاهل",
+    "dari": "وضعیت",
     "en": "Status"
   },
   "email": {
