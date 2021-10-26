@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.10'
-DESCRIPTION = 'remove_breadcrump, breadcrump removed and the title of all page fixed'
+VERSION = '0.8.11'
+DESCRIPTION = 'user_profile, removed the extra bootstrap file from template.js and fixed the issue of spelling in employee details'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
