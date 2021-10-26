@@ -599,6 +599,10 @@
     "dari": "مدت قرارداد",
     "en": "Contract Duration"
   },
+  "contract_details": {
+    "dari": "جزئیات قرارداد",
+    "en": "Contract Details"
+  },
   "add_holiday": {
     "dari": "اضافه کردن رخصتی",
     "en": "Add Holiday"
@@ -945,7 +949,7 @@
   },
   "phone": {
     "dari": "شماره تماس",
-    "en": "Phone Address"
+    "en": "Phone Number"
   },
   "phone_second": {
     "dari": "شماره تماس دوم",
@@ -964,7 +968,7 @@
     "en": "Current Address"
   },
   "status": {
-    "dari": "وضعیت تاهل",
+    "dari": "وضعیت",
     "en": "Status"
   },
   "email": {

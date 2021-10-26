@@ -211,7 +211,7 @@
             switch(true){
                 case (btnID === 'view-contract'):
                     if(contract_id != '' && contract_id != undefined){
-                        window.open('/employee_details?emp_id='+contract_id, '_blank');
+                        window.open('/contract_details/'+contract_id, '_self');
                     }else{
                         toastWarning('Please select an employee');
                     }
@@ -300,23 +300,18 @@
                 sal = response.contract.salary
                 var rowID = con.contract_id;
                 var last_cell = $('#'+rowID).find("td:last").html();
-                $('#'+rowID).find("td:gt(2)").remove();
-                var rowCells = $('#'+rowID).html();    
-                var sRowCell = '<td>';
-                var eRowCell = '</td>';
-                rowCells += 
-                        sRowCell + pos.department + eRowCell
-                        + sRowCell + pos.position + eRowCell
-                        + sRowCell + con.contract_type + eRowCell
-                        + sRowCell + sal.base + eRowCell
-                        + sRowCell + sal.transportation + eRowCell
-                        + sRowCell + sal.house_hold + eRowCell
-                        + sRowCell + sal.currency + eRowCell
-                        + sRowCell + con.start_date + eRowCell
-                        + sRowCell + con.end_date + eRowCell
-                        + sRowCell + last_cell + eRowCell;
-                
-                $('#'+rowID).addClass('bg-success').html(rowCells);
+                var table = $('#contract_setting').dataTable();
+                table.fnUpdate(pos.department, $('tr#'+ rowID)[0], 3);
+                table.fnUpdate(pos.position, $('tr#'+ rowID)[0], 4);
+                table.fnUpdate(con.contract_type, $('tr#'+ rowID)[0], 5);
+                table.fnUpdate(sal.base, $('tr#'+ rowID)[0], 6);
+                table.fnUpdate(sal.transportation, $('tr#'+ rowID)[0], 7);
+                table.fnUpdate(sal.house_hold, $('tr#'+ rowID)[0], 8);
+                table.fnUpdate(sal.currency, $('tr#'+ rowID)[0], 9);
+                table.fnUpdate(con.start_date, $('tr#'+ rowID)[0], 10);
+                table.fnUpdate(con.end_date, $('tr#'+ rowID)[0], 11);
+                table.fnUpdate(last_cell, $('tr#'+ rowID)[0], 12);
+                $('#'+rowID).addClass('bg-success');
     
             },error: function(response){
                 var statusCode = response.status;
@@ -358,8 +353,9 @@
                 processData:false,
                 success: function(response){
                     $('#'+contract_id).addClass('bg-success');
-                    $('#'+contract_id).find("td:last").html(response.status);
                     toastSuccess(response.message);
+                    var table = $('#contract_setting').dataTable();
+                    table.fnUpdate(response.status, $('tr#'+ contract_id)[0], 12);
                 },error: function(response){
                     var statusCode = response.status;
                     var r = '';

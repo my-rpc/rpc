@@ -1,0 +1,226 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+    .border-radius-en{
+        border-left: none;
+        border-radius: 0.25rem 0 0 0.25rem !important;
+    }
+    .pagination{
+      align-items: center;
+      justify-content: center;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+  <div class="box">
+    <div class="box-header with-border">
+      <h4 class="box-title text-primary font-weight-bold ">{{translation.contract_details[language]}}</h4>
+    </div>
+    <div class="box-body">
+      <div class="box-header py-1">
+        <h4 class="box-title">
+          {% if language == 'dari' %}
+            {{contract.position.name}}
+          {% else %}
+            {{contract.position.name_english}}
+          {% endif %}
+          {% if contract.status and (contract.end_date - date.today()).days > 0 %}
+            ({{ (contract.end_date - date.today()).days }} {{translation.day[language]}})
+          {% endif %}
+        </h4>
+        <div class="pull-right">
+          {% if contract.status %}
+            <small class="badge bg-success">
+              {{translation.active[language]}}
+            </small>
+          {% else %}
+            <small class="badge bg-secondary">
+              {{translation.inactive[language]}}
+            </small>
+          {% endif %}
+        </div>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.id_number[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.employee %}
+                      {{ contract.employee.id }}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.name_and_last_name[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.employee %}
+                      {% if language == 'dari' %}
+                        {{ contract.employee.name }} {{ contract.employee.lname }}
+                      {% else %}
+                        {{ contract.employee.name_english }} {{ contract.employee.lname_english }}
+                      {% endif %}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.contract_type[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.contract_type %}
+                      {% if language == 'dari' %}
+                        {{ contract.contract_type.name }}
+                      {% else %}
+                        {{ contract.contract_type.name_english }}
+                      {% endif %}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.position[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.position %}
+                      {% if language == 'dari' %}
+                        {{ contract.position.name }}
+                      {% else %}
+                        {{ contract.position.name_english }}
+                      {% endif %}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.department[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.department %}
+                      {% if language == 'dari' %}
+                        {{ contract.department.name }}
+                      {% else %}
+                        {{ contract.department.name_english }}
+                      {% endif %}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.start_date[language] }}</span>
+                  <strong class="float-right text-left">
+                    {{ to_jalali(contract.start_date) }}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.end_date[language] }}</span>
+                  <strong class="float-right text-left">
+                    {{ to_jalali(contract.end_date) }}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.base_salary[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.salary %}
+                      {{contract.salary.base }}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.transportation[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.salary %}
+                      {{contract.salary.transportation }}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.house_hold[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.salary %}
+                      {{contract.salary.house_hold }}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.currency[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% if contract.salary %}
+                      {% if contract.salary.currency == "1"%}
+                        {{translation.afghani[language]}}
+                      {% else %}
+                        {{translation.dollar[language]}}
+                      {% endif %}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="bg-white pt-2">
+              <div class="media-body overflow-auto m-1 p-1 bb-1">
+                  <span>{{ translation.contract_duration[language] }}</span>
+                  <strong class="float-right text-left">
+                    {% set num_months = (contract.end_date.year - contract.start_date.year) * 12 + (contract.end_date.month - contract.start_date.month) %}
+                    {% if num_months == 0 %}
+                      {{translation.less_then_a_month[language]}}
+                    {% else %}
+                      {{ num_months }} {{translation.months[language]}}
+                    {% endif %}
+                  </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+{% endblock js_code %}

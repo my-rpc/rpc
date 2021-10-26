@@ -51,7 +51,7 @@
                       {% set hourly=[] %}
                       {% set daily=[] %}
                       {% if employee %}
-                        {% for overtime in employee.overtimes  %}
+                        {% for overtime in employee.overtimes.filter_by(hr=1, supervisor=1).all()  %}
                           {% if not overtime.overtime_type %}
                             {% if daily.append((overtime.end_datetime - overtime.start_datetime).days) %}{% endif %}
                           {% else %}
@@ -74,7 +74,7 @@
                     {% set hourly=[] %}
                     {% set daily=[] %}
                     {% if employee %}
-                      {% for leave in employee.leaves  %}
+                      {% for leave in employee.leaves.filter_by(hr=1, supervisor=1).all()  %}
                         {% if not leave.leave_type %}
                           {% if daily.append((leave.end_datetime - leave.start_datetime).days) %}{% endif %}
                         {% else %}
@@ -95,7 +95,7 @@
                   </span>
                   {% set amounts=[] %}
                   {% if employee %}
-                    {% for loan in employee.loans %}
+                    {% for loan in employee.loans.filter_by(presidency=1, finance=1).all() %}
                       {% if amounts.append((loan.requested_amount)) %}{% endif %}
                     {% endfor %}
                   {% endif %}
@@ -110,7 +110,7 @@
           <div class="col-12">
             <div class="box box-default">
               <div class="box-header with-border">
-                <h4 class="box-title">{{translation.employee_profile[language]}}</h4>
+                <h4 class="box-title text-primary font-weight-bold ">{{translation.employee_profile[language]}}</h4>
               </div>
               <!-- /.box-header -->
                 <div class="box-body">
@@ -271,7 +271,7 @@
                             <div class="col-md-6">
                               <div class="bg-white pt-2">
                                 <div class="media-body  m-1 p-1 bb-1">
-                                    <span>{{ translation.m_status[language] }}</span>
+                                    <span>{{ translation.gender[language] }}</span>
                                     <strong class="float-right">
                                     {% if employee.gender == true %}
                                       {{translation.male[language]}}
@@ -285,7 +285,7 @@
                             <div class="col-md-6">
                               <div class="bg-white pt-2">
                                 <div class="media-body  m-1 p-1 bb-1">
-                                    <span>{{ translation.status[language] }}</span>
+                                    <span>{{ translation.m_status[language] }}</span>
                                     <strong class="float-right">
                                       {% if employee.m_status == True %}
                                         {{translation.married[language]}}
@@ -471,7 +471,7 @@
                                   ({{ (contract.end_date - date.today()).days }} {{translation.day[language]}})
                                 {% endif %}
                               </h4>
-                              <div class="box-controls pull-right">
+                              <div class="pull-right">
                                 {% if contract.status %}
                                   <small class="badge bg-success">
                                     {{translation.active[language]}}
@@ -631,18 +631,18 @@
                       <div class="row">
                         <div class="col-md-8 offset-md-2 box">
                           <div class="box-body">
-                            <div class="m2-1">
-                              <h4>{{translation.change_pass_form[language]}}</h4>
+                            <div class="my-1 text-center">
+                              <div class="font-weight-bold">{{translation.change_pass_form[language]}}</div>
                             </div>
-                            <form method="POST" , action="" id="add_employee">
+                            <form method="POST" , action="change_password">
                               {{ change_pass_form.hidden_tag()}}
                               <div class="form-group">
                                 {{ change_pass_form.old_pass.label(class="form-control-label")}}
                                 <div class="input-group icon-pointer">
-                                  {{ change_pass_form.old_pass(class="form-control form-control-lg")}}
-                                  <div class="input-group-prepend">
+                                  {{ change_pass_form.old_pass(type="password", class="form-control form-control-lg")}}
+                                  <div id="old_pass_prepend" class="input-group-prepend">
                                       <span class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} input-group-text bg-transparent">
-                                          <i class="fad fa-eye-slash"></i>
+                                          <i id="old_pass_icon" class="fad fa-eye-slash"></i>
                                       </span>
                                   </div>
                                 </div>
@@ -650,17 +650,17 @@
                               <div class="form-group">
                                 {{ change_pass_form.new_pass.label(class="form-control-label")}}
                                 <div class="input-group icon-pointer">
-                                  {{ change_pass_form.new_pass(class="form-control form-control-lg")}}
-                                  <div class="input-group-prepend">
+                                  {{ change_pass_form.new_pass(type="password", class="form-control form-control-lg")}}
+                                  <div id="new_pass_prepend" class="input-group-prepend">
                                       <span class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} input-group-text bg-transparent">
-                                          <i class="fad fa-eye-slash"></i>
+                                          <i id="new_pass_icon" class="fad fa-eye-slash"></i>
                                       </span>
                                   </div>
                                 </div>
                               </div>
                               <div class="form-group">
                                 {{ change_pass_form.confirm_pass.label(class="form-control-label")}}
-                                {{ change_pass_form.confirm_pass(class="form-control form-control-lg")}}
+                                {{ change_pass_form.confirm_pass(type="password", class="form-control form-control-lg")}}
                               </div>
                               <div class="form-group">
                                 {{ change_pass_form.submit(class="btn btn-primary")}}
@@ -702,6 +702,24 @@
 </section>
 {% endblock main_content%}
 {% block js_code %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {%if messages %}
+    {%for category, message in messages %}
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 <script>
 $(document).ready(function() {
   function uploadProfile(){
@@ -728,8 +746,35 @@ $(document).ready(function() {
         }
     });
   };
+  var old_pass = false;
+  $('#old_pass_prepend').click(function (e) {
+    if(old_pass){
+      $('#old_pass_icon').removeClass('fa-eye').addClass('fa-eye-slash');
+      $('#old_pass').attr('type', 'password');
+    }
+    else{
+      $('#old_pass_icon').removeClass('fa-eye-slash').addClass('fa-eye');
+      $('#old_pass').attr('type', 'text');
+    }
+    old_pass = !old_pass;
+  });
 
-  
+  var new_pass = false;
+  $('#new_pass_prepend').click(function (e) {
+    if(new_pass){
+      $('#new_pass_icon').removeClass('fa-eye').addClass('fa-eye-slash');
+      $('#new_pass').attr('type', 'password');
+      $('#confirm_pass').attr('type', 'password');
+    }
+    else{
+      $('#new_pass_icon').removeClass('fa-eye-slash').addClass('fa-eye');
+      $('#new_pass').attr('type', 'text');
+      $('#confirm_pass').attr('type', 'text');
+    }
+    new_pass = !new_pass;
+  });
+
+
     
 });
 </script>

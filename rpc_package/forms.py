@@ -7,7 +7,7 @@ from wtforms.widgets import TextArea
 from rpc_package.rpc_tables import Provinces, Districts, User_roles, Employees, Emails, Phone, Contract_types, \
     Positions, Departments, Salary, Holiday, AttendanceFile
 from rpc_package.utils import check_language, datetime_validation, date_validation, to_gregorian, get_months
-from rpc_package import translation_obj, message_obj
+from rpc_package import translation_obj, message_obj, pass_crypt
 import jdatetime, datetime
 
 class CreateUserForm(FlaskForm):
@@ -566,13 +566,23 @@ class ChangePassForm(FlaskForm):
     new_pass = StringField('New Password', validators=[DataRequired()])
     confirm_pass = StringField('Confirm Password', validators=[DataRequired()])
     submit = SubmitField('Submit')
-    def __init__(self, language):
+    def __init__(self, language, current_user={}):
         super(ChangePassForm, self).__init__()
         self.language = language
+        self.current_user = current_user
         self.old_pass.label.text = translation_obj.old_pass[language]
         self.new_pass.label.text = translation_obj.new_pass[language]
         self.confirm_pass.label.text = translation_obj.confirm_pass[language]
         self.submit.label.text = translation_obj.save[language]
+    def validate_old_pass(self, old_pass):
+        if not pass_crypt.check_password_hash(self.current_user.password, old_pass.data):
+            raise ValidationError(message_obj.old_pass_incorrect[self.language])
+    def validate_new_pass(self, new_pass):
+        if len(new_pass.data) < 8:
+            raise ValidationError(message_obj.must_be_more_then_eight_character[self.language])
+        if new_pass.data != self.confirm_pass.data:
+            raise ValidationError(message_obj.new_pass_not_equal_to_confirm_pass[self.language])
+
 
 class departmentForm(FlaskForm):
     name_department = StringField(' نام دیپارتمنت', validators=[DataRequired()])
