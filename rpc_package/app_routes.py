@@ -43,11 +43,20 @@ def create_new_user():
                 token='adding new token')
             try:
                 db.session.add(new_user)
+                db.session.flush()
                 db.session.commit()
             except IOError as exc:
                 return message_to_client_403(message_obj.create_new_user_not[session['language']])
-            return message_to_client_200(
-                message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
+            data = {
+                "user": {
+                    'emp_id': new_user.emp_id,
+                    'status': translation_obj.active[session['language']] if new_user.status else translation_obj.inactive[session['language']],
+                    'name' : '{} {}'.format(new_user.employee.name_english, new_user.employee.lname_english) if session['language'] == 'en' else '{} {}'.format(new_user.employee.name, new_user.employee.lname),
+                    'role': new_user.user_role.name if session['language'] == 'dari' else new_user.user_role.name_english
+                },
+                'message': message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data)
+            }
+            return jsonify(data)
         else:
             return message_to_client_403(create_new_user_form.errors)
     users = db.session.query(Users,
@@ -78,7 +87,7 @@ def uds_user():
                 return message_to_client_403(message_obj.create_new_user_update_not[language])
             data = {
                 "user": {
-                    'emp_id': user.emp_id, 'status': user.status,
+                    'emp_id': user.emp_id, 'status': translation_obj.active[session['language']] if user.status else translation_obj.inactive[session['language']],
                     'role': {'name': user_role.name, 'name_english': user_role.name_english}
                 },
                 'message': message_obj.create_new_user_update[language].format(request.form['employee_id'])
