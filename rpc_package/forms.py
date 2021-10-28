@@ -82,7 +82,8 @@ class EmployeeForm(FlaskForm):
     birthday = StringField('Birthday/تارخ تولد')
     tazkira = StringField('Tazkira/تذکره', validators=[Regexp('\d+')])
     gender = RadioField('Gender', choices=[[1, 'Male'], [0, 'Female']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
-    blood = StringField("Blood Type/گروپ خون", validators=[Regexp('(A|B|AB|O|C)[+-]')], default='C+')
+    blood_groups = ['NA', 'A+', 'B+', 'AB+', 'O+', 'A-', 'B-', 'AB-', 'O-']
+    blood = SelectField("Blood Type/گروپ خون", choices=blood_groups, validators=[Regexp('(A+|B+|AB+|O+|A-|B-|AB-|O-|NA)')], default='NA')
     m_status = RadioField('Marital Status', choices=[[1, 'Married'], [0, 'Single']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
     tin = StringField('TIN Number/نمبر تشخصیه', validators=[Regexp('\d+')], default='000')
     provinces_list = [(province.id, province.province_name + '/' + province.province_name_english) for province in

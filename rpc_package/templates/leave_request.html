@@ -64,8 +64,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                {{form.submit(class="btn btn-primary")}}
-            </div>
+                    {{form.submit(class="btn btn-primary")}}
+                </div>
             </div>
             </form>
         </div>
@@ -90,9 +90,10 @@
                         <th>{{translation.hr[language]}}</th>
                         <th>{{translation.request_date[language]}}</th>
                         <th>{{translation.finalized_date[language]}}</th>
+                        <th></th>
                       </tr>
                       {% for leave in my_leave_list %}
-                      <tr>
+                      <tr class="leave_row">
                         <td>
                             <div
                                 class="btn m-0 p-0 mx-1"
@@ -137,9 +138,16 @@
                                 {{to_jalali(leave.finalized_at, '%Y-%m-%d %H:%M:%S')}}
                             {% endif %}
                         </td>
+                        <td class="delete">
+                            {% if leave.supervisor == None and leave.hr == None %}
+                            <a style="display: none;" href="delete_leave/{{ leave.id }}" onclick="return confirm('Do you want to delete this record?');">
+                                <i class="fa fa-trash-alt text-danger"></i>
+                            </a>
+                            {% endif %}
+                        </td>
                       </tr>
                       <tr>
-                            <td colspan="9" class="no-padding">
+                            <td colspan="10" class="no-padding">
                                 <table class="collapse table" id="more_{{leave.id}}" data-parent="#leave_list">
                                     <tr>
                                         {% if leave.reason %}
@@ -207,6 +215,7 @@
                 $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', $('#start_datetime_icon').MdPersianDateTimePicker('getDate'));
             }
             else{
+                console.log($('#start_datetime_icon').MdPersianDateTimePicker('getText'));
                 $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', false);
             }
         });
@@ -234,6 +243,12 @@
                 .MdPersianDateTimePicker('setOption', 'enableTimePicker', true)
                 .MdPersianDateTimePicker('setOption', 'textFormat', 'yyyy-MM-dd HH:mm:00')
             }
+        });
+        $('.leave_row').on('mouseover', function (e) {
+            $(this).children('td.delete').children('a').css('display', 'block');
+        });
+        $('.leave_row').on('mouseout', function (e) {
+            $(this).children('td.delete').children('a').css('display', 'none');
         });
     });
 </script>

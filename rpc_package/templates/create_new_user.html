@@ -267,6 +267,28 @@ $(document).on( 'submit', '#create_user', function(e){
         success: function (response) {
             toastSuccess(response.message);
             $('.create_new_user_modal').modal('hide');
+            var t = $('#create_new_user_table').DataTable();
+            var user = response.user;
+            console.log(user);
+            var rowNode = t.row.add( [
+                user.emp_id,
+                user.name,
+                user.role,
+                user.status,
+                `<a href="javascript:void(0)" class="" onclick="updateUserOpenModel('` + user.emp_id + `')">
+                    <i class="fad fa-edit text-info"></i> 
+                </a>
+                <span class="px-4 text-secondary font-weight-bolder">|</span>
+                <a href="javascript:void(0)" class="text-primary" onclick="resetPassword('` + user.emp_id + `')"> 
+                    <i class="fad fa-sync text-primary"></i>Reset Password </a>`
+            ]).draw(false).node();
+            //table.row.add([newCom]).draw(false);
+            t.page('last').draw(false);
+            $(rowNode)
+                .css('background-color', '#1bc5bd !important')
+                .animate({
+                    color: 'black'
+                });
         },error: function(response){
             var statusCode = response.status;
             var r = '';
@@ -296,11 +318,7 @@ $(document).on( 'submit', '#update_user', function(e){
             rowCell3 = '#'+user.emp_id+ ' td:eq(3)';
             alert(user.role.name)
             $(rowCell2).html(user.role.name);
-            if(user.status){
-                $(rowCell3).text('Active');
-            }else{
-                $(rowCell3).text('Inactive');
-            }
+            $(rowCell3).text(user.status);
             $('#'+user.emp_id).addClass('bg-success');
 
         },error: function(response){

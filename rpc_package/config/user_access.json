@@ -21,7 +21,9 @@
     "loan_guarantor",
     "resign_request",
     "my_equipment",
-    "view_resign_request"
+    "view_resign_request",
+    "delete_leave",
+    "delete_overtime"
   ],
   "Acting Manager" : [
     "leave_supervisor",
@@ -114,6 +116,8 @@
     "accept_reject_resign_request",
     "holiday",
     "delete_holiday",
-    "update_holiday"
+    "update_holiday",
+    "delete_leave",
+    "delete_overtime"
   ]
 }
