@@ -605,11 +605,10 @@ def leave_request():
 @app.route("/delete_leave/<int:leave_id>", methods=['GET'])
 @login_required
 def delete_leave(leave_id):
-    # if not check_access('delete_leave'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('delete_leave'):
+        return redirect(url_for('access_denied'))
     try:
         leave = Leave_form.query.get(leave_id)
-        print(leave.emp_id == current_user.emp_id and leave.supervisor == None and leave.hr == None)
         if leave.emp_id == current_user.emp_id and leave.supervisor == None and leave.hr == None:
             db.session.delete(leave)
             db.session.commit()
@@ -747,6 +746,23 @@ def overtime_request():
         return redirect(url_for('overtime_request'))
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
         title=translation_obj.forms[session['language']], language=session['language'])
+
+@app.route("/delete_overtime/<int:overtime_id>", methods=['GET'])
+@login_required
+def delete_overtime(overtime_id):
+    if not check_access('delete_overtime'):
+        return redirect(url_for('access_denied'))
+    try:
+        overtime = Overtime_form.query.get(overtime_id)
+        if overtime.emp_id == current_user.emp_id and overtime.supervisor == None and overtime.hr == None:
+            db.session.delete(overtime)
+            db.session.commit()
+            flash(message_obj.overtime_request_deleted[session['language']], 'success')
+        else:
+            flash(message_obj.overtime_request_not_deleted[session['language']], 'error')
+    except IOError as exc:
+        flash(message_obj.overtime_request_not_deleted[session['language']], 'error')
+    return redirect(url_for('overtime_request'))
 
 @app.route('/overtime_supervisor', methods=["GET"])
 @login_required

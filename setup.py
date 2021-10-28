@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.13'
-DESCRIPTION = 'leave_request_delete, delete button added for leave request that is not aaproved or deleted'
+VERSION = '0.8.14'
+DESCRIPTION = 'overtime_request_delete, delete button added for overtime request that has not been aaproved or rejected'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

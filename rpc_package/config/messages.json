@@ -408,5 +408,13 @@
   "leave_request_not_deleted": {
     "dari": "در خواست رخصتی متاسفانه حذف نشد",
     "en": "Leave request has not been deleted"
+  },
+  "overtime_request_deleted": {
+    "dari": "در خواست اضافه کاری موفقانه حذف شد",
+    "en": "Overtime request successfully deleted"
+  },
+  "overtime_request_not_deleted": {
+    "dari": "در خواست اضافه کاری متاسفانه حذف نشد",
+    "en": "Overtime request has not been deleted"
   }
 }
