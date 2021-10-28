@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.15'
-DESCRIPTION = 'create_user_and_update_datatable, version 0.8.15 I format the data of user after save and return into client and use the datatable function for added the new row and set the color for it'
+VERSION = '0.8.16'
+DESCRIPTION = 'update_employee, version 0.8.16v when employee data updated in database the datatable also updated'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

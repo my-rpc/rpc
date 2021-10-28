@@ -271,25 +271,20 @@ $(document).on('submit', '#update_employee', function(e){
         success: function(response){
             $('.update_employee_modal').modal('hide');
             toastSuccess(response.message);
-            console.log(response.employee)
             emp = response.employee
             rowID = emp.emp_id;
-            $('#'+rowID).find("td:gt(0)").remove();
-            rowCells = $('#'+rowID).html();    
-            sRowCell = '<td>';
-            eRowCell = '</td>';
-            rowCells += sRowCell + rowID + eRowCell 
-                    + sRowCell + emp.name + eRowCell 
-                    + sRowCell + emp.father_name + eRowCell
-                    + sRowCell + emp.phone + eRowCell
-                    + sRowCell + emp.email + eRowCell
-                    + sRowCell + emp.gender + eRowCell
-                    + sRowCell + emp.tazkira + eRowCell
-                    + sRowCell + emp.birthday + eRowCell
-                    + sRowCell + emp.blood + eRowCell
-                    + sRowCell + emp.tin + eRowCell;
-            
-            $('#'+rowID).addClass('bg-success').html(rowCells);
+            var table = $('#employee_setting').dataTable();
+            table.fnUpdate(rowID, $('tr#'+ rowID)[0], 1);
+            table.fnUpdate(emp.name, $('tr#'+ rowID)[0], 2);
+            table.fnUpdate(emp.father_name, $('tr#'+ rowID)[0], 3);
+            table.fnUpdate(emp.phone, $('tr#'+ rowID)[0], 4);
+            table.fnUpdate(emp.email, $('tr#'+ rowID)[0], 5);
+            table.fnUpdate(emp.gender, $('tr#'+ rowID)[0], 6);
+            table.fnUpdate(emp.tazkira, $('tr#'+ rowID)[0], 7);
+            table.fnUpdate(emp.birthday, $('tr#'+ rowID)[0], 8);
+            table.fnUpdate(emp.blood, $('tr#'+ rowID)[0], 9);
+            table.fnUpdate(emp.tin, $('tr#'+ rowID)[0], 10);
+            $('#'+rowID).addClass('bg-success');
 
         },error: function(response){
             var statusCode = response.status;
