@@ -378,7 +378,7 @@ def uds_employee():
                     else update_employee_form.father_name_english.data,
                     'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
                     'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
-                    'gender': update_employee_form.gender.data,
+                    'gender': translation_obj.male[session['language']] if update_employee_form.gender.data == '1' else translation_obj.female[session['language']],
                     'tazkira': update_employee_form.tazkira.data,
                     'm_status': update_employee_form.m_status.data,
                     'birthday': update_employee_form.birthday.data,
@@ -601,6 +601,24 @@ def leave_request():
         return redirect(url_for('leave_request'))
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
         title=translation_obj.forms[session['language']], language=session['language'])
+
+@app.route("/delete_leave/<int:leave_id>", methods=['GET'])
+@login_required
+def delete_leave(leave_id):
+    # if not check_access('delete_leave'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        leave = Leave_form.query.get(leave_id)
+        print(leave.emp_id == current_user.emp_id and leave.supervisor == None and leave.hr == None)
+        if leave.emp_id == current_user.emp_id and leave.supervisor == None and leave.hr == None:
+            db.session.delete(leave)
+            db.session.commit()
+            flash(message_obj.leave_request_deleted[session['language']], 'success')
+        else:
+            flash(message_obj.leave_request_not_deleted[session['language']], 'error')
+    except IOError as exc:
+        flash(message_obj.leave_request_not_deleted[session['language']], 'error')
+    return redirect(url_for('leave_request'))   
 
 @app.route('/leave_supervisor', methods=["GET"])
 @login_required

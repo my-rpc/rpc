@@ -400,5 +400,13 @@
   "must_be_more_then_eight_character": {
     "dari": "رمز عبور حداقل باید 8 حرف باشد",
     "en": "Password must be more then 8 characters"
+  },
+  "leave_request_deleted": {
+    "dari": "در خواست رخصتی موفقانه حذف شد",
+    "en": "Leave request successfully deleted"
+  },
+  "leave_request_not_deleted": {
+    "dari": "در خواست رخصتی متاسفانه حذف نشد",
+    "en": "Leave request has not been deleted"
   }
 }

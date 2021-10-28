@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.12'
-DESCRIPTION = 'update_contract, update contract issue with position and contract type, added image and opecity in login page'
+VERSION = '0.8.13'
+DESCRIPTION = 'leave_request_delete, delete button added for leave request that is not aaproved or deleted'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
