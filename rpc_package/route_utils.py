@@ -73,7 +73,7 @@ def upload_profile_pic(request):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
     ext = request_file.filename.split('.')[1]
     if ext in ALLOWED_EXTENSIONS:
-        request_file.filename = f"profile-" + session['emp_id'] + "." + ext
+        request_file.filename = 'profile-{}-{}.{}'.format(session['emp_id'], datetime.datetime.today().strftime('%m%d%H%M%S'), ext)
         workingdir = os.path.abspath(os.getcwd())
         path = os.path.join(workingdir + "/rpc_package/static/images/profiles", request_file.filename)
         emp = Employees.query.filter_by(id=session['emp_id']).first()

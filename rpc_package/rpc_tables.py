@@ -62,6 +62,7 @@ class Users(db.Model, UserMixin):
     token = db.Column(db.String(255), nullable=True)
     # Relationship
     employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="users")
+    user_role = db.relationship('User_roles', foreign_keys=[role], overlaps="users")
 
     def get_id(self):
         return (self.emp_id)

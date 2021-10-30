@@ -43,11 +43,20 @@ def create_new_user():
                 token='adding new token')
             try:
                 db.session.add(new_user)
+                db.session.flush()
                 db.session.commit()
             except IOError as exc:
                 return message_to_client_403(message_obj.create_new_user_not[session['language']])
-            return message_to_client_200(
-                message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data))
+            data = {
+                "user": {
+                    'emp_id': new_user.emp_id,
+                    'status': translation_obj.active[session['language']] if new_user.status else translation_obj.inactive[session['language']],
+                    'name' : '{} {}'.format(new_user.employee.name_english, new_user.employee.lname_english) if session['language'] == 'en' else '{} {}'.format(new_user.employee.name, new_user.employee.lname),
+                    'role': new_user.user_role.name if session['language'] == 'dari' else new_user.user_role.name_english
+                },
+                'message': message_obj.create_new_user_save[session['language']].format(create_new_user_form.employee_id.data)
+            }
+            return jsonify(data)
         else:
             return message_to_client_403(create_new_user_form.errors)
     users = db.session.query(Users,
@@ -78,7 +87,7 @@ def uds_user():
                 return message_to_client_403(message_obj.create_new_user_update_not[language])
             data = {
                 "user": {
-                    'emp_id': user.emp_id, 'status': user.status,
+                    'emp_id': user.emp_id, 'status': translation_obj.active[session['language']] if user.status else translation_obj.inactive[session['language']],
                     'role': {'name': user_role.name, 'name_english': user_role.name_english}
                 },
                 'message': message_obj.create_new_user_update[language].format(request.form['employee_id'])
@@ -378,7 +387,7 @@ def uds_employee():
                     else update_employee_form.father_name_english.data,
                     'phone': update_employee_form.phone.data + '<br>' + update_employee_form.phone_second.data,
                     'email': update_employee_form.email.data + '<br>' + update_employee_form.email_second.data,
-                    'gender': update_employee_form.gender.data,
+                    'gender': translation_obj.male[session['language']] if update_employee_form.gender.data == '1' else translation_obj.female[session['language']],
                     'tazkira': update_employee_form.tazkira.data,
                     'm_status': update_employee_form.m_status.data,
                     'birthday': update_employee_form.birthday.data,
@@ -602,6 +611,23 @@ def leave_request():
     return render_template('leave_request.html', form=leave_form, my_leave_list=my_leave_list,
         title=translation_obj.forms[session['language']], language=session['language'])
 
+@app.route("/delete_leave/<int:leave_id>", methods=['GET'])
+@login_required
+def delete_leave(leave_id):
+    if not check_access('delete_leave'):
+        return redirect(url_for('access_denied'))
+    try:
+        leave = Leave_form.query.get(leave_id)
+        if leave.emp_id == current_user.emp_id and leave.supervisor == None and leave.hr == None:
+            db.session.delete(leave)
+            db.session.commit()
+            flash(message_obj.leave_request_deleted[session['language']], 'success')
+        else:
+            flash(message_obj.leave_request_not_deleted[session['language']], 'error')
+    except IOError as exc:
+        flash(message_obj.leave_request_not_deleted[session['language']], 'error')
+    return redirect(url_for('leave_request'))   
+
 @app.route('/leave_supervisor', methods=["GET"])
 @login_required
 def leave_supervisor():
@@ -729,6 +755,23 @@ def overtime_request():
         return redirect(url_for('overtime_request'))
     return render_template('overtime_request.html', form=overtime_form, emp_overtime_list=emp_overtime_list,
         title=translation_obj.forms[session['language']], language=session['language'])
+
+@app.route("/delete_overtime/<int:overtime_id>", methods=['GET'])
+@login_required
+def delete_overtime(overtime_id):
+    if not check_access('delete_overtime'):
+        return redirect(url_for('access_denied'))
+    try:
+        overtime = Overtime_form.query.get(overtime_id)
+        if overtime.emp_id == current_user.emp_id and overtime.supervisor == None and overtime.hr == None:
+            db.session.delete(overtime)
+            db.session.commit()
+            flash(message_obj.overtime_request_deleted[session['language']], 'success')
+        else:
+            flash(message_obj.overtime_request_not_deleted[session['language']], 'error')
+    except IOError as exc:
+        flash(message_obj.overtime_request_not_deleted[session['language']], 'error')
+    return redirect(url_for('overtime_request'))
 
 @app.route('/overtime_supervisor', methods=["GET"])
 @login_required

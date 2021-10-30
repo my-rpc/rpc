@@ -721,7 +721,6 @@
 {% endwith %}
 
 <script>
-$(document).ready(function() {
   function uploadProfile(){
     $form = $("#upload_profile_pic");
     var formData = new FormData($form[0]);
@@ -745,7 +744,9 @@ $(document).ready(function() {
             toastError(r);
         }
     });
-  };
+  }
+  
+$(document).ready(function() {
   var old_pass = false;
   $('#old_pass_prepend').click(function (e) {
     if(old_pass){
