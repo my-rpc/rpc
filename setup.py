@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.16'
-DESCRIPTION = 'update_employee, version 0.8.16v when employee data updated in database the datatable also updated'
+VERSION = '0.8.19'
+DESCRIPTION = 'changed_admin_access, version 0.8.19v the manager permission added for admin for approve and reject of leave and overtime'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

@@ -110,10 +110,11 @@ def to_jalali(value, date_format='%Y-%m-%d', type='str'):
 
 def check_access(route_name=''):
     if current_user and current_user.user_role :
-        roles = getattr(user_access, current_user.user_role.name_english)
-        employees = getattr(user_access, "Employee")
+        roles = getattr(user_access, current_user.user_role.name_english) + getattr(user_access, "Employee")
+        if current_user.user_role.name_english == 'Admin':
+            roles += getattr(user_access, "Manager")
         if isinstance(roles, list) :
-            return (route_name in roles or route_name in employees)
+            return (route_name in roles)
     return False
 
 def get_months():
