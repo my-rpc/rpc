@@ -928,6 +928,16 @@ def emp_autocomplete():
         message = translation_obj.not_found[session['language']]
     return jsonify(result = result, message = message)
 
+@app.route('/last_date_of_month', methods=['POST'])
+@login_required
+def last_date_of_month():
+    date = jdatetime.datetime.strptime(request.form['date'], '%Y-%m-%d')
+    last_day = get_last_date_of_month(date)
+    miladi_date = last_day.togregorian()
+    if not miladi_date:
+        message = translation_obj.not_found[session['language']]
+    return jsonify(year=miladi_date.year, month=miladi_date.month, day=miladi_date.day)
+
 @app.route('/user_autocomplete', methods=['GET'])
 @login_required
 def user_autocomplete():
