@@ -65,7 +65,9 @@
     "loan_hr",
     "holiday",
     "delete_holiday",
-    "update_holiday"
+    "update_holiday",
+    "leave_report",
+    "overtime_report"
   ],
   "Finance" : [
     "loan_finance"

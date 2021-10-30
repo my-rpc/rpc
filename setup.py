@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.18'
-DESCRIPTION = 'access_limitation_by_department, version 0.8.18v the new query applied in getting the list of leave and overtime request and show only the same department request'
+VERSION = '0.8.19'
+DESCRIPTION = 'changed_admin_access, version 0.8.19v the manager permission added for admin for approve and reject of leave and overtime'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
