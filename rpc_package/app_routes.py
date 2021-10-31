@@ -634,7 +634,11 @@ def leave_supervisor():
     if not check_access('leave_supervisor'):
         return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
+    position_history = current_user.employee.position_history.order_by(Position_history.status.asc()).first()
+    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == position_history.department_id).distinct()
+    
     leave_supervisor = Leave_form.query \
+        .filter(Leave_form.emp_id.in_(emps)) \
         .order_by(Leave_form.requested_at.desc()) \
         .paginate(per_page=10,page=int(page),error_out=True)
     return render_template('leave_supervisor.html', leave_supervisor=leave_supervisor,
@@ -779,7 +783,10 @@ def overtime_supervisor():
     if not check_access('overtime_supervisor'):
         return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
+    position_history = current_user.employee.position_history.order_by(Position_history.status.asc()).first()
+    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == position_history.department_id).distinct()
     overtime_supervisor = Overtime_form.query \
+        .filter(Overtime_form.emp_id.in_(emps)) \
         .order_by(Overtime_form.requested_at.desc()) \
         .paginate(per_page=10,page=int(page),error_out=True)
     return render_template('overtime_supervisor.html', overtime_supervisor=overtime_supervisor,
@@ -927,6 +934,16 @@ def emp_autocomplete():
     if not result :
         message = translation_obj.not_found[session['language']]
     return jsonify(result = result, message = message)
+
+@app.route('/last_date_of_month', methods=['POST'])
+@login_required
+def last_date_of_month():
+    date = jdatetime.datetime.strptime(request.form['date'], '%Y-%m-%d')
+    last_day = get_last_date_of_month(date)
+    miladi_date = last_day.togregorian()
+    if not miladi_date:
+        message = translation_obj.not_found[session['language']]
+    return jsonify(year=miladi_date.year, month=miladi_date.month, day=miladi_date.day)
 
 @app.route('/user_autocomplete', methods=['GET'])
 @login_required
