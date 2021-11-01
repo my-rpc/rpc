@@ -421,8 +421,8 @@ class Equipment(db.Model, UserMixin):
     name_english = db.Column(db.String(64), nullable=False)
     category = db.Column(db.String(64), nullable=False)
     serial = db.Column(db.String(32), nullable=False)
-    model = db.Column(db.String(64), nullable=False)
-    description = db.Column(db.Text(0), nullable=False)
+    model = db.Column(db.String(64))
+    in_use = db.Column(db.Boolean, nullable=True, default=False)
 
     def __repr__(self):
         return f"Equipment ID: {self.id}, Equipment Name: {self.name}"
