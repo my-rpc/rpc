@@ -1,8 +1,8 @@
 {% extends "page_layout/layout.html" %}
 
-{% block title %} {{ super() }} {{translation.employee_setting[language]}} {% endblock %}
+{% block title %} {{ super() }} {{translation.employee_settings[language]}} {% endblock %}
 {% block css_or_js_code %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css')}}">
     <style>
         .rtl [type=radio]:checked.table-radio, .rtl [type=radio]:not(:checked).table-radio, [type=radio]:not(:checked).table-radio, [type=radio]:checked.table-radio {
             position: absolute !important;
@@ -14,23 +14,26 @@
             cursor: pointer;
         }
         .border-radius-dari{
+            border-left: none;
             border-radius: 0 0.25rem 0.25rem 0 !important;
         }
-        
+
     </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
 
 <div class="box">
     <div class="box-header with-border">
-        <h4 class="box-title">{{translation.employee_settings[language]}}</h4>
+        <h4 class="box-title text-primary font-weight-bold ">{{translation.employee_settings[language]}}</h4>
     </div>
     <div class="text-center py-4">
-        <button class="btn btn-info my-3 btn-function" id="view-employee" type="button"><span><i class="fad fa-eye"></i> View Employee</span></button>
-        <button class="btn btn-info-light my-3 btn-function" id="edit-employee" type="button"><span><i class="fad fa-edit"></i> Edit Employee</span></button>
-        <button class="btn btn-primary my-3 btn-function" id="add-doc" type="button"><span><i class="fad fa-file-alt"></i> Add Documents</span></button>
-        <button class="btn btn-primary my-3 btn-function" type="button"><span><i class="fad fa-file-medical" ></i> Add Contract</span></button>
-        <button class="btn btn-warning my-3 btn-function" type="button"><span><i class="fad fa-times"></i> Delete Employee</span></button>
+        <button class="btn btn-info my-3 mx-2 btn-function" data-toggle="tooltip" data-placement="top" title="View Employee" id="view-employee" type="button"><span><i class="fad fa-eye"></i> </span></button>
+        <button class="btn btn-info-light my-3 mx-2 btn-function" data-toggle="tooltip" data-placement="top" title="Edit Employee" id="edit-employee" type="button"><span><i class="fad fa-edit"></i> </span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-documents" type="button"><span><i class="fad fa-file-alt"></i> Add Documents</span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-contract" type="button"><span><i class="fad fa-file-signature" ></i> Add Contract</span></button>
+        <button class="btn btn-warning my-3 mx-2 btn-function btn-sm" id="delete-employee" type="button"><span><i class="fad fa-times"></i> Delete Employee</span></button>
+        <button class="btn btn-primary my-3 mx-2 btn-function btn-sm" id="add-equipment" type="button"><span><i class="fad fa-file-signature" ></i> Add Equipment</span></button>
+
     </div>
     <div class="box-body table-responsive">
         <table class="table table-striped table-hover" id="employee_setting">
@@ -58,8 +61,13 @@
                         </div>
                     </td>
                     <td>{{emp.id}}</td>
-                    <td>{{emp.name}} {{emp.lname}}</td>
-                    <td>{{emp.fname}}</td>
+                    {% if language == 'dari' %}
+                        <td>{{emp.name}} {{emp.lname}}</td>
+                        <td>{{emp.fname}}</td>
+                    {% else %}
+                        <td>{{emp.name_english}} {{emp.lname_english}}</td>
+                        <td>{{emp.fname_english}}</td>
+                    {% endif %}
                     <td>
                         {% if phones[loop.index0] %}
                         {% for ph in phones[loop.index0] %}
@@ -84,7 +92,7 @@
                         <td>{{translation.female[language]}}</td>
                     {% endif %}
                     <td>{{emp.tazkira}}</td>
-                    <td>{{emp.birthday}}</td>
+                    <td>{{ to_jalali(emp.birthday)}}</td>
                     <td>{{emp.blood}}</td>
                     <td>{{emp.tin}}</td>
                 </tr>
@@ -124,16 +132,11 @@
 {% endblock main_content%}
 {% block js_code %}
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js"></script>
-
-<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
-<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
+<script src="{{url_for('static', filename='js/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/vfs_fonts.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
 
 <script>
-
-
     $(document).ready(function() {
         $('#employee_setting').DataTable({
             dom: 'Blfrtp',
@@ -141,55 +144,63 @@
                 "lengthMenu": "_MENU_"
             },
             buttons: [
-                'colvis',
-                'excel',
-                'print'
+                {extend: 'colvis', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-eye"></i> Column visibility'},
+                // { extend: 'copy', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-copy"></i> Copy'},
+                // { extend: 'csv', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-csv"></i> CSV' },
+                { extend: 'excel', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-excel"></i> Excel' },
+                // { extend: 'pdf', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-pdf"></i> PDF'},
+                { extend: 'print', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-print"></i> Print' }
             ],
-        }
-        );
+        });
 
-
-        $('.btn-function').on('click', function(fun){
-            var btnValue = $.trim($(this).text());
+$('.btn-function').on('click', function(fun){
+            var btnID = $(this).prop('id');
             empID = $('#employee_setting').find('input:radio[name="selected_emp"]:checked').val();
             switch(true){
-                case (btnValue === 'View Employee'):
+                case (btnID === 'view-employee'):
                     if(empID != '' && empID != undefined){
-                        window.open('/employee_details?emp_id='+empID, '_blank');
+                        window.open('/employee_details?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee');
                     }
                     break;
-                case(btnValue === 'Edit Employee'):
+                case(btnID === 'edit-employee'):
                     if(empID != '' && empID != undefined){
                         updateEmployee(empID);
                     }else{
                         toastWarning('Please select an employee');
                     }
                     break
-                case(btnValue === 'Add Documents'):
+                case(btnID === 'add-documents'):
                     if(empID != '' && empID != undefined){
-                        window.open('/add_documents?emp_id='+empID, '_blank');
+                        window.open('/add_documents?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
-                case(btnValue === 'Add Contract'):
+                case(btnID === 'add-equipment'):
                     if(empID != '' && empID != undefined){
-                        window.open('/add_contract?emp_id='+empID, '_blank');
+                        window.open('/add_equipment?emp_id='+empID, '_self');
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
-                case(btnValue === 'Delete Employee'):
+                case(btnID === 'add-contract'):
+                    if(empID != '' && empID != undefined){
+                        window.open('/add_contract?emp_id='+empID, '_self');
+                    }else{
+                        toastWarning('Please select an employee')
+                    }
+                    break;
+                case(btnID === 'delete-employee'):
                     if(empID != '' && empID != undefined){
                         deleteEmployee(empID);
                     }else{
                         toastWarning('Please select an employee')
                     }
                     break;
-            }   
-            
+            }
+
         })
     });
 
@@ -260,25 +271,20 @@ $(document).on('submit', '#update_employee', function(e){
         success: function(response){
             $('.update_employee_modal').modal('hide');
             toastSuccess(response.message);
-            console.log(response.employee)
             emp = response.employee
             rowID = emp.emp_id;
-            $('#'+rowID).find("td:gt(0)").remove();
-            rowCells = $('#'+rowID).html();    
-            sRowCell = '<td>';
-            eRowCell = '</td>';
-            rowCells += sRowCell + rowID + eRowCell 
-                    + sRowCell + emp.name + eRowCell 
-                    + sRowCell + emp.father_name + eRowCell
-                    + sRowCell + emp.phone + eRowCell
-                    + sRowCell + emp.email + eRowCell
-                    + sRowCell + emp.gender + eRowCell
-                    + sRowCell + emp.tazkira + eRowCell
-                    + sRowCell + emp.birthday + eRowCell
-                    + sRowCell + emp.blood + eRowCell
-                    + sRowCell + emp.tin + eRowCell;
-            
-            $('#'+rowID).addClass('bg-success').html(rowCells);
+            var table = $('#employee_setting').dataTable();
+            table.fnUpdate(rowID, $('tr#'+ rowID)[0], 1);
+            table.fnUpdate(emp.name, $('tr#'+ rowID)[0], 2);
+            table.fnUpdate(emp.father_name, $('tr#'+ rowID)[0], 3);
+            table.fnUpdate(emp.phone, $('tr#'+ rowID)[0], 4);
+            table.fnUpdate(emp.email, $('tr#'+ rowID)[0], 5);
+            table.fnUpdate(emp.gender, $('tr#'+ rowID)[0], 6);
+            table.fnUpdate(emp.tazkira, $('tr#'+ rowID)[0], 7);
+            table.fnUpdate(emp.birthday, $('tr#'+ rowID)[0], 8);
+            table.fnUpdate(emp.blood, $('tr#'+ rowID)[0], 9);
+            table.fnUpdate(emp.tin, $('tr#'+ rowID)[0], 10);
+            $('#'+rowID).addClass('bg-success');
 
         },error: function(response){
             var statusCode = response.status;
@@ -291,7 +297,7 @@ $(document).on('submit', '#update_employee', function(e){
     });
 });
 
- 
+
 
 deleteEmployee = function(empID){
     if(confirm('Are you sure you want to delete this Employee?')){

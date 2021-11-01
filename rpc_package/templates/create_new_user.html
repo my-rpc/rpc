@@ -5,7 +5,13 @@
     <!-- add js, css code or library as need. js code is recommended in at footer 
         This code will be add to the head of the page
     -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css')}}">
+<style>
+    .ui-menu.ui-autocomplete {
+        z-index: 3000;
+    }
+</style>
+
 {% endblock  css_or_js_code %}
 {% block main_content %}
 <!-- main content code will be add here -->
@@ -19,7 +25,7 @@
                     <th>{{translation.employee_id[language]}}</th>
                     <th>{{translation.first_name[language]}}</th>
                     <th>{{translation.user_role[language]}}</th>
-                    <th>{{translation.status[language]}}</th>
+                    <th>{{translation.user_status[language]}}</th>
                     <th>{{translation.operations[language]}}</th> 
                     <!-- operations should be added to translation -->
                     
@@ -82,7 +88,9 @@
                     <fieldset class="form-group">
                         <div class="form-group">
                             {{ form.employee_id.label(class="form-control-label")}}
-                            {{ form.employee_id(class="form-control form-control-lg")}}
+                            <input name="autocomplete" type="text" id="autocomplete" class="form-control form-control-lg"/>
+                            <small class="text-danger" id="guarantor-guide"></small>
+                            {{ form.employee_id(hidden="true")}}
                         </div>
                         <div class="form-group">
                             {{ form.password.label(class="form-control-label")}}
@@ -150,7 +158,7 @@
                         </div>
                     </fieldset>
                     <div class="form-group">
-                        {{form.submit(class="btn btn-primary")}}
+                        {{form.submit(class="btn btn-primary", value=translation.update_user[language])}}
                     </div>
                     
                 </form>
@@ -167,14 +175,12 @@
         add js code or library here as needed 
         This code will be add to the footer of the page
     -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.25/b-1.7.1/b-colvis-1.7.1/b-html5-1.7.1/b-print-1.7.1/date-1.1.0/r-2.2.9/sb-1.1.0/sl-1.3.3/datatables.min.js"></script>
-
-    <script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
-    <script src="{{url_for('static', filename='js/rpc.js')}}"></script>
-    <script>
-
+    <script src="{{url_for('static', filename='js/pdfmake.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/vfs_fonts.js')}}"></script>
+    <script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
+    
+    <script src="{{url_for('static', filename='js/jquery_ui.js')}}"></script>    
+<script>
 $(document).ready(function() {
     $('#create_new_user_table').DataTable({
         dom: 'Bfrtip',
@@ -190,8 +196,23 @@ $(document).ready(function() {
             }
         }
         ],
-    }
-    );
+    });
+
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('user_autocomplete')}}",{q: request.term}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#guarantor-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#employee_id').val(ui.item.value);
+        }
+    });
 });
 
 updateUserOpenModel = function(userID){
@@ -246,6 +267,28 @@ $(document).on( 'submit', '#create_user', function(e){
         success: function (response) {
             toastSuccess(response.message);
             $('.create_new_user_modal').modal('hide');
+            var t = $('#create_new_user_table').DataTable();
+            var user = response.user;
+            console.log(user);
+            var rowNode = t.row.add( [
+                user.emp_id,
+                user.name,
+                user.role,
+                user.status,
+                `<a href="javascript:void(0)" class="" onclick="updateUserOpenModel('` + user.emp_id + `')">
+                    <i class="fad fa-edit text-info"></i> 
+                </a>
+                <span class="px-4 text-secondary font-weight-bolder">|</span>
+                <a href="javascript:void(0)" class="text-primary" onclick="resetPassword('` + user.emp_id + `')"> 
+                    <i class="fad fa-sync text-primary"></i>Reset Password </a>`
+            ]).draw(false).node();
+            //table.row.add([newCom]).draw(false);
+            t.page('last').draw(false);
+            $(rowNode)
+                .css('background-color', '#1bc5bd !important')
+                .animate({
+                    color: 'black'
+                });
         },error: function(response){
             var statusCode = response.status;
             var r = '';
@@ -275,11 +318,7 @@ $(document).on( 'submit', '#update_user', function(e){
             rowCell3 = '#'+user.emp_id+ ' td:eq(3)';
             alert(user.role.name)
             $(rowCell2).html(user.role.name);
-            if(user.status){
-                $(rowCell3).text('Active');
-            }else{
-                $(rowCell3).text('Inactive');
-            }
+            $(rowCell3).text(user.status);
             $('#'+user.emp_id).addClass('bg-success');
 
         },error: function(response){

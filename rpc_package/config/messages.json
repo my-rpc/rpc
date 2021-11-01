@@ -60,7 +60,7 @@
     "en": "Wrong email format"
   },
   "required_field": {
-  "dari": "الزامی است  {}",
+  "dari": "{} الزامی است",
     "en": "{} is required"
   },
   "required_upload": {
@@ -133,7 +133,7 @@
   },
   "user_inactive": {
     "dari": "حساب کاربر فعال نیست",
-    "en": "User Acoount is not active"
+    "en": "Your account is inactive"
   },
   "blood_type": {
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
@@ -143,9 +143,49 @@
     "dari": "درخواست رخصتی ارسال شد",
     "en": "Leave request has been sent"
   },
-    "leave_request_not_sent": {
+  "leave_request_not_sent": {
     "dari": "درخواست رخصتی ارسال نشد",
     "en": "Leave request has been not sent"
+  },
+  "leave_request_accepted": {
+    "dari": "درخواست رخصتی پذیرفته شد",
+    "en": "Leave request has been accepted"
+  },
+  "leave_request_rejected": {
+    "dari": "درخواست رخصتی  رد شد",
+    "en": "Leave request has been rejected"
+  },
+  "loan_request_sent": {
+    "dari": "درخواست قرضه ارسال شد",
+    "en": "Loan request has been sent"
+  },
+  "loan_request_guarantor_rejected": {
+    "dari": "درخواست ضمانت  رد شد",
+    "en": "Guarantee request has been rejected"
+  },
+  "loan_request_guarantor_accepted": {
+    "dari": "درخواست ضمانت پذیرفته شد",
+    "en": "Guarantee request has been accepted"
+  },
+  "loan_request_rejected": {
+    "dari": "درخواست قرضه رد شد",
+    "en": "Loan request has been rejected"
+  },
+  "loan_request_accepted": {
+    "dari": "درخواست قرضه پذیرفته شد",
+    "en": "Loan request has been accepted"
+  },
+  "overtime_request_rejected": {
+    "dari": "درخواست اضافه کاری رد شد",
+    "en": "Overtime request has been rejected"
+  },
+  "overtime_request_accepted": {
+    "dari": "درخواست اضافه کاری پذیرفته شد",
+    "en": "Overtime request has been accepted"
+  },
+  "loan_request_not_sent": {
+    "dari": "درخواست قرضه ارسال نشد",
+    "en": "Loan request has been not sent"
   },
   "overtime_request_sent": {
     "dari": "درخواست اضافه کاری ارسال شد",
@@ -155,6 +195,38 @@
     "dari": "درخواست اضافه کاری ارسال نشد",
     "en": "Overtime request has been not sent"
   },
+  "incorrect_datetime_format": {
+    "dari": "خطا در فارمت دیتا، تاریخ و زمان درست وارید کنید.",
+    "en": "Incorrect data format, should be YYYY-MM-DD hh:mm:ss"
+  },
+  "incorrect_date_format": {
+    "dari": "خطا در فارمت دیتا، تاریخ درست وارید کنید.",
+    "en": "Incorrect data format, should be YYYY-MM-DD"
+  },
+  "more_leave_duration": {
+    "dari": "مدت رخصتی نباید بیش از 8 ساعت باشد",
+    "en": "Leave duration has not been more then 8 hours."
+  },
+  "less_leave_duration": {
+    "dari": "مدت رخصتی نباید کمتر از 1 ساعت باشد",
+    "en": "Leave duration has not been less then 1 hours."
+  },
+  "more_overtime_duration": {
+    "dari": "مدت اضافه کاری نباید بیش از 8 ساعت باشد",
+    "en": "Overtime duration has not been more then 8 hours."
+  },
+  "less_overtime_duration": {
+    "dari": "مدت اضافه کاری نباید کمتر از 1 ساعت باشد",
+    "en": "Overtime duration has not been less then 1 hours."
+  },
+  "less_character": {
+    "dari": "تعداد حروف باید بیشتر از {} باشد",
+    "en": "The input character should be more then {}"
+  },
+  "invalid_character": {
+    "dari": "متن تنها می تواند عدد و حروف باشد",
+    "en": "The text must be letters and number."
+  },
   "contract_added":{
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه شد",
     "en": "Contract added for employe with {} ID"
@@ -163,12 +235,64 @@
     "dari": "قرارداد جدید برای کارمند با آیدی {} موفقانه اضافه نشد",
     "en": "Contract not added for employe with {} ID"
   },
+  "contract_delete":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف شد",
+    "en": "Contract deleted for user with {} ID"
+  },"contract_delete_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه حذف نشد",
+    "en": "Contract not deleted for user with {} ID"
+  },
+  "contract_update":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی شد",
+    "en": "Contract updated for user with {} ID"
+  },"contract_update_not":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه بروزرسانی نشد",
+    "en": "Contract not updated for user with {} ID"
+  },
+  "contract_status_changed":{
+    "dari": "قرارداد مربوط کاربر با آیدی {} موفقانه {} شد",
+    "en": "Contract status changed for user ID {} to {}"
+  },
+  "resign_request_sent": {
+    "dari": "درخواست استعفا ارسال شد",
+    "en": "Resign request has been sent"
+  },
+    "resign_request_not_sent": {
+    "dari": "درخواست استعفا ارسال نشد",
+    "en": "Resign request has been not sent"
+  },
+  "action_performed": {
+    "dari": "عملیات انجام شد",
+    "en": "Action Performed"
+  },
+  "action_not_performed": {
+    "dari": "عملیات انجام نشد",
+    "en": "Action not Performed"
+  },
+
+  "add_department": {
+    "dari": "دیپارتمنت اضافه شد",
+    "en": "Department Added"
+  },
+  "delivered": {
+    "dari": "تحویل گرفته شد",
+    "en": "Delivred"
+  },
+  "not_delivered": {
+    "dari": "تحویل گرفته نشد",
+    "en": "Not Delivred"
+  },
+    "add_department_not": {
+    "dari": "دیپارتمنت اضافه نشد",
+    "en": "Department not Added"
+  },
   "val_dic" : {
-    "employee_id": "Employee already exi...mployee ID",
+    "employee_id": "Employee already exist, please check your employee ID",
     "email": "ایمیل شما موجود است",
     "phone": "تلفون شما موجود است",
     "phone_second": "تلفون شما موجود است",
-    "permanent_address": "This field is required.", 
+    "email_second": "ایمیل شما موجود است",
+    "permanent_address": "This field is required.",
     "permanent_address_dari": "This field is required.",
     "current_address": "This field is required.",
     "current_address_dari": "This field is required.",
@@ -180,5 +304,137 @@
   "invalid_message": {
     "dari": "درخواست اشتباه",
     "en": "invalid request"
+  },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
+  },
+  "active_contract_message": {
+    "dari": "این کارمند یک قرارداد فعال دارد",
+    "en": "this employee has an active contract"
+  },
+  "duplicate_entry": {
+    "dari": "{} از قبل موجود است",
+    "en": "{} is already exist"
+  },
+  "holiday_added": {
+    "dari": "رخصتی جدید موفقانه اضافه شد",
+    "en": "New holiday successfully added"
+  },
+  "holiday_not_added": {
+    "dari": "رخصتی جدید اضافه نشد",
+    "en": "New holiday has not been added"
+  },
+  "holiday_deleted": {
+    "dari": "رخصتی موفقانه حذف شد",
+    "en": "Holiday successfully deleted"
+  },
+  "holiday_not_deleted": {
+    "dari": "رخصتی حذف نشد",
+    "en": "Holiday has not been deleted"
+  },
+  "holiday_updated": {
+    "dari": "رخصتی موفقانه بروزرسانی شد",
+    "en": "Holiday successfully updated"
+  },
+  "holiday_not_updated": {
+    "dari": "رخصتی متاسفانه بروزرسانی نشد",
+    "en": "Holiday has not been updated"
+  },
+  "file_format_excel": {
+    "dari": "فارمت فایل باید اکسل باشد",
+    "en": "File format must be an excel"
+  },
+  "existen_attendance": {
+    "dari": "فایل حاضری مربوط این ماه از قبل موجود است",
+    "en": "Attendance file has been existed for this month"
+  },
+  "attendance_file_saved": {
+    "dari": "فایل رخصتی موفقانه ذخیره شد",
+    "en": "Attendance file successfully saved"
+  },
+  "attendance_file_not_saved": {
+    "dari": "رخصتی متاسفانه بروزرسانی نشد",
+    "en": "Attendance file has not been saved"
+  },
+  "attendance_file_deleted": {
+    "dari": "فایل حاضری موفقانه حذف شد",
+    "en": "Attendance file successfully deleted"
+  },
+  "attendance_file_not_deleted": {
+    "dari": "فایل حاضری حذف نشد",
+    "en": "Attendance file has not been deleted"
+  },
+  "attendance_file_processed": {
+    "dari": "پردازش فایل حاضری موفقانه انجام شد",
+    "en": "Attendance file successfully processed"
+  },
+  "attendance_file_not_processed": {
+    "dari": "فایل حاضری حذف نشد",
+    "en": "Attendance file has not been processed"
+  },
+  "password_changed": {
+    "dari": "رمز عبور موفقانه تعییر کرد",
+    "en": "Password successfully Changed"
+  },
+  "password_not_changed": {
+    "dari": "رمز عبور متاسفانه تعییر نکرد",
+    "en": "Password has not been Changed"
+  },
+  "old_pass_incorrect": {
+    "dari": "رمز عبور قبلی نادرست است",
+    "en": "Old password is incorrect"
+  },
+  "new_pass_not_equal_to_confirm_pass": {
+    "dari": "رمز عبور جدید و تائید آن یکسان نیست",
+    "en": "New password and Confirmation is not the same"
+  },
+  "must_be_more_then_eight_character": {
+    "dari": "رمز عبور حداقل باید 8 حرف باشد",
+    "en": "Password must be more then 8 characters"
+  },
+  "leave_request_deleted": {
+    "dari": "در خواست رخصتی موفقانه حذف شد",
+    "en": "Leave request successfully deleted"
+  },
+  "leave_request_not_deleted": {
+    "dari": "در خواست رخصتی متاسفانه حذف نشد",
+    "en": "Leave request has not been deleted"
+  },
+  "overtime_request_deleted": {
+    "dari": "در خواست اضافه کاری موفقانه حذف شد",
+    "en": "Overtime request successfully deleted"
+  },
+  "overtime_request_not_deleted": {
+    "dari": "در خواست اضافه کاری متاسفانه حذف نشد",
+    "en": "Overtime request has not been deleted"
+  },
+  "equipment_added": {
+    "dari": "تجهیزات جدید موفقانه اضافه شد",
+    "en": "New equipment successfully added"
+  },
+  "equipment_not_added": {
+    "dari": "تجهیزات جدید اضافه نشد",
+    "en": "New equipment has not been added"
+  },
+  "equipment_deleted": {
+    "dari": "تجهیزات موفقانه حذف شد",
+    "en": "Equipment successfully deleted"
+  },
+  "equipment_not_deleted": {
+    "dari": "تجهیزات حذف نشد",
+    "en": "Equipment has not been deleted"
+  },
+  "equipment_updated": {
+    "dari": "تجهیزات موفقانه بروزرسانی شد",
+    "en": "Equipment successfully updated"
+  },
+  "equipment_not_updated": {
+    "dari": "تجهیزات متاسفانه بروزرسانی نشد",
+    "en": "Equipment has not been updated"
+  },
+  "long_input": {
+    "dari": "تعداد کاراکترها نباید بیشتر از {} باشد",
+    "en": "The number of characters should not exceed {}"
   }
 }

@@ -1,0 +1,184 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/datatables.min.css')}}">
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+    <div class="box">
+        <div class="col-12">
+            <div class="box">
+                <div class="box-header with-border">
+                  <h4 class="box-title text-primary font-weight-bold ">{{translation.leave_report[language]}}</h4>
+                </div>
+              <div class="box-body">
+                <form method="GET" , action="">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="from" class="form-control-label">{{translation.from[language]}}</label>
+                                <div class="input-group mb-3">
+                                    <div id="from_date-icon" class="input-group-prepend">
+                                        <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                            <i class="fad fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" name="from" id="from" value="{{request.args.get('from') if request.args.get('from') != None }}" class="form-control form-control-lg"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label">{{translation.to[language]}}</label>
+                                <div class="input-group mb-3">
+                                    <div id="to_date-icon" class="input-group-prepend">
+                                        <span class="{{ 'border-radius-dari' if language == 'dari' }} input-group-text bg-transparent">
+                                            <i class="fad fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" name="to" id="to" value="{{ request.args.get('to') if request.args.get('to') != None }}" class="form-control form-control-lg" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary mt-2">
+                          <i class="fa fa-filter"></i>
+                          {{translation.filter[language]}}
+                        </button>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+              <!-- /.box-header -->
+              <div class="box-body no-padding">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="leave_report">
+                      <thead>
+                        <tr>
+                          <th>{{translation.id_number[language]}}</th>
+                          <th>{{translation.applicant_name[language]}}</th>
+                          <th>{{translation.daily[language]}}</th>
+                          <th>{{translation.hourly[language]}}</th>
+                          <th>{{translation.total[language]}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for employee in leave_report %}
+                        <tr  id="{{employee.id}}">
+                            <td>{{employee.id}}</td>
+                            <td>
+                                {% if employee %}
+                                  {% if language == 'dari' %}
+                                    {{ employee.name + ' ' + employee.lname }}
+                                  {% else %}
+                                    {{ employee.name_english + ' ' + employee.lname_english }}
+                                  {% endif %}
+                                {% endif %}
+                            </td>
+                            {% set hourly=[] %}
+                            {% set daily=[] %}
+                            {% if request.args.get('from') and request.args.get('to') %}
+                              {% set leaves = employee.leaves.filter_by(hr=1, supervisor=1).filter(Leave_form.start_datetime >= to_gregorian(request.args.get('from'))).filter(Leave_form.start_datetime < to_gregorian(request.args.get('to'))).all() %}
+                            {% endif %}
+                            {% for leave in leaves  %}
+                              {% if not leave.leave_type %}
+                                {% if daily.append((leave.end_datetime - leave.start_datetime).days) %}{% endif %}
+                              {% else %}
+                                {% if hourly.append((leave.end_datetime - leave.start_datetime).seconds) %}{% endif %}
+                              {% endif %}
+                            {% endfor %}
+                            {% set day_sum=sum(daily) %}
+                            {% set hour_sum=sum(hourly) %}
+                            <td>
+                              {{ day_sum }} {{translation.day[language]}}
+                            </td>
+                            <td>
+                              {% if ((hour_sum/3600) / 8)|int %}
+                              {{ ((hour_sum/3600) / 8)|int }} {{translation.day[language]}},
+                              {% endif %} {{ ((hour_sum/3600) % 8 )|int }}:{{ ((hour_sum/60) % 60 )|int }}
+                            </td>
+                            <td>
+                              {{ (day_sum + ((hour_sum/3600)/8)|int) }} {{translation.day[language]}}, {{ ((hour_sum/3600) % 8 )|int }}:{{ ((hour_sum/60) % 60 )|int }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+    </div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+<script src="{{url_for('static', filename='js/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/vfs_fonts.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables.min.js')}}"></script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+      // Leaving form, set persian date picker for start date time field.
+      $('#from_date-icon').MdPersianDateTimePicker({
+          targetTextSelector: '#from',
+          textFormat: 'yyyy-MM-dd',
+          isGregorian: false,
+          englishNumber: true,
+          fromDate: true,
+          groupId: 'leave_report_date',
+      });
+      // Leaving form, set persian date picker for end date time field.
+      $('#to_date-icon').MdPersianDateTimePicker({
+          targetTextSelector: '#to',
+          textFormat: 'yyyy-MM-dd',
+          isGregorian: false,
+          englishNumber: true,
+          toDate: true,
+          groupId: 'leave_report_date',
+      });
+
+      $('#leave_report').DataTable({
+        dom: 'Blfrtp',
+        "language": {
+          "lengthMenu": "_MENU_"
+        },
+        buttons: [
+          { extend: 'excel', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-excel"></i> Excel' },
+          // { extend: 'pdf', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-file-pdf"></i> PDF'},
+          { extend: 'print', className: 'btn btn-primary-light btn-sm', text: '<i class="fad fa-print"></i> Print' }
+        ],
+      });
+    });
+        
+</script>
+
+{% endblock js_code %}

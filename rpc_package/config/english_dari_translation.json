@@ -91,6 +91,14 @@
     "dari": "تنظیمات",
     "en": "Setting"
   },
+  "employee_forms": {
+    "dari": "فرم های کارمند",
+    "en": "Employee Request"
+  },
+  "my_forms": {
+    "dari": "فرم های من",
+    "en": "My Forms"
+  },
   "forms": {
     "dari": "فرم ها",
     "en": "Forms"
@@ -112,12 +120,28 @@
     "en": "HR"
   },
   "supervisor": {
-    "dari": "سوپروایز",
+    "dari": "مسئول بخش",
     "en": "Supervisor"
   },
   "total_days_hours": {
     "dari": "کل روزها/ساعتها",
     "en": "Total Days/Hours"
+  },
+  "total": {
+    "dari": "مجموعه",
+    "en": "Total"
+  },
+  "from": {
+    "dari": "از تاریخ",
+    "en": "From Date"
+  },
+  "to": {
+    "dari": "تا تاریخ",
+    "en": "To Date"
+  },
+  "filter": {
+    "dari": "فیلتر",
+    "en": "Filter"
   },
   "employee_request_form": {
     "dari": "فورم درخواست کارمند",
@@ -135,17 +159,49 @@
     "dari": "پروفایل کارمند",
     "en": "Employee Profile"
   },
+  "profile": {
+    "dari": "پروفایل",
+    "en": "Profile"
+  },
   "list_of_leave_request": {
     "dari": "لیست درخواست رخصتی",
     "en": "List of Leave Request"
+  },
+  "list_of_resign_request": {
+    "dari": "لیست درخواست استعفا",
+    "en": "List of Resign Request"
   },
   "overtime_form": {
     "dari": "فورم اضافه کاری",
     "en": "Overtime Form"
   },
+  "days": {
+    "dari": "روز",
+    "en": "days"
+  },
+  "day": {
+    "dari": "روز",
+    "en": "day"
+  },
+  "hour": {
+    "dari": "ساعت",
+    "en": "hour"
+  },
+  "overtime": {
+    "dari": "اضافه کاری",
+    "en": "Overtime"
+  },
   "list_of_overtime_request": {
     "dari": "لیست درخواست اضافه کاری",
     "en": "List of Overtime Request"
+  },
+  "list_of_loan_request": {
+    "dari": "لیست درخواست قرضه",
+    "en": "List of Loan Request"
+  },
+  "list_of_loan_guarantor": {
+    "dari": "لیست ضمانت قرضه",
+    "en": "List of Loan Guarantor"
   },
   "prepayment_form": {
     "dari": "فورم پیش پرداخت",
@@ -167,6 +223,10 @@
     "dari": "کاربر",
     "en": "User"
   },
+  "no_document_uploaded": {
+    "dari": "هیچ سندی آپلود نشده است",
+    "en": "No documents uploaded"
+  },
   "full_screen": {
     "dari": "تمام صفحه",
     "en": "Full Screen"
@@ -179,9 +239,33 @@
     "dari": "عنوان",
     "en": "Title"
   },
+  "english_title": {
+    "dari": "عنوان انگلیسی",
+    "en": "English Title"
+  },
+  "old_pass": {
+    "dari": "رمز عبور قبلی",
+    "en": "Old Password"
+  },
+  "new_pass": {
+    "dari": "رمز عبور جدید",
+    "en": "New Password"
+  },
+  "confirm_pass": {
+    "dari": "تائید رمز عبور",
+    "en": "Confirm Password"
+  },
   "attendance": {
     "dari": "حاضری",
     "en": "Attendance"
+  },
+  "change_pass": {
+    "dari": "تغییر رمز عبور",
+    "en": "Change Password"
+  },
+  "change_pass_form": {
+    "dari": "فورم تغییر رمز عبور",
+    "en": "Change Password Form"
   },
   "absent": {
     "dari": "غیر حاضر",
@@ -190,6 +274,10 @@
   "send_request": {
     "dari": "ارسال درخواست",
     "en": "Send Request"
+  },
+  "send": {
+    "dari": "ارسال",
+    "en": "Send"
   },
   "job_announcement_form": {
     "dari": "فورم اعلان وظیفه",
@@ -222,6 +310,34 @@
   "guarantor": {
     "dari": "ضامن",
     "en": "Guarantor"
+  },
+  "guarantor_name": {
+    "dari": "نام ضامن",
+    "en": "Guarantor Name"
+  },
+  "confirm_overtime_message": {
+    "dari": "آیا شما این درخواست اضافه کاری را تائید می کنید؟",
+    "en": "Do you approve this overtime request?"
+  },
+  "confirm_leave_message": {
+    "dari": "آیا شما این درخواست رخصتی را تائید می کنید؟",
+    "en": "Do you approve this leave request?"
+  },
+  "guarantor_confirm_loan_message": {
+    "dari": "آیا شما موافق هستید که ضامن این قرضه شوید؟",
+    "en": "Do you agree to be a guarantor of this loan?"
+  },
+  "hr_confirm_loan_message": {
+    "dari": "آیا دیپارتمنت منابع بشری این درخواست قرضه را تائید می کند؟",
+    "en": "Does the HR department approve this loan request?"
+  },
+  "presidency_confirm_loan_message": {
+    "dari": "آیا ریاست دفتر این درخواست قرضه را تائید می کند؟",
+    "en": "Does the head office approve this loan application?"
+  },
+  "finance_confirm_loan_message": {
+    "dari": "آیا مدیریت مالی این درخواست قرضه را اجرا می کند؟",
+    "en": "Does the financial management execute this loan request?"
   },
   "grand_name": {
     "dari": "نام پدر کلان",
@@ -271,6 +387,10 @@
     "dari": "فورم قرضه",
     "en": "Loan Form"
   },
+  "loan": {
+    "dari": "قرضه",
+    "en": "Loan"
+  },
   "employee_signature": {
     "dari": "امضا کارمند",
     "en": "Employee Signature"
@@ -286,6 +406,14 @@
   "rejected": {
     "dari": "رد شده",
     "en": "Rejected"
+  },
+  "reject": {
+    "dari": "رد",
+    "en": "Rejected"
+  },
+  "accept": {
+    "dari": "قبول",
+    "en": "Accept"
   },
   "pending": {
     "dari": "انتظار",
@@ -315,6 +443,10 @@
     "dari": "شرح اضافه کاری",
     "en": "Overtime Description"
   },
+  "reason_for_disagreement": {
+    "dari": "علت عدم موافقت",
+    "en": "Reason for Disagreement"
+  },
   "id_number": {
     "dari": "نمبر آی دی",
     "en": "ID Number"
@@ -323,17 +455,53 @@
     "dari": "پایه معاش",
     "en": "Base Salary"
   },
-  "amount request": {
+  "requested_amount": {
     "dari": "مبلغ درخواستی",
-    "en": "Amount Request"
+    "en": "Requested Amount"
   },
-  "refund_per_month": {
-    "dari": "بازپرداخت به ماه",
-    "en": "Refund Per Month"
+  "repayment_period_in_months": {
+    "dari": "مدت بازپرداخت به ماه",
+    "en": "Repayment period in months"
+  },
+  "months": {
+    "dari": "ماه",
+    "en": "Months"
+  },
+  "month": {
+    "dari": "ماه",
+    "en": "Month"
+  },
+  "attendance_file": {
+    "dari": "فایل حاضری",
+    "en": "Attendance File"
+  },
+  "attendance_file_list": {
+    "dari": "لیست فایل حاضری",
+    "en": "List of Attendance File"
+  },
+  "attendance_file_form": {
+    "dari": "فورم فایل حاضری",
+    "en": "Form of Attendance File"
+  },
+  "select_attendance_file": {
+    "dari": "فایل حاضری را انتخاب کنید",
+    "en": "Select Attendance File"
+  },
+  "less_then_a_month": {
+    "dari": "کمتر از یک ماه",
+    "en": "Less then a month"
   },
   "monthly_amount": {
     "dari": "مبلغ ماهانه",
     "en": "Monthly Amount"
+  },
+  "repayment_start_date": {
+    "dari": "تاریخ شروع بازپرداخت",
+    "en": "Repayment Start Date"
+  },
+  "repayment_end_date": {
+    "dari": "تاریخ ختم باز پرداخت",
+    "en": "Repayment End Date"
   },
   "start_date": {
     "dari": "تاریخ شروع",
@@ -350,6 +518,22 @@
   "father_name": {
     "dari": "نام پدر",
     "en": "Father Name"
+  },
+  "add_department": {
+    "dari": "اضافه کردن دیپارتمنت",
+    "en": "Add Department"
+  },
+  "department_id": {
+    "dari": "ایدی دیپارتمنت",
+    "en": "Department ID"
+  },
+   "name_department": {
+    "dari": "نام دیپارتمنت به فارسی",
+    "en": "Name of department in Persian"
+  },
+  "name_english_department": {
+    "dari": "نام دیپارتمنت به اینگلیسی",
+    "en": "Name of Department in English"
   },
   "date_and_signature": {
     "dari": "تاریخ و امضا",
@@ -370,6 +554,18 @@
   "finance_manager": {
     "dari": "مدیر مالی",
     "en": "Finance Manager"
+  },
+  "finance": {
+    "dari": "مالی",
+    "en": "Finance"
+  },
+  "save": {
+    "dari": "ذخیره",
+    "en": "Save"
+  },
+  "presidency": {
+    "dari": "ریاست",
+    "en": "Presidency"
   },
   "job_number": {
     "dari": "شماره وظیفه",
@@ -403,6 +599,50 @@
     "dari": "مدت قرارداد",
     "en": "Contract Duration"
   },
+  "contract_details": {
+    "dari": "جزئیات قرارداد",
+    "en": "Contract Details"
+  },
+  "add_holiday": {
+    "dari": "اضافه کردن رخصتی",
+    "en": "Add Holiday"
+  },
+  "update_holiday": {
+    "dari": "بروز رسانی رخصتی",
+    "en": "Update Holiday"
+  },
+  "year": {
+    "dari": "سال",
+    "en": "Year"
+  },
+  "list_of_holiday": {
+    "dari": "لیست روز های رخصتی",
+    "en": "List of Holidays"
+  },
+  "contract_update": {
+    "dari": "تغییرات قراداد",
+    "en": "َUpdate Contract"
+  },
+  "afghani":{
+    "dari":"افغانی",
+    "en":"AFG"
+  },
+  "dollar":{
+    "dari":"دالر",
+    "en":"َUSD"
+  },
+  "transportation":{
+    "dari":"حمله",
+    "en":"Transportation"
+  },
+  "house_hold":{
+    "dari":"خرج دسترخوان",
+    "en":"House Hold"
+  },
+  "currency":{
+    "dari":"نوع پول",
+    "en":"Currency"
+  },
   "job_responsibilities": {
     "dari": "لایحه وظایف",
     "en": "Job Responsibilities"
@@ -411,9 +651,33 @@
     "dari": " درخواست رخصتی",
     "en": "Leave Form"
   },
+  "request_resign_form":{
+    "dari": " درخواست استعفا",
+    "en": "Resign Form"
+  },
   "request_overtime_form":{
     "dari": " درخواست اضافه کاری",
     "en": "Overtime Form"
+  },
+  "request_loan_form":{
+    "dari": "درخواست قرضه",
+    "en": "Loan Request"
+  },
+  "loan_applicant":{
+    "dari": "درخواست کننده قرضه",
+    "en": "Loan Applicant"
+  },
+  "applicant_info":{
+    "dari": "معلومات درخواست کننده",
+    "en": "Applicant Info"
+  },
+  "applicant_name":{
+    "dari": "نام درخواست دهنده",
+    "en": "Applicant Name"
+  },
+  "view_detials":{
+    "dari": "دیدن جزئیات",
+    "en": "View Detials"
   },
   "copy_of_national_id": {
     "dari": "کاپی تذکره",
@@ -439,9 +703,29 @@
     "dari": "حذف کارمند",
     "en": "Delete Employee"
   },
+  "delete": {
+    "dari": "حذف",
+    "en": "Delete"
+  },
+  "primary_file": {
+    "dari": "فایل اولیه",
+    "en": "Primary file"
+  },
+  "result_file": {
+    "dari": "فایل نتیجه",
+    "en": "Result File"
+  },
+  "process": {
+    "dari": "پردازش",
+    "en": "Process"
+  },
   "add_document": {
     "dari": "اضافه کردن اسناد",
     "en": "Add Document"
+  },
+  "add": {
+    "dari": "اضافه کردن",
+    "en": "Add"
   },
   "print": {
     "dari": "پرینت",
@@ -495,6 +779,10 @@
     "dari": "درباره",
     "en": "About"
   },
+  "add_equipment": {
+    "dari": "تحویل تجهیزات",
+    "en": "Add equipment"
+  },
   "contact": {
     "dari": "ارتباط",
     "en": "Contact"
@@ -510,10 +798,6 @@
   "closing_date": {
     "dari": "تاریخ ختم اعلان",
     "en": "Closing Date"
-  },
-  "responsibilities": {
-    "dari": "وظایف و مسئولیت ها",
-    "en": "Responsibilities"
   },
   "educations": {
     "dari": "تحصیلات",
@@ -551,17 +835,37 @@
     "dari": "مدت همکاری با شرکت",
     "en": "Work Duration"
   },
-  "relevant_responsibilities": {
+  "responsibilities": {
     "dari": "وظایف مربوطه",
-    "en": "Employee Card"
+    "en": "Relevant Responsibilities"
   },
-  "relevant_equipment": {
+  "resign_summary": {
+    "dari": "خلاصه استعفا",
+    "en": "Resign Summary"
+  },
+  "equipment": {
     "dari": "تجهیزات مربوطه ",
     "en": "Relevant Equipment"
+  },
+  "equipment_name": {
+    "dari": "نام",
+    "en": "Name"
+  },
+  "equipment_name_english": {
+    "dari": "نام به لاتین",
+    "en": "English Name"
+  },
+  "equipment_status": {
+    "dari": "وضعیت",
+    "en": "Status"
   },
   "resign_reason": {
     "dari": "دلیل استعفا",
     "en": "Resign Reason"
+  },
+  "resign_request": {
+    "dari": "درخواست استعفا",
+    "en": "Resign Request"
   },
   "gender": {
     "dari": "جنسیت",
@@ -570,6 +874,10 @@
   "m_status": {
     "dari": "حالت مدنی",
     "en": "Marital Status"
+  },
+  "record_status": {
+    "dari": "حالت",
+    "en": "Status"
   },
   "need_date": {
     "dari": "شروع ضرورت",
@@ -641,7 +949,7 @@
   },
   "phone": {
     "dari": "شماره تماس",
-    "en": "Phone Address"
+    "en": "Phone Number"
   },
   "phone_second": {
     "dari": "شماره تماس دوم",
@@ -660,7 +968,7 @@
     "en": "Current Address"
   },
   "status": {
-    "dari": "وضعیت تاهل",
+    "dari": "وضعیت",
     "en": "Status"
   },
   "email": {
@@ -767,12 +1075,60 @@
     "dari": "اطلاعات تماس و آدرس ",
     "en": "Contact Details"
   },
+  "details": {
+    "dari": "جزئیات",
+    "en": "Details"
+  },
+  "requested_inbox": {
+    "dari": "صندوق درخواست ها",
+    "en": "Requested Inbox"
+  },
+  "finalized_date": {
+    "dari": "تاریخ نهایی",
+    "en": "Finalized Date"
+  },
+  "loan_guarantor": {
+    "dari": "ضامن قرضه",
+    "en": "Loan Guarantor"
+  },
+  "loan_hr": {
+    "dari": "قرضه منابع بشری",
+    "en": "Laon HR"
+  },
+  "loan_presidency": {
+    "dari": "قرضه ریاست",
+    "en": "Loan Presidency"
+  },
+  "loan_finance": {
+    "dari": "قرضه مالی",
+    "en": "Loan Finance"
+  },
+  "overtime_hr": {
+    "dari": "اضافه کاری منابع بشری",
+    "en": "Overtime HR"
+  },
+  "overtime_supervisor": {
+    "dari": "اضافه کاری سوپروایز",
+    "en": "Overtime Supervisor"
+  },
+  "leave_hr": {
+    "dari": "رخصتی منابع بشری",
+    "en": "Leave HR"
+  },
+  "leave_supervisor": {
+    "dari": "رخصتی سوپروایز",
+    "en": "Leave Supervisor"
+  },
   "user_setting": {
     "dari": " تنظیمات کاربر ",
     "en": "User Setting"
   },
+  "not_found": {
+    "dari": "نتیجه ای یافت نشد",
+    "en": "oops! Result not found"
+  },
   "employee_settings": {
-    "dari": "تنظیمات کامند",
+    "dari": "تنظیمات کارمند",
     "en": "Employee Settings"
   },
   "active":{
@@ -816,7 +1172,75 @@
     "en": "Male"
   },
   "female": {
-    "dari": "مرد",
+    "dari": "زن",
     "en": "Female"
+  },
+  "producer": {
+    "dari": "تهیه کننده",
+    "en": "Producer"
+  },
+  "verifier": {
+    "dari": "تائید کننده",
+    "en": "Verifier"
+  },
+  "executor": {
+    "dari": "اجرا کننده",
+    "en": "Executor"
+  },
+  "my_equipment": {
+    "dari": "تجهیزات من", 
+    "en": "My equipment"
+  },
+  "received_equipment": {
+    "dari": "تجهیزات دریافت شده",
+    "en": "Received Equipment"
+  },
+  "reports": {
+    "dari": "گزارشات",
+    "en": "Reports"
+  },
+  "leave_report": {
+    "dari": "گزارش رخصتی",
+    "en": "Leave Report"
+  },
+  "overtime_report": {
+    "dari": "گزارش اضافه کاری",
+    "en": "Overtime Report"
+  },
+  "name": {
+    "dari": "نام",
+    "en": "Name"
+  },
+  "english_name": {
+    "dari": "نام به انگلیسی",
+    "en": "Name in English"
+  },
+  "serial": {
+    "dari": "سریال نمبر",
+    "en": "Serial"
+  },
+  "category": {
+    "dari": "دسته بندی",
+    "en": "Category"
+  },
+  "model": {
+    "dari": "مدل",
+    "en": "Model"
+  },
+  "description": {
+    "dari": "توضیحات",
+    "en": "Description"
+  },
+  "list_of_equipment": {
+    "dari": "لیست وسایل و تجهیزات",
+    "en": "List of Equipment"
+  },
+  "add_new_equipment": {
+    "dari": "اضافه کردن تجهیزات",
+    "en": "Add Equipment"
+  },
+  "update_equipment": {
+    "dari": "بروز رسانی تجهیزات",
+    "en": "Update Equipment"
   }
 }

@@ -126,19 +126,19 @@
                     </li>
                   </ul>
                 </li>	
-                
                 <!-- User Account-->
                 <li class="dropdown user user-menu">
-                  <a href="#" class="waves-effect waves-light dropdown-toggle" data-toggle="dropdown" title="کاربر">
+                  <a href="#" class="waves-effect waves-light dropdown-toggle" data-toggle="dropdown" title="{{translation.user[language]}}">
                       <i class="icon-User"><span class="path1"></span><span class="path2"></span></i>
                   </a>
                   <ul class="dropdown-menu animated flipInX">
                     <li class="user-body">
-                       <a class="dropdown-item" href="/profile"><i class="ti-user text-muted mr-2"></i> پروفایل</a>
-                       <a class="dropdown-item" href="#"><i class="ti-wallet text-muted mr-2"></i> My Wallet</a>
-                       <a class="dropdown-item" href="#"><i class="ti-settings text-muted mr-2"></i> تنظیمات</a>
+                       <a class="dropdown-item" href="/profile"><i class="ti-user text-muted mr-2"></i> {{translation.profile[language]}}</a>
+                       <a class="dropdown-item" id="change-pass-button" href="#change-pass" data-toggle="tab" role="tab">
+                         <i class="ti-settings text-muted mr-2"></i>{{translation.change_pass[language]}}
+                        </a>
                        <div class="dropdown-divider"></div>
-                       <a class="dropdown-item" href="/logout"><i class="ti-lock text-muted mr-2"></i> خروج</a>
+                       <a class="dropdown-item" href="/logout"><i class="ti-lock text-muted mr-2"></i> {{translation.logout[language]}}</a>
                     </li>
                   </ul>
                 </li>	

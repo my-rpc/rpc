@@ -9,11 +9,11 @@
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
     <!-- Vendors Style-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendors_css.css')}}">
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendors_css.css')}}">    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.md.bootstrap.datetimepicker.style.css')}}">
 
     <!-- Style-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery_ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/skin_color.css')}}">
 
@@ -33,7 +33,6 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <div class="container-full">
-{% include 'page_layout/breadcrumb.html' %}
 
       <!-- Main content -->
       <section class="content">
@@ -60,7 +59,26 @@
 <!-- Persian datetime picker JS added -->
 <script src="{{ url_for('static', filename='js/jquery.md.bootstrap.datetimepicker.js')}}"></script>
 
+<script src="{{url_for('static', filename='assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js')}}"></script>
+<script src="{{url_for('static', filename='js/rpc.js')}}"></script>
 <!-- this block is for js code if needed at the begining of page  -->
+<script>
+    $(document).ready(function() {
+        var hash = window.location.hash;
+    
+        if (hash == "#change-pass"){
+            $('#tabs a[href="' + hash + '"]').tab('show');
+        }
+        else
+            $('#tabs a:first').tab('show');
+    
+        $('#change-pass-button').click(function (e) {
+            window.location.replace(window.location.origin + "/profile#change-pass");
+            $('.nav-link.border-bottom').removeClass('active');
+            $('a[href$="#change-pass"]').tab('show');
+        });
+    });
+  </script>
 {% block js_code %}{% endblock %}
 
 </body>

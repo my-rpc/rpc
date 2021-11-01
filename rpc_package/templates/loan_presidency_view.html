@@ -1,0 +1,267 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    .b-1{
+      border-color: #be69076b !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+  <div class="box">
+    <div class="col-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h4 class="box-title text-primary font-weight-bold ">{{translation.request_loan_form[language]}}</h4>
+        </div>
+        <div class="mt-15">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{ translation.loan_applicant[language] }}</h4>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.id_number[language] }}</span>
+                    <strong class="float-right">
+                      {{ loan_data.employee.id }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.loan_applicant[language] }}</span>
+                    <strong class="float-right">
+                      {% if language == 'dari' %}
+                        {{ loan_data.employee.name + ' ' + loan_data.employee.lname }}
+                      {% else %}
+                        {{ loan_data.employee.name_english + ' ' + loan_data.employee.lname_english }}
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.requested_amount[language] }}</span>
+                    <strong class="float-right">
+                      {{ loan_data.requested_amount }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.repayment_start_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(loan_data.start_date) }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.repayment_end_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(loan_data.end_date) }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.repayment_period_in_months[language] }}</span>
+                    <strong class="float-right">
+                      {{ (loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month) }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.monthly_amount[language] }}</span>
+                    <strong class="float-right">
+                      {{ '{:.2f}'.format(loan_data.requested_amount/((loan_data.end_date.year - loan_data.start_date.year) * 12 + (loan_data.end_date.month - loan_data.start_date.month))) }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.request_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(loan_data.requested_at, '%Y-%m-%d %H:%M:%S') }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% if loan_data.finalized_at %}
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.finalized_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(loan_data.finalized_at, '%Y-%m-%d %H:%M:%S') }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          <div class="mb-15 bb-1"></div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{ translation.guarantor[language] }}</h4>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.id_number[language] }}</span>
+                    <strong class="float-right">
+                      {{ loan_data.re_guarantor.id }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.guarantor[language] }}</span>
+                    <strong class="float-right">
+                      {% if language == 'dari' %}
+                        {{ loan_data.re_guarantor.name + ' ' + loan_data.re_guarantor.lname }}
+                      {% else %}
+                        {{ loan_data.re_guarantor.name_english + ' ' + loan_data.re_guarantor.lname_english }}
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-15 bb-1"></div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{ translation.hr[language] }}</h4>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.id_number[language] }}</span>
+                    <strong class="float-right">
+                      {{ loan_data.re_hr.id }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{translation.name_and_last_name[language]}}</span>
+                    <strong class="float-right">
+                      {% if language == 'dari' %}
+                        {{ loan_data.re_hr.name + ' ' + loan_data.re_hr.lname }}
+                      {% else %}
+                        {{ loan_data.re_hr.name_english + ' ' + loan_data.re_hr.lname_english }}
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-15 bb-1"></div>
+          <div class="row">
+            <div class="mb-15">
+              <div class="mx-15">
+                <form  method="POST" , action="" id="loan_guarantor">
+                  {{ form.hidden_tag()}}
+                  <div class="form-group col-md-12">
+                    {{ form.presidency.label(class="form-control-label")}}
+                    <div class="form-check1">
+                      {% for item in form.presidency %}
+                      {{ item( class="form-check-input")}}
+                      {{ item.label( class="form-check-label")}}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="form-group col-md-12">
+                    {{form.submit( disabled="true", class="btn btn-primary")}}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+      $("[name='presidency']").on('input', function (e) {
+        $('#submit').attr('disabled', false);
+      });
+    });
+</script>
+{% endblock js_code %}

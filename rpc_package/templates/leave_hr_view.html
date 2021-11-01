@@ -1,0 +1,251 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    .b-1{
+      border-color: #be69076b !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section class="content">
+  <div class="box">
+    <div class="col-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <h4 class="box-title text-primary font-weight-bold ">{{translation.request_leave_form[language]}}</h4>
+        </div>
+        <div class="mt-15">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{ translation.applicant_info[language] }}</h3>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.id_number[language] }}</span>
+                    <strong class="float-right">
+                      {{ leave_data.emp_id }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.applicant_name[language] }}</span>
+                    <strong class="float-right">
+                      {% if language == 'dari' %}
+                        {{ leave_data.employee.name + ' ' + leave_data.employee.lname }}
+                      {% else %}
+                        {{ leave_data.employee.name_english + ' ' + leave_data.employee.lname_english }}
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.leave_type[language] }}</span>
+                    <strong class="float-right">
+                      {% if leave_data.leave_type %}
+                          {{translation.hourly[language]}}
+                      {% else %}
+                          {{translation.daily[language]}}
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.start_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(leave_data.start_datetime, '%Y-%m-%d %H:%M:%S') }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.end_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(leave_data.end_datetime, '%Y-%m-%d %H:%M:%S') }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.total_days_hours[language] }}</span>
+                    <strong class="float-right">
+                        {{ ((leave_data.end_datetime - leave_data.start_datetime)|string)
+                            .replace('days', translation.days[language]).replace('day', translation.day[language])}}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.request_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(leave_data.requested_at, '%Y-%m-%d %H:%M:%S') }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% if leave_data.finalized_at %}
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.finalized_date[language] }}</span>
+                    <strong class="float-right">
+                      {{ to_jalali(leave_data.finalized_at, '%Y-%m-%d %H:%M:%S') }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          <div class="mb-15 bb-1"></div>
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{ translation.supervisor[language] }}</h4>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.id_number[language] }}</span>
+                    <strong class="float-right">
+                      {{ leave_data.re_supervisor.id }}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.supervisor[language] }}</span>
+                    <strong class="float-right">
+                      {% if language == 'dari' %}
+                        {{ leave_data.re_supervisor.name + ' ' + leave_data.re_supervisor.lname }}
+                      {% else %}
+                        {{ leave_data.re_supervisor.name_english + ' ' + leave_data.re_supervisor.lname_english }}
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-15 bb-1"></div>
+          {% if leave_data.hr == None %}
+          <div class="row">
+            <div class="mb-15">
+              <div class="mx-15">
+                <form  method="POST" , action="" id="loan_hr">
+                  {{ form.hidden_tag()}}
+                  <div class="form-group col-md-12">
+                    {{ form.hr.label(class="form-control-label")}}
+                    <div class="form-check1">
+                      {% for item in form.hr %}
+                      {{ item(class="form-check-input")}}
+                      {{ item.label(class="form-check-label")}}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="form-group col-md-12">
+                    {{form.submit( disabled="true", class="btn btn-primary")}}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="row">
+            <div class="col-md-12">
+              <h4 class="mx-15">{{translation.hr[language]}}</h4>
+            </div>
+            <div class="col-md-6 mb-15">
+              <div class="media bg-white b-1">
+                <div class="media-body">
+                  <p>
+                    <span>{{ translation.record_status[language] }}</span>
+                    <strong class="float-right">
+                      {% if leave_data.hr == True %}
+                      <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                      {% else %}
+                      <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                      {% endif %}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+      $("[name='hr']").on('input', function (e) {
+        $('#submit').attr('disabled', false);
+      });
+    });
+</script>
+{% endblock js_code %}
