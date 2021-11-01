@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.20'
-DESCRIPTION = 'equipment, version 0.8.20v the list, view, create and update of equipment done'
+VERSION = '0.8.21'
+DESCRIPTION = 'end_contract_alarm, version 0.8.21v the alarm message set in layout page and it show message when the user contract was near end'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
