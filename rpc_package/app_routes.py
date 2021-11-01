@@ -6,20 +6,21 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
-    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm, ChangePassForm
+    OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm, ChangePassForm, \
+    EquipmentForm
 
 from rpc_package.form_dynamic_language import *
 
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
-    Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile
+    Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile, Equipment
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
     to_gregorian, to_jalali, check_access, get_last_date_of_month
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
     update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
-    add_loan_request, accept_equipment, accept_reject_resign, add_holiday, add_attendance
+    add_loan_request, accept_equipment, accept_reject_resign, add_holiday, add_attendance, add_new_equipment
 import os
 import datetime
 import jdatetime
@@ -1203,7 +1204,6 @@ def holiday():
         year = jdatetime.date.today().year
         if request.args.get('year'):
             year = request.args.get('year')
-        # 
         start_end_year = Holiday.query.with_entities(func.max(Holiday.date).label('maxdate'), func.min(Holiday.date).label('mindate')).first()
         
         start = jdatetime.date(year=int(year),month=1,day=1)
@@ -1362,6 +1362,76 @@ def my_equipment():
         return redirect(request.referrer)
     return render_template('my_equipment.html', form=form, received_equipment=received_equipment, my_equipment=my_equipment, language=session['language'])
 
+@app.route("/equipment", methods=['GET', 'POST'])
+@login_required
+def equipment():
+    # if not check_access('equipment'):
+    #     return redirect(url_for('access_denied'))
+    equipment_form = EquipmentForm(session['language'])
+    if request.method == "GET":
+        equipments = Equipment.query.all()
+
+    if request.method == 'POST':
+        if equipment_form.validate_on_submit():
+            if add_new_equipment(equipment_form) == "success":
+                flash(message_obj.equipment_added[session['language']], 'success')
+            else:
+                flash(message_obj.equipment_not_added[session['language']], 'error')
+        else:
+            flash(equipment_form.errors)
+        return redirect(url_for('equipment'))
+    return render_template('equipment.html', form=equipment_form, equipments=equipments,
+        title=translation_obj.forms[session['language']], language=session['language'])
+
+@app.route("/delete_equipment/<int:equipment_id>", methods=['GET'])
+@login_required
+def delete_equipment(equipment_id):
+    # if not check_access('delete_equipment'):
+    #     return redirect(url_for('access_denied'))
+    try:
+        equipment = Equipment.query.get(equipment_id)
+        db.session.delete(equipment)
+        db.session.commit()
+        flash(message_obj.equipment_deleted[session['language']], 'success')
+    except IOError as exc:
+        flash(message_obj.equipment_not_deleted[session['language']], 'error')
+    return redirect(url_for('equipment'))
+
+@app.route("/update_equipment", methods=['GET', 'POST'])
+@login_required
+def update_equipment():
+    # if not check_access('update_equipment'):
+    #     return redirect(url_for('access_denied'))
+    equipment_form = EquipmentForm(session['language'])
+    if request.method == "GET":
+        equipment = Equipment.query.get(request.args.get('id'))
+        data = {
+            'id': equipment.id,
+            'name': equipment.name,
+            'name_english': equipment.name_english,
+            'serial': equipment.serial,
+            'model': equipment.model,
+            'category': equipment.category,
+            'description': equipment.description
+        }
+        return jsonify(data)
+    elif request.method == "POST":
+        if equipment_form.validate_on_submit():
+            try:
+                equipment = Equipment.query.get(request.form['id'])
+                equipment.name = request.form['name']
+                equipment.name_english = request.form['name_english']
+                equipment.serial = request.form['serial']
+                equipment.model = request.form['model']
+                equipment.category = request.form['category']
+                equipment.description = request.form['description']
+                db.session.commit()
+                flash(message_obj.equipment_updated[session['language']], 'success')
+            except IOError as exc:
+                flash(message_obj.equipment_not_updated[session['language']], 'error')
+        else:
+            flash(equipment_form.errors)
+    return redirect(url_for('equipment'))
 
 @app.route("/view_resign_request", methods=['GET', 'POST'])
 @login_required

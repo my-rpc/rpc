@@ -139,14 +139,6 @@
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
     "en": "wrong format of blood type correct one is (B+)"
   },
-  "equipment_added": {
-    "dari": "تجهیزات اضافه شد",
-    "en": "Equipment has been added"
-  },
-  "equipment_not_added": {
-    "dari": "تجهیزات اضافه نشد",
-    "en": "Equipment has not been added"
-  },
   "leave_request_sent": {
     "dari": "درخواست رخصتی ارسال شد",
     "en": "Leave request has been sent"
@@ -416,5 +408,33 @@
   "overtime_request_not_deleted": {
     "dari": "در خواست اضافه کاری متاسفانه حذف نشد",
     "en": "Overtime request has not been deleted"
+  },
+  "equipment_added": {
+    "dari": "تجهیزات جدید موفقانه اضافه شد",
+    "en": "New equipment successfully added"
+  },
+  "equipment_not_added": {
+    "dari": "تجهیزات جدید اضافه نشد",
+    "en": "New equipment has not been added"
+  },
+  "equipment_deleted": {
+    "dari": "تجهیزات موفقانه حذف شد",
+    "en": "Equipment successfully deleted"
+  },
+  "equipment_not_deleted": {
+    "dari": "تجهیزات حذف نشد",
+    "en": "Equipment has not been deleted"
+  },
+  "equipment_updated": {
+    "dari": "تجهیزات موفقانه بروزرسانی شد",
+    "en": "Equipment successfully updated"
+  },
+  "equipment_not_updated": {
+    "dari": "تجهیزات متاسفانه بروزرسانی نشد",
+    "en": "Equipment has not been updated"
+  },
+  "long_input": {
+    "dari": "تعداد کاراکترها نباید بیشتر از {} باشد",
+    "en": "The number of characters should not exceed {}"
   }
 }
