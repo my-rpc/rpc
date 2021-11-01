@@ -539,7 +539,6 @@ class EquipmentForm(FlaskForm):
     serial = StringField('Serial', validators=[DataRequired()])
     category = StringField('Category')
     model = StringField('Model')
-    description = TextAreaField('Description')
     submit = SubmitField('Submit')
     def __init__(self, language):
         super(EquipmentForm, self).__init__()
@@ -549,7 +548,6 @@ class EquipmentForm(FlaskForm):
         self.serial.label.text = translation_obj.serial[language]
         self.category.label.text = translation_obj.category[language]
         self.model.label.text = translation_obj.model[language]
-        self.description.label.text = translation_obj.description[language]
         self.submit.label.text = translation_obj.save[language]
 
     def validate_name (self, name):

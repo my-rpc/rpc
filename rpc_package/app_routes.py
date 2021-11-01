@@ -1411,8 +1411,7 @@ def update_equipment():
             'name_english': equipment.name_english,
             'serial': equipment.serial,
             'model': equipment.model,
-            'category': equipment.category,
-            'description': equipment.description
+            'category': equipment.category
         }
         return jsonify(data)
     elif request.method == "POST":
@@ -1424,7 +1423,6 @@ def update_equipment():
                 equipment.serial = request.form['serial']
                 equipment.model = request.form['model']
                 equipment.category = request.form['category']
-                equipment.description = request.form['description']
                 db.session.commit()
                 flash(message_obj.equipment_updated[session['language']], 'success')
             except IOError as exc:
