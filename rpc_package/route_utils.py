@@ -4,7 +4,7 @@ from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
-    Positions, Loan_form, Holiday, AttendanceFile
+    Positions, Loan_form, Holiday, AttendanceFile, Equipment
 
 from flask import session
 import datetime
@@ -390,6 +390,21 @@ def add_holiday(holiday_form):
             title=holiday_form.title.data,
             title_english=holiday_form.title_english.data)
         db.session.add(holiday)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+def add_new_equipment(equipment_form):
+    try:
+        equipment = Equipment(
+            name=equipment_form.name.data,
+            name_english=equipment_form.name_english.data,
+            model=equipment_form.model.data,
+            serial=equipment_form.serial.data,
+            category=equipment_form.category.data,
+            description=equipment_form.description.data)
+        db.session.add(equipment)
         db.session.commit()
         return "success"
     except IOError as io:

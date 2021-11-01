@@ -1206,5 +1206,41 @@
   "overtime_report": {
     "dari": "گزارش اضافه کاری",
     "en": "Overtime Report"
+  },
+  "name": {
+    "dari": "نام",
+    "en": "Name"
+  },
+  "english_name": {
+    "dari": "نام به انگلیسی",
+    "en": "Name in English"
+  },
+  "serial": {
+    "dari": "سریال نمبر",
+    "en": "Serial"
+  },
+  "category": {
+    "dari": "دسته بندی",
+    "en": "Category"
+  },
+  "model": {
+    "dari": "مدل",
+    "en": "Model"
+  },
+  "description": {
+    "dari": "توضیحات",
+    "en": "Description"
+  },
+  "list_of_equipment": {
+    "dari": "لیست وسایل و تجهیزات",
+    "en": "List of Equipment"
+  },
+  "add_new_equipment": {
+    "dari": "اضافه کردن تجهیزات",
+    "en": "Add Equipment"
+  },
+  "update_equipment": {
+    "dari": "بروز رسانی تجهیزات",
+    "en": "Update Equipment"
   }
 }

@@ -417,9 +417,12 @@ class Resign_form(db.Model, UserMixin):
 class Equipment(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    name_english = db.Column(db.String(20), nullable=False)
-    equipment_category = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
+    name_english = db.Column(db.String(64), nullable=False)
+    category = db.Column(db.String(64), nullable=False)
+    serial = db.Column(db.String(32), nullable=False)
+    model = db.Column(db.String(64), nullable=False)
+    description = db.Column(db.Text(0), nullable=False)
 
     def __repr__(self):
         return f"Equipment ID: {self.id}, Equipment Name: {self.name}"
