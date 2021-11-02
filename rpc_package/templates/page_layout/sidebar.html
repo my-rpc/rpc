@@ -50,6 +50,21 @@
         </ul>
       </li>
       {% endif %}
+      {% if check_access('attendance_file') and check_access('holiday') %}
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-clock"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.attendance[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url_for('attendance_file') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.attendance_file[language] }}</a></li>
+          <li><a href="{{ url_for('holiday') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.holidays[language] }}</a></li>
+        </ul>
+      </li>
+      {% endif %}
 
       <li class="treeview">
         <a href="#">
@@ -140,6 +155,21 @@
           <i span class="fal fa-user-circle"><span class="path1"></span><span class="path2"></span></i>
           <span>{{translation.user_setting[language] }}</span>
         </a>
+      </li>
+      {% endif %}
+      {% if check_access('equipment') %}
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-tools"><span class="path1"></span><span class="path2"></span></i>
+          <span>{{translation.equipment[language] }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-right pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a href="{{ url_for('attendance_file') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.attendance_file[language] }}</a></li>
+          <li><a href="{{ url_for('holiday') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.holidays[language] }}</a></li>
+        </ul>
       </li>
       {% endif %}
       {% if check_access('my_equipment') %}

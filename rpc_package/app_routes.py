@@ -1282,8 +1282,8 @@ def update_holiday():
 @app.route("/attendance_file", methods=['GET', 'POST'])
 @login_required
 def attendance_file():
-    # if not check_access('attendance_file'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('attendance_file'):
+        return redirect(url_for('access_denied'))
     attendance_form = AttendanceForm(session['language'])
     if request.method == "GET":
         attendance_file_list = AttendanceFile.query.all()
@@ -1303,8 +1303,8 @@ def attendance_file():
 @app.route("/delete_attendance_file/<int:attendance_id>", methods=['GET'])
 @login_required
 def delete_attendance_file(attendance_id):
-    # if not check_access('delete_attendance_file'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('delete_attendance_file'):
+        return redirect(url_for('access_denied'))
     try:
         attendance = AttendanceFile.query.get(attendance_id)
         if attendance.raw_file_url and os.path.exists(os.path.join(f"./rpc_package" + attendance.raw_file_url)):
@@ -1321,8 +1321,8 @@ def delete_attendance_file(attendance_id):
 @app.route("/process_attendance_file/<int:attendance_id>", methods=['GET'])
 @login_required
 def process_attendance_file(attendance_id):
-    # if not check_access('process_attendance_file'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('process_attendance_file'):
+        return redirect(url_for('access_denied'))
     try:
         attendance = AttendanceFile.query.get(attendance_id)
         start = jdatetime.date(year=attendance.year, month=attendance.month, day=1)
@@ -1373,8 +1373,8 @@ def my_equipment():
 @app.route("/equipment", methods=['GET', 'POST'])
 @login_required
 def equipment():
-    # if not check_access('equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('equipment'):
+        return redirect(url_for('access_denied'))
     equipment_form = EquipmentForm(session['language'])
     if request.method == "GET":
         equipments = Equipment.query.all()
@@ -1394,8 +1394,8 @@ def equipment():
 @app.route("/delete_equipment/<int:equipment_id>", methods=['GET'])
 @login_required
 def delete_equipment(equipment_id):
-    # if not check_access('delete_equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('delete_equipment'):
+        return redirect(url_for('access_denied'))
     try:
         equipment = Equipment.query.get(equipment_id)
         db.session.delete(equipment)
@@ -1408,8 +1408,8 @@ def delete_equipment(equipment_id):
 @app.route("/update_equipment", methods=['GET', 'POST'])
 @login_required
 def update_equipment():
-    # if not check_access('update_equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('update_equipment'):
+        return redirect(url_for('access_denied'))
     equipment_form = EquipmentForm(session['language'])
     if request.method == "GET":
         equipment = Equipment.query.get(request.args.get('id'))
