@@ -533,6 +533,45 @@ class HolidayForm(FlaskForm):
         if title_english.data == '':
             raise ValidationError(message_obj.required_field[self.language].format(translation_obj.english_title[self.language]))
 
+class EquipmentForm(FlaskForm):
+    name = StringField('نام', validators=[DataRequired()])
+    name_english = StringField('Name in English', validators=[DataRequired()])
+    serial = StringField('Serial', validators=[DataRequired()])
+    category = StringField('Category')
+    model = StringField('Model')
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(EquipmentForm, self).__init__()
+        self.language = language
+        self.name.label.text = translation_obj.name[language]
+        self.name_english.label.text = translation_obj.english_name[language]
+        self.serial.label.text = translation_obj.serial[language]
+        self.category.label.text = translation_obj.category[language]
+        self.model.label.text = translation_obj.model[language]
+        self.submit.label.text = translation_obj.save[language]
+
+    def validate_name (self, name):
+        if name.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.name[self.language]))
+        elif not re.match("^[0-9- .آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", name.data):
+            raise ValidationError(message_obj.invalid_character[self.language])
+        elif len(name.data) > 64:
+            raise ValidationError(message_obj.long_input[self.language].format('64'))
+    def validate_name_english (self, name_english):
+        if name_english.data == '':
+            raise ValidationError(message_obj.required_field[self.language].format(translation_obj.name_english[self.language]))
+        elif len(name_english.data) > 64:
+            raise ValidationError(message_obj.long_input[self.language].format('64'))
+    def validate_model (self, model):
+        if len(model.data) > 64:
+            raise ValidationError(message_obj.long_input[self.language].format('64'))
+    def validate_serial (self, serial):
+        if len(serial.data) > 32:
+            raise ValidationError(message_obj.long_input[self.language].format('32'))
+    def validate_category (self, category):
+        if len(category.data) > 64:
+            raise ValidationError(message_obj.long_input[self.language].format('64'))
+
 class AttendanceForm(FlaskForm):
     year = jdatetime.date.today().year
     year = SelectField('Year', choices=[year-1, year, year+1])
