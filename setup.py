@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.20'
-DESCRIPTION = 'equipment, version 0.8.20v the list, view, create and update of equipment done'
+VERSION = '0.8.22'
+DESCRIPTION = 'automatic_logout, version 0.8.22v when the contract of user end the status of contract change to inactive and user automatically logged out'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

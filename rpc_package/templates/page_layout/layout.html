@@ -32,6 +32,23 @@
 {% include 'page_layout/sidebar.html' %}
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
+    {% if current_user %}
+        {% set contract = current_user.employee.position_history.filter_by(status=1).first() %}
+        {% if contract %}
+            {% set rdays = (contract.end_date - date.today()).days %}
+            {% if rdays <= 10 %}
+            <div class="offset-md-1 col-md-10" style="position: fixed; z-index: 1000; top: 5; width: 55%;">
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong class="mx-1">{{ message_obj.end_contract_title[session['language']]  if session.get('language') else message_obj.end_contract_title['en'] }}! </strong>
+                    <span>{{ message_obj.end_contract_message[session['language']].format(rdays)  if session.get('language') else message_obj.end_contract_message['en'].format(rdays) }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
     <div class="container-full">
 
       <!-- Main content -->
