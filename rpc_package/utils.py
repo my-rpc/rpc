@@ -8,7 +8,6 @@ from rpc_package import user_access
 from flask_login import current_user
 import pandas as pd
 import numpy as np
-from flask import url_for, redirect, request
 
 class EmployeeValidator:
 

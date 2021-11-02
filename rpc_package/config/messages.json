@@ -132,8 +132,8 @@
     "en": "Last name is required"
   },
   "user_inactive": {
-    "dari": "حساب کاربر فعال نیست",
-    "en": "Your account is inactive"
+    "dari": "حساب کاربر شما غیر فعال است یا قرارداد تان ختم شده است",
+    "en": "Your account is inactive or your contract end"
   },
   "blood_type": {
     "dari": "فورمت گروه خونی اشتباه است درست تایپ کنید (B+)",
@@ -443,6 +443,6 @@
   },
   "end_contract_message": {
     "dari": "قرار داد شما تا {} روز دیگر ختم می شود لطفا قبل از مسدود شدن حساب تان به منابع بشری مراجعه نمایید",
-    "en": "Your contract expires in {} days. Please refer to Human Resources before your account is blocked"
+    "en": "Your contract expires in {} days. Please refer to Human Resources before your account is block"
   }
 }

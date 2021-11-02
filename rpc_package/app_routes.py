@@ -27,6 +27,13 @@ import jdatetime
 from sqlalchemy import func
 from rpc_package.attendance import Attendance
 
+@app.before_request
+def check_contract():
+    if current_user.is_authenticated:
+        position_history = current_user.employee.position_history.filter_by(status=1).first()
+        if not position_history and current_user.user_role.name_english != 'Admin':
+            logout_user()
+
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
@@ -144,7 +151,8 @@ def login():
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
-            if user.status:
+            position_history = user.employee.position_history.filter_by(status=1).first()
+            if (user.status and position_history) or user.user_role.name_english == 'Admin':
                 employee = Employees.query.filter_by(id=user.emp_id).first()
                 session['language'] = login_form.prefer_language.data
                 session['emp_id'] = user.emp_id
@@ -447,8 +455,8 @@ def profile():
 @app.route("/change_password", methods=['POST'])
 @login_required
 def change_password():
-    # if not check_access('change_password'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('change_password'):
+        return redirect(url_for('access_denied'))
     change_pass_form = ChangePassForm(session['language'], current_user)
     if request.method == "POST":
         if change_pass_form.validate_on_submit():
@@ -542,8 +550,8 @@ def edit_contract():
 @app.route('/contract_details/<int:contract_id>', methods=['GET'])
 @login_required
 def contract_details(contract_id):
-    # if not check_access('contract_details'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('contract_details'):
+        return redirect(url_for('access_denied'))
     try:
         contract = Position_history.query.filter_by(id=contract_id).first()
     except IOError as exc:
