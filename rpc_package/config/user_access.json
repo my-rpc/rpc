@@ -63,6 +63,9 @@
     "leave_hr",
     "overtime_hr",
     "loan_hr",
+    "attendance_file",
+    "delete_attendance_file",
+    "process_attendance_file",
     "holiday",
     "delete_holiday",
     "update_holiday",
@@ -116,10 +119,16 @@
     "view_resign_request",
     "deliver_equipment",
     "accept_reject_resign_request",
+    "attendance_file",
+    "delete_attendance_file",
+    "process_attendance_file",
     "holiday",
     "delete_holiday",
     "update_holiday",
     "delete_leave",
-    "delete_overtime"
+    "delete_overtime",
+    "equipment",
+    "delete_equipment",
+    "update_equipment"
   ]
 }
