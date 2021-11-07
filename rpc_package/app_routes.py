@@ -27,6 +27,13 @@ import jdatetime
 from sqlalchemy import func
 from rpc_package.attendance import Attendance
 
+@app.before_request
+def check_contract():
+    if current_user.is_authenticated:
+        position_history = current_user.employee.position_history.filter_by(status=1).first()
+        if not position_history and current_user.user_role.name_english != 'Admin':
+            logout_user()
+
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
 def create_new_user():
@@ -144,7 +151,8 @@ def login():
     if login_form.validate_on_submit():
         user = Users.query.filter_by(emp_id=login_form.username.data).first()
         if user and pass_crypt.check_password_hash(user.password, login_form.password.data):
-            if user.status:
+            position_history = user.employee.position_history.filter_by(status=1).first()
+            if (user.status and position_history) or user.user_role.name_english == 'Admin':
                 employee = Employees.query.filter_by(id=user.emp_id).first()
                 session['language'] = login_form.prefer_language.data
                 session['emp_id'] = user.emp_id
@@ -447,8 +455,8 @@ def profile():
 @app.route("/change_password", methods=['POST'])
 @login_required
 def change_password():
-    # if not check_access('change_password'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('change_password'):
+        return redirect(url_for('access_denied'))
     change_pass_form = ChangePassForm(session['language'], current_user)
     if request.method == "POST":
         if change_pass_form.validate_on_submit():
@@ -542,8 +550,8 @@ def edit_contract():
 @app.route('/contract_details/<int:contract_id>', methods=['GET'])
 @login_required
 def contract_details(contract_id):
-    # if not check_access('contract_details'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('contract_details'):
+        return redirect(url_for('access_denied'))
     try:
         contract = Position_history.query.filter_by(id=contract_id).first()
     except IOError as exc:
@@ -1274,8 +1282,8 @@ def update_holiday():
 @app.route("/attendance_file", methods=['GET', 'POST'])
 @login_required
 def attendance_file():
-    # if not check_access('attendance_file'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('attendance_file'):
+        return redirect(url_for('access_denied'))
     attendance_form = AttendanceForm(session['language'])
     if request.method == "GET":
         attendance_file_list = AttendanceFile.query.all()
@@ -1295,8 +1303,8 @@ def attendance_file():
 @app.route("/delete_attendance_file/<int:attendance_id>", methods=['GET'])
 @login_required
 def delete_attendance_file(attendance_id):
-    # if not check_access('delete_attendance_file'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('delete_attendance_file'):
+        return redirect(url_for('access_denied'))
     try:
         attendance = AttendanceFile.query.get(attendance_id)
         if attendance.raw_file_url and os.path.exists(os.path.join(f"./rpc_package" + attendance.raw_file_url)):
@@ -1313,8 +1321,8 @@ def delete_attendance_file(attendance_id):
 @app.route("/process_attendance_file/<int:attendance_id>", methods=['GET'])
 @login_required
 def process_attendance_file(attendance_id):
-    # if not check_access('process_attendance_file'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('process_attendance_file'):
+        return redirect(url_for('access_denied'))
     try:
         attendance = AttendanceFile.query.get(attendance_id)
         start = jdatetime.date(year=attendance.year, month=attendance.month, day=1)
@@ -1365,8 +1373,8 @@ def my_equipment():
 @app.route("/equipment", methods=['GET', 'POST'])
 @login_required
 def equipment():
-    # if not check_access('equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('equipment'):
+        return redirect(url_for('access_denied'))
     equipment_form = EquipmentForm(session['language'])
     if request.method == "GET":
         equipments = Equipment.query.all()
@@ -1386,8 +1394,8 @@ def equipment():
 @app.route("/delete_equipment/<int:equipment_id>", methods=['GET'])
 @login_required
 def delete_equipment(equipment_id):
-    # if not check_access('delete_equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('delete_equipment'):
+        return redirect(url_for('access_denied'))
     try:
         equipment = Equipment.query.get(equipment_id)
         db.session.delete(equipment)
@@ -1400,8 +1408,8 @@ def delete_equipment(equipment_id):
 @app.route("/update_equipment", methods=['GET', 'POST'])
 @login_required
 def update_equipment():
-    # if not check_access('update_equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('update_equipment'):
+        return redirect(url_for('access_denied'))
     equipment_form = EquipmentForm(session['language'])
     if request.method == "GET":
         equipment = Equipment.query.get(request.args.get('id'))
@@ -1411,8 +1419,7 @@ def update_equipment():
             'name_english': equipment.name_english,
             'serial': equipment.serial,
             'model': equipment.model,
-            'category': equipment.category,
-            'description': equipment.description
+            'category': equipment.category
         }
         return jsonify(data)
     elif request.method == "POST":
@@ -1424,7 +1431,6 @@ def update_equipment():
                 equipment.serial = request.form['serial']
                 equipment.model = request.form['model']
                 equipment.category = request.form['category']
-                equipment.description = request.form['description']
                 db.session.commit()
                 flash(message_obj.equipment_updated[session['language']], 'success')
             except IOError as exc:

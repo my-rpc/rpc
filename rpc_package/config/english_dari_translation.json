@@ -619,6 +619,10 @@
     "dari": "لیست روز های رخصتی",
     "en": "List of Holidays"
   },
+  "holidays": {
+    "dari": "روزهای رخصتی",
+    "en": "Holidays"
+  },
   "contract_update": {
     "dari": "تغییرات قراداد",
     "en": "َUpdate Contract"
@@ -844,8 +848,8 @@
     "en": "Resign Summary"
   },
   "equipment": {
-    "dari": "تجهیزات مربوطه ",
-    "en": "Relevant Equipment"
+    "dari": "تجهیزات",
+    "en": "Equipment"
   },
   "equipment_name": {
     "dari": "نام",

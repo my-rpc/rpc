@@ -402,8 +402,7 @@ def add_new_equipment(equipment_form):
             name_english=equipment_form.name_english.data,
             model=equipment_form.model.data,
             serial=equipment_form.serial.data,
-            category=equipment_form.category.data,
-            description=equipment_form.description.data)
+            category=equipment_form.category.data)
         db.session.add(equipment)
         db.session.commit()
         return "success"

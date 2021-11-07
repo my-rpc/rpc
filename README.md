@@ -15,7 +15,7 @@
     DELIMITER //
     CREATE PROCEDURE contractStatusUpdatePro()
     BEGIN
-    update position_history SET status = 0 WHERE  DATE_ADD(end_date, INTERVAL 5 DAY) < CURRENT_DATE AND status = 1;
+    update position_history SET status = 0 WHERE end_date < CURRENT_DATE AND status = 1;
     End;
     //
     DELIMITER ;
