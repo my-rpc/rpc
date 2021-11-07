@@ -441,8 +441,40 @@
     "dari": "هشدار ختم قرار داد",
     "en": "End Contract Alarm"
   },
+  "equipment_confirm_message": {
+    "dari": "آیا مطمئن هستید که این تجهیزات را دریافت کرده اید؟",
+    "en": "Are you sure that you received this Equipment?"
+  },
   "end_contract_message": {
     "dari": "قرار داد شما تا {} روز دیگر ختم می شود لطفا قبل از مسدود شدن حساب تان به منابع بشری مراجعه نمایید",
     "en": "Your contract expires in {} days. Please refer to Human Resources before your account is block"
+  },
+  "equipment_confirm": {
+    "dari": "تایید دریافت تجهیزات موفقانه انجام شد",
+    "en": "Equipment confirmation successfully done"
+  },
+  "equipment_not_confirm": {
+    "dari": "تایید دریافت تجهیزات متاسفانه انجام نشد",
+    "en": "Equipment confirmation has not been done"
+  },
+  "equipment_assigned": {
+    "dari": "اختصاص دادن تجهیزات موفقانه انجام شد",
+    "en": "Equipment assign successfully done"
+  },
+  "equipment_not_assigned": {
+    "dari": "اختصاص دادن تجهیزات متاسفانه انجام نشد",
+    "en": "Equipment assign has not been done"
+  },
+  "equipment_surrender": {
+    "dari": "تسلیم تجهیزات موفقانه انجام شد",
+    "en": "Equipment surrender successfully done"
+  },
+  "equipment_not_surrender": {
+    "dari": "تسلیم تجهیزات متاسفانه انجام نشد",
+    "en": "Equipment surrender has not been done"
+  },
+  "file_not_downloaded": {
+    "dari": "فایل دانلود نشد",
+    "en": "File does not downloaded"
   }
 }

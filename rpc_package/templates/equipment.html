@@ -10,28 +10,6 @@
         border-left: none;
         border-radius: 0 0.25rem 0.25rem 0 !important;
     }
-    .holiday li a.nav-link{
-      border: none !important;
-    }
-    .holiday li a.nav-link.border-bottom{
-      border-bottom: 1px solid #d9d9d9 !important;
-    }
-    .holiday li a.nav-link.border-radius-top{
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-    .holiday li a.nav-link.border-radius-bottom{
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-    }
-    .holiday ul.nav{
-      border: 1px solid #d9d9d9;
-      border-radius: 10px;
-    }
-    .holiday .border-radius{
-      border: 1px solid #d9d9d9;
-      border-radius: 10px;
-    }
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
@@ -39,25 +17,38 @@
   <div class="equipment">
     <div class="box">
       <div class="box-header with-border py-2">
-        <h4 class="box-title text-primary mt-3 font-weight-bold pull-left ">{{translation.list_of_equipment[language]}}</h4>
+        <h4 class="box-title text-primary mt-3 font-weight-bold float-left">{{translation.list_of_equipment[language]}}</h4>
       
         <button
-        type="button"
-        class="btn btn-info m-2 pull-right"
-        title="{{translation.add_holiday[language]}}"
-        onclick="openAddModel()"
-      >
+          type="button"
+          class="btn btn-info m-2 float-right"
+          title="{{translation.add_holiday[language]}}"
+          onclick="openAddModel()"
+        >
         <i class="fa fa-plus"></i>
         {{translation.add[language]}}
       </button>
       </div>
       <div class="box-body">
-        <div class="row">
-          <div class="col-md-12 form-group">
-            
+        <form method="GET" , action="">
+          <div class="row">
+            <div class="form-group  col-md-6">
+              <label class="form-control-label" for="status">{{translation.record_status[language]}}</label>
+              <select class="form-control form-control-lg" id="status" name="status">
+                <option selected value="all">{{translation.all[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == '1' }} value="1">{{translation.in_use[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == '0' }} value="0">{{translation.free_of_use[language]}}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="mt-3 pt-2">
+                <button type="submit" class="btn btn-primary mt-2">
+                  <i class="fa fa-filter"></i> {{translation.filter[language]}}
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-
+        </form>
         <div class="table-responsive">
           <table class="table table-hover" id="overitme_list">
             <tr>
@@ -67,16 +58,34 @@
               <th>{{translation.serial[language]}}</th>
               <th>{{translation.category[language]}}</th>
               <th>{{translation.model[language]}}</th>
-              <th></th>
+              <th>{{translation.record_status[language]}}</th>
+              <th>{{translation.operation[language]}}</th>
             </tr>
-            {% for item in equipments %}
+            {% for item in equipments.items %}
             <tr>
-                <td></td>
+                <td>{{ (equipments.page -1) * equipments.per_page + equipments.items.index(item)+1}}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.name_english }}</td>
                 <td>{{ item.serial }}</td>
                 <td>{{ item.category }}</td>
                 <td>{{ item.model }}</td>
+                <td>
+                  {% if item.in_use %}
+                  <span class="badge badge-pill badge-info">
+                    {{translation.in_use[language]}}
+                    {% set employee = item.emp_equipments.filter(or_(Employee_equipment.status==None, Employee_equipment.status==0)).first().employee %}
+                    <small class="font-weight-bold" >(
+                      {% if language == 'en' %}
+                      {{employee.name_english}} {{employee.lname_english}}
+                      {% else %}
+                      {{employee.name}} {{employee.lname}}
+                      {% endif %}
+                    )</small>
+                  </span>
+                  {% else %}
+                  <span class="badge badge-pill badge-success">{{translation.free_of_use[language]}}</span>
+                  {% endif %}
+                </td>
                 <td style="white-space:nowrap">
                   <a href="javascript:void(0)" onclick="updateHolidayOpenModel('{{item.id}}')">
                     <i class="fad fa-edit text-info"></i>
@@ -90,6 +99,54 @@
               {% endfor %}
           </table>
         </div>
+        {% if equipments.pages > 1 %}
+        <div class="row">
+          <div class="col-md-10">
+            <nav aria-label="Page navigation example">
+              {% set arg_page = request.args.get('page')|int if request.args.get('page')|int != 0 else 1 %}
+              <ul class="pagination">
+                <li class="page-item">
+                  <a
+                    class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} waves-effect waves-light btn btn-outline btn-rounded btn-info-light mb-5"
+                    href="{{'#' if arg_page == 1 else url_for('equipment', page=arg_page-1, status=request.args.get('status'))}}"
+                    aria-label="Previous"
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                {% for page in equipments.iter_pages(left_edge=2, right_edge=2) %}
+                  {% if page %}
+                  <li class="page-item">
+                    <a
+                      class="waves-effect waves-light btn btn-rounded {{'btn-info' if arg_page == page else 'btn-outline btn-info-light'}} mb-5"
+                      href="{{url_for('equipment', page=page, status=request.args.get('status') )}}"
+                    >{{ page }}</a>
+                  </li>
+                  {% else %}
+                    ...
+                  {% endif %}
+                {% endfor %}
+                <li class="page-item">
+                  <a
+                    class="{{ 'border-radius-en' if language == 'dari' else 'border-radius-dari' }} waves-effect waves-light btn btn-outline btn-rounded btn-info-light mb-5"
+                    href="{{'#' if arg_page == equipments.pages else url_for('equipment', page=arg_page+1, status=request.args.get('status'))}}"
+                    aria-label="Next"
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-2">
+            <div class="bg-secondary p-3 font-weight-bold" style="border-radius: 5px;">
+                {{translation.total[language]}}: {{ equipments.total }}
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
       </div>
     </div>

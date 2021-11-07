@@ -157,18 +157,32 @@
         </a>
       </li>
       {% endif %}
-      {% if check_access('equipment') %}
+      {% if check_access('equipment') or check_access('emp_equipment') %}
       <li class="treeview">
         <a href="#">
           <i class="fa fa-tools"><span class="path1"></span><span class="path2"></span></i>
-          <span>{{translation.equipment[language] }}</span>
+          <span>{{translation.logistic[language] }}</span>
           <span class="pull-right-container">
             <i class="fa fa-angle-right pull-right"></i>
           </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="{{ url_for('attendance_file') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.attendance_file[language] }}</a></li>
-          <li><a href="{{ url_for('holiday') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.holidays[language] }}</a></li>
+          {% if check_access('emp_equipment') %}
+          <li>
+            <a href="{{ url_for('emp_equipment') }}">
+              <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+              {{translation.assign_equipment[language] }}
+            </a>
+          </li>
+          {% endif %}
+          {% if check_access('equipment') %}
+            <li>
+              <a href="{{ url_for('equipment') }}">
+                <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                {{translation.list_of_equipment[language] }}
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </li>
       {% endif %}
