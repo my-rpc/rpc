@@ -23,7 +23,8 @@
     "my_equipment",
     "view_resign_request",
     "delete_leave",
-    "delete_overtime"
+    "delete_overtime",
+    "recieved_equipment"
   ],
   "Acting Manager" : [
     "leave_supervisor",
@@ -74,6 +75,14 @@
   ],
   "Finance" : [
     "loan_finance"
+  ],
+  "Logistic" : [
+    "equipment",
+    "delete_equipment",
+    "update_equipment",
+    "emp_equipment",
+    "surrender_equipment",
+    "download_equipment_file"
   ],
   "All" : [
     "create_new_user",
@@ -127,8 +136,12 @@
     "update_holiday",
     "delete_leave",
     "delete_overtime",
+    "recieved_equipment",
     "equipment",
     "delete_equipment",
-    "update_equipment"
+    "update_equipment",
+    "emp_equipment",
+    "surrender_equipment",
+    "download_equipment_file"
   ]
 }

@@ -409,6 +409,55 @@ def add_new_equipment(equipment_form):
     except IOError as io:
         return 'error'
 
+def add_employee_equipment(equipment_form):
+    try:
+        if equipment_form.file_url.data:
+            request_file = equipment_form.file_url.data
+            request_file.filename = f"{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}-equipment." + request_file.filename.rsplit('.', 1)[1]
+            path = "./rpc_package/static/files/equipments/"
+            if not os.path.exists(path):
+                os.makedirs(path)
+            path = os.path.join(path, request_file.filename)
+            request_file.save(path)
+        equipment = Equipment.query.get(equipment_form.equipment.data)
+        equipment.in_use = True
+        emp_equipment = Employee_equipment(
+            emp_id=equipment_form.employee.data,
+            equipment_id=equipment_form.equipment.data,
+            taken_date=datetime.date.today(),
+            file_url=f"/static/files/equipments/" + request_file.filename if equipment_form.file_url.data else None,
+            created_by=current_user.emp_id,
+            created_at=datetime.datetime.today())
+        db.session.add(emp_equipment)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+def surrender_equipment_update(equipment_form):
+    try:
+        emp_equipment = Employee_equipment.query.get(equipment_form.id.data)
+        if equipment_form.file_url.data:
+            request_file = equipment_form.file_url.data
+            request_file.filename = f"{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}-equipment-{emp_equipment.id}." + request_file.filename.rsplit('.', 1)[1]
+            path = "./rpc_package/static/files/equipments/"
+            if not os.path.exists(path):
+                os.makedirs(path)
+            path = os.path.join(path, request_file.filename)
+            request_file.save(path)
+            if emp_equipment.file_url:
+                old_file_path = './rpc_package' + emp_equipment.file_url
+                if os.path.exists(old_file_path):
+                    os.remove(old_file_path)
+        emp_equipment.equipment.in_use = False
+        emp_equipment.return_date = datetime.date.today()
+        emp_equipment.status = True
+        emp_equipment.file_url =f"/static/files/equipments/" + request_file.filename if equipment_form.file_url.data else None,
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
 
 def add_contract_form(contract_form):
     try:

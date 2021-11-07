@@ -51,6 +51,42 @@
     "dari": "آیدی نمبر",
     "en": "Employees ID"
   },
+  "taken_date": {
+    "dari": "تاریخ گرفتن",
+    "en": "Taken Date"
+  },
+  "submission_date": {
+    "dari": "تاریخ تسلیم",
+    "en": "Date of submission"
+  },
+  "submission_equipment": {
+    "dari": "تسلیم تجهیزات",
+    "en": "Equipment Submission"
+  },
+  "submitted": {
+    "dari": "تسلیم داده",
+    "en": "Submitted"
+  },
+  "pending_for_confirm": {
+    "dari": "منتظر تایید",
+    "en": "Pending for Confirm"
+  },
+  "surrender": {
+    "dari": "تسلیم گرفتن",
+    "en": "Surrender"
+  },
+  "assign": {
+    "dari": "اختصاص دادن",
+    "en": "Assign"
+  },
+  "in_use": {
+    "dari": "در حال استفاده",
+    "en": "In Use"
+  },
+  "free_of_use": {
+    "dari": "بدون استفاده",
+    "en": "Free of use"
+  },
   "password": {
     "dari": "پسورد",
     "en": "Password"
@@ -58,6 +94,14 @@
   "confirm_password": {
     "dari": "تایید پسورد",
     "en": "Confirm Password"
+  },
+  "confirmed": {
+    "dari": "تایید شده",
+    "en": "Confirmed"
+  },
+  "confirm": {
+    "dari": "تایید کردن",
+    "en": "Confirm"
   },
   "user_role": {
     "dari": "نقش کاربر",
@@ -303,6 +347,14 @@
     "dari": "ضمایم",
     "en": "Attachment"
   },
+  "attachment_file": {
+    "dari": "فایل ضمیمه",
+    "en": "Attachment File"
+  },
+  "assign_equipment": {
+    "dari": "اختصاص دادن تجهیزات",
+    "en": "Assign Equipment"
+  },
   "first_name": {
     "dari": "نام",
     "en": "Name"
@@ -547,6 +599,10 @@
     "dari": "مدیر تدارکات",
     "en": "Logistic Manager"
   },
+  "logistic": {
+    "dari": "تدارکات",
+    "en": "Logistic"
+  },
   "IT_manager": {
     "dari": "مدیر آی تی ",
     "en": "IT Manager"
@@ -715,6 +771,10 @@
     "dari": "فایل اولیه",
     "en": "Primary file"
   },
+  "file": {
+    "dari": "فایل",
+    "en": "File"
+  },
   "result_file": {
     "dari": "فایل نتیجه",
     "en": "Result File"
@@ -778,6 +838,10 @@
   "call": {
     "dari": "تماس",
     "en": "Call"
+  },
+  "all": {
+    "dari": "همه",
+    "en": "All"
   },
   "about": {
     "dari": "درباره",
@@ -1236,8 +1300,12 @@
     "en": "Description"
   },
   "list_of_equipment": {
-    "dari": "لیست وسایل و تجهیزات",
+    "dari": "لیست تجهیزات",
     "en": "List of Equipment"
+  },
+  "list_of_equipment_assign": {
+    "dari": "لیست اختصاص دادن تجهیزات",
+    "en": "List of Equipment Assign"
   },
   "add_new_equipment": {
     "dari": "اضافه کردن تجهیزات",

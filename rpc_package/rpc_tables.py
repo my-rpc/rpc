@@ -423,6 +423,8 @@ class Equipment(db.Model, UserMixin):
     serial = db.Column(db.String(32), nullable=False)
     model = db.Column(db.String(64))
     in_use = db.Column(db.Boolean, nullable=True, default=False)
+    # Relationship
+    emp_equipments = db.relationship("Employee_equipment", foreign_keys='Employee_equipment.equipment_id', lazy='dynamic')
 
     def __repr__(self):
         return f"Equipment ID: {self.id}, Equipment Name: {self.name}"
@@ -432,8 +434,15 @@ class Employee_equipment(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     emp_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=False)
     equipment_id = db.Column(db.Integer, db.ForeignKey('equipment.id'), nullable=False)
-    received = db.Column(db.Boolean)
-    delivered = db.Column(db.Boolean)
+    taken_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.Boolean)
+    return_date = db.Column(db.Date, nullable=True)
+    file_url = db.Column(db.String(255, collation='utf8_general_ci'), nullable=True)
+    created_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
+    created_at = db.Column(db.DateTime, nullable=True)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="employee_equipment")
+    equipment = db.relationship('Equipment', foreign_keys=[equipment_id], overlaps="employee_equipment")
 
     def __repr__(self):
         return f"Employee_equipment ID: {self.id}, Employee ID: {self.emp_id}"

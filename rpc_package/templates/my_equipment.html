@@ -20,69 +20,69 @@
 {% block main_content %}
 <section>
     {% if my_equipment %}
-   <div class="box">
-    <div class="box-header">
-      <h4 class="box-title text-primary font-weight-bold">
-        {{translation.my_equipment[language]}}
-      </h4>
-    </div>
-       <form method="POST">
-        {{ form.hidden_tag()}}
-       <div class="box-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
-              <tr>
-                <th>{{translation.leave_type[language]}}</th>
-                <th>{{translation.leave_type[language]}}</th>
-                <th>{{translation.start_date[language]}}</th>
-                <th>{{translation.end_date[language]}}</th>
-              </tr>
-              {% for equipment in my_equipment %}
-              <tr>
-                <td>{{form.equipment(value=equipment[1].id, class="equipmentCheckbox")}}</td>
-                <td>{{equipment[1].name}}</td>
-                <td>{{equipment[1].name_english}}</td>
-                <td>{{equipment[1].equipment_catgory}}</td>
-            
-              </tr>
-              {% endfor %}
-            </table>
-          </div>
-       </div>
-       <div class="box-footer">
-        {{ form.submit(class="btn btn-primary")}}
+    <div class="box">
+      <div class="box-header">
+        <h4 class="box-title text-primary font-weight-bold">
+          {{translation.my_equipment[language]}}
+        </h4>
       </div>
-    </form>
-   </div>
+      <div class="box-body">
+      <div class="table-responsive">
+          <table class="table table-hover">
+            <tr>
+              <th>#</th>
+              <th>{{translation.name[language]}}</th>
+              <th>{{translation.serial[language]}}</th>
+              <th>{{translation.model[language]}}</th>
+              <th>{{translation.taken_date[language]}}</th>
+              <th>{{translation.submission_date[language]}}</th>
+            </tr>
+            {% for equipment in my_equipment %}
+            <tr>
+              <td>{{my_equipment.index(equipment) + 1}}</td>
+              <td>
+                {% if equipment.equipment %}
+                  {{equipment.equipment.name_english if language == 'en' else equipment.equipment.name }}
+                {% endif %}
+              </td>
+              <td>
+                {% if equipment.equipment %}
+                  {{equipment.equipment.serial}}
+                {% endif %}
+              </td>
+              <td>
+                {% if equipment.equipment %}
+                  {{equipment.equipment.model}}
+                {% endif %}
+              </td>
+              <td>
+                {% if equipment.taken_date %}
+                  {{ to_jalali(equipment.taken_date)}}
+                {% endif %}
+              </td>
+              <td>
+                {% if equipment.status == True  %}
+                  {{ to_jalali(equipment.return_date) }}
+                {% elif equipment.status == False %}
+                  <span class="badge badge-pill badge-info">
+                    {{translation.in_use[language]}}
+                  </span>
+                {% else %}
+                  <a href="recieved_equipment/{{equipment.id}}"
+                    class="btn btn-info mx-2"
+                    onclick="return confirm('{{message_obj.equipment_confirm_message[language]}}');">
+                    {{ translation.confirm[language]}}
+                  </a>
+                {% endif %}
+              </td>
+          
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
    {% endif %}
-   <div class="box">
-    <div class="box-header">
-      <h4 class="box-title text-primary font-weight-bold">
-        {{translation.received_equipment[language]}}
-      </h4>
-    </div>
-    <div class="box-body">
-     {% if received_equipment %}
-     <div class="table-responsive">
-         <table class="table table-hover">
-           <tr>
-             <th>{{translation.leave_type[language]}}</th>
-             <th>{{translation.start_date[language]}}</th>
-             <th>{{translation.end_date[language]}}</th>
-           </tr>
-           {% for equipment in received_equipment %}
-           <tr>
-             <td>{{equipment[1].name}}</td>
-             <td>{{equipment[1].name_english}}</td>
-             <td>{{equipment[1].equipment_catgory}}</td>
-         
-           </tr>
-           {% endfor %}
-         </table>
-       </div>
-     {% endif %}
-    </div>
-</div>
 </section>
 {% endblock main_content%}
 {% block js_code %}
