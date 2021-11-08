@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.23'
-DESCRIPTION = 'equipment_assign, version 0.8.23v equipment assign and surrender done for employee'
+VERSION = '0.8.24'
+DESCRIPTION = 'remove_file_in_equipment_assign, version 0.8.24v in equipment assign file removed'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

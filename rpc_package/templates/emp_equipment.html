@@ -70,7 +70,7 @@
               <th>{{translation.taken_date[language]}}</th>
               <th>{{translation.record_status[language]}}</th>
               <th>{{translation.submission_date[language]}}</th>
-              <th>{{translation.file[language]}}</th>
+              <!-- <th>{{translation.file[language]}}</th> -->
             </tr>
             {% for item in emp_equipments.items %}
             <tr>
@@ -117,7 +117,7 @@
                     </a>
                   {% endif %}
                 </td>
-                <td>
+                <!-- <td>
                   {% if item.file_url %}
                     <a href="download_equipment_file/{{item.id}}" class="btn btn-xs">
                       <button type="button" class="waves-effect waves-light btn btn-xs btn-circle btn-info">
@@ -125,7 +125,7 @@
                       </button>
                     </a>
                   {% endif %}
-                </td>
+                </td> -->
               </tr>
               {% endfor %}
           </table>
@@ -210,10 +210,6 @@
                           <small class="text-danger" id="equipment-guide"></small>
                           {{ form.equipment(type="hidden")}}
                       </div>
-                      <div class="form-group col-md-6">
-                          {{ form.file_url.label(class="form-control-label")}}
-                          {{ form.file_url(class="form-control form-control-lg")}}
-                      </div>
                   </fieldset>
                   <div class="form-group">
                       {{form.submit(class="btn btn-primary")}}
@@ -234,7 +230,7 @@
       <div class="modal-content">
           <div class="modal-header">
               <h4 class="modal-title text-primary" id="myLargeModalLabel">
-                  {{translation.submission_equipment[language]}}
+                {{message_obj.equipment_confirm_message[language]}}
               </h4>
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           </div>
@@ -244,13 +240,11 @@
               {{ surrender_form.hidden_tag()}}
               <input type="hidden" name="id" id="id" />
               <fieldset class="form-group row">
-                <div class="form-group col-md-6">
-                  {{ surrender_form.file_url.label(class="form-control-label")}}
-                  {{ surrender_form.file_url(class="form-control form-control-lg")}}
-                </div>
+               
               </fieldset>
               <div class="form-group">
-                  {{surrender_form.submit(class="btn btn-primary", value=translation.save[language] )}}
+                  {{surrender_form.submit(class="btn btn-primary", value=translation.confirm[language] )}}
+                  <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
               </div>
             </form>
           </div>
