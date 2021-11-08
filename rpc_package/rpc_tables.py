@@ -10,6 +10,9 @@ def load_user(user_id):
         if position_history :
             current_user.department = position_history.department
         current_user.user_role = User_roles.query.get(current_user.role)
+        current_user.notifications = Notification.query \
+            .filter_by(emp_id=current_user.emp_id, read=0) \
+            .order_by(Notification.id.desc()).all()
         return current_user
     else:
         return None
@@ -46,7 +49,7 @@ class Employees(db.Model, UserMixin):
     documents = db.relationship("Documents", foreign_keys='Documents.emp_id', cascade="all, delete")
     current_address = db.relationship("Current_addresses", foreign_keys='Current_addresses.emp_id', uselist=False, cascade="all, delete")
     permanent_address = db.relationship("Permanent_addresses", foreign_keys='Permanent_addresses.emp_id', uselist=False, cascade="all, delete")
-
+    notifications = db.relationship("Notification", foreign_keys='Notification.emp_id', cascade="all, delete")
     def __repr__(self):
         return f"Employee ID: {self.id}, Name: {self.name}, " \
                f"Last name: {self.lname}, Tazkira: {self.tazkira}, Profile: {self.profile_pic} TIN: {self.tin}"
@@ -104,6 +107,22 @@ class Phone(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Employee: {self.emp_id}, Phone: {self.phone}"
+
+class Notification(db.Model, UserMixin):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "notifications"
+    id = db.Column(db.Integer, primary_key=True)
+    emp_id = db.Column(db.String(20, collation='utf8_general_ci'),
+        db.ForeignKey('employees.id'), primary_key=True, nullable=False)
+    message = db.Column(db.String(255), nullable=True)
+    message_english = db.Column(db.String(255), nullable=True)
+    url = db.Column(db.String(255), nullable=True)
+    read = db.Column(db.Boolean(1), nullable=False, default=False)
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="notifications")
+
+    def __repr__(self):
+        return f"Notification ID: {self.id}, Employee: {self.emp_id}"
 
 
 class Current_addresses(db.Model, UserMixin):
@@ -440,8 +459,8 @@ class Employee_equipment(db.Model, UserMixin):
     created_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     created_at = db.Column(db.DateTime, nullable=True)
     # Relationship
-    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="employee_equipment")
-    equipment = db.relationship('Equipment', foreign_keys=[equipment_id], overlaps="employee_equipment")
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="emp_equipments")
+    equipment = db.relationship('Equipment', foreign_keys=[equipment_id], overlaps="emp_equipments")
 
     def __repr__(self):
         return f"Employee_equipment ID: {self.id}, Employee ID: {self.emp_id}"

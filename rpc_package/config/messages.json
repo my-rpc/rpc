@@ -476,5 +476,17 @@
   "file_not_downloaded": {
     "dari": "فایل دانلود نشد",
     "en": "File does not downloaded"
+  },
+  "notifications": {
+    "reset_user_password" :{
+      "message": "رمز عبور تان باز نشانی شده، لطفا رمز عبور تان را تغییر دهید",
+      "message_english": "Your password has been reseted, please change your password",
+      "url": "/profile#change-pass"
+    },
+    "add_new_contract" :{
+      "message": "قرار داد جدید برای شما اضافه شد",
+      "message_english": "New contract added for you",
+      "url": "/profile#contract"
+    }
   }
 }

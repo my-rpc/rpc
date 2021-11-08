@@ -18,8 +18,6 @@ CONFIG = json.load(open(os.path.join(config_path, 'config/config.json'), 'rb'))
 app.config["SECRET_KEY"] = CONFIG['secret_key']
 app.config["SQLALCHEMY_DATABASE_URI"] = CONFIG['db_url']
 db = SQLAlchemy(app)
-from flask_wtf.csrf import CsrfProtect
-CsrfProtect(app)
 # TODO check why we need this
 
 # create translation object

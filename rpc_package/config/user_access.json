@@ -34,6 +34,7 @@
     "employee_settings",
     "employee_details",
     "contract_settings",
+    "contract_details",
     "loan_presidency",
 
     "leave_report",
@@ -43,6 +44,7 @@
     "employee_settings",
     "employee_details",
     "contract_settings",
+    "contract_details",
     "loan_presidency",
 
     "leave_report",
@@ -57,6 +59,7 @@
     "uds_employee",
     "delete_employee",
     "contract_settings",
+    "contract_details",
     "add_contract",
     "edit_contract",
     "delete_contract",
@@ -100,6 +103,7 @@
     "delete_employee",
     "profile",
     "contract_settings",
+    "contract_details",
     "add_contract",
     "edit_contract",
     "delete_contract",

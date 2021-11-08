@@ -252,8 +252,12 @@
     "en": "Prepayment Form"
   },
   "notification": {
-    "dari": "اعلان",
-    "en": "Notification"
+    "dari": "اعلان ها",
+    "en": "Notifications"
+  },
+  "notification_is_empty": {
+    "dari": "اعلان ها خالی است",
+    "en": "Notification is empty"
   },
   "task": {
     "dari": "وظیفه",
