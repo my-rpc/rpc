@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.24'
-DESCRIPTION = 'remove_file_in_equipment_assign, version 0.8.24v in equipment assign file removed'
+VERSION = '0.9.1'
+DESCRIPTION = 'notification_handling, version 0.9.1v the notification table created and display the notification and handle the route'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
