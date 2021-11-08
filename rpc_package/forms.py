@@ -583,7 +583,10 @@ class SurrenderEquipmentForm(FlaskForm):
         self.submit.label.text = translation_obj.save[language]
 
 class AssignEquipmentForm(FlaskForm):
-    employee = StringField('Employee Name', validators=[DataRequired()])
+    employee = StringField('Employee Name',
+        validators=[DataRequired(message='Employee ID is required!'),
+        Length(message='Employee ID length must be equal to 7', min=7, max=7),
+        Regexp('RPC-\d+', message='Invalid employee ID.')])
     equipment = StringField('Equipment Name', validators=[DataRequired()])
     file_url = FileField('Attachment File')
     submit = SubmitField('Submit')
@@ -594,28 +597,6 @@ class AssignEquipmentForm(FlaskForm):
         self.equipment.label.text = translation_obj.equipment[language]
         self.file_url.label.text = translation_obj.attachment_file[language]
         self.submit.label.text = translation_obj.save[language]
-
-    # def validate_name (self, name):
-    #     if name.data == '':
-    #         raise ValidationError(message_obj.required_field[self.language].format(translation_obj.name[self.language]))
-    #     elif not re.match("^[0-9- .آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیئ]*$", name.data):
-    #         raise ValidationError(message_obj.invalid_character[self.language])
-    #     elif len(name.data) > 64:
-    #         raise ValidationError(message_obj.long_input[self.language].format('64'))
-    # def validate_name_english (self, name_english):
-    #     if name_english.data == '':
-    #         raise ValidationError(message_obj.required_field[self.language].format(translation_obj.name_english[self.language]))
-    #     elif len(name_english.data) > 64:
-    #         raise ValidationError(message_obj.long_input[self.language].format('64'))
-    # def validate_model (self, model):
-    #     if len(model.data) > 64:
-    #         raise ValidationError(message_obj.long_input[self.language].format('64'))
-    # def validate_serial (self, serial):
-    #     if len(serial.data) > 32:
-    #         raise ValidationError(message_obj.long_input[self.language].format('32'))
-    # def validate_category (self, category):
-    #     if len(category.data) > 64:
-    #         raise ValidationError(message_obj.long_input[self.language].format('64'))
 
 class AttendanceForm(FlaskForm):
     year = jdatetime.date.today().year

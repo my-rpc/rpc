@@ -437,7 +437,6 @@ class Employee_equipment(db.Model, UserMixin):
     taken_date = db.Column(db.Date, nullable=False)
     status = db.Column(db.Boolean)
     return_date = db.Column(db.Date, nullable=True)
-    file_url = db.Column(db.String(255, collation='utf8_general_ci'), nullable=True)
     created_by = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'))
     created_at = db.Column(db.DateTime, nullable=True)
     # Relationship
