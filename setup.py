@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.8.22'
-DESCRIPTION = 'automatic_logout, version 0.8.22v when the contract of user end the status of contract change to inactive and user automatically logged out'
+VERSION = '0.9.2'
+DESCRIPTION = 'push_notification, version 0.9.2v the push notification function used for reset pass and add new contract'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

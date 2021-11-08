@@ -6,6 +6,7 @@ from flask_login import LoginManager
 import os
 import json
 import datetime
+from sqlalchemy import or_
 
 pymysql.install_as_MySQLdb()
 
@@ -31,7 +32,7 @@ login_manager.login_message = translation_obj.login_message['en']
 
 from rpc_package.utils import to_gregorian, to_jalali, check_access, get_month_name
 
-app.jinja_env.globals.update(to_jalali=to_jalali, to_gregorian=to_gregorian, \
+app.jinja_env.globals.update(to_jalali=to_jalali, to_gregorian=to_gregorian, or_=or_, \
     sum=sum, translation=translation_obj, message_obj=message_obj, check_access=check_access, \
     date=datetime.date, get_month_name=get_month_name)
 

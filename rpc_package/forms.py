@@ -572,6 +572,32 @@ class EquipmentForm(FlaskForm):
         if len(category.data) > 64:
             raise ValidationError(message_obj.long_input[self.language].format('64'))
 
+class SurrenderEquipmentForm(FlaskForm):
+    id = FileField('Id')
+    file_url = FileField('Attachment File')
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(SurrenderEquipmentForm, self).__init__()
+        self.language = language
+        self.file_url.label.text = translation_obj.attachment_file[language]
+        self.submit.label.text = translation_obj.save[language]
+
+class AssignEquipmentForm(FlaskForm):
+    employee = StringField('Employee Name',
+        validators=[DataRequired(message='Employee ID is required!'),
+        Length(message='Employee ID length must be equal to 7', min=7, max=7),
+        Regexp('RPC-\d+', message='Invalid employee ID.')])
+    equipment = StringField('Equipment Name', validators=[DataRequired()])
+    file_url = FileField('Attachment File')
+    submit = SubmitField('Submit')
+    def __init__(self, language):
+        super(AssignEquipmentForm, self).__init__()
+        self.language = language
+        self.employee.label.text = translation_obj.employee[language]
+        self.equipment.label.text = translation_obj.equipment[language]
+        self.file_url.label.text = translation_obj.attachment_file[language]
+        self.submit.label.text = translation_obj.save[language]
+
 class AttendanceForm(FlaskForm):
     year = jdatetime.date.today().year
     year = SelectField('Year', choices=[year-1, year, year+1])
