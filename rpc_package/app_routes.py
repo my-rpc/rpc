@@ -21,7 +21,8 @@ from rpc_package.route_utils import upload_docs, get_profile_info, get_documents
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, \
     send_resign_request, update_employee_data, set_emp_update_form_data, add_leave_request, \
     send_resign_request, send_department, add_loan_request, accept_equipment, accept_reject_resign, \
-    add_holiday, add_attendance, add_new_equipment, add_employee_equipment, surrender_equipment_update
+    add_holiday, add_attendance, add_new_equipment, add_employee_equipment, surrender_equipment_update, \
+    push_notification
 import os
 import datetime
 import jdatetime
@@ -128,6 +129,9 @@ def reset_user_password():
         try:
             sel_user = Users.query.get(user_id)
             sel_user.password = hashed_pass
+            # Notification Generate and save in table
+            notify_ms = message_obj.notifications['reset_user_password']
+            push_notification(sel_user.emp_id, notify_ms, notify_ms['url'])
             db.session.commit()
         except IOError as exc:
             return message_to_client_403(message_obj.create_new_user_update_not[session['language']])
@@ -495,7 +499,9 @@ def add_contract():
             if con_startdate:
                 flash({'contract_status':[message_obj.active_contract_message[session['language']] ]}, 'error')
                 return redirect(request.referrer)
-
+            # Notification Generate and save in table
+            notify_ms = message_obj.notifications['add_new_contract']
+            push_notification(contract_form.emp_id.data, notify_ms, notify_ms['url'])
             contract = add_contract_form(contract_form)
             if contract == "success":
                 flash(message_obj.contract_added[session['language']].format(emp_id), 'success')

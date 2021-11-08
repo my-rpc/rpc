@@ -4,7 +4,7 @@ from rpc_package import db
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
-    Positions, Loan_form, Holiday, AttendanceFile, Equipment
+    Positions, Loan_form, Holiday, AttendanceFile, Equipment, Notification
 
 from flask import session
 import datetime
@@ -721,3 +721,16 @@ def accept_reject_resign(request):
         return "success"
     except IOError as io:
         return 'error'
+def push_notification(emp_id, message, url):
+    try:
+        new_notification = Notification(
+            emp_id=emp_id,
+            message=message['message'],
+            message_english=message['message_english'],
+            url=url,
+            read=0)
+        db.session.add(new_notification)
+        return "success"
+    except IOError as io:
+        return 'error'
+    
