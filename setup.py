@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.9.2'
-DESCRIPTION = 'push_notification, version 0.9.2v the push notification function used for reset pass and add new contract'
+VERSION = '0.9.3'
+DESCRIPTION = 'leave_request_generate_notification, version 0.9.3v in send of leave request generate notification message for all employee has access and the same department'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

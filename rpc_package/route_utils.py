@@ -1,6 +1,6 @@
 import os
 import jdatetime
-from rpc_package import db
+from rpc_package import db, user_access
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
@@ -342,8 +342,9 @@ def add_leave_request(leave_form, emp_id):
                 end_datetime=to_gregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
                 requested_at=datetime.datetime.now())
             db.session.add(leave)
+        db.session.flush()
         db.session.commit()
-        return "success"
+        return leave
     except IOError as io:
         return 'error'
 
@@ -730,7 +731,19 @@ def push_notification(emp_id, message, url):
             url=url,
             read=0)
         db.session.add(new_notification)
+        db.session.commit()
         return "success"
     except IOError as io:
         return 'error'
     
+def get_role_ids(route_name=''):
+    user_roles = User_roles.query.all()
+    result = []
+    for role in user_roles:
+        roles = getattr(user_access, role.name_english) + getattr(user_access, "Employee")
+        if role.name_english == 'Admin':
+            roles += getattr(user_access, "Manager")
+        if isinstance(roles, list) :
+            if (route_name in roles):
+                result.append(role.id)
+    return result

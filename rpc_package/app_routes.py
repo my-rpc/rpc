@@ -22,7 +22,7 @@ from rpc_package.route_utils import upload_docs, get_profile_info, get_documents
     send_resign_request, update_employee_data, set_emp_update_form_data, add_leave_request, \
     send_resign_request, send_department, add_loan_request, accept_equipment, accept_reject_resign, \
     add_holiday, add_attendance, add_new_equipment, add_employee_equipment, surrender_equipment_update, \
-    push_notification
+    push_notification, get_role_ids
 import os
 import datetime
 import jdatetime
@@ -617,7 +617,21 @@ def leave_request():
     if request.method == 'POST':
         if leave_form.validate_on_submit():
             leave = add_leave_request(leave_form, current_user.emp_id)
-            if leave == "success":
+            if leave != "error":
+                # Get the list of employee for generating the notification
+                employees = db.session.query(Employees.id).join(Position_history, Position_history.emp_id == Employees.id) \
+                    .join(Users, Users.emp_id == Employees.id) \
+                    .filter(Position_history.department_id==current_user.department.id) \
+                    .filter(Users.role.in_(get_role_ids('leave_supervisor'))) \
+                    .filter(Users.status == True).all()
+                # Notification Generate and save in table
+                notify_ms = message_obj.notifications['leave_request_send']
+                notify_ms['message'] = notify_ms['message'].format(current_user.employee.name + ' ' + current_user.employee.lname)
+                notify_ms['message_english'] = notify_ms['message_english'].format(current_user.employee.name_english + ' ' + current_user.employee.lname_english)
+                notify_ms['url'] = notify_ms['url'].format(leave.id)
+                for emp in employees:
+                    push_notification(emp.id, notify_ms, notify_ms['url'])
+
                 flash(message_obj.leave_request_sent[session['language']], 'success')
             else:
                 flash(message_obj.leave_request_not_sent[session['language']], 'error')
@@ -650,8 +664,7 @@ def leave_supervisor():
     if not check_access('leave_supervisor'):
         return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
-    position_history = current_user.employee.position_history.order_by(Position_history.status.asc()).first()
-    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == position_history.department_id).distinct()
+    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == current_user.department.id).distinct()
     
     leave_supervisor = Leave_form.query \
         .filter(Leave_form.emp_id.in_(emps)) \
