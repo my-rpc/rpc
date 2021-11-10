@@ -381,7 +381,7 @@ def add_loan_request(loan_form, emp_id):
             requested_at=datetime.datetime.now())
         db.session.add(loan)
         db.session.commit()
-        return "success"
+        return loan
     except IOError as io:
         return 'error'
 
