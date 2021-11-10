@@ -1322,27 +1322,6 @@ def resign_request():
         title=translation_obj.forms[session['language']], form=resign_form,
         language=session['language'])
 
-@app.route('/add_equipment', methods=["GET", "POST"])
-@login_required
-def add_equipment():
-    if not check_access('add_equipment'):
-        return redirect(url_for('access_denied'))
-    emp_id = request.args.get("emp_id")
-    form = AddEquipmentForm()
-    all_equipment = ""
-    if request.method == "GET":
-        all_equipment = Equipment.query.all()
-    if request.method == "POST":
-        result = assign_equipment(request, emp_id)
-        if result == "success":
-            flash(message_obj.equipment_added[session['language']], 'success')
-        else:
-            flash(message_obj.equipment_not_added[session['language']], 'error')
-        return redirect(request.referrer)
-    return render_template('add_equipment.html', emp_id=emp_id,
-        title=translation_obj.forms[session['language']], form=form, all_equipment=all_equipment,
-        language=session['language'])
-
 @app.route('/emp_resign_request', methods=["GET", "POST"])
 @login_required
 def emp_resign_request():
@@ -1353,26 +1332,7 @@ def emp_resign_request():
         (Resign_form.emp_id == Employees.id)).all()
 
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
-                           title=translation_obj.employee_forms[session['language']], language=session['language'],
-                        )
-
-@app.route("/department_setting", methods=['GET', 'POST'])
-@login_required
-def department_setting():
-    if not check_access('department_setting'):
-        return redirect(url_for('access_denied'))
-    department_form = departmentForm(session['language'])
-    departments = Departments.query.all()
-    if request.method == 'POST':
-        department = send_department(department_form)
-        if department == "success":
-            flash(message_obj.add_department[session['language']], 'success')
-        else:
-            flash(message_obj.add_department_not[session['language']], 'error')
-        return redirect(request.referrer)
-    return render_template('department_setting.html', form=department_form, departments=departments,
-        title=translation_obj.forms[session['language']], language=session['language'])
-
+        title=translation_obj.employee_forms[session['language']], language=session['language'])
 
 @app.route("/holiday", methods=['GET', 'POST'])
 @login_required
@@ -1516,11 +1476,6 @@ def process_attendance_file(attendance_id):
     except IOError as exc:
         flash(message_obj.attendance_file_not_processed[session['language']], 'error')
     return redirect(url_for('attendance_file'))
-
-@app.route("/position_setting", methods=['GET', 'POST'])
-@login_required
-def position_setting():
-    return render_template('position_setting.html', language=session['language'])
 
 @app.route("/my_equipment", methods=['GET'])
 @login_required
