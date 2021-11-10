@@ -1,4 +1,4 @@
-from rpc_package import translation_obj, message_obj
+from rpc_package import translation_obj, message_obj, notification_msg
 
 
 def update_messages_user(form_obj, language):

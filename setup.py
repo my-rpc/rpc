@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.9.3'
-DESCRIPTION = 'leave_request_generate_notification, version 0.9.3v in send of leave request generate notification message for all employee has access and the same department'
+VERSION = '0.9.4'
+DESCRIPTION = 'leave_requset_notificaiton, version 0.9.4v the notificaiton message json file seprated and issue fixed for leave requset notificaiton'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

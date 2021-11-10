@@ -10,7 +10,7 @@ from sqlalchemy import or_
 
 pymysql.install_as_MySQLdb()
 
-from rpc_package.read_tran_message import Translation, MessagePull, UserAccess
+from rpc_package.read_tran_message import Translation, MessagePull, UserAccess, NotificationMessage
 
 app = Flask(__name__)
 config_path = os.path.dirname(__file__)
@@ -24,6 +24,7 @@ db = SQLAlchemy(app)
 translation_obj = Translation(os.path.join(config_path, 'config/english_dari_translation.json'))
 message_obj = MessagePull(os.path.join(config_path, 'config/messages.json'))
 user_access = UserAccess(os.path.join(config_path, 'config/user_access.json'))
+notification_msg = NotificationMessage(os.path.join(config_path, 'config/notifications_message.json'))
 pass_crypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
