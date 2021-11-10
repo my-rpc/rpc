@@ -6,8 +6,6 @@ import os
 import jdatetime, datetime
 from rpc_package import user_access
 from flask_login import current_user
-import pandas as pd
-import numpy as np
 
 class EmployeeValidator:
 
