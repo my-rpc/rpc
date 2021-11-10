@@ -1,0 +1,348 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.overtime[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    #start_date-icon,#end_date-icon {
+        cursor: pointer;
+    }
+    .border-radius-dari{
+        border-left: none;
+        border-radius: 0 0.25rem 0.25rem 0 !important;
+    }
+    .ui-menu.ui-autocomplete {
+        z-index: 3000;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section>
+  <div class="asign_equipment">
+    <div class="box">
+      <div class="box-header with-border py-2">
+        <h4 class="box-title text-primary mt-3 font-weight-bold float-left">{{translation.list_of_equipment_assign[language]}}</h4>
+      
+        <button
+          type="button"
+          class="btn btn-info m-2 float-right"
+          title="{{translation.add_holiday[language]}}"
+          onclick="openAddModel()"
+        >
+        <i class="fa fa-plus"></i>
+        {{translation.assign[language]}}
+      </button>
+      </div>
+      <div class="box-body">
+        <form method="GET" , action="">
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label class="form-control-label" for="employee">{{translation.employee[language]}}</label>
+              <input type="text" value="{{request.args.get('employee_id') if request.args.get('employee_id') != None}}" id="emp_filter_autocomplete" class="form-control form-control-lg ui-autocomplete-input" autocomplete="off">
+              <small class="text-danger" id="employee-filter-guide"></small>
+              <input id="employee-filter" name="employee_id" value="{{request.args.get('employee_id') if request.args.get('employee_id') != None}}" type="hidden">
+            </div>
+            <div class="form-group  col-md-4">
+              <label class="form-control-label" for="status">{{translation.record_status[language]}}</label>
+              <select class="form-control form-control-lg" id="status" name="status">
+                <option selected value="all">{{translation.all[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == 'None' }} value="None">{{translation.pending_for_confirm[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == '0' }} value="0">{{translation.confirmed[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == '1' }} value="1">{{translation.submitted[language]}}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <div class="mt-3 pt-2">
+                <button type="submit" class="btn btn-primary mt-2">
+                  <i class="fa fa-filter"></i> {{translation.filter[language]}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="table-responsive">
+          <table class="table table-hover" id="overitme_list">
+            <tr>
+              <th>#</th>
+              <th>{{translation.name[language]}}</th>
+              <th>{{translation.serial[language]}}</th>
+              <th>{{translation.employee_id[language]}}</th>
+              <th>{{translation.name_and_last_name[language]}}</th>
+              <th>{{translation.taken_date[language]}}</th>
+              <th>{{translation.record_status[language]}}</th>
+              <th>{{translation.submission_date[language]}}</th>
+              <!-- <th>{{translation.file[language]}}</th> -->
+            </tr>
+            {% for item in emp_equipments.items %}
+            <tr>
+                <td>{{ (emp_equipments.page -1) * emp_equipments.per_page +  emp_equipments.items.index(item)+1 }}</td>
+                <td>
+                  {% if item.equipment %}
+                    {{ item.equipment.name_english if language == 'en' else item.equipment.name }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.equipment %}
+                    {{ item.equipment.serial }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.employee %}
+                    {{ item.employee.id }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.employee %}
+                    {{ item.employee.name_english + ' ' + item.employee.lname_english if language == 'en' else item.employee.name + ' ' + item.employee.lname }}
+                  {% endif %}
+                </td>
+                <td style="white-space:nowrap">{{ to_jalali(item.taken_date) }}</td>
+                <td>
+                  {% if item.status == None %}
+                  <span class="badge badge-pill badge-warning">{{translation.pending_for_confirm[language]}}</span>
+                  {% elif item.status == False %}
+                  <span class="badge badge-pill badge-info">{{translation.confirmed[language]}}</span>
+                  {% elif item.status == True %}
+                  <span class="badge badge-pill badge-success">{{translation.submitted[language]}}</span>
+                  {% endif %}
+                </td>
+                <td style="white-space:nowrap">
+                  {% if item.status == True %}
+                    {{ to_jalali(item.return_date) }}
+                  {% else %}
+                    <a href="javascript:void(0)"
+                      class="btn btn-info mx-2"
+                      onclick="submissionOpenModel('{{item.id}}')"
+                    >
+                      {{translation.surrender[language]}}
+                    </a>
+                  {% endif %}
+                </td>
+                <!-- <td>
+                  {% if item.file_url %}
+                    <a href="download_equipment_file/{{item.id}}" class="btn btn-xs">
+                      <button type="button" class="waves-effect waves-light btn btn-xs btn-circle btn-info">
+                        <i class="fa fa-download"></i>
+                      </button>
+                    </a>
+                  {% endif %}
+                </td> -->
+              </tr>
+              {% endfor %}
+          </table>
+        </div>
+
+        {% if emp_equipments.pages > 1 %}
+        <div class="row">
+          <div class="col-md-10">
+            <nav aria-label="Page navigation col-md-8 ">
+              <ul class="pagination">
+                <li class="page-item">
+                  <a
+                    class="{{ 'border-radius-dari' if language == 'dari' else 'border-radius-en' }} waves-effect waves-light btn btn-outline btn-rounded btn-info-light mb-5"
+                    href="{{'#' if emp_equipments.page == 1 else url_for('emp_equipment', page=emp_equipments.page-1, status=request.args.get('status'), employee_id=request.args.get('employee_id'))}}"
+                    aria-label="Previous"
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+                {% for page in emp_equipments.iter_pages(left_edge=2, right_edge=2) %}
+                  {% if page %}
+                  <li class="page-item">
+                    <a
+                      class="waves-effect waves-light btn btn-rounded {{'btn-info' if emp_equipments.page == page else 'btn-outline btn-info-light'}} mb-5"
+                      href="{{url_for('emp_equipment', page=page, status=request.args.get('status'), employee_id=request.args.get('employee_id') )}}"
+                    >{{ page }}</a>
+                  </li>
+                  {% else %}
+                    ...
+                  {% endif %}
+                {% endfor %}
+                <li class="page-item">
+                  <a
+                    class="{{ 'border-radius-en' if language == 'dari' else 'border-radius-dari' }} waves-effect waves-light btn btn-outline btn-rounded btn-info-light mb-5"
+                    href="{{'#' if emp_equipments.page == emp_equipments.pages else url_for('emp_equipment', page=emp_equipments.page+1, status=request.args.get('status'), employee_id=request.args.get('employee_id'))}}"
+                    aria-label="Next"
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="col-md-2">
+            <div class="bg-secondary p-3 font-weight-bold" style="border-radius: 5px;">
+                {{translation.total[language]}}: {{ emp_equipments.total }}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+<!-- adding new user modal start -->
+<div class="modal fade add_equipment_modal" tabindex="-1" role="dialog" aria-labelledby="add_equipment_modal_label" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title text-primary" id="add_equipment_modal_label">
+                  {{translation.assign_equipment[language]}}
+              </h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+              <!--   Action="" is used to confirm to route to the same page.     -->
+              <form method="POST", action="" id="assign_equipment" enctype="multipart/form-data">
+                  {{ form.hidden_tag()}}
+                  <fieldset class="form-group row">
+                      <div class="form-group col-md-6">
+                          {{ form.employee.label(class="form-control-label")}}
+                          <input name="emp_autocomplete" type="text" id="emp_autocomplete" class="form-control form-control-lg"/>
+                          <small class="text-danger" id="employee-guide"></small>
+                          {{ form.employee(type="hidden")}}
+                      </div>
+                      <div class="form-group col-md-6">
+                          {{ form.equipment.label(class="form-control-label")}}
+                          <input name="equip_autocomplete" type="text" id="equip_autocomplete" class="form-control form-control-lg"/>
+                          <small class="text-danger" id="equipment-guide"></small>
+                          {{ form.equipment(type="hidden")}}
+                      </div>
+                  </fieldset>
+                  <div class="form-group">
+                      {{form.submit(class="btn btn-primary")}}
+                  </div>
+                  
+              </form>
+          </div>
+          
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- updating user modal start -->
+<div class="modal fade submission_equipment_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title text-primary" id="myLargeModalLabel">
+                {{message_obj.equipment_confirm_message[language]}}
+              </h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+          <div class="modal-body">
+            <!--   Action="" is used to confirm to route to the same page.     -->
+            <form method="POST", action="surrender_equipment" id="surrender_equipment" enctype="multipart/form-data">
+              {{ surrender_form.hidden_tag()}}
+              <input type="hidden" name="id" id="id" />
+              <fieldset class="form-group row">
+               
+              </fieldset>
+              <div class="form-group">
+                  {{surrender_form.submit(class="btn btn-primary", value=translation.confirm[language] )}}
+                  <button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
+              </div>
+            </form>
+          </div>
+      </div>
+      <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+<script src="{{url_for('static', filename='js/jquery_ui.js')}}"></script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            var message = JSON.parse('{{ message | tojson | safe}}');
+            if("{{category}}" == "success")
+                toastSuccess(message)
+            else
+                toastError(formValidationDisplay(message))
+        }); 
+        
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+<script>
+    $(document).ready(function() {
+
+      $("#emp_autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('user_autocomplete')}}",{q: request.term, all: true}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#employee-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#employee').val(ui.item.value);
+        }
+      });
+
+      $("#emp_filter_autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('user_autocomplete')}}",{q: request.term, all: true}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#employee-filter-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#employee-filter').val(ui.item.value);
+        }
+      });
+
+      $("#equip_autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('equipment_autocomplete')}}",{q: request.term}, function(data) {
+                response(data.result); // matching_results from jsonify
+                $('#equipment-guide').html(data.message);
+            });
+        },
+        delay: 200,
+        select: function(event, ui) {
+            // prevent autocomplete from updating the textbox
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#equipment').val(ui.item.value);
+        }
+      });
+
+      $('#emp_filter_autocomplete').on('input', function (e) {
+        if (e.target.value == '') {
+          $('#employee-filter').val('');
+        }
+      });
+
+      submissionOpenModel = function(id){
+        $('#surrender_equipment > input#id').val(id);
+        $('.submission_equipment_modal').modal('show');
+      }
+
+      openAddModel = function (e) {
+        $('.add_equipment_modal').modal('show');
+      }
+
+    });
+        
+</script>
+
+{% endblock js_code %}

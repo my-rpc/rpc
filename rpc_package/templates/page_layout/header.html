@@ -39,64 +39,43 @@
         <li class="dropdown notifications-menu">
           <a href="#" class="waves-effect waves-light dropdown-toggle" data-toggle="dropdown" title="{{translation.notification[language] }}">
             <i class="icon-Notifications"><span class="path1"></span><span class="path2"></span></i>
+          {% if current_user.notifications|length > 99 %}
+            <sup style="top: -1.2em;" class="{{ 'badge-left-en' if language == 'en' else 'badge-left-dari'}}">
+              <span style="font-size: 9px" class="badge badge-pill badge-primary">99+</span>
+            </sup>
+          {% elif current_user.notifications|length > 0 %}
+            <sup style="top: -1.2em;" class="{{ 'badge-left-en' if language == 'en' else 'badge-left-dari'}}">
+              <span style="font-size: 9px" class="badge badge-pill badge-primary">{{current_user.notifications|length}}</span>
+            </sup>
+          {% endif %}
           </a>
-          <ul class="dropdown-menu animated bounceIn">
+          <ul class="dropdown-menu animated bounceIn {{ 'text-left' if language == 'en' else 'text-right' }}" style="min-width: 300px !important;">
 
             <li class="header">
               <div class="p-20">
-                  <div class="flexbox">
-                      <div>
-                          <h4 class="mb-0 mt-0">{{translation.notification[language] }}</h4>
-                      </div>
-                      <div>
-                          <a href="#" class="text-danger">{{translation.clear_all[language] }}</a>
-                      </div>
-                  </div>
+                <h4 class="my-0">{{translation.notification[language]}}</h4>
               </div>
             </li>
 
             <li>
               <!-- inner menu: contains the actual data -->
-              <ul class="menu sm-scrol">
+              <ul class="menu md-scrol" style="max-height: 320px !important;">
+                {% if current_user.notifications | length > 0 %}
+                {% for item in current_user.notifications %}
                 <li>
-                  <a href="#">
-                    <i class="fa fa-users text-info"></i> Curabitur id eros quis nunc suscipit blandit.
+                  <a href="/read_notification/{{item.id}}">
+                    {{item.message_english if language == 'en' else item.message }}
                   </a>
                 </li>
+                {% endfor %}
+                {% else %}
                 <li>
-                  <a href="#">
-                    <i class="fa fa-warning text-warning"></i> Duis malesuada justo eu sapien elementum, in semper diam posuere.
+                  <a  style="text-align: center;">
+                    {{translation.notification_is_empty[language]}}
                   </a>
                 </li>
-                <li>
-                  <a href="#">
-                    <i class="fa fa-users text-danger"></i> Donec at nisi sit amet tortor commodo porttitor pretium a erat.
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i class="fa fa-shopping-cart text-success"></i> In gravida mauris et nisi
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i class="fa fa-user text-danger"></i> Praesent eu lacus in libero dictum fermentum.
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i class="fa fa-user text-primary"></i> Nunc fringilla lorem 
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i class="fa fa-user text-success"></i> Nullam euismod dolor ut quam interdum, at scelerisque ipsum imperdiet.
-                  </a>
-                </li>
+                {% endif %}
               </ul>
-            </li>
-            <li class="footer">
-                <a href="#">View all</a>
             </li>
           </ul>
         </li>	

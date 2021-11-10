@@ -1,10 +1,10 @@
 import os
 import jdatetime
-from rpc_package import db
+from rpc_package import db, user_access
 from rpc_package.rpc_tables import Users, User_roles, Documents, Employees, Phone, Emails, Districts, Provinces, \
     Contracts, Position_history, Salary, Overtime_form,  Resign_form, Contract_types, \
     Employee_equipment, Current_addresses, Permanent_addresses, Leave_form, Departments, \
-    Positions, Loan_form, Holiday, AttendanceFile, Equipment
+    Positions, Loan_form, Holiday, AttendanceFile, Equipment, Notification
 
 from flask import session
 import datetime
@@ -342,8 +342,9 @@ def add_leave_request(leave_form, emp_id):
                 end_datetime=to_gregorian(leave_form.end_datetime.data, '%Y-%m-%d %H:%M:%S'),
                 requested_at=datetime.datetime.now())
             db.session.add(leave)
+        db.session.flush()
         db.session.commit()
-        return "success"
+        return leave
     except IOError as io:
         return 'error'
 
@@ -363,8 +364,9 @@ def add_overtime_request(overtime_form, emp_id):
             description=overtime_form.description.data,
             requested_at=datetime.datetime.now())
         db.session.add(overtime)
+        db.session.flush()
         db.session.commit()
-        return "success"
+        return overtime
     except IOError as io:
         return 'error'
 
@@ -404,6 +406,55 @@ def add_new_equipment(equipment_form):
             serial=equipment_form.serial.data,
             category=equipment_form.category.data)
         db.session.add(equipment)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+def add_employee_equipment(equipment_form):
+    try:
+        # if equipment_form.file_url.data:
+        #     request_file = equipment_form.file_url.data
+        #     request_file.filename = f"{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}-equipment." + request_file.filename.rsplit('.', 1)[1]
+        #     path = "./rpc_package/static/files/equipments/"
+        #     if not os.path.exists(path):
+        #         os.makedirs(path)
+        #     path = os.path.join(path, request_file.filename)
+        #     request_file.save(path)
+        equipment = Equipment.query.get(equipment_form.equipment.data)
+        equipment.in_use = True
+        # file_url=f"/static/files/equipments/" + request_file.filename if equipment_form.file_url.data else None,
+        emp_equipment = Employee_equipment(
+            emp_id=equipment_form.employee.data,
+            equipment_id=equipment_form.equipment.data,
+            taken_date=datetime.date.today(),
+            created_by=current_user.emp_id,
+            created_at=datetime.datetime.today())
+        db.session.add(emp_equipment)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+
+def surrender_equipment_update(equipment_form):
+    try:
+        emp_equipment = Employee_equipment.query.get(equipment_form.id.data)
+        # if equipment_form.file_url.data:
+        #     request_file = equipment_form.file_url.data
+        #     request_file.filename = f"{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}-equipment-{emp_equipment.id}." + request_file.filename.rsplit('.', 1)[1]
+        #     path = "./rpc_package/static/files/equipments/"
+        #     if not os.path.exists(path):
+        #         os.makedirs(path)
+        #     path = os.path.join(path, request_file.filename)
+        #     request_file.save(path)
+        #     if emp_equipment.file_url:
+        #         old_file_path = './rpc_package' + emp_equipment.file_url
+        #         if os.path.exists(old_file_path):
+        #             os.remove(old_file_path)
+        emp_equipment.equipment.in_use = False
+        emp_equipment.return_date = datetime.date.today()
+        emp_equipment.status = True
+        # emp_equipment.file_url =f"/static/files/equipments/" + request_file.filename if equipment_form.file_url.data else None,
         db.session.commit()
         return "success"
     except IOError as io:
@@ -672,3 +723,28 @@ def accept_reject_resign(request):
         return "success"
     except IOError as io:
         return 'error'
+def push_notification(emp_id, message, url):
+    try:
+        new_notification = Notification(
+            emp_id=emp_id,
+            message=message['message'],
+            message_english=message['message_english'],
+            url=url,
+            read=0)
+        db.session.add(new_notification)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
+    
+def get_role_ids(route_name=''):
+    user_roles = User_roles.query.all()
+    result = []
+    for role in user_roles:
+        roles = getattr(user_access, role.name_english) + getattr(user_access, "Employee")
+        if role.name_english == 'Admin':
+            roles += getattr(user_access, "Manager")
+        if isinstance(roles, list) :
+            if (route_name in roles):
+                result.append(role.id)
+    return result

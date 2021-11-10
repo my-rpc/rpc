@@ -16,7 +16,14 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery_ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/skin_color.css')}}">
-
+    <style>
+        .badge-left-en{
+            left: -1em;
+        }
+        .badge-left-dari{
+            left: 1em;
+        }
+    </style>
     <!-- this block is for css or js code if needed at the begining of page  -->
     {% block css_or_js_code %}{% endblock %}
 
@@ -83,7 +90,7 @@
     $(document).ready(function() {
         var hash = window.location.hash;
     
-        if (hash == "#change-pass"){
+        if (hash == "#change-pass" || hash == "#contract"){
             $('#tabs a[href="' + hash + '"]').tab('show');
         }
         else

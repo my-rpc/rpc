@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, jsonify, flash, session
+from flask import render_template, url_for, redirect, request, jsonify, flash, session, send_file
 from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
@@ -7,20 +7,22 @@ from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVF
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
     OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm, ChangePassForm, \
-    EquipmentForm
+    EquipmentForm, AssignEquipmentForm, SurrenderEquipmentForm
 
 from rpc_package.form_dynamic_language import *
 
 from rpc_package.rpc_tables import Users, Employees, Documents, User_roles, Permanent_addresses, Current_addresses, \
     Contracts, Contract_types, Positions, Position_history, Salary, Employee_equipment, \
     Departments, Overtime_form, Districts, Equipment, Resign_form, Emails, Phone, Provinces, Leave_form, \
-    Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile, Equipment
+    Loan_form, Overtime_reason, Leave_reason, Holiday, AttendanceFile, Equipment, Notification
 from rpc_package.utils import EmployeeValidator, message_to_client_403, message_to_client_200, \
     to_gregorian, to_jalali, check_access, get_last_date_of_month
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
-    add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, send_resign_request,\
-    update_employee_data, set_emp_update_form_data, add_leave_request, send_resign_request, send_department, \
-    add_loan_request, accept_equipment, accept_reject_resign, add_holiday, add_attendance, add_new_equipment
+    add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, \
+    send_resign_request, update_employee_data, set_emp_update_form_data, add_leave_request, \
+    send_resign_request, send_department, add_loan_request, accept_equipment, accept_reject_resign, \
+    add_holiday, add_attendance, add_new_equipment, add_employee_equipment, surrender_equipment_update, \
+    push_notification, get_role_ids
 import os
 import datetime
 import jdatetime
@@ -128,6 +130,9 @@ def reset_user_password():
             sel_user = Users.query.get(user_id)
             sel_user.password = hashed_pass
             db.session.commit()
+            # Notification Generate and save in table
+            notify_ms = notification_msg.reset_user_password
+            push_notification(sel_user.emp_id, notify_ms, notify_ms['url'])
         except IOError as exc:
             return message_to_client_403(message_obj.create_new_user_update_not[session['language']])
         return message_to_client_200("Password has been reset")
@@ -494,9 +499,11 @@ def add_contract():
             if con_startdate:
                 flash({'contract_status':[message_obj.active_contract_message[session['language']] ]}, 'error')
                 return redirect(request.referrer)
-
             contract = add_contract_form(contract_form)
             if contract == "success":
+                # Notification Generate and save in table
+                notify_ms = notification_msg.add_new_contract
+                push_notification(contract_form.emp_id.data, notify_ms, notify_ms['url'])
                 flash(message_obj.contract_added[session['language']].format(emp_id), 'success')
                 # TODO show msg to page
                 return redirect(url_for('contract_settings'))
@@ -610,7 +617,21 @@ def leave_request():
     if request.method == 'POST':
         if leave_form.validate_on_submit():
             leave = add_leave_request(leave_form, current_user.emp_id)
-            if leave == "success":
+            if leave != "error":
+                # Get the list of employee for generating the notification
+                employees = db.session.query(Employees.id).join(Position_history, Position_history.emp_id == Employees.id) \
+                    .join(Users, Users.emp_id == Employees.id) \
+                    .filter(Position_history.department_id==current_user.department.id) \
+                    .filter(Users.role.in_(get_role_ids('leave_supervisor'))) \
+                    .filter(Users.status == True).all()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.leave_request_send.copy()
+                notify_ms['message'] = notify_ms['message'].format(current_user.employee.name + ' ' + current_user.employee.lname)
+                notify_ms['message_english'] = notify_ms['message_english'].format(current_user.employee.name_english + ' ' + current_user.employee.lname_english)
+                notify_ms['url'] = notify_ms['url'].format(leave.id)
+                for emp in employees:
+                    push_notification(emp.id, notify_ms, notify_ms['url'])
+
                 flash(message_obj.leave_request_sent[session['language']], 'success')
             else:
                 flash(message_obj.leave_request_not_sent[session['language']], 'error')
@@ -643,8 +664,7 @@ def leave_supervisor():
     if not check_access('leave_supervisor'):
         return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
-    position_history = current_user.employee.position_history.order_by(Position_history.status.asc()).first()
-    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == position_history.department_id).distinct()
+    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == current_user.department.id).distinct()
     
     leave_supervisor = Leave_form.query \
         .filter(Leave_form.emp_id.in_(emps)) \
@@ -676,9 +696,25 @@ def leave_supervisor_view(leave_id):
                     )
                     db.session.add(leave_reason)
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.supervisor_leave_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['supervisor'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['supervisor'] == '1' else 'rejected')
+                push_notification(leave_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['supervisor'] == '0':
                     flash(message_obj.leave_request_rejected[session['language']], 'success')
                 else:
+                    # Get the list of employee for generating the notification for all user have access in leave_hr route
+                    users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                        .filter(Users.role.in_(get_role_ids('leave_hr'))) \
+                        .filter(Users.status == True).all()
+                    # Notification Generate and save in table
+                    notify_ms = notification_msg.supervisor_leave_request_hr.copy()
+                    notify_ms['message'] = notify_ms['message'].format(leave_form.employee.name + ' ' + leave_form.employee.lname)
+                    notify_ms['message_english'] = notify_ms['message_english'].format(leave_form.employee.name_english + ' ' + leave_form.employee.lname_english)
+                    notify_ms['url'] = notify_ms['url'].format(leave_form.id)
+                    for user in users:
+                        push_notification(user.emp_id, notify_ms, notify_ms['url'])
                     flash(message_obj.leave_request_accepted[session['language']], 'success')
             except IOError as exc:
                 flash(exe, 'error')
@@ -719,6 +755,11 @@ def leave_hr_view(leave_id):
                 leave_form.hr_id = current_user.emp_id
                 leave_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.hr_leave_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['hr'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['hr'] == '1' else 'rejected')
+                push_notification(leave_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['hr'] == '0':
                     flash(message_obj.leave_request_rejected[session['language']], 'success')
                 else:
@@ -759,7 +800,21 @@ def overtime_request():
     if request.method == 'POST':
         if overtime_form.validate_on_submit():
             overtime = add_overtime_request(overtime_form, current_user.emp_id)
-            if overtime == "success":
+            if overtime != "error":
+                # Get the list of employee for generating the notification
+                employees = db.session.query(Employees.id).join(Position_history, Position_history.emp_id == Employees.id) \
+                    .join(Users, Users.emp_id == Employees.id) \
+                    .filter(Position_history.department_id==current_user.department.id) \
+                    .filter(Users.role.in_(get_role_ids('overtime_supervisor'))) \
+                    .filter(Users.status == True).all()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.overtime_request_send.copy()
+                notify_ms['message'] = notify_ms['message'].format(current_user.employee.name + ' ' + current_user.employee.lname)
+                notify_ms['message_english'] = notify_ms['message_english'].format(current_user.employee.name_english + ' ' + current_user.employee.lname_english)
+                notify_ms['url'] = notify_ms['url'].format(overtime.id)
+                for emp in employees:
+                    push_notification(emp.id, notify_ms, notify_ms['url'])
+
                 flash(message_obj.overtime_request_sent[session['language']], 'success')
             else:
                 flash(message_obj.overtime_request_not_sent[session['language']], 'error')
@@ -792,8 +847,7 @@ def overtime_supervisor():
     if not check_access('overtime_supervisor'):
         return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
-    position_history = current_user.employee.position_history.order_by(Position_history.status.asc()).first()
-    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == position_history.department_id).distinct()
+    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == current_user.department.id).distinct()
     overtime_supervisor = Overtime_form.query \
         .filter(Overtime_form.emp_id.in_(emps)) \
         .order_by(Overtime_form.requested_at.desc()) \
@@ -824,9 +878,26 @@ def overtime_supervisor_view(overtime_id):
                     )
                     db.session.add(overtime_reason)
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.supervisor_overtime_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['supervisor'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['supervisor'] == '1' else 'rejected')
+                push_notification(overtime_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['supervisor'] == '0':
                     flash(message_obj.overtime_request_rejected[session['language']], 'success')
                 else:
+                    # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                    users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                        .filter(Users.role.in_(get_role_ids('overtime_hr'))) \
+                        .filter(Users.status == True).all()
+                    # Notification Generate and save in table
+                    notify_ms = notification_msg.supervisor_overtime_request_hr.copy()
+                    notify_ms['message'] = notify_ms['message'].format(overtime_form.employee.name + ' ' + overtime_form.employee.lname)
+                    notify_ms['message_english'] = notify_ms['message_english'].format(overtime_form.employee.name_english + ' ' + overtime_form.employee.lname_english)
+                    notify_ms['url'] = notify_ms['url'].format(overtime_form.id)
+                    for user in users:
+                        push_notification(user.emp_id, notify_ms, notify_ms['url'])
+
                     flash(message_obj.overtime_request_accepted[session['language']], 'success')
             except IOError as exc:
                 flash(exc, 'error')
@@ -867,6 +938,11 @@ def overtime_hr_view(overtime_id):
                 overtime_form.hr_id = current_user.emp_id
                 overtime_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.hr_overtime_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['hr'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['hr'] == '1' else 'rejected')
+                push_notification(overtime_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['hr'] == '0':
                     flash(message_obj.overtime_request_rejected[session['language']], 'success')
                 else:
@@ -963,11 +1039,32 @@ def user_autocomplete():
     if session['language'] == 'en':
         name = Employees.name_english
         lname = Employees.lname_english
-    employees = db.session.query(Employees.id, name, lname) \
-        .filter(~Employees.users.any()) \
-        .filter(Employees.position_history.any(status=1)) \
-        .filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
+    if request.args.get('all'):
+        employees = db.session.query(Employees.id, name, lname) \
+            .filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
+    else:
+        employees = db.session.query(Employees.id, name, lname) \
+            .filter(~Employees.users.any()) \
+            .filter(Employees.position_history.any(status=1)) \
+            .filter((Employees.id.like('%' + str(search) + '%') | Employees.name.like('%' + str(search) + '%') | Employees.lname.like('%' + str(search) + '%') | Employees.name_english.like('%' + str(search) + '%') | Employees.lname_english.like('%' + str(search) + '%')))
+
     result = [({'value': mv[0], 'label': mv[0] + ' ' + mv[1] + ' ' + mv[2]}) for mv in employees.limit(10).all()]
+    message = ''
+    if not result :
+        message = translation_obj.not_found[session['language']]
+    return jsonify(result = result, message = message)
+
+@app.route('/equipment_autocomplete', methods=['GET'])
+@login_required
+def equipment_autocomplete():
+    search = request.args.get('q')
+    name = Equipment.name
+    if session['language'] == 'en':
+        name = Equipment.name_english
+    employees = db.session.query(Equipment.id, name, Equipment.model, Equipment.serial) \
+        .filter_by(in_use=0) \
+        .filter((Equipment.name.like('%' + str(search) + '%') | Equipment.name_english.like('%' + str(search) + '%') | Equipment.serial.like('%' + str(search) + '%')))
+    result = [({'value': mv[0], 'label': mv[1] + '-' + mv[2] + '  (' + mv[3] + ')' }) for mv in employees.limit(10).all()]
     message = ''
     if not result :
         message = translation_obj.not_found[session['language']]
@@ -1349,26 +1446,33 @@ def process_attendance_file(attendance_id):
 def position_setting():
     return render_template('position_setting.html', language=session['language'])
 
-@app.route("/my_equipment", methods=['GET', 'POST'])
+@app.route("/my_equipment", methods=['GET'])
 @login_required
 def my_equipment():
     if not check_access('my_equipment'):
         return redirect(url_for('access_denied'))
     form = AcceptEquipmentForm()
     if request.method == "GET":
-        my_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
-            (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == None).all()
-    received_equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
-        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==current_user.emp_id, Employee_equipment.received == True, Employee_equipment.delivered == None).all()
+        my_equipment = Employee_equipment.query \
+            .filter_by(emp_id=current_user.emp_id) \
+            .order_by(Employee_equipment.id.desc()).all()
+    return render_template('my_equipment.html', form=form, my_equipment=my_equipment, language=session['language'])
 
-    if request.method == "POST":
-        result = accept_equipment(request, "employee")
-        if result == "success":
-            flash(message_obj.add_department[session['language']], 'success')
-        else:
-            flash(message_obj.add_department_not[session['language']], 'error')
-        return redirect(request.referrer)
-    return render_template('my_equipment.html', form=form, received_equipment=received_equipment, my_equipment=my_equipment, language=session['language'])
+@app.route("/recieved_equipment/<int:equipment_id>", methods=['GET'])
+@login_required
+def recieved_equipment(equipment_id):
+    if not check_access('recieved_equipment'):
+        return redirect(url_for('access_denied'))
+    if request.method == "GET":
+        try:
+            emp_equipment = Employee_equipment.query.get(equipment_id)
+            if emp_equipment.emp_id == current_user.emp_id:
+                emp_equipment.status = False
+                db.session.commit()
+            flash(message_obj.equipment_confirm[session['language']], 'success')
+        except IOError as exc:
+            flash(message_obj.equipment_not_confirm[session['language']], 'error')
+    return redirect(url_for('my_equipment'))
 
 @app.route("/equipment", methods=['GET', 'POST'])
 @login_required
@@ -1377,7 +1481,12 @@ def equipment():
         return redirect(url_for('access_denied'))
     equipment_form = EquipmentForm(session['language'])
     if request.method == "GET":
-        equipments = Equipment.query.all()
+        status = request.args.get('status')
+        page = request.args.get('page') if request.args.get('page') else 1
+        equipments = Equipment.query.order_by(Equipment.id.desc())
+        if status == '0' or status == '1' :
+            equipments = equipments.filter(Equipment.in_use==status)
+        equipments = equipments.paginate(per_page=15,page=int(page),error_out=True)
 
     if request.method == 'POST':
         if equipment_form.validate_on_submit():
@@ -1388,8 +1497,8 @@ def equipment():
         else:
             flash(equipment_form.errors)
         return redirect(url_for('equipment'))
-    return render_template('equipment.html', form=equipment_form, equipments=equipments,
-        title=translation_obj.forms[session['language']], language=session['language'])
+    return render_template('equipment.html', form=equipment_form, equipments=equipments, Employee_equipment=Employee_equipment,
+        title=translation_obj.forms[session['language']], language=session['language'], request=request)
 
 @app.route("/delete_equipment/<int:equipment_id>", methods=['GET'])
 @login_required
@@ -1439,6 +1548,68 @@ def update_equipment():
             flash(equipment_form.errors)
     return redirect(url_for('equipment'))
 
+@app.route("/emp_equipment", methods=['GET', 'POST'])
+@login_required
+def emp_equipment():
+    if not check_access('emp_equipment'):
+        return redirect(url_for('access_denied'))
+    assign_equipment_form = AssignEquipmentForm(session['language'])
+    surrender_equipment_form = SurrenderEquipmentForm(session['language'])
+    if request.method == "GET":
+        status = request.args.get('status')
+        employee_id = request.args.get('employee_id')
+        page = request.args.get('page') if request.args.get('page') else 1
+        emp_equipments = Employee_equipment.query \
+            .order_by(Employee_equipment.id.desc())
+        if status == '0' or status == '1' or status == 'None':
+            if status == 'None':
+                status = None
+            emp_equipments = emp_equipments.filter(Employee_equipment.status==status)
+        if employee_id != '' and employee_id != None:
+            emp_equipments = emp_equipments.filter(Employee_equipment.emp_id==employee_id)
+        emp_equipments = emp_equipments.paginate(per_page=15,page=int(page),error_out=True)
+
+    if request.method == 'POST':
+        if assign_equipment_form.validate_on_submit():
+            if add_employee_equipment(assign_equipment_form) == "success":
+                flash(message_obj.equipment_assigned[session['language']], 'success')
+            else:
+                flash(message_obj.equipment_not_assigned[session['language']], 'error')
+        else:
+            flash(assign_equipment_form.errors)
+        return redirect(url_for('emp_equipment'))
+    return render_template('emp_equipment.html', form=assign_equipment_form, emp_equipments=emp_equipments,
+        title=translation_obj.forms[session['language']], surrender_form=surrender_equipment_form, language=session['language'])
+
+@app.route("/surrender_equipment", methods=['POST'])
+@login_required
+def surrender_equipment():
+    if not check_access('surrender_equipment'):
+        return redirect(url_for('access_denied'))
+    if request.method == 'POST':
+        surrender_equipment_form = SurrenderEquipmentForm(session['language'])
+        if surrender_equipment_form.validate_on_submit():
+            if surrender_equipment_update(surrender_equipment_form) == "success":
+                flash(message_obj.equipment_surrender[session['language']], 'success')
+            else:
+                flash(message_obj.equipment_not_surrender[session['language']], 'error')
+        else:
+            flash(surrender_equipment_form.errors)
+        return redirect(url_for('emp_equipment'))
+
+@app.route("/download_equipment_file/<int:equipment_id>", methods=['GET'])
+@login_required
+def download_equipment_file(equipment_id):
+    if not check_access('download_equipment_file'):
+        return redirect(url_for('access_denied'))
+    if request.method == "GET":
+        try:
+            emp_equipment = Employee_equipment.query.get(equipment_id)
+            path = os.path.join('.' + emp_equipment.file_url)
+        except IOError as exc:
+            flash(message_obj.file_not_downloaded[session['language']], 'error')
+    return send_file(path, as_attachment=True)
+
 @app.route("/view_resign_request", methods=['GET', 'POST'])
 @login_required
 def view_resign_request():
@@ -1461,6 +1632,18 @@ def deliver_equipment():
         flash(message_obj.delivered[session['language']], 'success')
     else:
         flash(message_obj.not_delivered[session['language']], 'error')
+    return redirect(request.referrer)
+
+@app.route("/read_notification/<int:notification_id>", methods=['GET'])
+@login_required
+def read_notification(notification_id):
+    # if not check_access('read_notification'):
+    #     return redirect(url_for('access_denied'))
+    notification = Notification.query.filter_by(id=notification_id).first()
+    if notification.emp_id == current_user.emp_id:
+        notification.read = True
+        db.session.commit()
+        return redirect(notification.url)
     return redirect(request.referrer)
 
 @app.route("/accept_reject_resign_request", methods=['GET'])
