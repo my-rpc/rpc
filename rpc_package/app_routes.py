@@ -695,13 +695,11 @@ def leave_supervisor_view(leave_id):
                         reason = request.form['reason']
                     )
                     db.session.add(leave_reason)
-                    db.session.commit()
+                db.session.commit()
                 # Notification Generate and save in table
-                message = 'تایید کرده' if request.form['supervisor'] == '1' else 'رد کرده'
-                message_english = 'accepted' if request.form['supervisor'] == '1' else 'rejected'
                 notify_ms = notification_msg.supervisor_leave_request_employee.copy()
-                notify_ms['message'] = notify_ms['message'].format(message)
-                notify_ms['message_english'] = notify_ms['message_english'].format(message_english)
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['supervisor'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['supervisor'] == '1' else 'rejected')
                 push_notification(leave_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['supervisor'] == '0':
                     flash(message_obj.leave_request_rejected[session['language']], 'success')
@@ -758,11 +756,9 @@ def leave_hr_view(leave_id):
                 leave_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
                 # Notification Generate and save in table
-                message = 'تایید کرده' if request.form['hr'] == '1' else 'رد کرده'
-                message_english = 'accepted' if request.form['hr'] == '1' else 'rejected'
                 notify_ms = notification_msg.hr_leave_request_employee.copy()
-                notify_ms['message'] = notify_ms['message'].format(message)
-                notify_ms['message_english'] = notify_ms['message_english'].format(message_english)
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['hr'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['hr'] == '1' else 'rejected')
                 push_notification(leave_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['hr'] == '0':
                     flash(message_obj.leave_request_rejected[session['language']], 'success')
@@ -804,7 +800,21 @@ def overtime_request():
     if request.method == 'POST':
         if overtime_form.validate_on_submit():
             overtime = add_overtime_request(overtime_form, current_user.emp_id)
-            if overtime == "success":
+            if overtime != "error":
+                # Get the list of employee for generating the notification
+                employees = db.session.query(Employees.id).join(Position_history, Position_history.emp_id == Employees.id) \
+                    .join(Users, Users.emp_id == Employees.id) \
+                    .filter(Position_history.department_id==current_user.department.id) \
+                    .filter(Users.role.in_(get_role_ids('overtime_supervisor'))) \
+                    .filter(Users.status == True).all()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.overtime_request_send.copy()
+                notify_ms['message'] = notify_ms['message'].format(current_user.employee.name + ' ' + current_user.employee.lname)
+                notify_ms['message_english'] = notify_ms['message_english'].format(current_user.employee.name_english + ' ' + current_user.employee.lname_english)
+                notify_ms['url'] = notify_ms['url'].format(overtime.id)
+                for emp in employees:
+                    push_notification(emp.id, notify_ms, notify_ms['url'])
+
                 flash(message_obj.overtime_request_sent[session['language']], 'success')
             else:
                 flash(message_obj.overtime_request_not_sent[session['language']], 'error')
@@ -837,8 +847,7 @@ def overtime_supervisor():
     if not check_access('overtime_supervisor'):
         return redirect(url_for('access_denied'))
     page = request.args.get('page') if request.args.get('page') else 1
-    position_history = current_user.employee.position_history.order_by(Position_history.status.asc()).first()
-    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == position_history.department_id).distinct()
+    emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == current_user.department.id).distinct()
     overtime_supervisor = Overtime_form.query \
         .filter(Overtime_form.emp_id.in_(emps)) \
         .order_by(Overtime_form.requested_at.desc()) \
@@ -869,9 +878,26 @@ def overtime_supervisor_view(overtime_id):
                     )
                     db.session.add(overtime_reason)
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.supervisor_overtime_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['supervisor'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['supervisor'] == '1' else 'rejected')
+                push_notification(overtime_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['supervisor'] == '0':
                     flash(message_obj.overtime_request_rejected[session['language']], 'success')
                 else:
+                    # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                    users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                        .filter(Users.role.in_(get_role_ids('overtime_hr'))) \
+                        .filter(Users.status == True).all()
+                    # Notification Generate and save in table
+                    notify_ms = notification_msg.supervisor_overtime_request_hr.copy()
+                    notify_ms['message'] = notify_ms['message'].format(overtime_form.employee.name + ' ' + overtime_form.employee.lname)
+                    notify_ms['message_english'] = notify_ms['message_english'].format(overtime_form.employee.name_english + ' ' + overtime_form.employee.lname_english)
+                    notify_ms['url'] = notify_ms['url'].format(overtime_form.id)
+                    for user in users:
+                        push_notification(user.emp_id, notify_ms, notify_ms['url'])
+
                     flash(message_obj.overtime_request_accepted[session['language']], 'success')
             except IOError as exc:
                 flash(exc, 'error')
@@ -912,6 +938,11 @@ def overtime_hr_view(overtime_id):
                 overtime_form.hr_id = current_user.emp_id
                 overtime_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.hr_overtime_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['hr'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['hr'] == '1' else 'rejected')
+                push_notification(overtime_form.employee.id, notify_ms, notify_ms['url'])
                 if request.form['hr'] == '0':
                     flash(message_obj.overtime_request_rejected[session['language']], 'success')
                 else:

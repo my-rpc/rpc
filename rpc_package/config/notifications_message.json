@@ -28,5 +28,25 @@
     "message": "منابع بشری درخواست رخصتی شما را {} است",
     "message_english": "Human Resource {} your leave request",
     "url": "/leave_request"
+  },
+  "overtime_request_send" :{
+    "message": "{} یک درخواست اضافه کاری فرستاده است",
+    "message_english": "{} has a overtime request",
+    "url": "/overtime_supervisor/{}"
+  },
+  "supervisor_overtime_request_hr" :{
+    "message": "{} یک درخواست اضافه کاری فرستاده است",
+    "message_english": "{} has a overtime request",
+    "url": "/overtime_hr/{}"
+  },
+  "supervisor_overtime_request_employee" :{
+    "message": "مسئول بخش درخواست اضافه کاری شما را {} است",
+    "message_english": "Supervisor {} your overtime request",
+    "url": "/overtime_request"
+  },
+  "hr_overtime_request_employee" :{
+    "message": "منابع بشری درخواست اضافه کاری شما را {} است",
+    "message_english": "Human Resource {} your overtime request",
+    "url": "/overtime_request"
   }
 }

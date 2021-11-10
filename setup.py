@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.9.4'
-DESCRIPTION = 'leave_requset_notificaiton, version 0.9.4v the notificaiton message json file seprated and issue fixed for leave requset notificaiton'
+VERSION = '0.9.5'
+DESCRIPTION = 'overtime_requset_notificaiton, version 0.9.5v the notificaiton push applied for overtime requset'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''
