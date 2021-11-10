@@ -48,5 +48,50 @@
     "message": "منابع بشری درخواست اضافه کاری شما را {} است",
     "message_english": "Human Resource {} your overtime request",
     "url": "/overtime_request"
+  },
+  "loan_request_send_guarantor" :{
+    "message": "{} درخواست قرضه کرده است و شما به عنوان ضامن هستید",
+    "message_english": "{} has a loan request and you are as guarantor, ",
+    "url": "/loan_guarantor/{}"
+  },
+  "guarantor_loan_request_employee" :{
+    "message": "{} درخواست ضمانت برای  قرضه شما را {} است",
+    "message_english": "{} has been {} your loan request",
+    "url": "/loan_request"
+  },
+  "guarantor_loan_request_hr" :{
+    "message": "{} یک درخواست قرضه فرستاده است",
+    "message_english": "{} has a loan request",
+    "url": "/loan_hr/{}"
+  },
+  "hr_loan_request_employee" :{
+    "message": "منابع بشری درخواست قرضه شما را {} است",
+    "message_english": "Human Resource has been {} your loan request",
+    "url": "/loan_request"
+  },
+  "hr_loan_request_presidency" :{
+    "message": "{} یک درخواست قرضه فرستاده است",
+    "message_english": "{} has been send a loan request",
+    "url": "/loan_presidency/{}"
+  },
+  "presidency_loan_request_employee" :{
+    "message": "ریاست درخواست قرضه شما را {} است",
+    "message_english": "Presidency has been {} your loan request",
+    "url": "/loan_request"
+  },
+  "presidency_loan_request_finance" :{
+    "message": "{} یک درخواست قرضه فرستاده است",
+    "message_english": "{} has been send a loan request",
+    "url": "/loan_finance/{}"
+  },
+  "finance_loan_request_employee" :{
+    "message": "مدیریت مالی درخواست قرضه شما را {} است",
+    "message_english": "Finance has been {} your loan request",
+    "url": "/loan_request"
+  },
+  "finance_loan_request_presidency" :{
+    "message": "مدیریت مالی درخواست قرضه {} را {} است",
+    "message_english": "Finance has been {} loan request of {}",
+    "url": "/loan_presidency/{}"
   }
 }

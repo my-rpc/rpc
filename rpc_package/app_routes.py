@@ -992,7 +992,12 @@ def loan_request():
             loan_form.end_date.data = jdatetime.datetime.strftime(jdatetime.date(year, (month % 12), day), '%Y-%m-%d')
             # loan_form.end_date = loan_form.start_date
             loan = add_loan_request(loan_form, current_user.emp_id)
-            if loan == "success":
+            if loan != "error":
+                # Notification Generate and save in table
+                notify_ms = notification_msg.loan_request_send_guarantor.copy()
+                notify_ms['message'] = notify_ms['message'].format(loan.employee.name + ' ' + loan.employee.lname)
+                notify_ms['message_english'] = notify_ms['message_english'].format(loan.employee.name_english + ' ' + loan.employee.lname_english)
+                push_notification(loan.guarantor_id, notify_ms, notify_ms['url'].format(loan.id))
                 flash(message_obj.loan_request_sent[session['language']], 'success')
             else:
                 flash(message_obj.loan_request_not_sent[session['language']], 'error')
@@ -1097,9 +1102,28 @@ def loan_guarantor_view(loan_id):
                 loan_form.guarantor = bool(int(request.form['guarantor']))
                 loan_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.guarantor_loan_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'] \
+                    .format(loan_form.re_guarantor.name + ' ' + loan_form.re_guarantor.lname, 'تایید کرده' if request.form['guarantor'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'] \
+                    .format(loan_form.re_guarantor.name_english + ' ' + loan_form.re_guarantor.lname_english, 'accepted' if request.form['guarantor'] == '1' else 'rejected')
+                push_notification(loan_form.emp_id, notify_ms, notify_ms['url'])
                 if request.form['guarantor'] == '0':
                     flash(message_obj.loan_request_guarantor_rejected[session['language']], 'success')
                 else:
+                    # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                    users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                        .filter(Users.role.in_(get_role_ids('loan_hr'))) \
+                        .filter(Users.status == True).all()
+                    # Notification Generate and save in table
+                    notify_ms = notification_msg.guarantor_loan_request_hr.copy()
+                    notify_ms['message'] = notify_ms['message'].format(loan_form.employee.name + ' ' + loan_form.employee.lname)
+                    notify_ms['message_english'] = notify_ms['message_english'].format(loan_form.employee.name_english + ' ' + loan_form.employee.lname_english)
+                    notify_ms['url'] = notify_ms['url'].format(loan_form.id)
+                    for user in users:
+                        push_notification(user.emp_id, notify_ms, notify_ms['url'])
+
                     flash(message_obj.loan_request_guarantor_accepted[session['language']], 'success')
             except IOError as exc:
                 flash(message_obj.loan_request_guarantor_accepted[session['language']], 'error')
@@ -1137,9 +1161,26 @@ def loan_hr_view(loan_id):
                 loan_form.hr_id = current_user.emp_id
                 loan_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.hr_loan_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['hr'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['hr'] == '1' else 'rejected')
+                push_notification(loan_form.emp_id, notify_ms, notify_ms['url'])
                 if request.form['hr'] == '0':
                     flash(message_obj.loan_request_rejected[session['language']], 'success')
                 else:
+                    # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                    users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                        .filter(Users.role.in_(get_role_ids('loan_presidency'))) \
+                        .filter(Users.status == True).all()
+                    # Notification Generate and save in table
+                    notify_ms = notification_msg.hr_loan_request_presidency.copy()
+                    notify_ms['message'] = notify_ms['message'].format(loan_form.employee.name + ' ' + loan_form.employee.lname)
+                    notify_ms['message_english'] = notify_ms['message_english'].format(loan_form.employee.name_english + ' ' + loan_form.employee.lname_english)
+                    notify_ms['url'] = notify_ms['url'].format(loan_form.id)
+                    for user in users:
+                        push_notification(user.emp_id, notify_ms, notify_ms['url'])
+
                     flash(message_obj.loan_request_accepted[session['language']], 'success')
             except IOError as exc:
                 flash(message_obj.loan_request_accepted[session['language']], 'error')
@@ -1177,9 +1218,25 @@ def loan_presidency_view(loan_id):
                 loan_form.presidency_id = current_user.emp_id
                 loan_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.presidency_loan_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['presidency'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['presidency'] == '1' else 'rejected')
+                push_notification(loan_form.emp_id, notify_ms, notify_ms['url'])
                 if request.form['presidency'] == '0':
                     flash(message_obj.loan_request_rejected[session['language']], 'success')
                 else:
+                    # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                    users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                        .filter(Users.role.in_(get_role_ids('loan_finance'))) \
+                        .filter(Users.status == True).all()
+                    # Notification Generate and save in table
+                    notify_ms = notification_msg.presidency_loan_request_finance.copy()
+                    notify_ms['message'] = notify_ms['message'].format(loan_form.employee.name + ' ' + loan_form.employee.lname)
+                    notify_ms['message_english'] = notify_ms['message_english'].format(loan_form.employee.name_english + ' ' + loan_form.employee.lname_english)
+                    for user in users:
+                        push_notification(user.emp_id, notify_ms, notify_ms['url'].format(loan_form.id))
+
                     flash(message_obj.loan_request_accepted[session['language']], 'success')
             except IOError as exc:
                 flash(message_obj.loan_request_accepted[session['language']], 'error')
@@ -1217,6 +1274,25 @@ def loan_finance_view(loan_id):
                 loan_form.finance_id = current_user.emp_id
                 loan_form.finalized_at=datetime.datetime.now()
                 db.session.commit()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.finance_loan_request_employee.copy()
+                notify_ms['message'] = notify_ms['message'].format('تایید کرده' if request.form['finance'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if request.form['finance'] == '1' else 'rejected')
+                push_notification(loan_form.emp_id, notify_ms, notify_ms['url'])
+               
+                # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                    .filter(Users.role.in_(get_role_ids('loan_presidency'))) \
+                    .filter(Users.status == True).all()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.finance_loan_request_presidency.copy()
+                notify_ms['message'] = notify_ms['message'] \
+                    .format(loan_form.employee.name + ' ' + loan_form.employee.lname, 'تایید کرده' if request.form['finance'] == '1' else 'رد کرده')
+                notify_ms['message_english'] = notify_ms['message_english'] \
+                    .format('accepted' if request.form['finance'] == '1' else 'rejected', loan_form.employee.name_english + ' ' + loan_form.employee.lname_english)
+                for user in users:
+                    push_notification(user.emp_id, notify_ms, notify_ms['url'].format(loan_form.id))
+
                 if request.form['finance'] == '0':
                     flash(message_obj.loan_request_rejected[session['language']], 'success')
                 else:
