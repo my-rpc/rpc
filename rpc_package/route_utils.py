@@ -364,8 +364,9 @@ def add_overtime_request(overtime_form, emp_id):
             description=overtime_form.description.data,
             requested_at=datetime.datetime.now())
         db.session.add(overtime)
+        db.session.flush()
         db.session.commit()
-        return "success"
+        return overtime
     except IOError as io:
         return 'error'
 
