@@ -22,21 +22,36 @@
                         <!-- <th>#</th> -->
                         <th>id</th>
                         <th>name</th>
-                        <th>last name</th>
                         <th>position</th>
                         <th>department</th>
+                        <th>Reason</th>
                         <th>view</th>
                       </tr>
                       {% if list_of_resigns %}
                       
                         {% for resign in list_of_resigns %}
                           <tr>
-                            <td>{{resign[0].emp_id}}</td>
-                            <td>{{resign[1].name}}</td>
-                            <td>{{resign[1].lname}}</td>
-                            <td></td>
-                            <td></td>
-                            <td><a href="/view_resign_request?resign={{resign[0].id}}"><i class="fa fa-eye text-primary"></i></a></td>
+                            <td>{{resign.emp_id}}</td>
+                            <td>
+                              {% if resign.employee %}
+                                {{ resign.employee.name_english + ' ' + resign.employee.lname_english if language == 'en' else resign.employee.name + ' ' + resign.employee.lname }}
+                              {% endif %}
+                            </td>
+                            {% set position_history = resign.employee.position_history.first() %}
+                            <td>
+                              {% if position_history %}
+                                {{ position_history.department.name_english if language == 'en' else position_history.department.name }}
+                              {% endif %} 
+                            </td>
+                            <td>
+                              {% if position_history %}
+                                {{ position_history.position.name_english if language == 'en' else position_history.position.name }}
+                              {% endif %} 
+                            </td>
+                            <td style="max-width: 12em;">
+                              {{ resign.reason }}
+                            </td>
+                            <td><a href="/view_resign_request?resign={{resign.id}}"><i class="fa fa-eye text-primary"></i></a></td>
                           </tr>
                         {% endfor %}
                       {% endif %}

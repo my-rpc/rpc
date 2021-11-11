@@ -1313,7 +1313,7 @@ def resign_request():
     resign_form = ResignRequestForm(session['language'])
     if request.method == "POST":
         resign = send_resign_request(resign_form, current_user.emp_id)
-        if resign == "success":
+        if resign != "error":
             flash(message_obj.resign_request_sent[session['language']], 'success')
         else:
             flash(message_obj.resign_request_not_sent[session['language']], 'error')
@@ -1328,11 +1328,33 @@ def emp_resign_request():
     if not check_access('emp_resign_request'):
         return redirect(url_for('access_denied'))
     if request.method == "GET":
-         list_of_resigns = db.session.query(Resign_form, Employees).join(Resign_form,
-        (Resign_form.emp_id == Employees.id)).all()
+         list_of_resigns = Resign_form.query.all()
 
     return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
         title=translation_obj.employee_forms[session['language']], language=session['language'])
+
+@app.route("/accept_reject_resign_request", methods=['GET'])
+@login_required
+def accept_reject_resign_request():
+    if not check_access('accept_reject_resign_request'):
+        return redirect(url_for('access_denied'))
+    resin = accept_reject_resign(request)
+    if resin == "success":
+        flash(message_obj.action_performed[session['language']], 'success')
+    else:
+        flash(message_obj.action_not_performed[session['language']], 'error')
+    return redirect(request.referrer)
+
+@app.route("/view_resign_request", methods=['GET', 'POST'])
+@login_required
+def view_resign_request():
+    if not check_access('view_resign_request'):
+        return redirect(url_for('access_denied'))
+    form = AcceptEquipmentForm()
+    resign_id = request.args.get('resign')
+    resign = Resign_form.query.filter(Resign_form.id == resign_id).first()
+    equipment = Employee_equipment.query.filter_by(emp_id=resign.emp_id).all()
+    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'])
 
 @app.route("/holiday", methods=['GET', 'POST'])
 @login_required
@@ -1667,18 +1689,6 @@ def download_equipment_file(equipment_id):
             flash(message_obj.file_not_downloaded[session['language']], 'error')
     return send_file(path, as_attachment=True)
 
-@app.route("/view_resign_request", methods=['GET', 'POST'])
-@login_required
-def view_resign_request():
-    if not check_access('view_resign_request'):
-        return redirect(url_for('access_denied'))
-    form = AcceptEquipmentForm()
-    resign_id = request.args.get('resign')
-    resign = db.session.query(Resign_form, Employees).join(Resign_form, Resign_form.id == resign_id).first()
-    equipment = db.session.query(Employee_equipment, Equipment).join(Employee_equipment,
-        (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==resign[0].emp_id, Employee_equipment.delivered == None).all()
-    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'])
-
 @app.route("/read_notification/<int:notification_id>", methods=['GET'])
 @login_required
 def read_notification(notification_id):
@@ -1689,18 +1699,6 @@ def read_notification(notification_id):
         notification.read = True
         db.session.commit()
         return redirect(notification.url)
-    return redirect(request.referrer)
-
-@app.route("/accept_reject_resign_request", methods=['GET'])
-@login_required
-def accept_reject_resign_request():
-    if not check_access('accept_reject_resign_request'):
-        return redirect(url_for('access_denied'))
-    resin = accept_reject_resign(request)
-    if resin == "success":
-        flash(message_obj.action_performed[session['language']], 'success')
-    else:
-        flash(message_obj.action_not_performed[session['language']], 'error')
     return redirect(request.referrer)
 
 @app.route("/access_denied", methods=['GET', 'POST'])

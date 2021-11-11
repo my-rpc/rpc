@@ -60,7 +60,7 @@
                                       <h4 class="timeline-title"><a href="#">{{translation.resign_reason[language]}}</a></h4>
                                   </div>
                                   <div class="timeline-body">
-                                      <p>{{resign[0].reason}}</p>
+                                      <p>{{resign.reason}}</p>
                                   </div>
                                   <!-- <div class="timeline-footer">
                                       <p class="text-right"><i class="fa fa-clock-o"></i> 8 days ago</p>
@@ -77,13 +77,13 @@
                                       <h4 class="timeline-title"><a href="#">{{translation.responsibilities[language]}}</a></h4>
                                   </div>
                                   <div class="timeline-body">
-                                      <p>{{resign[0].responsibilities}}</p>									
+                                      <p>{{resign.responsibilities}}</p>									
                                   </div>
                               </div>
                           </div>
                       </div>
                       <div class="box-footer">
-                        {% if resign and resign[0].hr == True %}
+                        {% if resign and resign.hr == True %}
                         <!-- <div class="col-lg-4">
                           <div class="box">
                             <div class="box-body ribbon-box">
@@ -93,11 +93,11 @@
                           </div>
                         </div>  -->
                         accepted
-                        {% elif resign[0].hr == False %}
+                        {% elif resign.hr == False %}
                           rejected
                         {% else %}
-                        <a href="/accept_reject_resign_request?resign={{resign[0].id}}&action=1"><button class="btn btn-success">Accept</button></a>
-                        <a href="/accept_reject_resign_request?resign={{resign[0].id}}&action=0"><button class="btn btn-danger">Reject</button></a>
+                        <a href="/accept_reject_resign_request?resign={{resign.id}}&action=1"><button class="btn btn-success">Accept</button></a>
+                        <a href="/accept_reject_resign_request?resign={{resign.id}}&action=0"><button class="btn btn-danger">Reject</button></a>
                         {% endif %}
                       </div>
                   </div>  
@@ -118,12 +118,12 @@
                              <th>{{translation.equipment_name_english[language]}}</th>
                              <th>{{translation.status[language]}}</th>
                            </tr>
-                           {% for eq in equipment %}
+                           {% for eq in equipment.equipment %}
                            <tr>
-                            <td>{{form.equipment(value=eq[0].id, class="equipmentCheckbox")}}</td>
-                            <td>{{eq[1].name}}</td>
-                            <td>{{eq[1].name_english}}</td>
-                            <td>{{eq[1].static}}</td>
+                            <td>{{form.equipment(value=eq.id, class="equipmentCheckbox")}}</td>
+                            <td>{{eq.name}}</td>
+                            <td>{{eq.name_english}}</td>
+                            <td>{{eq.static}}</td>
                            </tr>
                            {% endfor %}
                          </table>
@@ -158,7 +158,7 @@
                     <h6 class="widget-user-desc">Designer</h6>
                   </div>
                   <div class="widget-user-image">
-                    <img class="rounded-circle" src="{{resign[1].profile_pic}}" alt="User Avatar">
+                    <img class="rounded-circle" src="{{resign.profile_pic}}" alt="User Avatar">
                   </div>
                   <div class="box-footer">
                     <div class="row">
