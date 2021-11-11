@@ -381,7 +381,7 @@ def add_loan_request(loan_form, emp_id):
             requested_at=datetime.datetime.now())
         db.session.add(loan)
         db.session.commit()
-        return "success"
+        return loan
     except IOError as io:
         return 'error'
 
@@ -431,8 +431,9 @@ def add_employee_equipment(equipment_form):
             created_by=current_user.emp_id,
             created_at=datetime.datetime.today())
         db.session.add(emp_equipment)
+        db.session.flush()
         db.session.commit()
-        return "success"
+        return emp_equipment
     except IOError as io:
         return 'error'
 
@@ -456,7 +457,7 @@ def surrender_equipment_update(equipment_form):
         emp_equipment.status = True
         # emp_equipment.file_url =f"/static/files/equipments/" + request_file.filename if equipment_form.file_url.data else None,
         db.session.commit()
-        return "success"
+        return emp_equipment
     except IOError as io:
         return 'error'
 
@@ -497,15 +498,17 @@ def add_contract_form(contract_form):
 
 
 def send_resign_request(resign_form, emp_id):
-    resign = Resign_form(
-        emp_id=emp_id,
-        reason=resign_form.reason.data,
-        responsibilities=resign_form.responsibilities.data)
-    db.session.add(resign)
-    if db.session.commit():
-        return "success"
-    else:
-        return "error"
+    try:
+        resign = Resign_form(
+            emp_id=emp_id,
+            reason=resign_form.reason.data,
+            responsibilities=resign_form.responsibilities.data)
+        db.session.add(resign)
+        db.session.flush()
+        db.session.commit()
+        return resign
+    except IOError as io:
+        return 'error'
 
 def assign_equipment(request, emp_id):
     equipment = ""
