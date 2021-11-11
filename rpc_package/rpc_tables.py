@@ -427,9 +427,15 @@ class Resign_form(db.Model, UserMixin):
     reason = db.Column(db.Text, nullable=False)
     responsibilities = db.Column(db.Text, nullable=False)
     supervisor = db.Column(db.Boolean, nullable=True)
+    supervisor_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
     hr = db.Column(db.Boolean, nullable=True)
+    hr_id = db.Column(db.String(20, collation='utf8_general_ci'), db.ForeignKey('employees.id'), nullable=True)
+    finalized_at= db.Column(db.DateTime, nullable=False)
     requested_at= db.Column(db.DateTime, nullable=False)
-
+    # Relationship
+    employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="resign_form")
+    re_supervisor = db.relationship('Employees', foreign_keys=[supervisor_id], overlaps="resign_form")
+    re_hr = db.relationship('Employees', foreign_keys=[hr_id], overlaps="resign_form")
     def __repr__(self):
         return f"Resign ID: {self.id}, Employee ID: {self.emp_id}, Reason: {self.reason}"
 

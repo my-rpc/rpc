@@ -498,15 +498,17 @@ def add_contract_form(contract_form):
 
 
 def send_resign_request(resign_form, emp_id):
-    resign = Resign_form(
-        emp_id=emp_id,
-        reason=resign_form.reason.data,
-        responsibilities=resign_form.responsibilities.data)
-    db.session.add(resign)
-    if db.session.commit():
-        return "success"
-    else:
-        return "error"
+    try:
+        resign = Resign_form(
+            emp_id=emp_id,
+            reason=resign_form.reason.data,
+            responsibilities=resign_form.responsibilities.data)
+        db.session.add(resign)
+        db.session.flush()
+        db.session.commit()
+        return resign
+    except IOError as io:
+        return 'error'
 
 def assign_equipment(request, emp_id):
     equipment = ""
