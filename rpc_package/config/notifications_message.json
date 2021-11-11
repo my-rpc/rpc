@@ -93,5 +93,20 @@
     "message": "مدیریت مالی درخواست قرضه {} را {} است",
     "message_english": "Finance has been {} loan request of {}",
     "url": "/loan_presidency/{}"
+  },
+  "assign_equipment" :{
+    "message": "آیا شما {} را دریافت کردید؟ اگر بلی لطفا تایید کنید",
+    "message_english": "Do you recieved {} ? if yes please confirm it",
+    "url": "/my_equipment"
+  },
+  "recieved_equipment" :{
+    "message": "{} تایید کرده است که {} را گرفته است",
+    "message_english": "{} has been accepted that recieved {}",
+    "url": "/emp_equipment"
+  },
+  "surrender_equipment" :{
+    "message": "تسلیم دهی {} انجام شد",
+    "message_english": "surrendered of {} approved",
+    "url": "/my_equipment"
   }
 }

@@ -1500,6 +1500,19 @@ def recieved_equipment(equipment_id):
             if emp_equipment.emp_id == current_user.emp_id:
                 emp_equipment.status = False
                 db.session.commit()
+                 # Get the list of employee for generating the notification for all user have access in overtime_hr route
+                users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                    .filter(Users.role.in_(get_role_ids('emp_equipment'))) \
+                    .filter(Users.status == True).all()
+                # Notification Generate and save in table
+                notify_ms = notification_msg.recieved_equipment.copy()
+                notify_ms['message'] = notify_ms['message'] \
+                    .format(emp_equipment.employee.name + ' ' + emp_equipment.employee.lname, emp_equipment.equipment.name)
+                notify_ms['message_english'] = notify_ms['message_english'] \
+                    .format(emp_equipment.employee.name_english + ' ' + emp_equipment.employee.lname_english, emp_equipment.equipment.name_english)
+                for user in users:
+                    push_notification(user.emp_id, notify_ms, notify_ms['url'])
+
             flash(message_obj.equipment_confirm[session['language']], 'success')
         except IOError as exc:
             flash(message_obj.equipment_not_confirm[session['language']], 'error')
@@ -1602,7 +1615,14 @@ def emp_equipment():
 
     if request.method == 'POST':
         if assign_equipment_form.validate_on_submit():
-            if add_employee_equipment(assign_equipment_form) == "success":
+            emp_equipment = add_employee_equipment(assign_equipment_form)
+            if emp_equipment != "error":
+                # Notification Generate and save in table
+                notify_ms = notification_msg.assign_equipment.copy()
+                notify_ms['message'] = notify_ms['message'].format(emp_equipment.equipment.name)
+                notify_ms['message_english'] = notify_ms['message_english'].format(emp_equipment.equipment.name_english)
+                push_notification(emp_equipment.emp_id, notify_ms, notify_ms['url'])
+
                 flash(message_obj.equipment_assigned[session['language']], 'success')
             else:
                 flash(message_obj.equipment_not_assigned[session['language']], 'error')
@@ -1620,7 +1640,13 @@ def surrender_equipment():
     if request.method == 'POST':
         surrender_equipment_form = SurrenderEquipmentForm(session['language'])
         if surrender_equipment_form.validate_on_submit():
-            if surrender_equipment_update(surrender_equipment_form) == "success":
+            emp_equipment = surrender_equipment_update(surrender_equipment_form)
+            if emp_equipment != "error":
+                # Notification Generate and save in table
+                notify_ms = notification_msg.surrender_equipment.copy()
+                notify_ms['message'] = notify_ms['message'].format(emp_equipment.equipment.name)
+                notify_ms['message_english'] = notify_ms['message_english'].format(emp_equipment.equipment.name_english)
+                push_notification(emp_equipment.emp_id, notify_ms, notify_ms['url'])
                 flash(message_obj.equipment_surrender[session['language']], 'success')
             else:
                 flash(message_obj.equipment_not_surrender[session['language']], 'error')
@@ -1653,23 +1679,11 @@ def view_resign_request():
         (Equipment.id == Employee_equipment.equipment_id)).filter(Employee_equipment.emp_id==resign[0].emp_id, Employee_equipment.delivered == None).all()
     return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'])
 
-@app.route("/deliver_equipment", methods=['POST'])
-@login_required
-def deliver_equipment():
-    if not check_access('deliver_equipment'):
-        return redirect(url_for('access_denied'))
-    result = accept_equipment(request, "admin")
-    if result == "success":
-        flash(message_obj.delivered[session['language']], 'success')
-    else:
-        flash(message_obj.not_delivered[session['language']], 'error')
-    return redirect(request.referrer)
-
 @app.route("/read_notification/<int:notification_id>", methods=['GET'])
 @login_required
 def read_notification(notification_id):
-    # if not check_access('read_notification'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('read_notification'):
+        return redirect(url_for('access_denied'))
     notification = Notification.query.filter_by(id=notification_id).first()
     if notification.emp_id == current_user.emp_id:
         notification.read = True

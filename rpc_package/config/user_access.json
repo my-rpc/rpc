@@ -24,7 +24,8 @@
     "view_resign_request",
     "delete_leave",
     "delete_overtime",
-    "recieved_equipment"
+    "recieved_equipment",
+    "read_notification"
   ],
   "Acting Manager" : [
     "leave_supervisor",
@@ -146,6 +147,7 @@
     "update_equipment",
     "emp_equipment",
     "surrender_equipment",
-    "download_equipment_file"
+    "download_equipment_file",
+    "read_notification"
   ]
 }

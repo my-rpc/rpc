@@ -431,8 +431,9 @@ def add_employee_equipment(equipment_form):
             created_by=current_user.emp_id,
             created_at=datetime.datetime.today())
         db.session.add(emp_equipment)
+        db.session.flush()
         db.session.commit()
-        return "success"
+        return emp_equipment
     except IOError as io:
         return 'error'
 
@@ -456,7 +457,7 @@ def surrender_equipment_update(equipment_form):
         emp_equipment.status = True
         # emp_equipment.file_url =f"/static/files/equipments/" + request_file.filename if equipment_form.file_url.data else None,
         db.session.commit()
-        return "success"
+        return emp_equipment
     except IOError as io:
         return 'error'
 
