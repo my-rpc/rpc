@@ -20,7 +20,7 @@ from rpc_package.utils import EmployeeValidator, message_to_client_403, message_
 from rpc_package.route_utils import upload_docs, get_profile_info, get_documents, upload_profile_pic, \
     add_contract_form, add_overtime_request, set_contact_update_form_data, update_contract, assign_equipment, \
     send_resign_request, update_employee_data, set_emp_update_form_data, add_leave_request, \
-    send_resign_request, send_department, add_loan_request, accept_equipment, accept_reject_resign, \
+    send_resign_request, send_department, add_loan_request, accept_equipment, accept_reject_resign_supervisor, accept_reject_resign_hr, \
     add_holiday, add_attendance, add_new_equipment, add_employee_equipment, surrender_equipment_update, \
     push_notification, get_role_ids
 import os
@@ -1311,6 +1311,7 @@ def resign_request():
     if not check_access('resign_request'):
         return redirect(url_for('access_denied'))
     resign_form = ResignRequestForm(session['language'])
+    list_of_resigns = Resign_form.query.filter_by(emp_id=current_user.emp_id).all()
     if request.method == "POST":
         resign = send_resign_request(resign_form, current_user.emp_id)
         if resign != "error":
@@ -1318,43 +1319,82 @@ def resign_request():
         else:
             flash(message_obj.resign_request_not_sent[session['language']], 'error')
         return redirect(request.referrer)
-    return render_template('resign_request.html',
+    return render_template('resign_request.html', list_of_resigns=list_of_resigns,
         title=translation_obj.forms[session['language']], form=resign_form,
         language=session['language'])
 
-@app.route('/emp_resign_request', methods=["GET", "POST"])
+@app.route('/emp_resign_request_supervisor', methods=["GET", "POST"])
 @login_required
-def emp_resign_request():
-    if not check_access('emp_resign_request'):
+def emp_resign_request_supervisor():
+    if not check_access('emp_resign_request_supervisor'):
         return redirect(url_for('access_denied'))
     if request.method == "GET":
-         list_of_resigns = Resign_form.query.all()
+        emps = db.session.query(Position_history.emp_id).filter(Position_history.department_id == current_user.department.id).distinct()
+        list_of_resigns = Resign_form.query \
+            .filter(Resign_form.emp_id.in_(emps)) \
+            .order_by(Resign_form.id.desc()).all()
 
-    return render_template('emp_resign_request.html', list_of_resigns=list_of_resigns,
+    return render_template('emp_resign_request_supervisor.html', list_of_resigns=list_of_resigns,
         title=translation_obj.employee_forms[session['language']], language=session['language'])
 
-@app.route("/accept_reject_resign_request", methods=['GET'])
+@app.route('/emp_resign_request_hr', methods=["GET", "POST"])
 @login_required
-def accept_reject_resign_request():
-    if not check_access('accept_reject_resign_request'):
+def emp_resign_request_hr():
+    if not check_access('emp_resign_request_hr'):
         return redirect(url_for('access_denied'))
-    resin = accept_reject_resign(request)
+    if request.method == "GET":
+         list_of_resigns = Resign_form.query.filter_by(supervisor=1).order_by(Resign_form.id.desc()).all()
+
+    return render_template('emp_resign_request_hr.html', list_of_resigns=list_of_resigns,
+        title=translation_obj.employee_forms[session['language']], language=session['language'])
+
+@app.route("/accept_reject_resign_request_supervisor", methods=['GET'])
+@login_required
+def accept_reject_resign_request_supervisor():
+    if not check_access('accept_reject_resign_request_supervisor'):
+        return redirect(url_for('access_denied'))
+    resin = accept_reject_resign_supervisor(request)
     if resin == "success":
         flash(message_obj.action_performed[session['language']], 'success')
     else:
         flash(message_obj.action_not_performed[session['language']], 'error')
     return redirect(request.referrer)
 
-@app.route("/view_resign_request", methods=['GET', 'POST'])
+@app.route("/accept_reject_resign_request_hr", methods=['GET'])
 @login_required
-def view_resign_request():
-    if not check_access('view_resign_request'):
+def accept_reject_resign_request_hr():
+    if not check_access('accept_reject_resign_request_hr'):
+        return redirect(url_for('access_denied'))
+    resin = accept_reject_resign_hr(request)
+    if resin == "success":
+        flash(message_obj.action_performed[session['language']], 'success')
+    else:
+        flash(message_obj.action_not_performed[session['language']], 'error')
+    return redirect(request.referrer)
+
+@app.route("/view_resign_request_supervisor", methods=['GET', 'POST'])
+@login_required
+def view_resign_request_supervisor():
+    if not check_access('view_resign_request_supervisor'):
         return redirect(url_for('access_denied'))
     form = AcceptEquipmentForm()
     resign_id = request.args.get('resign')
     resign = Resign_form.query.filter(Resign_form.id == resign_id).first()
-    equipment = Employee_equipment.query.filter_by(emp_id=resign.emp_id).all()
-    return render_template('view_resign_request.html', form=form, equipment=equipment, resign=resign, language=session['language'])
+    emp_equipment = Employee_equipment.query.filter_by(emp_id=resign.emp_id).all()
+    return render_template('view_resign_request_supervisor.html', form=form, emp_equipment=emp_equipment, \
+        resign=resign, language=session['language'])
+
+@app.route("/view_resign_request_hr", methods=['GET', 'POST'])
+@login_required
+def view_resign_request_hr():
+    if not check_access('view_resign_request_hr'):
+        return redirect(url_for('access_denied'))
+    form = AcceptEquipmentForm()
+    resign_id = request.args.get('resign')
+    resign = Resign_form.query.filter(Resign_form.id == resign_id).first()
+    emp_equipment = Employee_equipment.query.filter_by(emp_id=resign.emp_id).all()
+    return render_template('view_resign_request_hr.html', form=form, emp_equipment=emp_equipment,
+        resign=resign, language=session['language'])
 
 @app.route("/holiday", methods=['GET', 'POST'])
 @login_required

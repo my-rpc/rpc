@@ -60,8 +60,12 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="{{ url_for('attendance_file') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.attendance_file[language] }}</a></li>
-          <li><a href="{{ url_for('holiday') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.holidays[language] }}</a></li>
+          {% if check_access('attendance_file') %}
+            <li><a href="{{ url_for('attendance_file') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.attendance_file[language] }}</a></li>
+          {% endif %}
+          {% if check_access('holiday') %}
+            <li><a href="{{ url_for('holiday') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.holidays[language] }}</a></li>
+          {% endif %}
         </ul>
       </li>
       {% endif %}
@@ -99,8 +103,11 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          {% if check_access('emp_resign_request') %}
-            <li><a href="{{ url_for('emp_resign_request') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form[language] }}</a></li>
+          {% if check_access('emp_resign_request_supervisor') %}
+            <li><a href="{{ url_for('emp_resign_request_supervisor') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form_supervisor[language] }}</a></li>
+          {% endif %}
+          {% if check_access('emp_resign_request_hr') %}
+            <li><a href="{{ url_for('emp_resign_request_hr') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.request_resign_form_hr[language] }}</a></li>
           {% endif %}
           {% if check_access('loan_guarantor') %}
             <li><a href="{{ url_for('loan_guarantor') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>{{translation.loan_guarantor[language]}}</a></li>
