@@ -1773,9 +1773,10 @@ def read_notification(notification_id):
         return redirect(url_for('access_denied'))
     notification = Notification.query.filter_by(id=notification_id).first()
     if notification.emp_id == current_user.emp_id:
-        notification.read = True
+        url = notification.url
+        db.session.delete(notification)
         db.session.commit()
-        return redirect(notification.url)
+        return redirect(url)
     return redirect(request.referrer)
 
 @app.route("/access_denied", methods=['GET', 'POST'])

@@ -117,7 +117,6 @@ class Notification(db.Model, UserMixin):
     message = db.Column(db.String(255), nullable=True)
     message_english = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
-    read = db.Column(db.Boolean(1), nullable=False, default=False)
     # Relationship
     employee = db.relationship('Employees', foreign_keys=[emp_id], overlaps="notifications")
 
