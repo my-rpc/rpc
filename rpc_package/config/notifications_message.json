@@ -108,5 +108,30 @@
     "message": "تسلیم دهی {} انجام شد",
     "message_english": "surrendered of {} approved",
     "url": "/my_equipment"
+  },
+  "resign_request_supervisor" :{
+    "message": "{} یک درخواست استعفا فرستاده است",
+    "message_english": "{} has been send a resign request",
+    "url": "/view_resign_request_supervisor?resign={}"
+  },
+  "resign_request_hr" :{
+    "message": "{} یک درخواست استعفا فرستاده است",
+    "message_english": "{} has been send a resign request",
+    "url": "/view_resign_request_hr?resign={}"
+  },
+  "supervisor_resign_request_employee" :{
+    "message": "مسئول بخش درخواست استعفا شما را {} است",
+    "message_english": "Supervisor {} your resign request",
+    "url": "/resign_request"
+  },
+  "supervisor_resign_request_hr" :{
+    "message": "{} یک درخواست استعفا فرستاده است",
+    "message_english": "{} has a resign request",
+    "url": "/view_resign_request_hr?resign={}"
+  },
+  "hr_resign_request_employee" :{
+    "message": "منابع بشری درخواست استعفا شما را {} است",
+    "message_english": "Human Resource {} your resign request",
+    "url": "/resign_request"
   }
 }

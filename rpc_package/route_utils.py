@@ -710,34 +710,32 @@ def accept_equipment(request, owner):
         return 'error'
 
 def accept_reject_resign_supervisor(request):
-    resign_id = request.args.get('resign')
-    action = request.args.get("action")
-    if action == "1":
-        action = True
-    elif action == "0":
-        action = False
-    resign = Resign_form.query.filter_by(id=resign_id).first()
-    resign.supervisor = action
     try:
-        db.session.add(resign)
+        resign_id = request.args.get('resign')
+        action = request.args.get("action")
+        if action == "1":
+            action = True
+        elif action == "0":
+            action = False
+        resign = Resign_form.query.filter_by(id=resign_id).first()
+        resign.supervisor = action
         db.session.commit()
-        return "success"
+        return resign
     except IOError as io:
         return 'error'
 
 def accept_reject_resign_hr(request):
-    resign_id = request.args.get('resign')
-    action = request.args.get("action")
-    if action == "1":
-        action = True
-    elif action == "0":
-        action = False
-    resign = Resign_form.query.filter_by(id=resign_id).first()
-    resign.hr = action
     try:
-        db.session.add(resign)
+        resign_id = request.args.get('resign')
+        action = request.args.get("action")
+        if action == "1":
+            action = True
+        elif action == "0":
+            action = False
+        resign = Resign_form.query.filter_by(id=resign_id).first()
+        resign.hr = action
         db.session.commit()
-        return "success"
+        return resign
     except IOError as io:
         return 'error'
 
