@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.9.8'
-DESCRIPTION = 'resign_request, version 0.9.8v fixed the issue of resign request and request list added for supervisor and hr'
+VERSION = '0.9.9'
+DESCRIPTION = 'resign_notification, version 0.9.9v notification added for resign request'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

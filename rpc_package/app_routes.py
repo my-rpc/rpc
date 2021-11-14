@@ -1315,6 +1315,19 @@ def resign_request():
     if request.method == "POST":
         resign = send_resign_request(resign_form, current_user.emp_id)
         if resign != "error":
+            # Get the list of employee for generating the notification
+            employees = db.session.query(Employees.id).join(Position_history, Position_history.emp_id == Employees.id) \
+                .join(Users, Users.emp_id == Employees.id) \
+                .filter(Position_history.department_id==current_user.department.id) \
+                .filter(Users.role.in_(get_role_ids('emp_resign_request_supervisor'))) \
+                .filter(Users.status == True).all()
+            # Notification Generate and save in table
+            notify_ms = notification_msg.resign_request_supervisor.copy()
+            notify_ms['message'] = notify_ms['message'].format(current_user.employee.name + ' ' + current_user.employee.lname)
+            notify_ms['message_english'] = notify_ms['message_english'].format(current_user.employee.name_english + ' ' + current_user.employee.lname_english)
+            notify_ms['url'] = notify_ms['url'].format(resign.id)
+            for emp in employees:
+                push_notification(emp.id, notify_ms, notify_ms['url'])
             flash(message_obj.resign_request_sent[session['language']], 'success')
         else:
             flash(message_obj.resign_request_not_sent[session['language']], 'error')
@@ -1323,7 +1336,7 @@ def resign_request():
         title=translation_obj.forms[session['language']], form=resign_form,
         language=session['language'])
 
-@app.route('/emp_resign_request_supervisor', methods=["GET", "POST"])
+@app.route('/emp_resign_request_supervisor', methods=["GET"])
 @login_required
 def emp_resign_request_supervisor():
     if not check_access('emp_resign_request_supervisor'):
@@ -1337,7 +1350,7 @@ def emp_resign_request_supervisor():
     return render_template('emp_resign_request_supervisor.html', list_of_resigns=list_of_resigns,
         title=translation_obj.employee_forms[session['language']], language=session['language'])
 
-@app.route('/emp_resign_request_hr', methods=["GET", "POST"])
+@app.route('/emp_resign_request_hr', methods=["GET"])
 @login_required
 def emp_resign_request_hr():
     if not check_access('emp_resign_request_hr'):
@@ -1353,8 +1366,26 @@ def emp_resign_request_hr():
 def accept_reject_resign_request_supervisor():
     if not check_access('accept_reject_resign_request_supervisor'):
         return redirect(url_for('access_denied'))
-    resin = accept_reject_resign_supervisor(request)
-    if resin == "success":
+    resign = accept_reject_resign_supervisor(request)    
+    if resign != "error":
+        # Notification Generate and save in table
+        notify_ms = notification_msg.supervisor_resign_request_employee.copy()
+        notify_ms['message'] = notify_ms['message'].format('تایید کرده' if resign.supervisor else 'رد کرده')
+        notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if resign.supervisor else 'rejected')
+        push_notification(resign.emp_id, notify_ms, notify_ms['url'])
+        if resign.supervisor == True:
+            # Get the list of employee for generating the notification for all user have access in leave_hr route
+            users = db.session.query(Users.emp_id).join(User_roles, User_roles.id == Users.role) \
+                .filter(Users.role.in_(get_role_ids('view_resign_request_hr'))) \
+                .filter(Users.status == True).all()
+            # Notification Generate and save in table
+            notify_ms = notification_msg.supervisor_resign_request_hr.copy()
+            notify_ms['message'] = notify_ms['message'].format(leave_form.employee.name + ' ' + leave_form.employee.lname)
+            notify_ms['message_english'] = notify_ms['message_english'].format(leave_form.employee.name_english + ' ' + leave_form.employee.lname_english)
+            notify_ms['url'] = notify_ms['url'].format(resign.id)
+            for user in users:
+                push_notification(user.emp_id, notify_ms, notify_ms['url'])
+
         flash(message_obj.action_performed[session['language']], 'success')
     else:
         flash(message_obj.action_not_performed[session['language']], 'error')
@@ -1365,8 +1396,14 @@ def accept_reject_resign_request_supervisor():
 def accept_reject_resign_request_hr():
     if not check_access('accept_reject_resign_request_hr'):
         return redirect(url_for('access_denied'))
-    resin = accept_reject_resign_hr(request)
-    if resin == "success":
+    resign = accept_reject_resign_hr(request)
+    if resign != "error":
+        # Notification Generate and save in table
+        notify_ms = notification_msg.hr_resign_request_employee.copy()
+        notify_ms['message'] = notify_ms['message'].format('تایید کرده' if resign.hr else 'رد کرده')
+        notify_ms['message_english'] = notify_ms['message_english'].format('accepted' if resign.hr else 'rejected')
+        push_notification(resign.emp_id, notify_ms, notify_ms['url'])
+
         flash(message_obj.action_performed[session['language']], 'success')
     else:
         flash(message_obj.action_not_performed[session['language']], 'error')
