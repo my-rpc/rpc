@@ -18,134 +18,203 @@
 </style>
 {% endblock  css_or_js_code %}
 {% block main_content %}
-<section class="content">
-   <div class="">
-    <div class="container-full">
+<section>
+   <div class="box">
+    <div>
       <div class="box-header with-border">
         <h4 class="box-title text-primary font-weight-bold ">{{translation.resign_request[language]}}</h4>
       </div>
-
-      <!-- Main content -->
-      <section class="content">
-
+      <div class="box-body">
+        {% if resign.employee %}
+        <h4 class="px-2 pt-2">{{translation.personal_information[language]}}</h4>
         <div class="row">
-          <div class="col-md-12">
-              
-            <div class="nav-tabs-custom">
-              <ul class="nav nav-tabs">
-                <li><a class="active" href="#usertimeline" data-toggle="tab">{{translation.resign_summary[language]}}</a></li>
-                <li><a href="#activity" data-toggle="tab">{{translation.equipment[language]}}</a></li>
-              </ul>
-
-              <div class="tab-content">
-
-               <div class="active tab-pane" id="usertimeline">
-                  <div class="box p-15"> 
-                      <div class="timeline timeline-single-column timeline-single-full-column">
-                          <div class="timeline-item">
-                            <div class="timeline-point timeline-point-info">
-                                <i class="ion ion-chatbubble-working"></i>
-                            </div>
-                              <div class="timeline-event">
-                                  <div class="timeline-heading">
-                                      <h4 class="timeline-title"><a href="#">{{translation.resign_reason[language]}}</a></h4>
-                                  </div>
-                                  <div class="timeline-body">
-                                      <p>{{resign.reason}}</p>
-                                  </div>
-                              </div>
-                          </div>
-
-                          <div class="timeline-item">
-                              <div class="timeline-point timeline-point-info">
-                                  <i class="ion ion-chatbubble-working"></i>
-                              </div>
-                              <div class="timeline-event">
-                                  <div class="timeline-heading">
-                                      <h4 class="timeline-title"><a href="#">{{translation.responsibilities[language]}}</a></h4>
-                                  </div>
-                                  <div class="timeline-body">
-                                      <p>{{resign.responsibilities}}</p>									
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="box-footer">
-                        {% if resign and resign.supervisor == True %}
-                        <div class="ribbon-box">
-                          <div class="ribbon ribbon-success">{{translation.accepted[language]}}</div>
-                        </div>
-                        {% elif resign.supervisor == False %}
-                        <div class="ribbon-box">
-                          <div class="ribbon ribbon-primary">{{translation.rejected[language]}}</div>
-                        </div>
-                        {% else %}
-                        <a href="/accept_reject_resign_request_supervisor?resign={{resign.id}}&action=1"><button class="btn btn-success">{{translation.accept[language]}}</button></a>
-                        <a href="/accept_reject_resign_request_supervisor?resign={{resign.id}}&action=0"><button class="btn btn-danger">{{translation.reject[language]}}</button></a>
-                        {% endif %}
-                      </div>
-                  </div>  
-                </div>    
-
-                <div class=" tab-pane" id="activity">			
-                  <div class="box">
-                    <div class="box-body">
-                     {% if emp_equipment %}
-                     <div class="table-responsive">
-                         <table class="table table-hover">
-                           <tr>
-                             <th>#</th>
-                             <th>{{translation.equipment_name[language]}}</th>
-                             <th>{{translation.equipment_name_english[language]}}</th>
-                             <th>{{translation.taken_date[language]}}</th>
-                             <th>{{translation.record_status[language]}}</th>
-                             <th>{{translation.submission_date[language]}}</th>
-                           </tr>
-                           {% for item in emp_equipment %}
-                           <tr>
-                            <td>{{ emp_equipment.index(item) + 1 }}</td>
-                            <td>{{item.equipment.name}}</td>
-                            <td>{{item.equipment.name_english}}</td>
-                            <td style="white-space:nowrap">{{ to_jalali(item.taken_date) }}</td>
-                            <td>
-                              {% if item.status == True %}
-                                <span class="badge badge-pill badge-success">{{translation.submitted[language]}}</span>
-                              {% else %}
-                                <span class="badge badge-pill badge-warning">{{translation.in_use[language]}}</span>
-                              {% endif %}
-                            </td>
-                            <td>
-                              {% if item.status == True %}
-                                {{ to_jalali(item.return_date) }}
-                              {% endif %}
-                            </td>
-                           </tr>
-                           {% endfor %}
-                         </table>
-                       </div>
-                     {% endif %}
-                    </div>
+          <div class="col-md-6">
+            <div class="box border-radius">
+              <div class="box-body">
+                <h4>نام به دری</h4>
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>نام</span>
+                      <strong class="float-right">
+                      {{ resign.employee.name }}
+                      </strong>
+                  </div>
                 </div>
-                  <div class="box p-15">				
-                  <!-- Post -->
-                 
-                 
-                 </div>
-
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>تخلص</span>
+                      <strong class="float-right">
+                      {{ resign.employee.lname }}
+                      </strong>
+                  </div>
                 </div>
-                <!-- /.tab-pane -->
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>نام پدر</span>
+                      <strong class="float-right">
+                      {{ resign.employee.fname }}
+                      </strong>
+                  </div>
+                </div>
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>نام پدر کلان</span>
+                      <strong class="float-right">
+                      {{ resign.employee.gname }}
+                      </strong>
+                  </div>
+                </div>
               </div>
-              <!-- /.tab-content -->
             </div>
-            <!-- /.nav-tabs-custom -->
           </div>
-          <!-- /.col -->
-
+          <div class="col-md-6">
+            <div class="box border-radius">
+              <div class="box-body">
+                <h4>Name in English</h4>
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>First Name</span>
+                      <strong class="float-right">
+                      {{ resign.employee.name_english }}
+                      </strong>
+                  </div>
+                </div>
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>Last Name</span>
+                      <strong class="float-right">
+                      {{ resign.employee.lname_english }}
+                      </strong>
+                  </div>
+                </div>
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>Father Name</span>
+                      <strong class="float-right">
+                      {{ resign.employee.fname_english }}
+                      </strong>
+                  </div>
+                </div>
+                <div class="bg-white pt-2">
+                  <div class="media-body m-1 p-1 bb-1">
+                      <span>Grand Father Name</span>
+                      <strong class="float-right">
+                      {{ resign.employee.gname_english }}
+                      </strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- /.row -->
+        {% endif %}
+        <div class="nav-tabs-custom">
+          <ul class="nav nav-tabs">
+            <li><a class="active" href="#usertimeline" data-toggle="tab">{{translation.resign_summary[language]}}</a></li>
+            <li><a href="#activity" data-toggle="tab">{{translation.equipment[language]}}</a></li>
+          </ul>
 
-      </section>
-      <!-- /.content -->
+          <div class="tab-content">
+
+           <div class="active tab-pane" id="usertimeline">
+              <div class="box p-15"> 
+                  <div class="timeline timeline-single-column timeline-single-full-column">
+                      <div class="timeline-item">
+                        <div class="timeline-point timeline-point-info">
+                            <i class="ion ion-chatbubble-working"></i>
+                        </div>
+                          <div class="timeline-event">
+                              <div class="timeline-heading">
+                                  <h4 class="timeline-title"><a href="#">{{translation.resign_reason[language]}}</a></h4>
+                              </div>
+                              <div class="timeline-body">
+                                  <p>{{resign.reason}}</p>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="timeline-item">
+                          <div class="timeline-point timeline-point-info">
+                              <i class="ion ion-chatbubble-working"></i>
+                          </div>
+                          <div class="timeline-event">
+                              <div class="timeline-heading">
+                                  <h4 class="timeline-title"><a href="#">{{translation.responsibilities[language]}}</a></h4>
+                              </div>
+                              <div class="timeline-body">
+                                  <p>{{resign.responsibilities}}</p>									
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="box-footer">
+                    {% if resign and resign.supervisor == True %}
+                    <div class="ribbon-box">
+                      <div class="ribbon ribbon-success">{{translation.accepted[language]}}</div>
+                    </div>
+                    {% elif resign.supervisor == False %}
+                    <div class="ribbon-box">
+                      <div class="ribbon ribbon-primary">{{translation.rejected[language]}}</div>
+                    </div>
+                    {% else %}
+                    <a href="/accept_reject_resign_request_supervisor?resign={{resign.id}}&action=1"><button class="btn btn-success">{{translation.accept[language]}}</button></a>
+                    <a href="/accept_reject_resign_request_supervisor?resign={{resign.id}}&action=0"><button class="btn btn-danger">{{translation.reject[language]}}</button></a>
+                    {% endif %}
+                  </div>
+              </div>  
+            </div>    
+
+            <div class=" tab-pane" id="activity">			
+              <div class="box">
+                <div class="box-body">
+                 {% if emp_equipment %}
+                 <div class="table-responsive">
+                     <table class="table table-hover">
+                       <tr>
+                         <th>#</th>
+                         <th>{{translation.equipment_name[language]}}</th>
+                         <th>{{translation.equipment_name_english[language]}}</th>
+                         <th>{{translation.taken_date[language]}}</th>
+                         <th>{{translation.record_status[language]}}</th>
+                         <th>{{translation.submission_date[language]}}</th>
+                       </tr>
+                       {% for item in emp_equipment %}
+                       <tr>
+                        <td>{{ emp_equipment.index(item) + 1 }}</td>
+                        <td>{{item.equipment.name}}</td>
+                        <td>{{item.equipment.name_english}}</td>
+                        <td style="white-space:nowrap">{{ to_jalali(item.taken_date) }}</td>
+                        <td>
+                          {% if item.status == True %}
+                            <span class="badge badge-pill badge-success">{{translation.submitted[language]}}</span>
+                          {% else %}
+                            <span class="badge badge-pill badge-warning">{{translation.in_use[language]}}</span>
+                          {% endif %}
+                        </td>
+                        <td>
+                          {% if item.status == True %}
+                            {{ to_jalali(item.return_date) }}
+                          {% endif %}
+                        </td>
+                       </tr>
+                       {% endfor %}
+                     </table>
+                   </div>
+                 {% endif %}
+                </div>
+            </div>
+              <div class="box p-15">				
+              <!-- Post -->
+             
+             
+             </div>
+
+            </div>
+            <!-- /.tab-pane -->
+          </div>
+          <!-- /.tab-content -->
+        </div>
+      </div>
     </div>
 </div>
 </section>
