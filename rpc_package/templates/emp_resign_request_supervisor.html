@@ -19,13 +19,14 @@
                   <div class="table-responsive">
                     <table class="table table-hover">
                       <tr>
-                        <!-- <th>#</th> -->
-                        <th>id</th>
-                        <th>name</th>
-                        <th>position</th>
-                        <th>department</th>
-                        <th>Reason</th>
-                        <th>view</th>
+                        <th>{{translation.id_number[language]}}</th>
+                        <th>{{translation.name_and_last_name[language]}}</th>
+                        <th>{{translation.position[language]}}</th>
+                        <th>{{translation.department[language]}}</th>
+                        <th>{{translation.resign_reason[language]}}</th>
+                        <th>{{translation.record_status[language]}}</th>
+                        <th>{{translation.request_date[language]}}</th>
+                        <th>{{translation.details[language]}}</th>
                       </tr>
                       {% if list_of_resigns %}
                       
@@ -51,7 +52,17 @@
                             <td style="max-width: 12em;">
                               {{ resign.reason }}
                             </td>
-                            <td><a href="/view_resign_request?resign={{resign.id}}"><i class="fa fa-eye text-primary"></i></a></td>
+                            <td>
+                              {% if resign.supervisor == None %}
+                              <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                              {% elif resign.supervisor == True %}
+                              <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                              {% elif resign.supervisor == False %}
+                              <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                              {% endif %}
+                            </td>
+                            <td>{{ to_jalali(resign.requested_at, '%Y-%m-%d')}}</td>
+                            <td><a href="/view_resign_request_supervisor?resign={{resign.id}}"><i class="fa fa-eye text-primary"></i></a></td>
                           </tr>
                         {% endfor %}
                       {% endif %}

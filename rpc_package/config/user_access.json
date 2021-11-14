@@ -7,7 +7,10 @@
   ],
   "Manager" : [
     "leave_supervisor",
-    "overtime_supervisor"
+    "overtime_supervisor",
+    "view_resign_request_supervisor",
+    "emp_resign_request_supervisor",
+    "accept_reject_resign_request_supervisor"
   ],
   "Employee" : [
     "emp_autocomplete",
@@ -21,7 +24,6 @@
     "loan_guarantor",
     "resign_request",
     "my_equipment",
-    "view_resign_request",
     "delete_leave",
     "delete_overtime",
     "recieved_equipment",
@@ -75,7 +77,10 @@
     "delete_holiday",
     "update_holiday",
     "leave_report",
-    "overtime_report"
+    "overtime_report",
+    "view_resign_request_hr",
+    "emp_resign_request_hr",
+    "accept_reject_resign_request_hr"
   ],
   "Finance" : [
     "loan_finance"
@@ -130,7 +135,12 @@
     "emp_resign_request",
     "department_setting",
     "my_equipment",
-    "view_resign_request",
+    "view_resign_request_supervisor",
+    "emp_resign_request_supervisor",
+    "accept_reject_resign_request_supervisor",
+    "view_resign_request_hr",
+    "emp_resign_request_hr",
+    "accept_reject_resign_request_hr",
     "deliver_equipment",
     "accept_reject_resign_request",
     "attendance_file",
