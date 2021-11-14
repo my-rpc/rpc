@@ -11,7 +11,7 @@ def load_user(user_id):
             current_user.department = position_history.department
         current_user.user_role = User_roles.query.get(current_user.role)
         current_user.notifications = Notification.query \
-            .filter_by(emp_id=current_user.emp_id, read=0) \
+            .filter_by(emp_id=current_user.emp_id) \
             .order_by(Notification.id.desc()).all()
         return current_user
     else:
