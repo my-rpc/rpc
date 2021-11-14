@@ -709,8 +709,23 @@ def accept_equipment(request, owner):
     except IOError as io:
         return 'error'
 
+def accept_reject_resign_supervisor(request):
+    resign_id = request.args.get('resign')
+    action = request.args.get("action")
+    if action == "1":
+        action = True
+    elif action == "0":
+        action = False
+    resign = Resign_form.query.filter_by(id=resign_id).first()
+    resign.supervisor = action
+    try:
+        db.session.add(resign)
+        db.session.commit()
+        return "success"
+    except IOError as io:
+        return 'error'
 
-def accept_reject_resign(request):
+def accept_reject_resign_hr(request):
     resign_id = request.args.get('resign')
     action = request.args.get("action")
     if action == "1":
@@ -719,13 +734,13 @@ def accept_reject_resign(request):
         action = False
     resign = Resign_form.query.filter_by(id=resign_id).first()
     resign.hr = action
-
     try:
         db.session.add(resign)
         db.session.commit()
         return "success"
     except IOError as io:
         return 'error'
+
 def push_notification(emp_id, message, url):
     try:
         new_notification = Notification(

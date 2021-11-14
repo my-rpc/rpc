@@ -712,12 +712,20 @@
     "en": "Job Responsibilities"
   },
   "request_leave_form":{
-    "dari": " درخواست رخصتی",
+    "dari": "درخواست رخصتی",
     "en": "Leave Form"
   },
   "request_resign_form":{
-    "dari": " درخواست استعفا",
+    "dari": "درخواست استعفا",
     "en": "Resign Form"
+  },
+  "request_resign_form_supervisor":{
+    "dari": "استعفا سوپروایزر",
+    "en": "Supervisor Resign Request"
+  },
+  "request_resign_form_hr":{
+    "dari": "استعفا منابع بشری",
+    "en": "HR Resign Request"
   },
   "request_overtime_form":{
     "dari": " درخواست اضافه کاری",
@@ -924,7 +932,7 @@
     "en": "Name"
   },
   "equipment_name_english": {
-    "dari": "نام به لاتین",
+    "dari": "نام به انگلیسی",
     "en": "English Name"
   },
   "equipment_status": {
@@ -938,6 +946,10 @@
   "resign_request": {
     "dari": "درخواست استعفا",
     "en": "Resign Request"
+  },
+  "resign_request_form": {
+    "dari": "فورم درخواست استعفا",
+    "en": "Resign Request Form"
   },
   "gender": {
     "dari": "جنسیت",
@@ -1180,7 +1192,7 @@
     "en": "Overtime HR"
   },
   "overtime_supervisor": {
-    "dari": "اضافه کاری سوپروایز",
+    "dari": "اضافه کاری سوپروایزر",
     "en": "Overtime Supervisor"
   },
   "leave_hr": {
@@ -1188,7 +1200,7 @@
     "en": "Leave HR"
   },
   "leave_supervisor": {
-    "dari": "رخصتی سوپروایز",
+    "dari": "رخصتی سوپروایزر",
     "en": "Leave Supervisor"
   },
   "user_setting": {

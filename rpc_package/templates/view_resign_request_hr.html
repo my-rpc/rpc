@@ -1,0 +1,157 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.resign_request[language]}} {% endblock %}
+{% block css_or_js_code %}
+<style>
+    [type=radio]:not(:checked).rd,
+    [type=radio]:checked.rd {
+        position: absolute !important;
+        left: auto;
+        opacity: 1 !important;
+    }
+    .equipmentCheckbox
+    {
+    opacity: 1 !important;
+    position: relative !important;
+    left: 0 !important;
+    }
+</style>
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section>
+   <div class="box">
+    <div class="col-md-12">
+      <div class="box-header with-border">
+        <h4 class="box-title text-primary font-weight-bold ">{{translation.resign_request[language]}}</h4>
+      </div>
+      <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+          <li><a class="active" href="#usertimeline" data-toggle="tab">{{translation.resign_summary[language]}}</a></li>
+          <li><a href="#activity" data-toggle="tab">{{translation.equipment[language]}}</a></li>
+        </ul>
+
+        <div class="tab-content">
+
+        <div class="active tab-pane" id="usertimeline">
+          <div class="box p-15"> 
+            <div class="timeline timeline-single-column timeline-single-full-column">
+              <div class="timeline-item">
+                <div class="timeline-point timeline-point-info">
+                    <i class="ion ion-chatbubble-working"></i>
+                </div>
+                  <div class="timeline-event">
+                      <div class="timeline-heading">
+                          <h4 class="timeline-title"><a href="#">{{translation.resign_reason[language]}}</a></h4>
+                      </div>
+                      <div class="timeline-body">
+                          <p>{{resign.reason}}</p>
+                      </div>
+                      <!-- <div class="timeline-footer">
+                          <p class="text-right"><i class="fa fa-clock-o"></i> 8 days ago</p>
+                      </div> -->
+                  </div>
+              </div>
+
+              <div class="timeline-item">
+                  <div class="timeline-point timeline-point-info">
+                      <i class="ion ion-chatbubble-working"></i>
+                  </div>
+                  <div class="timeline-event">
+                      <div class="timeline-heading">
+                          <h4 class="timeline-title"><a href="#">{{translation.responsibilities[language]}}</a></h4>
+                      </div>
+                      <div class="timeline-body">
+                          <p>{{resign.responsibilities}}</p>									
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="box-footer">
+              {% if resign and resign.hr == True %}
+                <div class="ribbon-box">
+                  <div class="ribbon ribbon-success">{{translation.accepted[language]}}</div>
+                </div>
+              {% elif resign.hr == False %}
+                <div class="ribbon-box">
+                  <div class="ribbon ribbon-primary">{{translation.rejected[language]}}</div>
+                </div>
+              {% else %}
+              <a href="/accept_reject_resign_request_hr?resign={{resign.id}}&action=1"><button class="btn btn-success">{{translation.accept[language]}}</button></a>
+              <a href="/accept_reject_resign_request_hr?resign={{resign.id}}&action=0"><button class="btn btn-danger">{{translation.reject[language]}}</button></a>
+              {% endif %}
+            </div>
+          </div>  
+        </div>  
+
+          <div class=" tab-pane" id="activity">			
+            <div class="box">
+              <div class="box-body">
+               {% if emp_equipment %}
+               <div class="table-responsive">
+                   <table class="table table-hover">
+                     <tr>
+                       <th>#</th>
+                       <th>{{translation.equipment_name[language]}}</th>
+                       <th>{{translation.equipment_name_english[language]}}</th>
+                       <th>{{translation.taken_date[language]}}</th>
+                       <th>{{translation.record_status[language]}}</th>
+                       <th>{{translation.submission_date[language]}}</th>
+                     </tr>
+                     {% for item in emp_equipment %}
+                     <tr>
+                      <td>{{ emp_equipment.index(item) + 1 }}</td>
+                      <td>{{item.equipment.name}}</td>
+                      <td>{{item.equipment.name_english}}</td>
+                      <td style="white-space:nowrap">{{ to_jalali(item.taken_date) }}</td>
+                      <td>
+                        {% if item.status == True %}
+                          <span class="badge badge-pill badge-success">{{translation.submitted[language]}}</span>
+                        {% else %}
+                          <span class="badge badge-pill badge-warning">{{translation.in_use[language]}}</span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if item.status == True %}
+                          {{ to_jalali(item.return_date) }}
+                        {% endif %}
+                      </td>
+                     </tr>
+                     {% endfor %}
+                   </table>
+                 </div>
+               {% endif %}
+              </div>
+          </div>
+            <div class="box p-15">				
+            <!-- Post -->
+           
+           
+           </div>
+
+          </div>
+          <!-- /.tab-pane -->
+        </div>
+        <!-- /.tab-content -->
+      </div>
+
+    </div>
+</div>
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{%if messages %}
+    {%for category, message in messages %} 
+    <!-- <div class="alert alert-{{category}}"> {{message}} </div> -->
+    <script>
+        $(document).ready(function() {
+            if("{{category}}" == "success")
+                toastSuccess("{{message}}")
+            else
+                toastError("{{message}}")
+        }); 
+    </script>
+    {% endfor %}
+{% endif %} {% endwith %}
+{% endblock js_code %}

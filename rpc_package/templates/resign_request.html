@@ -15,7 +15,7 @@
 <section >
    <div class="box">
         <div class="box-header with-border">
-            <h4 class="box-title text-primary font-weight-bold ">{{translation.resign_request[language]}}</h4>
+            <h4 class="box-title text-primary font-weight-bold ">{{translation.resign_request_form[language]}}</h4>
         </div>
        <div class="box-body">
            <form action="" method="POST">
@@ -29,12 +29,75 @@
                     {{ form.responsibilities(class="form-control", rows="10")}}
                    </div>
                    <div class="form-group">
-                {{form.submit(class="btn btn-primary")}}
+                        {{form.submit(class="btn btn-primary")}}
                    </div>
                </div>
            </form>
        </div>
    </div>
+   <div class="box">
+    <div class="col-12">
+        <div class="box">
+          <div class="box-header with-border">
+            <h4 class="box-title text-primary font-weight-bold ">{{translation.resign_request[language]}}</h4>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body no-padding">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <tr>
+                    <th>{{translation.resign_reason[language]}}</th>
+                    <th>{{translation.responsibilities[language]}}</th>
+                    <th>{{translation.supervisor[language]}}</th>
+                    <th>{{translation.hr[language]}}</th>
+                    <th>{{translation.request_date[language]}}</th>
+                    <th>{{translation.finalized_date[language]}}</th>
+                  </tr>
+                  {% if list_of_resigns %}
+                  
+                    {% for resign in list_of_resigns %}
+                      <tr>
+                        <td style="max-width: 16em;">
+                          {{ resign.reason }}
+                        </td>
+                        <td style="max-width: 22em;">
+                          {{ resign.responsibilities }}
+                        </td>
+                        <td>
+                            {% if resign.supervisor == None %}
+                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                            {% elif resign.supervisor == True %}
+                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                            {% elif resign.supervisor == False %}
+                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if resign.hr == None %}
+                            <span class="badge badge-pill badge-warning">{{translation.pending[language]}}</span>
+                            {% elif resign.hr == True %}
+                            <span class="badge badge-pill badge-success">{{translation.accepted[language]}}</span>
+                            {% elif resign.hr == False %}
+                            <span class="badge badge-pill badge-danger">{{translation.rejected[language]}}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ to_jalali(resign.requested_at, '%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            {% if resign.finalized_at %}
+                                {{ to_jalali(resign.finalized_at, '%Y-%m-%d %H:%M:%S') }}
+                            {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  {% endif %}
+                </table>
+              </div>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
 </section>
 {% endblock main_content%}
 {% block js_code %}
