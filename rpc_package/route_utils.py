@@ -745,8 +745,7 @@ def push_notification(emp_id, message, url):
             emp_id=emp_id,
             message=message['message'],
             message_english=message['message_english'],
-            url=url,
-            read=0)
+            url=url)
         db.session.add(new_notification)
         db.session.commit()
         return "success"
