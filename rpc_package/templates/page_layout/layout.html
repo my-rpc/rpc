@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>{% block title %}{% endblock %} - RPC-MIS</title>
+    <title class="no-print" >{% block title %}{% endblock %} - RPC-MIS</title>
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 
     <!-- Vendors Style-->
@@ -16,14 +16,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery_ui.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/skin_color.css')}}">
-    <style>
-        .badge-left-en{
-            left: -1em;
-        }
-        .badge-left-dari{
-            left: 1em;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/rpc.css')}}">
+
     <!-- this block is for css or js code if needed at the begining of page  -->
     {% block css_or_js_code %}{% endblock %}
 

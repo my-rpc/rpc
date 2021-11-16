@@ -1731,6 +1731,25 @@ def emp_equipment():
     return render_template('emp_equipment.html', form=assign_equipment_form, emp_equipments=emp_equipments,
         title=translation_obj.forms[session['language']], surrender_form=surrender_equipment_form, language=session['language'])
 
+@app.route("/print_emp_equipment/<str:employee_id>", methods=['GET'])
+@login_required
+def print_emp_equipment(employee_id):
+    if not check_access('print_emp_equipment'):
+        return redirect(url_for('access_denied'))
+
+    status = request.args.get('status')
+    
+    emp_equipments = Employee_equipment.query \
+        .filter(Employee_equipment.emp_id==employee_id) \
+        .order_by(Employee_equipment.id.desc())
+    if status == '0' or status == '1' or status == 'None':
+        if status == 'None':
+            status = '0'
+        emp_equipments = emp_equipments.filter(Employee_equipment.status==status)
+
+    return render_template('print_emp_equipment.html', emp_equipments=emp_equipments,
+        title=translation_obj.forms[session['language']], language=session['language'])
+
 @app.route("/surrender_equipment", methods=['POST'])
 @login_required
 def surrender_equipment():
