@@ -446,6 +446,7 @@ class Equipment(db.Model, UserMixin):
     category = db.Column(db.String(64), nullable=False)
     serial = db.Column(db.String(32), nullable=False)
     model = db.Column(db.String(64))
+    price = db.Column(db.Integer, nullable=False)
     in_use = db.Column(db.Boolean, nullable=True, default=False)
     # Relationship
     emp_equipments = db.relationship("Employee_equipment", foreign_keys='Employee_equipment.equipment_id', lazy='dynamic')
