@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from rpc_package import app, pass_crypt, db
 from werkzeug.utils import secure_filename
 from rpc_package.forms import CreateUserForm, LoginForm, EmployeeForm, UploadCVForm, UploadGuarantorForm, \
-    AddEquipmentForm, ResignRequestForm, UploadEducationalDocsForm, \
+    ResignRequestForm, UploadEducationalDocsForm, \
     UploadTinForm, UploadTazkiraForm, UploadExtraDocsForm, leaveRequestForm, departmentForm, OvertimeRequestForm, \
     ContractForm, LoanRequestForm, LoanGuarantorForm, LoanHRForm, LoanPresidencyForm, LoanFinanceForm, AcceptEquipmentForm, \
     OvertimeSupervisorForm, OvertimeHRForm, LeaveSupervisorForm, LeaveHRForm, HolidayForm, AttendanceForm, ChangePassForm, \
@@ -1671,6 +1671,7 @@ def update_equipment():
             'name_english': equipment.name_english,
             'serial': equipment.serial,
             'model': equipment.model,
+            'price': equipment.price,
             'category': equipment.category
         }
         return jsonify(data)
@@ -1682,6 +1683,7 @@ def update_equipment():
                 equipment.name_english = request.form['name_english']
                 equipment.serial = request.form['serial']
                 equipment.model = request.form['model']
+                equipment.price = request.form['price']
                 equipment.category = request.form['category']
                 db.session.commit()
                 flash(message_obj.equipment_updated[session['language']], 'success')

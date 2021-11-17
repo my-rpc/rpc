@@ -350,11 +350,6 @@ class ResignRequestForm(FlaskForm):
         self.submit.label.text = translation_obj.send_request[language]
         self.responsibilities.label.text = translation_obj.responsibilities[language]
 
-class AddEquipmentForm(FlaskForm):
-    equipment = BooleanField('equipment', default=[])
-    emp_id = HiddenField('Employee ID', validators=[DataRequired()])
-    submit = SubmitField('Add Equipment')
-
 class OvertimeRequestForm(FlaskForm):
     overtime_type = RadioField('Overtime Type', default=1, choices=[[1, 'Hourly'], [0, 'Daily']], validators=[DataRequired(), AnyOf(values=["1", "0"])])
     start_datetime = StringField('Start Date')
@@ -539,6 +534,7 @@ class EquipmentForm(FlaskForm):
     serial = StringField('Serial', validators=[DataRequired()])
     category = StringField('Category')
     model = StringField('Model')
+    price = IntegerField('Price')
     submit = SubmitField('Submit')
     def __init__(self, language):
         super(EquipmentForm, self).__init__()
@@ -548,6 +544,7 @@ class EquipmentForm(FlaskForm):
         self.serial.label.text = translation_obj.serial[language]
         self.category.label.text = translation_obj.category[language]
         self.model.label.text = translation_obj.model[language]
+        self.price.label.text = translation_obj.price[language]
         self.submit.label.text = translation_obj.save[language]
 
     def validate_name (self, name):
