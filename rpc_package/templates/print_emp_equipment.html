@@ -1,0 +1,136 @@
+{% extends "page_layout/layout.html" %}
+
+{% block title %} {{ super() }} {{translation.equipment[language]}} {% endblock %}
+{% block css_or_js_code %}
+
+{% endblock  css_or_js_code %}
+{% block main_content %}
+<section>
+  <div class="print_emp_equipment">
+    <div class="box">
+      <div class="box-header with-border py-2 no-print">
+        <h4 class="box-title text-primary mt-3 font-weight-bold float-left">{{translation.emp_list_of_equipment[language].format(employee.name_english + ' ' + employee.lname_english if language == 'en' else employee.name + ' ' + employee.lname)}}</h4>
+      </div>
+      <div class="box-body pt-0">
+        <form class="no-print" method="GET" , action="">
+          <div class="row">
+            <div class="form-group  col-md-4">
+              <label class="form-control-label" for="status">{{translation.record_status[language]}}</label>
+              <select class="form-control form-control-lg" id="status" name="status">
+                <option selected value="all">{{translation.all[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == '0' }} value="0">{{translation.in_use[language]}}</option>
+                <option {{ 'selected' if request.args.get('status') == '1' }} value="1">{{translation.submitted[language]}}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <div class="mt-3 pt-2">
+                <button type="submit" class="btn btn-primary mt-2 mx-1">
+                  <i class="fa fa-filter"></i> {{translation.filter[language]}}
+                </button>
+                <button type="button" onclick="window.print()" class="btn btn-warning mt-2 mx-1">
+                  <i class="fa fa-print"></i> {{translation.print[language]}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="no-screen">
+          <div class="text-center">
+            <div class="content-top-agile p-10" >
+              <img src="/static/images/rpc-logo1.png" width="200" />
+            </div>
+            <h4 class="font-weight-bold" style="color: #000000;">{{translation.reliance_power_group[language]}}</h4>
+            <h4 class="font-weight-bold" style="color: #000000;">{{translation.logistic_department[language]}}</h4>
+          </div>
+          <div class="pb-2" style="font-size: 16px;">
+            <span class="m-2" >{{translation.date[language]}}: <span class="font-weight-bold">{{jdate.today()}}</span></span>
+          </div>
+          <div class="pb-3" style="font-size: 16px;">
+            <span class="m-2">{{translation.employee_id[language]}}: <span class="font-weight-bold">{{ employee.id }}</span></span>
+            <span class="mx-2">{{translation.name[language]}}: <span class="font-weight-bold">{{ employee.name_english + ' ' + employee.lname_english if language == 'en' else employee.name + ' ' + employee.lname }}</span></span>
+            <span class="mx-2">{{translation.father_name[language]}}: <span class="font-weight-bold">{{ employee.fname_english if language == 'en' else employee.fname }}</span></span>
+            <span class="mx-2">{{translation.department[language]}}: <span class="font-weight-bold">
+              {% if employee.position_history.first() %}
+                {{ employee.position_history[0].department.name_english if language == 'en' else employee.position_history[0].department.name }}
+              {% endif %}
+            </span></span>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover" id="overitme_list">
+            <tr>
+              <th>#</th>
+              <th>{{translation.name[language]}}</th>
+              <th>{{translation.serial[language]}}</th>
+              <th>{{translation.model[language]}}</th>
+              <th>{{translation.price[language]}}</th>
+              <th>{{translation.taken_date[language]}}</th>
+              <th>{{translation.record_status[language]}}</th>
+              <th>{{translation.submission_date[language]}}</th>
+              <!-- <th>{{translation.file[language]}}</th> -->
+            </tr>
+            {% for item in emp_equipments %}
+            <tr>
+                <td>{{ emp_equipments.index(item)+1 }}</td>
+                <td>
+                  {% if item.equipment %}
+                    {{ item.equipment.name_english if language == 'en' else item.equipment.name }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.equipment %}
+                    {{ item.equipment.serial }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.equipment %}
+                    {{ item.equipment.model }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if item.equipment.price != None %}
+                    {{ item.equipment.price }}
+                  {% endif %}
+                </td>
+                <td style="white-space:nowrap">{{ to_jalali(item.taken_date) }}</td>
+                <td>
+                  {% if item.status == True %}
+                  <span class="badge badge-pill badge-success no-border">{{translation.submitted[language]}}</span>
+                  {% else %}
+                  <span class="badge badge-pill badge-warning no-border">{{translation.in_use[language]}}</span>
+                  {% endif %}
+                </td>
+                <td style="white-space:nowrap">
+                  {% if item.status == True %}
+                    {{ to_jalali(item.return_date) }}
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+          </table>
+        </div>
+        
+        <div class="mt-50 mx-40 no-screen">
+          <span class="float-right">
+            <div class="px-20 text-center" >
+              {{translation.signature[language]}} {{employee.name_english + ' ' + employee.lname_english if language == 'en' else employee.name + ' ' + employee.lname}}
+            </div>
+            <hr class="black-border" />
+          </span>
+          <span class="float-left">
+            <div class="px-20 text-center">
+              {{ translation.signature[language]}} {{translation.logistic_manager[language]}}
+            </div>
+            <hr class="black-border" />
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+{% endblock main_content%}
+{% block js_code %}
+
+{% endblock js_code %}

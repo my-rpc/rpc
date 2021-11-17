@@ -1,0 +1,85 @@
+@media print {
+  .no-print {
+    display: none;
+    margin: 0px !important;
+  }
+  .no-screen{
+    display: block !important;
+  }
+  /* @page {size: landscape} */
+  *{
+    box-sizing: border-box !important;
+  }
+
+  .col-md-9 {
+    width:  75%;
+    float: right;
+  }
+  .col-md-6 {
+    float: right;
+    width: 50%;
+  }
+  .col-md-4-print {
+    float: right;
+    width:  33%;
+  }
+  .col-md-3 {
+    float: right;
+    width:  24%;
+  }
+  .text-center{
+      text-align: center;
+  }
+  .col-md-1,
+  .col-md-2,
+  .col-md-3,
+  .col-md-4,
+  .col-md-5,
+  .col-md-6,
+  .col-md-7,
+  .col-md-8,
+  .col-md-9 {
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+  }
+  body, .site-content, .wrapper, .container-fluid, .content-wrapper {
+      margin: 0px !important;
+      padding: 0px !important;
+      border: none;
+      outline: none;
+      background-color: #ffffff;
+  }
+  .card {
+      width: 100% !important;
+      margin: 5px !important;
+      border: none;
+  }
+  .printContent {
+      padding-right: 10px !important;
+      width: 100%;
+  }
+  .no-border{
+      border: none !important;
+      border-radius: 0% !important;
+      color: #212529 !important;
+  }
+  .print_emp_equipment, span{
+      color: #000000 !important;
+  }
+  .black-border{
+    border-color: #555 !important;
+  }
+}
+
+.badge-left-en{
+  left: -1em;
+}
+.badge-left-dari{
+  left: 1em;
+}
+.no-print{
+    margin: 0px;
+}
+.no-screen{
+    display: none;
+}
