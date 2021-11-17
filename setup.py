@@ -5,8 +5,8 @@ from setuptools import setup, find_packages
 # ===================================
 
 PROJECT_NAME = 'rpc-mis'
-VERSION = '0.9.10'
-DESCRIPTION = 'employee_settings, version 0.9.10v the above button tranlated and the extra button removed and id linked to employee_details'
+VERSION = '0.9.11'
+DESCRIPTION = 'print_equipment_details, version 0.9.11v the new page added for printing the list of equipment of employee'
 AUTHOR = 'IMOR and RPC Team'
 AUTHOR_EMAIL = 'sau.ahmadi@gmail.com'
 URL = f''

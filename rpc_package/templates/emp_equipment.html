@@ -55,9 +55,6 @@
                 <button type="submit" class="btn btn-primary mt-2 mx-1">
                   <i class="fa fa-filter"></i> {{translation.filter[language]}}
                 </button>
-                <button type="button" class="btn btn-warning mt-2 mx-1">
-                  <i class="fa fa-print"></i> {{translation.print[language]}}
-                </button>
               </div>
             </div>
           </div>
@@ -68,6 +65,7 @@
               <th>#</th>
               <th>{{translation.name[language]}}</th>
               <th>{{translation.serial[language]}}</th>
+              <th>{{translation.price[language]}}</th>
               <th>{{translation.employee_id[language]}}</th>
               <th>{{translation.name_and_last_name[language]}}</th>
               <th>{{translation.taken_date[language]}}</th>
@@ -89,13 +87,20 @@
                   {% endif %}
                 </td>
                 <td>
+                  {% if item.equipment.price %}
+                    {{ item.equipment.price }}
+                  {% endif %}
+                </td>
+                <td>
                   {% if item.employee %}
                     {{ item.employee.id }}
                   {% endif %}
                 </td>
                 <td>
                   {% if item.employee %}
+                  <a href="/print_emp_equipment/{{item.employee.id}}">
                     {{ item.employee.name_english + ' ' + item.employee.lname_english if language == 'en' else item.employee.name + ' ' + item.employee.lname }}
+                  </a>
                   {% endif %}
                 </td>
                 <td style="white-space:nowrap">{{ to_jalali(item.taken_date) }}</td>

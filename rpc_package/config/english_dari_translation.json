@@ -175,6 +175,10 @@
     "dari": "مجموعه",
     "en": "Total"
   },
+  "signature": {
+    "dari": "امضاء",
+    "en": "Signature of"
+  },
   "from": {
     "dari": "از تاریخ",
     "en": "From Date"
@@ -599,6 +603,14 @@
     "dari": " مدیر دیپارتمنت",
     "en": "Department Manager"
   },
+  "reliance_power_group": {
+    "dari": "گروپ کمپنی های ریلانس پاور",
+    "en": "Reliance Power Group"
+  },
+  "logistic_department": {
+    "dari": "دیپارتمنت تدارکات",
+    "en": "Logistice Department"
+  },
   "logistic_manager": {
     "dari": "مدیر تدارکات",
     "en": "Logistic Manager"
@@ -794,6 +806,10 @@
   "process": {
     "dari": "پردازش",
     "en": "Process"
+  },
+  "price": {
+    "dari": "ارزش",
+    "en": "Price"
   },
   "add_document": {
     "dari": "اضافه کردن اسناد",
@@ -1322,6 +1338,10 @@
   "list_of_equipment": {
     "dari": "لیست تجهیزات",
     "en": "List of Equipment"
+  },
+  "emp_list_of_equipment": {
+    "dari": "لیست تجهیزات {}",
+    "en": "{} Equipments List"
   },
   "list_of_equipment_assign": {
     "dari": "لیست اختصاص دادن تجهیزات",

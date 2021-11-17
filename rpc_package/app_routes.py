@@ -1731,13 +1731,14 @@ def emp_equipment():
     return render_template('emp_equipment.html', form=assign_equipment_form, emp_equipments=emp_equipments,
         title=translation_obj.forms[session['language']], surrender_form=surrender_equipment_form, language=session['language'])
 
-@app.route("/print_emp_equipment/<str:employee_id>", methods=['GET'])
+@app.route("/print_emp_equipment/<string:employee_id>", methods=['GET'])
 @login_required
 def print_emp_equipment(employee_id):
-    if not check_access('print_emp_equipment'):
-        return redirect(url_for('access_denied'))
+    # if not check_access('print_emp_equipment'):
+    #     return redirect(url_for('access_denied'))
 
     status = request.args.get('status')
+    employee = Employees.query.filter_by(id=employee_id).first()
     
     emp_equipments = Employee_equipment.query \
         .filter(Employee_equipment.emp_id==employee_id) \
@@ -1747,7 +1748,7 @@ def print_emp_equipment(employee_id):
             status = '0'
         emp_equipments = emp_equipments.filter(Employee_equipment.status==status)
 
-    return render_template('print_emp_equipment.html', emp_equipments=emp_equipments,
+    return render_template('print_emp_equipment.html', emp_equipments=emp_equipments.all(), employee=employee,
         title=translation_obj.forms[session['language']], language=session['language'])
 
 @app.route("/surrender_equipment", methods=['POST'])

@@ -58,6 +58,7 @@
               <th>{{translation.serial[language]}}</th>
               <th>{{translation.category[language]}}</th>
               <th>{{translation.model[language]}}</th>
+              <th>{{translation.price[language]}}</th>
               <th>{{translation.record_status[language]}}</th>
               <th>{{translation.operation[language]}}</th>
             </tr>
@@ -69,6 +70,11 @@
                 <td>{{ item.serial }}</td>
                 <td>{{ item.category }}</td>
                 <td>{{ item.model }}</td>
+                <td>
+                  {% if item.price %}
+                    {{ item.price }}
+                  {% endif %}
+                </td>
                 <td>
                   {% if item.in_use %}
                   <span class="badge badge-pill badge-info">
