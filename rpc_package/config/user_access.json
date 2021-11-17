@@ -87,6 +87,7 @@
   ],
   "Logistic" : [
     "equipment",
+    "print_emp_equipment",
     "delete_equipment",
     "update_equipment",
     "emp_equipment",
@@ -101,6 +102,7 @@
     "accept_reject_resign_request_supervisor",
     
     "equipment",
+    "print_emp_equipment",
     "delete_equipment",
     "update_equipment",
     "emp_equipment",
@@ -167,6 +169,7 @@
     "delete_overtime",
     "recieved_equipment",
     "equipment",
+    "print_emp_equipment",
     "delete_equipment",
     "update_equipment",
     "emp_equipment",

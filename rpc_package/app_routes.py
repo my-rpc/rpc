@@ -26,7 +26,7 @@ from rpc_package.route_utils import upload_docs, get_profile_info, get_documents
 import os
 import datetime
 import jdatetime
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from rpc_package.attendance import Attendance
 
 @app.before_request
@@ -1736,19 +1736,21 @@ def emp_equipment():
 @app.route("/print_emp_equipment/<string:employee_id>", methods=['GET'])
 @login_required
 def print_emp_equipment(employee_id):
-    # if not check_access('print_emp_equipment'):
-    #     return redirect(url_for('access_denied'))
+    if not check_access('print_emp_equipment'):
+        return redirect(url_for('access_denied'))
 
     status = request.args.get('status')
     employee = Employees.query.filter_by(id=employee_id).first()
-    
-    emp_equipments = Employee_equipment.query \
-        .filter(Employee_equipment.emp_id==employee_id) \
-        .order_by(Employee_equipment.id.desc())
-    if status == '0' or status == '1' or status == 'None':
-        if status == 'None':
-            status = '0'
-        emp_equipments = emp_equipments.filter(Employee_equipment.status==status)
+    if employee:
+        emp_equipments = Employee_equipment.query \
+            .filter(Employee_equipment.emp_id==employee_id) \
+            .order_by(Employee_equipment.id.desc())
+        if status == '1':
+            emp_equipments = emp_equipments.filter(Employee_equipment.status==status)
+        elif status == '0':
+            emp_equipments = emp_equipments.filter(or_(Employee_equipment.status == False, Employee_equipment.status == None))
+    else:
+        return redirect(url_for('emp_equipment'))
 
     return render_template('print_emp_equipment.html', emp_equipments=emp_equipments.all(), employee=employee,
         title=translation_obj.forms[session['language']], language=session['language'])
