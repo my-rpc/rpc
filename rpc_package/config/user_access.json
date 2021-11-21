@@ -87,6 +87,22 @@
   ],
   "Logistic" : [
     "equipment",
+    "print_emp_equipment",
+    "delete_equipment",
+    "update_equipment",
+    "emp_equipment",
+    "surrender_equipment",
+    "download_equipment_file"
+  ],
+  "Logistic Manager" : [
+    "leave_supervisor",
+    "overtime_supervisor",
+    "view_resign_request_supervisor",
+    "emp_resign_request_supervisor",
+    "accept_reject_resign_request_supervisor",
+    
+    "equipment",
+    "print_emp_equipment",
     "delete_equipment",
     "update_equipment",
     "emp_equipment",
@@ -153,6 +169,7 @@
     "delete_overtime",
     "recieved_equipment",
     "equipment",
+    "print_emp_equipment",
     "delete_equipment",
     "update_equipment",
     "emp_equipment",
