@@ -233,7 +233,9 @@
                 if (start_date) {
                     $.post('last_date_of_month', { date: start_date }, function(response){
                         var date = new Date(response.year, response.month - 1 , response.day);
-                        $('#end_datetime_icon').MdPersianDateTimePicker('setOption', 'disableAfterDate', date);
+                        $('#end_datetime_icon')
+                        .MdPersianDateTimePicker('clearDate')
+                        .MdPersianDateTimePicker('setOption', 'disableAfterDate', date);
                     }, 'json')
                     .fail(function(e){
                         console.log("error", e);

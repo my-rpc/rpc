@@ -35,6 +35,11 @@ def check_contract():
         position_history = current_user.employee.position_history.filter_by(status=1).first()
         if not position_history and current_user.user_role.name_english != 'Admin':
             logout_user()
+        try:
+            if not session['language']:
+                logout_user()
+        except IOError as exc:
+            logout_user()
 
 @app.route("/create_new_user", methods=['GET', 'POST'])
 @login_required
@@ -1029,7 +1034,7 @@ def emp_autocomplete():
 @login_required
 def last_date_of_month():
     date = jdatetime.datetime.strptime(request.form['date'], '%Y-%m-%d')
-    last_day = get_last_date_of_month(date)
+    last_day =(date.replace(day=1) + datetime.timedelta(days=32)).replace(day=1)
     miladi_date = last_day.togregorian()
     if not miladi_date:
         message = translation_obj.not_found[session['language']]
