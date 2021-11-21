@@ -1029,7 +1029,7 @@ def emp_autocomplete():
 @login_required
 def last_date_of_month():
     date = jdatetime.datetime.strptime(request.form['date'], '%Y-%m-%d')
-    last_day = get_last_date_of_month(date)
+    last_day =(date.replace(day=1) + datetime.timedelta(days=32)).replace(day=1)
     miladi_date = last_day.togregorian()
     if not miladi_date:
         message = translation_obj.not_found[session['language']]
