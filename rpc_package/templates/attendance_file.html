@@ -80,8 +80,13 @@
               </td>
               <td>
                 {% if not attendance.file_url %}
-                <a href="process_attendance_file/{{attendance.id}}" class="mx-2">
-                  <i class="fad fa-sync-alt text-secondary"></i>
+                <a href="process_attendance_file/{{attendance.id}}" onclick="showLoader(event)" id="process_attendance_file" class="mx-2">
+                  <div>
+                    <i class="fad fa-sync-alt text-secondary sync-icon"></i>
+                    <div class="spinner" style="display: none;">
+                      <i class='fad fa-spinner fa-spin text-info'></i>
+                    </div>
+                  </div>
                 </a>
                 {% endif %}
               </td>
@@ -127,5 +132,15 @@
       {% endfor %}
   {% endif %}
 {% endwith %}
+
+<script>
+  $(document).ready(function() {
+    showLoader = function (e) {
+      // e.preventDefault();
+      $(e.target).closest('div').children(".spinner").show();
+      $(e.target).hide()
+    }
+  });
+</script>
 
 {% endblock js_code %}
