@@ -80,6 +80,7 @@
                   <span class="badge badge-pill badge-info">
                     {{translation.in_use[language]}}
                     {% set employee = item.emp_equipments.filter(or_(Employee_equipment.status==None, Employee_equipment.status==0)).first().employee %}
+                    {% if employee %}
                     <small class="font-weight-bold" >(
                       {% if language == 'en' %}
                       {{employee.name_english}} {{employee.lname_english}}
@@ -87,6 +88,7 @@
                       {{employee.name}} {{employee.lname}}
                       {% endif %}
                     )</small>
+                    {% endif %}
                   </span>
                   {% else %}
                   <span class="badge badge-pill badge-success">{{translation.free_of_use[language]}}</span>
